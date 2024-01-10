@@ -33,6 +33,8 @@
 </template>
 
 <script>
+
+//componentes
 import InputLogin from '@/components/inputs/Input-Login.vue'
 import EmailIcon from '@/components/icons/Email-icon.vue'
 import PasswordIcon from '../icons/Password-icon.vue';
@@ -40,6 +42,10 @@ import HiddenButton from '../botones/Hidden-button.vue';
 import LayoutLogin from '../Layouts/LayoutLogin.vue';
 import InputCheckboxText from '../inputs/Input-Checkbox-Text.vue';
 import SubmitButton from '../botones/Submit-button.vue';
+
+//librerias
+
+import axios from 'axios';
 
 export default {
     //nombre componente
@@ -77,12 +83,21 @@ export default {
         },
 
         // Detecta el evento Submit y realiza la consulta a la api
-        Enviar(evento){
-            let e = {
-                usuario: this.Usuario,
-                password: this.Password
-            }
-            console.log(e)
+        async Enviar(){
+            const respuesta = await axios.post(
+                'login', 
+                {
+                    usuario: this.Usuario,
+                    password: this.Password
+                }
+            );
+
+            console.log(respuesta)
+
+            localStorage.setItem('token', respuesta.data.token)
+
+            this.$router.push('/sociedad');
+        
         },
     },
     
