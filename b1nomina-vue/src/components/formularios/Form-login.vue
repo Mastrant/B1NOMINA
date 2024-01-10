@@ -78,7 +78,11 @@ export default {
 
         // Detecta el evento Submit y realiza la consulta a la api
         Enviar(evento){
-            console.log(this.Usuario, this.Password)
+            let e = {
+                usuario: this.Usuario,
+                password: this.Password
+            }
+            console.log(e)
         },
     },
     
