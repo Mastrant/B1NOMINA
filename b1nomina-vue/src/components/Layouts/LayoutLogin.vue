@@ -1,0 +1,24 @@
+<template>
+    <div class="LayotLogin-div">
+        <slot name="Recuerdame">
+    
+        </slot>
+        <slot name="TextLink">
+    
+        </slot>
+    </div>
+
+</template>
+
+<style scope>
+
+div.LayotLogin-div {
+    display:flex;
+    justify-content:space-between ;
+    align-self: center;
+    align-items: center;
+    margin-top: 16px;
+}
+
+
+</style>
