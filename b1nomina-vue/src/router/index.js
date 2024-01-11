@@ -12,14 +12,23 @@ const router = createRouter({
       path: '/sociedad',
       name: 'sociedad',
       component: () => import('../views/SociedadView.vue'),
-
-      children: [
-        {
-          path: ':sociedadId/dashboard',
-          component: () => import('../views/DashboardView.vue'),
-        },
-      ]
     },
+    {
+      path: '/sociedad/:sociedadId',
+      component: () => import('../views/DashboardView.vue'),        
+        
+    },
+    {
+      path: '/sociedad/:sociedadId/dashboard',
+      name: 'dashboard',
+      component: () => import('../views/DashboardView.vue'),
+    },
+    {
+      path: '/sociedad/:sociedadId/gestionNomina',
+      name: 'gestionNomina',
+      component: () => import('../views/GestionNominaView.vue'),
+    },
+
   ]
 })
 

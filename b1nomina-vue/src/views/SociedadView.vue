@@ -8,14 +8,12 @@
                 </p>
             </article>
         </div>
-        <div class="sociedadView-fondo-cards">
-            <CardSociedad  data="holi'"/>
-            <CardSociedad  data="holi'"/>
-            <CardSociedad  data="holi'"/>
-            
+        <div  class="sociedadView-fondo-cards">
+            <div v-for="(item) in SociedadesAccesibles" :key="item.id">
+                <CardSociedad  :data="item"/> 
+            </div>    
         </div>
-    </div>
- 
+    </div> 
 </template>
 
 <script>
@@ -31,10 +29,9 @@ export default {
     data() {
         return {
             SociedadesAccesibles: [
-                {id: 1, name: 1, icon:''},
-                {id: 2, name: 2, icon:''},
-                {id: 3, name: 3, icon:''},
-                {id: 4, name: 4, icon:''},
+                {id: 1, name: 'Sociedad 1', icon:''},
+                {id: 2, name: 'Sociedad 2', icon:''},
+                {id: 3, name: 'Sociedad 3', icon:''},
             ]
         }
     },

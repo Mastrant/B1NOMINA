@@ -1,11 +1,10 @@
 <template>
     <div class="cardsociedad">
         <div class="cardsociedad-body">
-            <h3 class="cardsociedad-titulo">{{ data }}</h3>
-            <img alt="ICON sociedad">
-
-            <router-link :to="`/sociedad/${data}/dashboard`">
-                Iniciar Seccion
+            <h3 class="cardsociedad-titulo">{{ data.name }}</h3>
+            <img class="cardAvatar" :href="data.icon" alt="ICON sociedad">
+            <router-link class="cardsociedad-button" :to="`/sociedad/${data.id}/dashboard`">
+                    Iniciar Sección
             </router-link>
         </div>
     </div>
@@ -20,7 +19,7 @@ export default {
     },
     props: [
         'data'
-    ]
+    ],
 }
 </script>
 
@@ -61,6 +60,32 @@ div.cardsociedad {
     margin: 0;
     height: 34px;
     align-items: center;
+}
+
+.cardsociedad-button{
+    width: 160px;
+    height: 50px;
+
+    background: #1A2771;
+    border-radius: 6px;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    display: inline-flex;
+
+    /* tipografia*/
+    color: #F8F8F8;
+    font-size: 16px;
+    font-family: Poppins;
+    font-weight: 400;
+    line-height: 26px;
+    word-wrap: break-word;
+    text-decoration:none;
+}
+
+img.cardAvatar {
+    width: 96px;
+    height: 96px;
 }
 
 </style>
