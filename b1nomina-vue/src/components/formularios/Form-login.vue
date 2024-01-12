@@ -1,7 +1,7 @@
 <template>
     <form class="form-Login" methods="POST" @submit.prevent="Enviar">
 
-        <InputLogin Text="Usuario" Placeholder="Ingresar Usuario" @message="RecibirUsuario">
+        <InputLogin Text="RUT" Placeholder="Ingresar RUT" @message="RecibirUsuario">
             <template #FirtIcon> 
                 <EmailIcon />                   
             </template>
@@ -35,7 +35,7 @@
 <script>
 
 //componentes
-import InputLogin from '@/components/inputs/Input-Login.vue'
+import InputLogin from '@/components/inputs/Input-Login.vue';
 import EmailIcon from '@/components/icons/Email-icon.vue'
 import PasswordIcon from '../icons/Password-icon.vue';
 import HiddenButton from '../botones/Hidden-button.vue';
@@ -84,20 +84,28 @@ export default {
 
         // Detecta el evento Submit y realiza la consulta a la api
         async Enviar(){
-            const respuesta = await axios.post(
-                'login', 
-                {
-                    usuario: this.Usuario,
-                    password: this.Password
+            let payload = {
+                username: this.Usuario,
+                password: this.Password
+            }
+
+            console.log(payload)
+            await axios.post('/login', payload)
+            .then( 
+                res => {
+                    console.log(res)
                 }
-            );
+            )
+            .catch (
+                error => {
+                    //JSON con el mensaje de error
+                    let data = error.response.data
 
-            console.log(respuesta)
-
-            localStorage.setItem('token', respuesta.data.token)
-
-            this.$router.push('/sociedad');
-        
+                    //mostrar mensaje de error
+                   console.log(data.message)
+                }
+            )
+            // this.$router.push('/sociedad');
         },
     },
     

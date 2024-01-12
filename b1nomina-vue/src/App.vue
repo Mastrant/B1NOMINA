@@ -1,11 +1,7 @@
-<script setup>
-
-</script>
-
 <template>
-<div class="contend">
-  <router-view />
-</div>
+  <div class="contend">
+    <router-view />
+  </div>
 </template>
 
 <style>
@@ -14,7 +10,5 @@
   height: 100%;
   width: auto;
 }
-
-
 
 </style>
