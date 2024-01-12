@@ -15,20 +15,20 @@ const router = createRouter({
     },
     {
       path: '/sociedad/:sociedadId',
-      component: () => import('../views/DashboardView.vue'),        
-        
+      component: () => import('../views/TemplateView.vue'), 
+      children: [
+        {
+          path: '/sociedad/:sociedadId/dashboard',
+          name: 'dashboard',
+          component: () => import('../views/DashboardView.vue'),
+        },
+        {
+          path: '/sociedad/:sociedadId/gestionNomina',
+          name: 'gestionNomina',
+          component: () => import('../views/GestionNominaView.vue'),
+        },
+      ]       
     },
-    {
-      path: '/sociedad/:sociedadId/dashboard',
-      name: 'dashboard',
-      component: () => import('../views/DashboardView.vue'),
-    },
-    {
-      path: '/sociedad/:sociedadId/gestionNomina',
-      name: 'gestionNomina',
-      component: () => import('../views/GestionNominaView.vue'),
-    },
-
   ]
 })
 
