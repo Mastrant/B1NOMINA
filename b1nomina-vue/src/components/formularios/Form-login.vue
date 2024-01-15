@@ -84,22 +84,22 @@ export default {
 
         // Detecta el evento Submit y realiza la consulta a la api
         async Enviar(){
-            let payload = {
-                username: this.Usuario,
-                password: this.Password
-            }
+            var payload = `username=${this.Usuario}&password=${this.Password}`
 
             console.log(payload)
+
+            // Genera la peticion POST
             await axios.post('/login', payload)
             .then( 
                 res => {
-                    console.log(res)
+                    let data = res.response.data
+                    console.log(`${data.token} ${data.userId}`)
                 }
             )
             .catch (
                 error => {
                     //JSON con el mensaje de error
-                    let data = error.response.data
+                   var data = error.response.data
 
                     //mostrar mensaje de error
                    console.log(data.message)

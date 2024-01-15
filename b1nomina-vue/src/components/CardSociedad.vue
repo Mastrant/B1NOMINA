@@ -18,7 +18,8 @@ export default {
         }
     },
     props: [
-        'data'
+        //informacion del sociedad id, nombre y el icono a utilizar 
+        'data',
     ],
 }
 </script>

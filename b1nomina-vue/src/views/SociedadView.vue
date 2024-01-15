@@ -43,11 +43,6 @@ export default {
         console.log(respuesta)
         */
     },
-    methods() {
-        
-        console.log(this.$route.params.sociedadId)
-        
-    }
 }
 </script>
 
