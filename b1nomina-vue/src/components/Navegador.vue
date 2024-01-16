@@ -1,13 +1,9 @@
-<template>
+<template>    
         <nav class="aside " id="aside">
             <div class="head">
                 <div class="profile" v-if="desplegarMenu">
-                    <Transition>
-                        <LogoTextVue />
-                    </Transition>
-                    
+                    <LogoTextVue />
                 </div>
-                
                 <MenuButton @click="desplegarMenu = !desplegarMenu"/>
             </div>
 
@@ -100,23 +96,18 @@
                 </div>
             </div>
             
-            <div class="perfil">
-                <img class="avatar" id="avatar"  alt="avatar">
-                <div class="perfil-text" v-if="desplegarMenu">
+            <div class="perfil" v-if="desplegarMenu">
+                <Avatar />
+                <div class="perfil-text" >
                     <span class="text-perfil text-perfil-1">Nombre de Empresa</span>
                     <span class="text-perfil">Rut 0102030405</span>
                 </div>
                 <div v-if="desplegarMenu">
-                    <img  class="icon icon-options dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" href="#">Cambiar Sociedad</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="../login/login.html">Cerrar sesión</a>
-                        </li>
-                    </ul>
+                    <TresPuntosIcon />
                 </div>            
+            </div>
+            <div class="perfil-hidden" v-else>
+                <Avatar />
             </div>
         </nav>       
 </template>
@@ -138,7 +129,11 @@ import AjustesIcon from './icons/Ajustes-icon.vue';
 import CampanaIcon from './icons/Campana-icon.vue';
 import HelpCircleIcon from './icons/HelpCircle-icon.vue';
 import TuerquitaIcon from './icons/Tuerquita-icon.vue';
+import TresPuntosIcon from './icons/TresPuntos-icon.vue';
 
+//AVATAR
+
+import Avatar from './avatars/Avatar1.vue'
 
 // Generar reactividad del componente
 import {ref} from 'vue';
@@ -163,7 +158,7 @@ const desplegarMenu = ref(false)
     display: flex;
     flex-direction: column;
     position: absolute;
-    box-sizing: content-box;
+    box-sizing: border-box;
 }
 .head {
     margin-top: 40px;
@@ -193,10 +188,6 @@ div.contend {
     justify-content: space-between;
 }
 
-
-
-
-
 .options img {
     margin-right: 16px;
 }
@@ -207,18 +198,28 @@ div.contend {
     text-decoration: none;
 }
 
-.perfil {
+
+div.perfil {
+    
     display: flex;
     justify-content: center;
-    padding: 24px 16px;
+    padding: 24px 0px;
     align-items: center;
     border-radius: 8px;
     border: 2px #4E5FBD solid;
     background: #1A2771;
     color: #CDE0F1;
+    margin: 48px 0px;
+    box-sizing: content-box;
     width: 100%;
-    margin-top: 32px;
+    justify-content: space-evenly;
 
+}
+
+div.perfil-hidden{
+    margin: 48px 0px;
+    display: flex;
+    justify-content: center;
 }
 
 .avatar {
@@ -243,40 +244,6 @@ div.contend {
     height: 20.5px;
     width: 20.5px;
     cursor: pointer;
-}
-
-/* AL cerrar el menú */
-
-.aside.activate {
-    width: 88px;
-    transition: all 0.4s ease;
-}
-
-.aside.activate .option,
-.aside.activate .profile,
-.aside.activate .perfil-text,
-.aside.activate .icon-options {
-    display: none;
-}
-
-.aside.activate .perfil {
-    border-style: none;
-    background: none;
-}
-
-.aside.activate .head img,
-.aside.activate .perfil img,
-.aside.activate .icon {
-    margin: auto;
-}
-
-.aside.activate .contend-option,
-.aside.activate .head {
-    border-radius: 8px;
-}
-
-.aside.activate .head {
-    background-color: #1A2771;
 }
 
 .Name-page a {
