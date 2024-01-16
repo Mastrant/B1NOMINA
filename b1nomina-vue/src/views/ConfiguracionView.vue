@@ -1,12 +1,17 @@
 <template>
     <div>
-        HELP VIEW
+        configuracion
     </div>
 </template>
 
 <script>
 export default {
-    name: 'help'
+    name: 'configuracion',
+    data() {
+        return {
+            
+        }
+    },
 }
 </script>
 

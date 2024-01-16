@@ -1,10 +1,14 @@
 <template>
-        <ASide class="aside " id="aside">
+        <nav class="aside " id="aside">
             <div class="head">
-                <div class="profile">
-                    <LogoTextVue />
+                <div class="profile" v-if="desplegarMenu">
+                    <Transition>
+                        <LogoTextVue />
+                    </Transition>
+                    
                 </div>
-                <MenuIconvue />
+                
+                <MenuButton @click="desplegarMenu = !desplegarMenu"/>
             </div>
 
             <div class="contend">
@@ -12,11 +16,11 @@
                 <div class="contend1">
                     <div class="options">
                         <!--Dashboard-->
-                        <NavButton>
+                        <NavButton >
                             <template #direccion>
-                                <CuboIcon />
                                 <router-link to="dashboard">
-                                    Dashboard
+                                    <CuboIcon />
+                                    <span v-if="desplegarMenu">Dashboard</span>
                                 </router-link>
                             </template>
                         </NavButton>
@@ -25,7 +29,7 @@
                             <template #direccion>
                                 <router-link to="gestionNomina">
                                     <DolarIconBlanco />
-                                     Gestión de Nómina
+                                    <span v-if="desplegarMenu">Gestión de Nómina</span>
                                 </router-link>
                             </template>
                         </NavButton>
@@ -34,7 +38,7 @@
                             <template #direccion>
                                 <router-link to="empleados">
                                     <TwoPersonIcon />
-                                    Empleados
+                                    <span v-if="desplegarMenu">Empleados</span>
                                 </router-link>
                             </template>
                         </NavButton>
@@ -43,7 +47,7 @@
                             <template #direccion>
                                 <router-link to="eventos">
                                     <TableIcon />
-                                    Eventos
+                                    <span v-if="desplegarMenu">Eventos</span>
                                 </router-link>
                             </template>
                         </NavButton>
@@ -52,7 +56,7 @@
                             <template #direccion>
                                 <router-link to="informes">
                                     <AjustesIcon />
-                                    Informes
+                                    <span v-if="desplegarMenu">Informes</span>
                                 </router-link>
                             </template>
                         </NavButton>
@@ -67,19 +71,19 @@
                             <template #direccion>
                                 <router-link to="notificaciones">
                                     <CampanaIcon />
-                                    Notificaciones
+                                    <span v-if="desplegarMenu">
+                                        Notificaciones
+                                        <CantidadNotificaciones num="5"/>
+                                    </span>
                                 </router-link>
-                            </template>
-                            <template #notification>
-                                <CantidadNotificaciones num="5"/>
                             </template>
                         </NotificationButton>
                         <!-- Soporte y Asistencia-->
                         <NavButton>
                             <template #direccion>
-                                <router-link to="help">
+                                <router-link to="/help">
                                     <HelpCircleIcon />
-                                    Soporte y Asistencia
+                                    <span v-if="desplegarMenu">Soporte y Asistencia</span>
                                 </router-link>
                             </template>
                         </NavButton>
@@ -88,7 +92,7 @@
                             <template #direccion>
                                 <router-link to="configuracion">
                                     <TuerquitaIcon />
-                                    Configuración
+                                    <span v-if="desplegarMenu">Configuración</span>
                                 </router-link>
                             </template>
                         </NavButton>
@@ -98,24 +102,28 @@
             
             <div class="perfil">
                 <img class="avatar" id="avatar"  alt="avatar">
-                <div class="perfil-text">
+                <div class="perfil-text" v-if="desplegarMenu">
                     <span class="text-perfil text-perfil-1">Nombre de Empresa</span>
                     <span class="text-perfil">Rut 0102030405</span>
                 </div>
-                <div>
-                <img  class="icon icon-options dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Cambiar Sociedad</a></li>
-                    <li><a class="dropdown-item" href="../login/login.html">Cerrar sesión</a></li>
-                </ul>
+                <div v-if="desplegarMenu">
+                    <img  class="icon icon-options dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="#">Cambiar Sociedad</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="../login/login.html">Cerrar sesión</a>
+                        </li>
+                    </ul>
                 </div>            
             </div>
-        </ASide>       
+        </nav>       
 </template>
 
-<script>
+<script setup>
 import LogoTextVue from './logos/Logo-text.vue';
-import MenuIconvue from '@/components/icons/Menu-icon.vue';
+import MenuButton from './botones/Menu-button.vue';
 import NavButton from './botones/Nav-button.vue';
 import NotificationButton from './botones/Notification-button.vue';
 import CantidadNotificaciones from './CantidadNotificaciones.vue';
@@ -131,35 +139,14 @@ import CampanaIcon from './icons/Campana-icon.vue';
 import HelpCircleIcon from './icons/HelpCircle-icon.vue';
 import TuerquitaIcon from './icons/Tuerquita-icon.vue';
 
-export default {
-    components: {
-        LogoTextVue,
-        MenuIconvue,
-        NavButton,
-        NotificationButton,
-        CantidadNotificaciones,
 
-        //Componentes Iconos Utilizados
-        CuboIcon,
-        DolarIconBlanco,
-        TwoPersonIcon,
-        TableIcon,
-        AjustesIcon,
-        CampanaIcon,
-        HelpCircleIcon,
-        TuerquitaIcon,
+// Generar reactividad del componente
+import {ref} from 'vue';
+const desplegarMenu = ref(false)
 
 
-    },
-    data() {
-        return {
-            
-        }
-    },
-    methods: {
-        
-    }
-}
+
+
 </script>
 
 <style scoped>
@@ -167,7 +154,7 @@ export default {
 .aside {
     z-index: 5;
     height: 100%;
-    width: 300px;
+    width: fit-content;
     padding: 0 17.75px;
     background-color: #1A245B;
     color: #CDE0F1;
@@ -185,6 +172,7 @@ export default {
     height: 52.5px;
     justify-content: space-between;
     margin-bottom: 32px;
+    gap: 12px;
 }
 .head > img {
     cursor: pointer;

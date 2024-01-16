@@ -1,12 +1,17 @@
 <template>
     <div>
-        HELP VIEW
+        Notificaciones
     </div>
 </template>
 
 <script>
 export default {
-    name: 'help'
+    name: 'notificaciones',
+    data() {
+        return {
+            
+        }
+    },
 }
 </script>
 

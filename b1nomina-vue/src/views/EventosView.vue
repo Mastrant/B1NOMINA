@@ -1,12 +1,17 @@
 <template>
     <div>
-        HELP VIEW
+        Eventos
     </div>
 </template>
 
 <script>
 export default {
-    name: 'help'
+    name: 'eventos',
+    data() {
+        return {
+            
+        }
+    },
 }
 </script>
 

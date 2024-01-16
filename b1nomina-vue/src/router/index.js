@@ -36,6 +36,31 @@ const router = createRouter({
           name: 'gestionNomina',
           component: () => import('../views/GestionNominaView.vue'),
         },
+        {
+          path: '/sociedad/:sociedadId/empleados',
+          name: 'empleados',
+          component: () => import('../views/EmpleadosView.vue'),
+        },
+        {
+          path: '/sociedad/:sociedadId/informes',
+          name: 'informes',
+          component: () => import('../views/InformesView.vue'),
+        },
+        {
+          path: '/sociedad/:sociedadId/configuracion',
+          name: 'configuracion',
+          component: () => import('../views/ConfiguracionView.vue'),
+        },
+        {
+          path: '/sociedad/:sociedadId/eventos',
+          name: 'eventos',
+          component: () => import('../views/EventosView.vue'),
+        },
+        {
+          path: '/sociedad/:sociedadId/notificaciones',
+          name: 'notificaciones',
+          component: () => import('../views/NotificacionesView.vue'),
+        },
       ]       
     },
     {

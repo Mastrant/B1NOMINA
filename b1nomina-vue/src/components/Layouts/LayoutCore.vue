@@ -3,10 +3,11 @@
         <slot name="nav">
         
         </slot>
-        <div>
+        <div class="barraLateral">
             <slot name="body">
 
             </slot>
+
         </div>   
     </section>
 </template>

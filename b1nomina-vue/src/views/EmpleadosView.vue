@@ -1,12 +1,17 @@
 <template>
     <div>
-        HELP VIEW
+        EMPLEADOS
     </div>
 </template>
 
 <script>
 export default {
-    name: 'help'
+    name: 'empleados',
+    data() {
+        return {
+            
+        }
+    },
 }
 </script>
 

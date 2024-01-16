@@ -3,9 +3,6 @@
         <slot name="direccion">
 
         </slot>
-        <slot name="notification">
-
-        </slot>
     </div>
 </template>
 
@@ -32,6 +29,23 @@ div.notificatioButton-contend {
 .options div:hover {
     background-color: #1A2771;
     transition: all 0.3s ease-in-out;
+}
+
+.notificatioButton-contend > a {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.notificatioButton-contend > a > span {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
 }
 
 </style>
