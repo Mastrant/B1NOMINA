@@ -4,6 +4,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 
+//importa la configuracion de axios
 import './axios'
 
 const app = createApp(App)
