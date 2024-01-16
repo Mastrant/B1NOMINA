@@ -15,7 +15,7 @@
                         <NavButton>
                             <template #direccion>
                                 <CuboIcon />
-                                <router-link to="">
+                                <router-link to="dashboard">
                                     Dashboard
                                 </router-link>
                             </template>
@@ -23,17 +23,17 @@
                         <!--Gestion de Nomina-->
                         <NavButton>
                             <template #direccion>
-                                <router-link to="">
-                                    "icon"
-                                    Gestión de Nómina
+                                <router-link to="gestionNomina">
+                                    <DolarIconBlanco />
+                                     Gestión de Nómina
                                 </router-link>
                             </template>
                         </NavButton>
                         <!--Empleados-->
                         <NavButton>
                             <template #direccion>
-                                <router-link to="">
-                                    "icon"
+                                <router-link to="empleados">
+                                    <TwoPersonIcon />
                                     Empleados
                                 </router-link>
                             </template>
@@ -41,8 +41,8 @@
                         <!--Eventos-->
                         <NavButton>
                             <template #direccion>
-                                <router-link to="">
-                                    "icon"
+                                <router-link to="eventos">
+                                    <TableIcon />
                                     Eventos
                                 </router-link>
                             </template>
@@ -50,8 +50,8 @@
                         <!--Informes-->
                         <NavButton>
                             <template #direccion>
-                                <router-link to="">
-                                    "icon"
+                                <router-link to="informes">
+                                    <AjustesIcon />
                                     Informes
                                 </router-link>
                             </template>
@@ -65,8 +65,8 @@
                         <!--Notificaciones-->
                         <NotificationButton>
                             <template #direccion>
-                                <router-link to="">
-                                    "icon"
+                                <router-link to="notificaciones">
+                                    <CampanaIcon />
                                     Notificaciones
                                 </router-link>
                             </template>
@@ -77,8 +77,8 @@
                         <!-- Soporte y Asistencia-->
                         <NavButton>
                             <template #direccion>
-                                <router-link to="">
-                                    "icon"
+                                <router-link to="help">
+                                    <HelpCircleIcon />
                                     Soporte y Asistencia
                                 </router-link>
                             </template>
@@ -86,8 +86,8 @@
                         <!--Configuración-->
                         <NavButton>
                             <template #direccion>
-                                <router-link to="">
-                                    "icon"
+                                <router-link to="configuracion">
+                                    <TuerquitaIcon />
                                     Configuración
                                 </router-link>
                             </template>
@@ -125,6 +125,11 @@ import CantidadNotificaciones from './CantidadNotificaciones.vue';
 import CuboIcon from './icons/Cubo-icon.vue';
 import DolarIconBlanco from './icons/Dolar-icon-blanco.vue';
 import TwoPersonIcon from './icons/TwoPerson-icon.vue';
+import TableIcon from './icons/Table-icon.vue';
+import AjustesIcon from './icons/Ajustes-icon.vue';
+import CampanaIcon from './icons/Campana-icon.vue';
+import HelpCircleIcon from './icons/HelpCircle-icon.vue';
+import TuerquitaIcon from './icons/Tuerquita-icon.vue';
 
 export default {
     components: {
@@ -134,9 +139,15 @@ export default {
         NotificationButton,
         CantidadNotificaciones,
 
+        //Componentes Iconos Utilizados
         CuboIcon,
         DolarIconBlanco,
         TwoPersonIcon,
+        TableIcon,
+        AjustesIcon,
+        CampanaIcon,
+        HelpCircleIcon,
+        TuerquitaIcon,
 
 
     },

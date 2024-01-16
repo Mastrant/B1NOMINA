@@ -1,11 +1,10 @@
 <template>
     <LayoutCore>
+        <template #body>
+            <RouterView />
+        </template>
         <template #nav>
             <NavegadorVue />                 
-        </template>
-        <template #header>
-            
-                
         </template>
     </LayoutCore>
 </template>
@@ -18,7 +17,6 @@ export default {
     components: {
         NavegadorVue,
         LayoutCore,
-
     }
 }
 </script>

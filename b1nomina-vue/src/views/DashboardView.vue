@@ -6,7 +6,7 @@
 
 <script>
 export default {
-    name: 'dashboard',
+    name: 'dashboardView',
     data() {
         return {
             
@@ -16,5 +16,8 @@ export default {
 </script>
 
 <style scoped>
-
+div {
+    display: flex;
+    justify-content: center;
+}
 </style>
