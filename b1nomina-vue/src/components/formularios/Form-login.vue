@@ -69,8 +69,7 @@ export default {
             recordarCredenciales: '',
             
         }
-    },
-    
+    },    
     methods: {
         //recibe el valor emitido del input -- Usuario --
         RecibirUsuario(value) {
@@ -91,21 +90,38 @@ export default {
                 password: this.Password
             }
 
+            //configura que el tipo de mensaje enviado sea de tipo JSON
+            let config = {
+                headers: {
+                    "Content-Type": "aplication/json",
+                },
+            }
             console.log(payload)
 
             // Genera la peticion POST
-            await axios.post(`/login?username=${this.Usuario}&password=${this.Password}`, payload)
+            await axios.post(`/login?username=${this.Usuario}&password=${this.Password}`, payload, config)
             .then( 
                 res => {
                     console.log(res)
+
+                    //si el estado es OK
+                    if(res.status==202){
+                        //Almacena el token en el local Storage
+                        localStorage.setItem('token', res.data.token)
+                        //almacena el id del usuario en el local Storage
+                        localStorage.setItem('userId', res.data.userId)
+                        // Envia a la pagina sociedad
+                        this.$router.push('/sociedad')
+                    }
                 }
             )
             .catch (
                 error => {
+                    document.form.reset();
                     //JSON con el mensaje de error
-
-                    //mostrar mensaje de error
-                   console.log(error.response)
+                    const data = error.data.message
+                    //mostrar mensaje de error en consola
+                   console.log(data)
                 }
             )
             // this.$router.push('/sociedad');

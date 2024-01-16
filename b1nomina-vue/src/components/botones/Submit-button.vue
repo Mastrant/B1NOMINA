@@ -50,5 +50,6 @@ button.submit-button {
     font-family: Poppins;
     font-weight: 500;
     word-wrap: "break-word";
+    cursor: pointer;
 }
 </style>

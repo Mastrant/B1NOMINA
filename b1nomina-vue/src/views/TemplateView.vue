@@ -17,7 +17,14 @@ export default {
     components: {
         NavegadorVue,
         LayoutCore,
-    }
+    },
+    async mounted() {
+        if(localStorage.getItem('token')){
+            console.log("pagina de persona")
+        }else{
+            this.$router.push("/login")
+        }
+    },
 }
 </script>
 

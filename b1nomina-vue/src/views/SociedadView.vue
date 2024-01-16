@@ -37,11 +37,18 @@ export default {
     },
 
     //al momento de crear el componente verifica el toquen y pide las sociedades disponibles
-    async created() {
-        /*
-        const respuesta = await axios.get('validate');
-        console.log(respuesta)
-        */
+    async mounted() {
+        if(localStorage.getItem('token')){
+            await axios.get(`/user/${localStorage.getItem('userId')}`,  localStorage.getItem('token'))
+            .then( res => {
+                console.log(res)
+            })
+            .catch( error => {
+                console.log(error)
+            })
+        }else{
+            this.$router.push("/login")
+        }
     },
 }
 </script>
