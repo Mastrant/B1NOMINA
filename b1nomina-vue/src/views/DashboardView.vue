@@ -1,12 +1,16 @@
 <template>
     <div>
-        DASHBOARD
+        <Header nombrePagina="DashBoard" />
     </div>
 </template>
 
 <script>
+import Header from '@/components/Header.vue';
 export default {
     name: 'dashboardView',
+    components: {
+        Header,
+    },
     data() {
         return {
             

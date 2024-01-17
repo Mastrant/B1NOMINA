@@ -1,12 +1,16 @@
 <template>
     <div>
-        EMPLEADOS
+        <Header nombrePagina="Empleados" />
     </div>
 </template>
 
 <script>
+import Header from '@/components/Header.vue';
 export default {
     name: 'empleados',
+    components: {
+        Header
+    },
     data() {
         return {
             

@@ -1,12 +1,16 @@
 <template>
     <div>
-        Eventos
+        <Header nombrePagina="Eventos" />
     </div>
 </template>
 
 <script>
+import Header from '@/components/Header.vue';
 export default {
     name: 'eventos',
+    components: {
+        Header
+    },
     data() {
         return {
             

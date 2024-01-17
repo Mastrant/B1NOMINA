@@ -1,12 +1,16 @@
 <template>
     <div>
-        Informes
+        <Header nombrePagina="Informes" />
     </div>
 </template>
 
 <script>
+import Header from '@/components/Header.vue';
 export default {
     name: 'informes',
+    components: {
+        Header
+    },
     data() {
         return {
             
