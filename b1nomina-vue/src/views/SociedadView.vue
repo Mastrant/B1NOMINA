@@ -39,7 +39,10 @@ export default {
     //al momento de crear el componente verifica el toquen y pide las sociedades disponibles
     async mounted() {
         if(localStorage.getItem('token')){
-            await axios.get(`/user/${localStorage.getItem('userId')}`,  localStorage.getItem('token'))
+            await axios.get(`/user/${localStorage.getItem('userId')}`, { headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            })
             .then( res => {
                 console.log(res)
             })

@@ -1,7 +1,7 @@
 <template>    
         <nav class="aside " id="aside">
             <div class="head">
-                <div class="profile" v-if="desplegarMenu">
+                <div class="profile" v-show="desplegarMenu">
                     <LogoTextVue />
                 </div>
                 <MenuButton @click="desplegarMenu = !desplegarMenu"/>

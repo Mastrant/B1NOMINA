@@ -67,6 +67,7 @@ export default {
             Usuario: '',
             Password: '',
             recordarCredenciales: '',
+            loginError: false,
             
         }
     },    
