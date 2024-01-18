@@ -8,23 +8,40 @@
                 </p>
             </article>
         </div>
-        <div  class="sociedadView-fondo-cards">
+        <div  class="sociedadView-fondo-cards">                
             <div v-for="(item) in SociedadesAccesibles" :key="item.id">
-                <CardSociedad  :data="item"/> 
-            </div>    
+                <Suspense>
+                    <template #default>
+                        <CardSociedad  :data="item"/>
+                    </template>
+                    <template  #fallback>
+                        <cargarSociedad />
+                    </template>
+                </Suspense> 
+            </div>
         </div>
     </div> 
 </template>
 
 <script>
 import axios from 'axios';
-import CardSociedad from '@/components/CardSociedad.vue';
+import cargarSociedad from '@/components/splashscreen/Carga-sociedad.vue'
+import { defineAsyncComponent } from 'vue';
 
 
 export default {
     //componentes
     components:{
-        CardSociedad,
+        cargarSociedad,
+        CardSociedad: defineAsyncComponent(() => new Promise(
+            (resolve) => {
+                setTimeout(
+                    () => {
+                        resolve(import("@/components/CardSociedad.vue"))
+                    }, 2500 //tiempo de carga
+                )
+            }
+        ))
     },
     data() {
         return {
