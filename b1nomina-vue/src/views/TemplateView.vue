@@ -19,12 +19,28 @@ export default {
         LayoutCore,
     },
     async mounted() {
-        if(localStorage.getItem('token')){
+        if(localStorage.getItem('token') && this.validateToken(`${localStorage.getItem('token')}`) ){
             console.log("pagina de persona")
         }else{
             this.$router.push("/login")
         }
     },
+    methods: {
+        async validateToken(TOKEN) {
+            await axios.post(`/validate?token=${TOKEN}`)
+            .then( respuesta => {
+                if (respuesta.status==201){
+                    return true
+                }
+            })
+            .catch( error => {
+                console.log(error)
+                return false
+                
+            })
+            return
+        }
+    }, 
     }
 </script>
 
