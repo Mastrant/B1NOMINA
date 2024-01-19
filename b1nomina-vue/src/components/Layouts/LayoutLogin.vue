@@ -1,6 +1,6 @@
 <template>
     <div class="LayotLogin-div">
-        <slot name="Recuerdame">
+        <slot>
     
         </slot>
         <slot name="TextLink">
@@ -18,6 +18,7 @@ div.LayotLogin-div {
     align-self: center;
     align-items: center;
     margin-top: 16px;
+    
 }
 
 
