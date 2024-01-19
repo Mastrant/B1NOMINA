@@ -53,15 +53,14 @@ export default {
         }
     },
 
+
     //al momento de crear el componente verifica el toquen y pide las sociedades disponibles
     async mounted() {
-        if(localStorage.getItem('token')){
-            await axios.get(`/user/${localStorage.getItem('userId')}`, { headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                }
-            })
+        if(localStorage.getItem('token') && this.validateToken(`${localStorage.getItem('token')}`) ){
+
+            await axios.get('/list_sociedad')
             .then( res => {
-                console.log(res)
+                console.log(res.data)
             })
             .catch( error => {
                 console.log(error)
@@ -70,6 +69,22 @@ export default {
             this.$router.push("/login")
         }
     },
+    methods: {
+        async validateToken(TOKEN) {
+            await axios.post(`/validate?token=${TOKEN}`)
+            .then( respuesta => {
+                if (respuesta.status==201){
+                    return true
+                }
+            })
+            .catch( error => {
+                console.log(error)
+                return false
+                
+            })
+            return
+        }
+    }, 
 }
 </script>
 

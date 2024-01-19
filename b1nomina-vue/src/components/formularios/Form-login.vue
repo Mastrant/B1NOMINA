@@ -105,7 +105,7 @@ export default {
                     console.log(res)
 
                     //si el estado es OK
-                    if(res.status==202){
+                    if(res.status==202 || res.status==200){
                         //Almacena el token en el local Storage
                         localStorage.setItem('token', res.data.token)
                         //almacena el id del usuario en el local Storage

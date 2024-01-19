@@ -10,6 +10,6 @@ const token = localStorage.getItem('token')
 
 if(token){
     //configuracion de la cabezera con el token
-    axios.defaults.headers.common['Authorization'] = 'Bearer' + localStorage.getItem('token');
+    axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`
 }
 

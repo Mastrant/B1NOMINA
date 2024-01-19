@@ -7,12 +7,6 @@ const router = createRouter({
   
   // Lista de las Rutas
   routes: [
-    //redirecciones
-    {
-      path: '/', 
-      redirect: '/sociedad'
-    },
-
     //Login
     {
       path: '/',
@@ -40,7 +34,7 @@ const router = createRouter({
           path: '/sociedad/:sociedadId/dashboard',
           name: 'dashboard',
           component: () => import('../views/DashboardView.vue'),
-          alias: ['/dashboard']
+          alias: ['dashboard']
         },
         {
           path: '/sociedad/:sociedadId/gestionNomina',
