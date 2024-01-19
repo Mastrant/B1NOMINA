@@ -1,9 +1,9 @@
 <template>
     <div class="cardsociedad">
         <div class="cardsociedad-body">
-            <h3 class="cardsociedad-titulo">{{ data.name }}</h3>
-            <img class="cardAvatar" :href="data.icon" alt="ICON sociedad">
-            <router-link class="cardsociedad-button" :to="`/sociedad/${data.id}/dashboard`">
+            <h3 class="cardsociedad-titulo">{{ name }}</h3>
+            <img class="cardAvatar" :href="icon" alt="ICON sociedad">
+            <router-link class="cardsociedad-button" :to="`/sociedad/${id}/dashboard`">
                     Selecionar
             </router-link>
         </div>
@@ -17,10 +17,18 @@ export default {
           
         }
     },
-    props: [
+    props: {
         //informacion del sociedad id, nombre y el icono a utilizar 
-        'data',
-    ],
+        //nombre de la sociedad
+        name: {String},
+        //ID de la sociedad
+        id : {Number},
+        //icono de la sociedad
+        icon : {
+            String,
+            default: '@/avatars/Avatar1.vue'
+        }
+    },
 }
 </script>
 

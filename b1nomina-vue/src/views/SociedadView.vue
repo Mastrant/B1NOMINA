@@ -12,7 +12,7 @@
             <div v-for="(item) in SociedadesAccesibles" :key="item.id">
                 <Suspense>
                     <template #default>
-                        <CardSociedad  :data="item"/>
+                        <CardSociedad  :name="item.nombre" :id="item.id" :icon="`${item.icon}`"/>
                     </template>
                     <template  #fallback>
                         <cargarSociedad />
@@ -45,22 +45,20 @@ export default {
     },
     data() {
         return {
-            SociedadesAccesibles: [
-                {id: 1, name: 'Sociedad 1', icon:''},
-                {id: 2, name: 'Sociedad 2', icon:''},
-                {id: 3, name: 'Sociedad 3', icon:''},
-            ]
+            SociedadesAccesibles: []
         }
     },
 
 
     //al momento de crear el componente verifica el toquen y pide las sociedades disponibles
     async mounted() {
+        // Verifica que el token existe y si este es valido
         if(localStorage.getItem('token') && this.validateToken(`${localStorage.getItem('token')}`) ){
 
+            //si es valido solicita la lista de sociedade
             await axios.get('/list_sociedad')
             .then( res => {
-                console.log(res.data)
+                this.SociedadesAccesibles = res.data
             })
             .catch( error => {
                 console.log(error)
