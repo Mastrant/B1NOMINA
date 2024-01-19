@@ -1,17 +1,12 @@
 <template>
-
-    <label class="container"> {{ Text }}
-        <input type="checkbox" v-model="value">
-        <span class="checkmark"></span>
-    </label>
-    
+  <input type="checkbox" v-model="value">    
 </template>
 
 <script>
 export default {
-    name: 'Input-checkBox-text',
+    name: 'Input-checkBox',
     props: {
-        Text: String,
+        userId: String,
     },
     data() {
         return {
@@ -22,30 +17,9 @@ export default {
 </script>
 
 <style scoped>
-
-/* Configuracion general del espacio*/
-.container {
-    display: block;
-    position: relative;
-    padding-left: 25px;
-    cursor: pointer;
-    
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-
-    align-items: center;
-    align-self: center;
-
-    /* Configuracion del texto*/
-    font-size: 14px;
-    font-family: 'Poppins';
-
-  }
   
   /* Esconder configuracion por default*/
-  .container input {
+ input {
     position: absolute;
     opacity: 0;
     cursor: pointer;

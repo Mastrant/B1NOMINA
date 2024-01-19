@@ -1,9 +1,9 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 //creacion del router
 const router = createRouter({
   //creacion del historial de navegacion
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   
   // Lista de las Rutas
   routes: [
@@ -14,6 +14,10 @@ const router = createRouter({
     },
 
     //Login
+    {
+      path: '/',
+      redirect: '/Login'
+    },
     {
         path: '/login',
         name: 'Login',

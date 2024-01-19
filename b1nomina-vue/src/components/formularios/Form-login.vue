@@ -18,8 +18,7 @@
         </InputLogin>
         
         <LayoutLogin>
-            <template #Recuerdame>         
-                <InputCheckboxText Text="Recuerdame" />
+            <template #default>         
             </template>
             <template #TextLink>                    
                 <span class="text-recuperar">¿Has olvidado tu Contraseña?</span>

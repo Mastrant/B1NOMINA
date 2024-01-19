@@ -4,7 +4,7 @@
             <h3 class="cardsociedad-titulo">{{ data.name }}</h3>
             <img class="cardAvatar" :href="data.icon" alt="ICON sociedad">
             <router-link class="cardsociedad-button" :to="`/sociedad/${data.id}/dashboard`">
-                    Iniciar Sección
+                    Selecionar
             </router-link>
         </div>
     </div>
@@ -84,6 +84,9 @@ div.cardsociedad {
     text-decoration:none;
 }
 
+.cardsociedad-button:hover {
+    background: #1a34b6;
+}
 img.cardAvatar {
     width: 96px;
     height: 96px;
