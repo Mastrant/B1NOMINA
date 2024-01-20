@@ -98,7 +98,7 @@ const router = createRouter({
   ]
 })
 
-//antes de acceder a cada ruta
+//antes de acceder a cada ruta //en construccion
 
 /*
 router.beforeEach((to, from, next) => {

@@ -33,10 +33,12 @@ export default {
     //componentes
     components:{
         cargarSociedad,
+        //componente asyncrono
         CardSociedad: defineAsyncComponent(() => new Promise(
             (resolve) => {
                 setTimeout(
                     () => {
+                        //importacion del componente
                         resolve(import("@/components/CardSociedad.vue"))
                     }, 2100 //tiempo de carga
                 )
@@ -45,6 +47,7 @@ export default {
     },
     data() {
         return {
+            //data de las sociedades
             SociedadesAccesibles: []
         }
     },
@@ -55,15 +58,18 @@ export default {
         // Verifica que el token existe y si este es valido
         if(localStorage.getItem('token') && this.validateToken(`${localStorage.getItem('token')}`) ){
 
-            //si es valido solicita la lista de sociedade
+            //si es valido solicita la lista de sociedades segun el usuario
             await axios.get('/list_sociedad')
             .then( res => {
+                //guarda la lista de dicionarios en la lista Sociedades accesibles definida
                 this.SociedadesAccesibles = res.data
             })
             .catch( error => {
+                //muestra el error al consultar las sociedades
                 console.log(error)
             })
         }else{
+            //elimina el token y devuleve al login
             this.$router.push("/login")
         }
     },
