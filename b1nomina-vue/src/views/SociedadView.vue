@@ -13,7 +13,7 @@
                 <Suspense>
                     <template #default>
                         <CardSociedad  :name="item.nombre" :id="item.id" :icon="`${item.icon}`"/>
-                    </template>
+                    </template> 
                     <template  #fallback>
                         <cargarSociedad />
                     </template>

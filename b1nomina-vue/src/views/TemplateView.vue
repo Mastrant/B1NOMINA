@@ -15,7 +15,7 @@ import LayoutCore from '@/components/Layouts/LayoutCore.vue';
 import axios from 'axios';
 
 export default {
-        components: {
+    components: {
         NavegadorVue,
         LayoutCore,
     },
@@ -44,6 +44,3 @@ export default {
     }, 
     }
 </script>
-
-<style scoped>
-</style>
