@@ -96,12 +96,15 @@ export default {
                     "Content-Type": "aplication/json",
                 },
             }
+
+            //Muestra los datos enviado Test
             console.log(payload)
 
             // Genera la peticion POST
             await axios.post(`/login?username=${this.Usuario}&password=${this.Password}`, payload, config)
             .then( 
                 res => {
+                    //muestra la respuesta
                     console.log(res)
 
                     //si el estado es OK

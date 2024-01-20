@@ -10,23 +10,36 @@ const router = createRouter({
     //Login
     {
       path: '/',
-      redirect: '/Login'
+      redirect: '/Login',
+      meta: {
+        requiereToken: false,
+      }
+
     },
     {
         path: '/login',
         name: 'Login',
-        component: () => import('../views/LoginView.vue')
+        component: () => import('../views/LoginView.vue'),
+        meta: {
+          requiereToken: false,
+        }
     },
     //Selecionar la sociedad posterior al login
     {
       path: '/sociedad',
       name: 'sociedad',
       component: () => import('../views/SociedadView.vue'),
+      meta: {
+        requiereToken: true,
+      }
     },
     //sociedad selecionada
     {
       path: '/sociedad/:sociedadId',
       component: () => import('../views/TemplateView.vue'), 
+      meta: {
+        requiereToken: true,
+      },
       
       //panel Dashboard de la sociedad selecionada
       children: [
@@ -74,6 +87,11 @@ const router = createRouter({
       component: () => import('../views/HelpView.vue'),
     },
   ]
+})
+
+//antes de acceder a cada ruta
+router.beforeEach((to, from, next) => {
+  const localStora
 })
 
 export default router
