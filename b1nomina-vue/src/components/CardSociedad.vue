@@ -12,11 +12,7 @@
 
 <script>
 export default {
-    data() {
-        return {
-          
-        }
-    },
+    //datos recividos del componente padre
     props: {
         //informacion del sociedad id, nombre y el icono a utilizar 
         //nombre de la sociedad
@@ -33,7 +29,7 @@ export default {
 </script>
 
 <style scope>
-
+/* estilos de la targeta principal*/
 div.cardsociedad {
     padding: 48px; 
     background: white; 

@@ -99,8 +99,12 @@ const router = createRouter({
 })
 
 //antes de acceder a cada ruta
+
+/*
 router.beforeEach((to, from, next) => {
-  const localStora
+  const localStorage = ''
 })
+
+*/
 
 export default router

@@ -55,8 +55,7 @@
                                     <span v-if="desplegarMenu">Informes</span>
                                 </router-link>
                             </template>
-                        </NavButton>
-                        
+                        </NavButton>  
                     </div>   
                 </div>
                 <!--Botones inferiores-->
@@ -95,17 +94,22 @@
                     </div>
                 </div>
             </div>
-            
+
+            <!--Parte inferior del navegados-->
+
+            <!--Si el panel esta desplegado despliega esta parte-->
             <div class="perfil" v-if="desplegarMenu">
                 <Avatar />
                 <div class="perfil-text" >
                     <span class="text-perfil text-perfil-1">Nombre de Empresa</span>
                     <span class="text-perfil">Rut 0102030405</span>
                 </div>
-                <div v-if="desplegarMenu">
+                <div>
                     <TresPuntosIcon />
                 </div>            
             </div>
+
+            <!--Si el panel esta recogido despliega esta parte-->
             <div class="perfil-hidden" v-else>
                 <Avatar />
             </div>

@@ -38,7 +38,7 @@ export default {
                 setTimeout(
                     () => {
                         resolve(import("@/components/CardSociedad.vue"))
-                    }, 2500 //tiempo de carga
+                    }, 2100 //tiempo de carga
                 )
             }
         ))
