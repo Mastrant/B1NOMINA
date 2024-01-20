@@ -12,6 +12,7 @@
 <script>
 import NavegadorVue from '@/components/Navegador.vue';
 import LayoutCore from '@/components/Layouts/LayoutCore.vue';
+import axios from 'axios';
 
 export default {
         components: {
