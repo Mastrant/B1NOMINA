@@ -27,13 +27,11 @@ export default {
     //al montar el componente
     async mounted() {
         //si el token existe y la validacion en TRUE
-        if(localStorage.getItem('token') && this.validateToken(`${localStorage.getItem('token')}`) ){
+        (localStorage.getItem('token') && this.validateToken(`${localStorage.getItem('token')}`)) ?  
+        console.log(localStorage.getItem('token')):
+        this.$router.push("/login") //eliminar el token generado y enviar al login
             //realizar peticiones
-            console.log("pagina de persona")
-        }else{
-            //eliminar el token generado y enviar al login
-            this.$router.push("/login")
-        }
+            
     },
     //metodos
     methods: {
@@ -49,12 +47,10 @@ export default {
             })
             .catch( error => {
                 //muestra el error
-                console.log(error)
+                console.log(error + " peticion")
                 return false
                 
             })
-            //si no se logra la peticion devuelve false
-            return false
         }
     }, 
     }

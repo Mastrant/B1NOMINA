@@ -9,14 +9,16 @@
 <script>
 import Header from '@/components/Header.vue';
 import LayoutPanel from '@/components/Layouts/LayoutPanel.vue';
+
 export default {
     name: 'gestionNomina',
     components: {
         Header,
-        LayoutPanel
+        LayoutPanel,
     },
 }
 </script>
+
 <style scoped>
 div {
     display: flex;

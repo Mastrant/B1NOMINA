@@ -6,7 +6,7 @@
                 <slot name="FirtIcon" class="form-icon-conted"></slot>
             </span>
 
-            <input required :placeholder="Placeholder" :type="InputType" class="form-control" v-model="DataInput">
+            <input required :placeholder="Placeholder" :type="InputType" class="form-control">
             
             <span class="form-icon-conted">
                 <slot name="SecondIcon" class="form-button-conted"></slot>
@@ -26,19 +26,6 @@ export default {
         'Placeholder',
         'InputType',
     ],
-
-    data(){
-        return{
-            DataInput: '',
-        }
-    },
-    //Se mantiene a la escuacha del texto recibido con v-model="DataInput"
-    watch: {
-        //Funcion que emite la data ingresada al componente padre <<Recibir como  @message:'funtion'>>
-        DataInput: function () {
-            this.$emit('message', this.DataInput)
-       }
-    }
 }
 
 </script>

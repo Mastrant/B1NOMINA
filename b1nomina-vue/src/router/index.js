@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'; //importa librerias de vue router
 
 //creacion del router
 const router = createRouter({
@@ -12,7 +12,7 @@ const router = createRouter({
       path: '/',
       redirect: '/Login',
       meta: {
-        requiereToken: false,
+        requiereToken: false, //establece si es requerido autorizacion para acceder
       }
 
     },
@@ -22,7 +22,7 @@ const router = createRouter({
         name: 'Login',
         component: () => import('../views/LoginView.vue'),
         meta: {
-          requiereToken: false,
+          requiereToken: false, //establece si es requerido autorizacion para acceder
         }
     },
     //Selecionar la sociedad posterior al logIn
@@ -31,7 +31,7 @@ const router = createRouter({
       name: 'sociedad',
       component: () => import('../views/SociedadView.vue'),
       meta: {
-        requiereToken: true,
+        requiereToken: true, //establece si es requerido autorizacion para acceder
       }
     },
     //sociedad selecionada
@@ -39,7 +39,7 @@ const router = createRouter({
       path: '/sociedad/:sociedadId',
       component: () => import('../views/TemplateView.vue'), 
       meta: {
-        requiereToken: true,
+        requiereToken: true, //establece si es requerido autorizacion para acceder
       },
       
       // rutas derivadas de la seleccion de la sociedad
@@ -56,37 +56,37 @@ const router = createRouter({
           path: '/sociedad/:sociedadId/gestionNomina',
           name: 'gestionNomina',
           component: () => import('../views/GestionNominaView.vue'),
-        },
+                  },
         //panel empleados
         {
           path: '/sociedad/:sociedadId/empleados',
           name: 'empleados',
           component: () => import('../views/EmpleadosView.vue'),
-        },
+                  },
         //panel informes
         {
           path: '/sociedad/:sociedadId/informes',
           name: 'informes',
           component: () => import('../views/InformesView.vue'),
-        },
+                  },
         //panel configuracion
         {
           path: '/sociedad/:sociedadId/configuracion',
           name: 'configuracion',
           component: () => import('../views/ConfiguracionView.vue'),
-        },
+                  },
         //panel eventos
         {
           path: '/sociedad/:sociedadId/eventos',
           name: 'eventos',
           component: () => import('../views/EventosView.vue'),
-        },
+                  },
         //panel notificaciones
         {
           path: '/sociedad/:sociedadId/notificaciones',
           name: 'notificaciones',
           component: () => import('../views/NotificacionesView.vue'),
-        },
+                  },
       ]       
     },
     //panel de ayuda general
@@ -94,17 +94,29 @@ const router = createRouter({
       path: '/help',
       name: 'help',
       component: () => import('../views/HelpView.vue'),
+      meta: {
+        requiereToken: false, //establece si es requerido autorizacion para acceder
+      },
     },
   ]
 })
 
-//antes de acceder a cada ruta //en construccion
-
 /*
+
+//antes de acceder a cada ruta //en construccion
 router.beforeEach((to, from, next) => {
-  const localStorage = ''
+  
+  //verifica que se tenga un token
+  const auht = localStorage.getItem('token') != null
+  //verifica si la ruta requiere autentificacion
+  const needAuth = to.meta.requiereToken
+
+  // compara los resultados
+  (needAuth && !auht )? 
+  next('Login'): //si la ruta requiere authentificacion y no lo esta redirige al login
+  next() //permite el acceso a la ruta
 })
 
 */
-
+//permite mantener el acceso al router
 export default router

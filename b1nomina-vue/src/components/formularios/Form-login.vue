@@ -1,13 +1,13 @@
 <template>
     <form class="form-Login" methods="POST" @submit.prevent="Enviar">
 
-        <InputLogin Text="RUT" Placeholder="Ingresar RUT" @message="RecibirUsuario">
+        <InputLogin Text="RUT" Placeholder="Ingresar RUT" v-model="Usuario">
             <template #FirtIcon> 
                 <EmailIcon />                   
             </template>
         </InputLogin>
 
-        <InputLogin Text="Contraseña" Placeholder="Ingresar Contraseña" Input-Type="password" @message="RecibirPassword">
+        <InputLogin Text="Contraseña" Placeholder="Ingresar Contraseña" Input-Type="password" v-model="Password">
             <template #FirtIcon> 
                 <PasswordIcon />
             </template>
@@ -16,7 +16,7 @@
                 <HiddenButton />
             </template>
         </InputLogin>
-        
+        {{ Password }}
         <LayoutLogin>
             <template #default>         
             </template>
@@ -25,14 +25,18 @@
             </template>
         </LayoutLogin>
 
-        <SubmitButton Text="Enviar"/>
+        <div class="showError">
+            <alertError v-show="loginError.credenciales"/>
+            <alertWarning v-show="loginError.server"/>
+        </div>
 
+        <div class="contend-button">
+            <SubmitButton Text="Enviar"/>
+        </div>        
     </form>
-
 </template>
 
 <script>
-
 //componentes
 import InputLogin from '@/components/inputs/Input-Login.vue';
 import EmailIcon from '@/components/icons/Email-icon.vue'
@@ -41,6 +45,8 @@ import HiddenButton from '../botones/Hidden-button.vue';
 import LayoutLogin from '../Layouts/LayoutLogin.vue';
 import InputCheckboxText from '../inputs/Input-Checkbox-Text.vue';
 import SubmitButton from '../botones/Submit-button.vue';
+import alertError from '@/components/alertas/alert-Error.vue';
+import alertWarning from '@/components/alertas/alert-Warning.vue';
 
 //librerias
 
@@ -52,39 +58,35 @@ export default {
 
     //componentes Utilizados
     components: {
-    InputLogin,
-    EmailIcon,
-    PasswordIcon,
-    HiddenButton,
-    LayoutLogin,
-    InputCheckboxText,
-    SubmitButton,
+        InputLogin,
+        EmailIcon,
+        PasswordIcon,
+        HiddenButton,
+        LayoutLogin,
+        InputCheckboxText,
+        SubmitButton,
+        alertError,
+        alertWarning,
     },
 
     data() {
         return {
             Usuario: '',
             Password: '',
-            recordarCredenciales: '',
-            loginError: false,
+            loginError: {
+                credenciales: false,
+                server: false,
+            },
             
         }
-    },    
+    },
     methods: {
         //recibe el valor emitido del input -- Usuario --
-        RecibirUsuario(value) {
-            this.Usuario = value;
-        },
-
-        //recibe el valor emitido del input -- Password --
-        RecibirPassword(value) {
-            this.Password = value;
-        },
 
         // Detecta el evento Submit y realiza la consulta a la api
         async Enviar(){
 
-            //genera un json
+            //genera un json con la informacion del login
             const payload = {
                 username: this.Usuario,
                 password: this.Password
@@ -120,18 +122,16 @@ export default {
             )
             .catch (
                 error => {
-                    document.form.reset();
-                    //JSON con el mensaje de error
-                    const data = error.data.message
-                    //mostrar mensaje de error en consola
-                   console.log(data)
+                    console.log(error.response)
+                    if(error.response.status==401){
+                        this.loginError.credenciales = true
+                    } else if (error.response.status==500) {
+                        this.loginError.server = true;
+                    }
                 }
             )
-            // this.$router.push('/sociedad');
         },
     },
-    
-
 }
 
 </script>
@@ -154,6 +154,16 @@ span.text-recuperar {
     font-weight: 300;
     word-wrap: break-word;
     cursor: pointer;
+}
+
+div.contend-button {
+    box-sizing: content-box;
+}
+
+div.showError{
+    display: flex;
+    flex-direction: column;
+    padding-top: 12px;
 }
 </style>
 

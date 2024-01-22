@@ -33,7 +33,7 @@ export default {
     //componentes
     components:{
         cargarSociedad,
-        //componente asyncrono
+        //componente async
         CardSociedad: defineAsyncComponent(() => new Promise(
             (resolve) => {
                 setTimeout(
@@ -51,8 +51,25 @@ export default {
             SociedadesAccesibles: []
         }
     },
-
-
+    methods: {
+        //realiza una comprobacion del token ingresado
+        async validateToken(TOKEN) {
+            await axios.post(`/validate?token=${TOKEN}`)
+            .then( respuesta => {
+                //si es authorizado devuelve verdadero
+                if (respuesta.status==201){
+                    return true
+                }
+            })
+            //captura el error
+            .catch( error => {
+                console.log(error + 'validacion')
+                return false
+                
+            })
+            return
+        }
+    }, 
     //al momento de crear el componente verifica el toquen y pide las sociedades disponibles
     async mounted() {
         // Verifica que el token existe y si este es valido
@@ -66,29 +83,14 @@ export default {
             })
             .catch( error => {
                 //muestra el error al consultar las sociedades
-                console.log(error)
+                console.log(error + 'peticion de datos')
             })
         }else{
             //elimina el token y devuleve al login
             this.$router.push("/login")
         }
     },
-    methods: {
-        async validateToken(TOKEN) {
-            await axios.post(`/validate?token=${TOKEN}`)
-            .then( respuesta => {
-                if (respuesta.status==201){
-                    return true
-                }
-            })
-            .catch( error => {
-                console.log(error)
-                return false
-                
-            })
-            return
-        }
-    }, 
+    
 }
 </script>
 

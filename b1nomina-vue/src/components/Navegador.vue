@@ -104,11 +104,10 @@
                     <span class="text-perfil text-perfil-1">Nombre de Empresa</span>
                     <span class="text-perfil">Rut 0102030405</span>
                 </div>
-                <div>
+                <div v-if="desplegarMenu">
                     <TresPuntosIcon />
                 </div>            
             </div>
-
             <!--Si el panel esta recogido despliega esta parte-->
             <div class="perfil-hidden" v-else>
                 <Avatar />

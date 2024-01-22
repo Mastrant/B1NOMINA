@@ -29,10 +29,8 @@ div.contend-button {
 
 /*estilos del boton*/
 button.submit-button {
-    width: 90%; 
+    width: 100%; 
     height: 100%; 
-    padding-left: 173px; 
-    padding-right: 173px; 
     padding-top: 13px; 
     padding-bottom: 13px; 
     background: #002E99; 
@@ -43,6 +41,7 @@ button.submit-button {
     gap: 10px; 
     display: inline-flex;
     margin: 0px 6px;
+    box-sizing: border-box;
 
     /*Estilo del texto*/
     color: white;
