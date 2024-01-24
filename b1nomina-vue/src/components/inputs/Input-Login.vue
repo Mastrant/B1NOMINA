@@ -10,7 +10,7 @@
             
             <span class="form-icon-conted">
                 <slot name="SecondIcon" class="form-button-conted"></slot>
-            </span>
+            </span> 
         
         </div>
     </div>

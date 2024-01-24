@@ -49,37 +49,16 @@ import alertError from '@/components/alertas/alert-Error.vue';
 import alertWarning from '@/components/alertas/alert-Warning.vue';
 
 //librerias
-
 import axios from 'axios';
+
+import InputBaseVue from '../inputs/Input.Base.vue';
+import { ref } from 'vue';
 
 export default {
     //nombre componente
     name: 'FormularioLogin',
 
     //componentes Utilizados
-    components: {
-        InputLogin,
-        EmailIcon,
-        PasswordIcon,
-        HiddenButton,
-        LayoutLogin,
-        InputCheckboxText,
-        SubmitButton,
-        alertError,
-        alertWarning,
-    },
-
-    data() {
-        return {
-            Usuario: '',
-            Password: '',
-            loginError: {
-                credenciales: false,
-                server: false,
-            },
-            
-        }
-    },
     methods: {
         //recibe el valor emitido del input -- Usuario --
 
@@ -132,6 +111,37 @@ export default {
             )
         },
     },
+    components: {
+        InputLogin,
+        EmailIcon,
+        PasswordIcon,
+        HiddenButton,
+        LayoutLogin,
+        InputCheckboxText,
+        SubmitButton,
+        alertError,
+        alertWarning,
+        InputBaseVue,
+    },
+    setup(){
+
+        const Usuario = ref('')
+        const Password = ''
+        const  loginError = {
+            credenciales: false,
+            server: false,
+        }
+        let ah= ref('')
+
+        return {
+            Usuario,
+            Password,
+            loginError,
+            ah,
+            
+        }
+    }
+
 }
 
 </script>
