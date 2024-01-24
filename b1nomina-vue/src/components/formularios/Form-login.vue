@@ -75,10 +75,7 @@ export default {
         return {
             Usuario: '',
             Password: '',
-            inputTipeLogin: {
-                type: String,
-                default: "text"
-            },
+            inputTipeLogin: "password",
             loginError: {
                 credenciales: false,
                 server: false,
