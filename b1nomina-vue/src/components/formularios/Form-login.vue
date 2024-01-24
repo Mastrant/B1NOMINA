@@ -1,22 +1,22 @@
 <template>
     <form class="form-Login" methods="POST" @submit.prevent="Enviar">
 
-        <InputLogin Text="RUT" Placeholder="Ingresar RUT" v-model="Usuario">
+        <InputLogin Text="Usuario" Placeholder="Ingresar Usuario" @message="RecibirUsuario">
             <template #FirtIcon> 
                 <EmailIcon />                   
             </template>
         </InputLogin>
 
-        <InputLogin Text="Contraseña" Placeholder="Ingresar Contraseña" Input-Type="password" v-model="Password">
+        <InputLogin Text="Contraseña" Placeholder="Ingresar Contraseña" :Input-Type="inputTipeLogin" @message="RecibirPassword">
             <template #FirtIcon> 
                 <PasswordIcon />
             </template>
 
             <template #SecondIcon> 
-                <HiddenButton />
+                <HiddenButton @inputType="showPassword"/>
             </template>
         </InputLogin>
-        {{ Password }}
+
         <LayoutLogin>
             <template #default>         
             </template>
@@ -38,29 +38,64 @@
 
 <script>
 //componentes
-import InputLogin from '@/components/inputs/Input-Login.vue';
-import EmailIcon from '@/components/icons/Email-icon.vue'
-import PasswordIcon from '../icons/Password-icon.vue';
-import HiddenButton from '../botones/Hidden-button.vue';
+const InputLogin = defineAsyncComponent(() => import('@/components/inputs/Input-Login.vue') )
+
+const EmailIcon = defineAsyncComponent(() => import('@/components/icons/Email-icon.vue'));
+const PasswordIcon = defineAsyncComponent(() => import('../icons/Password-icon.vue'));
+const HiddenButton = defineAsyncComponent(() => import('../botones/Hidden-button.vue'));
 import LayoutLogin from '../Layouts/LayoutLogin.vue';
-import InputCheckboxText from '../inputs/Input-Checkbox-Text.vue';
-import SubmitButton from '../botones/Submit-button.vue';
-import alertError from '@/components/alertas/alert-Error.vue';
-import alertWarning from '@/components/alertas/alert-Warning.vue';
+const InputCheckboxText = defineAsyncComponent(() => import('../inputs/Input-Checkbox-Text.vue'));
+const SubmitButton = defineAsyncComponent(() => import('../botones/Submit-button.vue'));
+const alertError = defineAsyncComponent(() => import('@/components/alertas/alert-Error.vue'));
+const alertWarning = defineAsyncComponent(() => import('@/components/alertas/alert-Warning.vue'));
 
 //librerias
 import axios from 'axios';
-
-import InputBaseVue from '../inputs/Input.Base.vue';
-import { ref } from 'vue';
 
 export default {
     //nombre componente
     name: 'FormularioLogin',
 
     //componentes Utilizados
+    components: {
+        InputLogin,
+        EmailIcon,
+        PasswordIcon,
+        HiddenButton,
+        LayoutLogin,
+        InputCheckboxText,
+        SubmitButton,
+        alertError,
+        alertWarning,
+    },
+
+    data() {
+        return {
+            Usuario: '',
+            Password: '',
+            loginError: {
+                credenciales: false,
+                server: false,
+            },
+            
+        }
+    },
     methods: {
         //recibe el valor emitido del input -- Usuario --
+
+        showPassword(value){
+            this.inputTipeLogin = value;
+        },
+
+        //recibe el valor emitido del input -- Usuario --
+        RecibirUsuario(value) {
+            this.Usuario = value;
+        },
+
+        //recibe el valor emitido del input -- Password --
+        RecibirPassword(value) {
+            this.Password = value;
+        },
 
         // Detecta el evento Submit y realiza la consulta a la api
         async Enviar(){
