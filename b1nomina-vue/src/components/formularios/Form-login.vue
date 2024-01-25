@@ -6,8 +6,9 @@
                 <EmailIcon />                   
             </template>
         </InputLogin>
-
+        {{ inputTipeLogin }}
         <InputLogin Text="Contraseña" Placeholder="Ingresar Contraseña" :Input-Type="inputTipeLogin" @message="RecibirPassword">
+
             <template #FirtIcon> 
                 <PasswordIcon />
             </template>
@@ -37,9 +38,10 @@
 </template>
 
 <script>
+
+import { defineAsyncComponent } from 'vue';
 //componentes
 const InputLogin = defineAsyncComponent(() => import('@/components/inputs/Input-Login.vue') )
-
 const EmailIcon = defineAsyncComponent(() => import('@/components/icons/Email-icon.vue'));
 const PasswordIcon = defineAsyncComponent(() => import('../icons/Password-icon.vue'));
 const HiddenButton = defineAsyncComponent(() => import('../botones/Hidden-button.vue'));
@@ -73,6 +75,7 @@ export default {
         return {
             Usuario: '',
             Password: '',
+            inputTipeLogin: 'password',
             loginError: {
                 credenciales: false,
                 server: false,
@@ -81,7 +84,7 @@ export default {
         }
     },
     methods: {
-        //recibe el valor emitido del input -- Usuario --
+        //Cambia el tipo de input de la contraseña
 
         showPassword(value){
             this.inputTipeLogin = value;
@@ -146,37 +149,6 @@ export default {
             )
         },
     },
-    components: {
-        InputLogin,
-        EmailIcon,
-        PasswordIcon,
-        HiddenButton,
-        LayoutLogin,
-        InputCheckboxText,
-        SubmitButton,
-        alertError,
-        alertWarning,
-        InputBaseVue,
-    },
-    setup(){
-
-        const Usuario = ref('')
-        const Password = ''
-        const  loginError = {
-            credenciales: false,
-            server: false,
-        }
-        let ah= ref('')
-
-        return {
-            Usuario,
-            Password,
-            loginError,
-            ah,
-            
-        }
-    }
-
 }
 
 </script>

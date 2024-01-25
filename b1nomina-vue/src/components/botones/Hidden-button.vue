@@ -18,7 +18,7 @@ import ShowIcon from '../icons/Show-icon.vue';
 export default {
     data() {
         return {
-            showPassword: false
+            showPassword: true
         }
     },
     components: {
