@@ -73,7 +73,7 @@ export default {
     //al momento de crear el componente verifica el toquen y pide las sociedades disponibles
     async mounted() {
         // Verifica que el token existe y si este es valido
-        if(localStorage.getItem('token') && this.validateToken(`${localStorage.getItem('token')}`) ){
+        if(localStorage.getItem('token') != null && this.validateToken(`${localStorage.getItem('token')}`) === true ){
 
             //si es valido solicita la lista de sociedades segun el usuario
             await axios.get('/list_sociedad')
@@ -87,6 +87,7 @@ export default {
             })
         }else{
             //elimina el token y devuleve al login
+
             this.$router.push("/login")
         }
     },

@@ -25,6 +25,7 @@ const {text, URL} = toRefs(props)
     width: 125px;
     border-radius: 6px;
     background-color: #0d6efd;
+    padding: 8px 16px;
 
     text-align: center;
     align-items: center;
