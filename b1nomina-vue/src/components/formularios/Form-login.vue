@@ -6,7 +6,6 @@
                 <EmailIcon />                   
             </template>
         </InputLogin>
-        {{ inputTipeLogin }}
         <InputLogin Text="Contraseña" Placeholder="Ingresar Contraseña" :Input-Type="inputTipeLogin" @message="RecibirPassword">
 
             <template #FirtIcon> 
@@ -84,6 +83,8 @@ export default {
         }
     },
     methods: {
+
+
         //Cambia el tipo de input de la contraseña
 
         showPassword(value){
@@ -181,6 +182,10 @@ div.showError{
     display: flex;
     flex-direction: column;
     padding-top: 12px;
+
+
 }
+
+
 </style>
 
