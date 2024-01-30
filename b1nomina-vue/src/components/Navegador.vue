@@ -168,6 +168,16 @@ const listaModulos = [
 
 const OptenerModulos = () => {
     return axios.get(`user/${localStorage.getItem('userId')}/asignated_modules`, localStorage.getItem('userId'))
+    .then(
+        (respuesta) => {
+            console.log(respuesta)
+        }
+    )
+    .catch(
+        (error) => {
+            console.log(error)
+        }
+    )
 }
 
 
