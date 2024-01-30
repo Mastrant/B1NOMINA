@@ -6,8 +6,8 @@
                 <EmailIcon />                   
             </template>
         </InputLogin>
-
         <InputLogin Text="Contraseña" Placeholder="Ingresar Contraseña" :Input-Type="inputTipeLogin" @message="RecibirPassword">
+
             <template #FirtIcon> 
                 <PasswordIcon />
             </template>
@@ -37,9 +37,10 @@
 </template>
 
 <script>
+
+import { defineAsyncComponent } from 'vue';
 //componentes
 const InputLogin = defineAsyncComponent(() => import('@/components/inputs/Input-Login.vue') )
-
 const EmailIcon = defineAsyncComponent(() => import('@/components/icons/Email-icon.vue'));
 const PasswordIcon = defineAsyncComponent(() => import('../icons/Password-icon.vue'));
 const HiddenButton = defineAsyncComponent(() => import('../botones/Hidden-button.vue'));
@@ -50,9 +51,7 @@ const alertError = defineAsyncComponent(() => import('@/components/alertas/alert
 const alertWarning = defineAsyncComponent(() => import('@/components/alertas/alert-Warning.vue'));
 
 //librerias
-
 import axios from 'axios';
-import { defineAsyncComponent } from 'vue';
 
 export default {
     //nombre componente
@@ -75,7 +74,7 @@ export default {
         return {
             Usuario: '',
             Password: '',
-            inputTipeLogin: "password",
+            inputTipeLogin: 'password',
             loginError: {
                 credenciales: false,
                 server: false,
@@ -84,7 +83,9 @@ export default {
         }
     },
     methods: {
-        //recibe el valor emitido del input -- Usuario --
+
+
+        //Cambia el tipo de input de la contraseña
 
         showPassword(value){
             this.inputTipeLogin = value;
@@ -181,6 +182,10 @@ div.showError{
     display: flex;
     flex-direction: column;
     padding-top: 12px;
+
+
 }
+
+
 </style>
 
