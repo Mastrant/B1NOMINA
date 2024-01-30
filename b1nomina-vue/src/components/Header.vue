@@ -13,7 +13,7 @@ export default {
 }
 </script>
 
-<style scope>
+<style scoped>
 header.header {
 background: #F8F8F8;
 color: #1A2771;

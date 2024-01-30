@@ -43,7 +43,7 @@ export default {
 
 </script>
 
-<style scope>
+<style scoped>
 /*Contenedor General*/
 div.input-line-contend {
     background-color: #FFFFFF;

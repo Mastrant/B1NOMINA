@@ -1,17 +1,27 @@
 <template>
-    <slot>
+    <section class="layoutpanel">
+        <slot name="cabecera">
 
-    </slot>
-    
-    <slot name="cabecera">
+        </slot>
 
-    </slot>
-
-    <slot name="panel">
-        
-    </slot>
-    <slot name="panel">
-        
-    </slot>
-    
+        <div class="body">
+            <slot name="panel">
+            
+            </slot>
+        </div>
+    </section>
 </template>
+
+<style scoped>
+section.layoutpanel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+div.body {
+    padding: 12px;
+}
+
+</style>

@@ -13,7 +13,7 @@ export default {
 }
 </script>
 
-<style scope>
+<style>
 div.nav-contend {
     display: flex;    
     align-items: center;

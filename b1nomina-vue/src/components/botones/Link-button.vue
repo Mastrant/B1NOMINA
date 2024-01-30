@@ -12,9 +12,9 @@ import { defineProps, toRefs,} from "vue";
 const props = defineProps({
     text: String,
     URL: String
-})
+});
 
-const {text, URL} = toRefs(props)
+const {text, URL} = toRefs(props);
 
 </script>
 

@@ -9,6 +9,7 @@ export default defineConfig({
     vue(),
   ],
   resolve: {
+    //direccion a donde apunta el @
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }

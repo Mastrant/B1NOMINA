@@ -10,7 +10,7 @@
 
 </template>
 
-<style scope>
+<style scoped>
 
 div.LayotLogin-div {
     display:flex;

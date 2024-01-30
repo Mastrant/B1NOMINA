@@ -28,7 +28,7 @@ export default {
 }
 </script>
 
-<style scope>
+<style scoped>
 /* estilos de la targeta principal*/
 div.cardsociedad {
     padding: 48px; 

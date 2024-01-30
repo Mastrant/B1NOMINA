@@ -31,11 +31,11 @@ import { ref, defineProps } from "vue";
 
 const props = defineProps(
 
-)
+);
 
 </script>
 
-<style scope>
+<style scoped>
 
 .tr > th.columna-datos {
     color: #667085;

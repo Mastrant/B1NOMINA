@@ -40,7 +40,7 @@ export default {
 
 </script>
 
-<style scope>
+<style scoped>
 .button {
     border: none;
     background: white;

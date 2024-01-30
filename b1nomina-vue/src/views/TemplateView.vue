@@ -27,9 +27,8 @@ export default {
     //al montar el componente
     async mounted() {
         //si el token existe y la validacion en TRUE
-        ((localStorage.getItem('token') != null) && this.validateToken(`${localStorage.getItem('token')}`)) ?  
-        console.log("Autorizado"): //Si la validacion es correcta
-        this.$router.push("/login") //eliminar el token generado y enviar al login
+        ((localStorage.getItem('token') != null) && (this.validateToken(`${localStorage.getItem('token')}`))) ? console.log("Autorizado"): this.$router.push("/login")
+         //eliminar el token generado y enviar al login
             //realizar peticiones
             
     },
@@ -41,12 +40,13 @@ export default {
             .then( respuesta => {
                 //si es authorizado devuelve verdadero
                 if (respuesta.status==201 || respuesta.status==202){
+                    console.log("valido")
                     return true
                 }
             })
             //captura el error
             .catch( error => {
-
+                console.log(error + " error de validacion")
                 return false
                 
             })

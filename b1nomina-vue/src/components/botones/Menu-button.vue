@@ -8,7 +8,7 @@
 import MenuIconvue from '@/components/icons/Menu-icon.vue';
 </script>
 
-<style scope>
+<style scoped>
 
 button.menu-button {
     width: 60.50px;

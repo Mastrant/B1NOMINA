@@ -12,7 +12,7 @@ export default {
 }
 </script>
 
-<style scope>
+<style>
 
 div.notificatioButton-contend {
     display: flex;    

@@ -10,7 +10,7 @@
     </div>
 </template>
 
-<script scope>
+<script scoped>
 import LinkButton from '@/components/botones/Link-button.vue'
 
 export default {

@@ -20,7 +20,7 @@ import InfoLogin from '@/components/InfoLogin.vue';
 import ActionsLogin from '@/components/ActionsLogin.vue'
 </script>
 
-<style scope>
+<style scoped>
 .login-section {
     display: flex;
     flex-direction: row;

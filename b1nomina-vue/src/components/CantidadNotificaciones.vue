@@ -15,7 +15,7 @@ export default {
 }
 </script>
 
-<style scope>
+<style scoped>
 span.CantidadNotifiaciones {
     padding: 2px 7.8px;
     background: #CDE0F1; 

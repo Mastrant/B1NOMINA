@@ -12,7 +12,7 @@
     </section>
 </template>
 
-<style scope>
+<style scoped>
 section.layout-section {
     height: 100%;
     display: flex;

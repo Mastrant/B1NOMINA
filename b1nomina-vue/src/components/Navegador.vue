@@ -10,25 +10,18 @@
             <div class="contend">
                 <!--Botones superiores-->
                 <div class="contend1">
-                    <div class="options">
+                    <div class="options" v-for="modulo in listaModulos" :key="modulo.idModulo">
                         <!--Dashboard-->
                         <NavButton >
                             <template #direccion>
-                                <router-link to="dashboard">
+                                <router-link :to="modulo.urlModulo">
                                     <CuboIcon />
-                                    <span v-show="desplegarMenu">Dashboard</span>
+                                    <span v-show="desplegarMenu">{{modulo.nombreModulo}}</span>
                                 </router-link>
                             </template>
                         </NavButton>
-                        <!--Gestion de Nomina-->
-                        <NavButton>
-                            <template #direccion>
-                                <router-link to="gestionNomina">
-                                    <DolarIconBlanco />
-                                    <span v-show="desplegarMenu">Gestión de Nómina</span>
-                                </router-link>
-                            </template>
-                        </NavButton>
+                    </div>
+                    <div class="options">     
                         <!--Empleados-->
                         <NavButton>
                             <template #direccion>
@@ -138,11 +131,50 @@ import TresPuntosIcon from './icons/TresPuntos-icon.vue';
 
 import Avatar from './avatars/Avatar1.vue'
 
+//axios
+import axios from 'axios';
+
 // Generar reactividad del componente
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
+
+
 const desplegarMenu = ref(false)
 
+const listaModulos2 = ref([])
 
+const listaModulos = [
+  {
+    "idModulo": 1,
+    "nombreModulo": "Gestion de Empleados",
+    "urlModulo": "empleados",
+    "iconoModulo": "",
+    "asignado": false
+  },
+  {
+    "idModulo": 3,
+    "nombreModulo": "Eventos",
+    "urlModulo": "eventos",
+    "iconoModulo": "",
+    "asignado": false
+  },
+  {
+    "idModulo": 4,
+    "nombreModulo": "Gestión de Nómina",
+    "urlModulo": "gestionNomina",
+    "iconoModulo": "",
+    "asignado": false
+  },
+]
+
+const OptenerModulos = () => {
+    return axios.get(`user/${localStorage.getItem('userId')}/asignated_modules`, localStorage.getItem('userId'))
+}
+
+
+//al momento de  montar el componente
+onMounted(() => {
+
+});
 
 
 </script>
