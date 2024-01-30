@@ -117,23 +117,23 @@ export default {
             }
 
             //Muestra los datos enviado Test
-            console.log(payload)
+            //console.log(payload)
 
             // Genera la peticion POST
             await axios.post(`/login?username=${this.Usuario}&password=${this.Password}`, payload, config)
             .then( 
                 res => {
                     //muestra la respuesta
-                    console.log(res)
+                    //console.log(res)
 
                     //si el estado es OK
-                    if(res.status==202 || res.status==200){
+                    if(res.status==202 || res.status==200 || res.status==201){
                         //Almacena el token en el local Storage
                         localStorage.setItem('token', res.data.token)
                         //almacena el id del usuario en el local Storage
                         localStorage.setItem('userId', res.data.userId)
                         // Envia a la pagina sociedad
-                        this.$router.push('/sociedad')
+                        this.$router.push('sociedad')
                     }
                 }
             )

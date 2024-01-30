@@ -1,15 +1,15 @@
 <template>
     <div>
-        <Header nombrePagina="Empleados" />
+        <Headervue nombrePagina="Empleados" />
     </div>
 </template>
 
 <script>
-import Header from '@/components/Header.vue';
+import Headervue from '@/components/Header.vue';
 export default {
     name: 'empleados',
     components: {
-        Header
+        Headervue,
     },
     data() {
         return {

@@ -56,7 +56,7 @@ const router = createRouter({
           path: '/sociedad/:sociedadId/gestionNomina',
           name: 'gestionNomina',
           component: () => import('../views/GestionNominaView.vue'),
-                  },
+        },
         //panel empleados
         {
           path: '/sociedad/:sociedadId/empleados',

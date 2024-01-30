@@ -57,23 +57,21 @@ export default {
             await axios.post(`/validate?token=${TOKEN}`)
             .then( respuesta => {
                 //si es authorizado devuelve verdadero
-                if (respuesta.status==201){
+                if (respuesta.status==201 || respuesta.status==202){
                     return true
                 }
             })
             //captura el error
             .catch( error => {
-                console.log(error + 'validacion')
                 return false
                 
             })
-            return
         }
     }, 
     //al momento de crear el componente verifica el toquen y pide las sociedades disponibles
     async mounted() {
         // Verifica que el token existe y si este es valido
-        if(localStorage.getItem('token') != null && this.validateToken(`${localStorage.getItem('token')}`) === true ){
+        if(localStorage.getItem('token') != null && this.validateToken(`${localStorage.getItem('token')}`)){
 
             //si es valido solicita la lista de sociedades segun el usuario
             await axios.get('/list_sociedad')
@@ -87,7 +85,6 @@ export default {
             })
         }else{
             //elimina el token y devuleve al login
-
             this.$router.push("/login")
         }
     },

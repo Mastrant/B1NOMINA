@@ -16,7 +16,7 @@
                             <template #direccion>
                                 <router-link to="dashboard">
                                     <CuboIcon />
-                                    <span v-if="desplegarMenu">Dashboard</span>
+                                    <span v-show="desplegarMenu">Dashboard</span>
                                 </router-link>
                             </template>
                         </NavButton>
@@ -25,7 +25,7 @@
                             <template #direccion>
                                 <router-link to="gestionNomina">
                                     <DolarIconBlanco />
-                                    <span v-if="desplegarMenu">Gestión de Nómina</span>
+                                    <span v-show="desplegarMenu">Gestión de Nómina</span>
                                 </router-link>
                             </template>
                         </NavButton>
@@ -34,7 +34,7 @@
                             <template #direccion>
                                 <router-link to="empleados">
                                     <TwoPersonIcon />
-                                    <span v-if="desplegarMenu">Empleados</span>
+                                    <span v-show="desplegarMenu">Empleados</span>
                                 </router-link>
                             </template>
                         </NavButton>
@@ -43,7 +43,7 @@
                             <template #direccion>
                                 <router-link to="eventos">
                                     <TableIcon />
-                                    <span v-if="desplegarMenu">Eventos</span>
+                                    <span v-show="desplegarMenu">Eventos</span>
                                 </router-link>
                             </template>
                         </NavButton>
