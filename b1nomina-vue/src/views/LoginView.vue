@@ -18,6 +18,11 @@
 <script setup>
 import InfoLogin from '@/components/InfoLogin.vue';
 import ActionsLogin from '@/components/ActionsLogin.vue'
+
+onMounted(() => {
+    this.$router.replace('Login')
+}),
+
 </script>
 
 <style scoped>

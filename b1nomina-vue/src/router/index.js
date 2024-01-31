@@ -62,7 +62,16 @@ const router = createRouter({
           path: '/sociedad/:sociedadId/empleados',
           name: 'empleados',
           component: () => import('../views/EmpleadosView.vue'),
-                  },
+          children: [
+            {
+              path: '',
+              components: {
+                EMPLEADOS: () => import('../components/formularios/Form-empleados.vue'),
+                enContratacion : () => import('')
+              }
+            },
+          ]
+        },
         //panel informes
         {
           path: '/sociedad/:sociedadId/informes',

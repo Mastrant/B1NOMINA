@@ -39,6 +39,7 @@
 <script>
 
 import { defineAsyncComponent } from 'vue';
+
 //componentes
 const InputLogin = defineAsyncComponent(() => import('@/components/inputs/Input-Login.vue') )
 const EmailIcon = defineAsyncComponent(() => import('@/components/icons/Email-icon.vue'));
@@ -79,11 +80,9 @@ export default {
                 credenciales: false,
                 server: false,
             },
-            
         }
     },
     methods: {
-
 
         //Cambia el tipo de input de la contraseña
 
@@ -140,11 +139,14 @@ export default {
             )
             .catch (
                 error => {
-                    console.log(error.response)
+
                     if(error.response.status==401){
                         this.loginError.credenciales = true
+
                     } else if (error.response.status==500) {
                         this.loginError.server = true;
+                    } else {
+                        console.log(error.message)
                     }
                 }
             )
