@@ -6,11 +6,11 @@
         <template #panel>
             <LayoutForm>
                 <template #cabecera>
-                    <router-link to="empleados">empleaddos</router-link>
-                    <router-link to="enContratacion">enContratacion</router-link>
+                    <router-link :to="{name: 'listar'}">empleados</router-link>
+                    <router-link :to="{name: 'enContratacion'}"> En Contratacion</router-link>
                 </template>
                 <template #formulario>
-                    <router-view name="EMPLEADOS"/>
+                    <router-view />
                 </template>
             </LayoutForm>
         </template>

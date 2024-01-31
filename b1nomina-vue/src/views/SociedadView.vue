@@ -8,39 +8,24 @@
                 </p>
             </article>
         </div>
-        <div  class="sociedadView-fondo-cards">                
-            <div v-for="(item) in SociedadesAccesibles" :key="item.id">
-                <Suspense>
-                    <template #default>
-                        <CardSociedad  :name="item.nombre" :id="item.id" :icon="`${item.icon}`"/>
-                    </template> 
-                    <template  #fallback>
-                        <cargarSociedad />
-                    </template>
-                </Suspense> 
-            </div>
-        </div>
+        <listaSociedades/>  
     </div> 
 </template>
 
 <script>
 import axios from 'axios';
-import cargarSociedad from '@/components/splashscreen/Carga-sociedad.vue'
 import { defineAsyncComponent } from 'vue';
 
 
 export default {
     //componentes
     components:{
-        cargarSociedad,
-        //componente async
-        CardSociedad: defineAsyncComponent(() => new Promise(
+        listaSociedades: defineAsyncComponent(()=> new Promise(
             (resolve) => {
                 setTimeout(
                     () => {
-                        //importacion del componente
-                        resolve(import("@/components/CardSociedad.vue"))
-                    }, 2100 //tiempo de carga
+                        resolve(import("@/components/listas/Lista-sociedades.vue"))
+                    }, 1000//tiempo de carga
                 )
             }
         ))
@@ -55,6 +40,7 @@ export default {
         //realiza una comprobacion del token ingresado
         async validateToken(TOKEN) {
             await axios.post(`/validate?token=${TOKEN}`)
+
             .then( respuesta => {
                 //si es authorizado devuelve verdadero
                 if (respuesta.status==201 || respuesta.status==202){
@@ -67,25 +53,14 @@ export default {
                 
             })
         },
-
-        async solicitarSociedad(){
-            //si es valido solicita la lista de sociedades segun el usuario
-            await axios.get('/list_sociedad')
-            .then( res => {
-                //guarda la lista de dicionarios en la lista Sociedades accesibles definida
-                this.SociedadesAccesibles = res.data
-            })
-            .catch( error => {
-                //muestra el error al consultar las sociedades
-                console.log(error + 'peticion de datos')
-            })
-        }
     }, 
     //al momento de crear el componente verifica el toquen y pide las sociedades disponibles
     async mounted() {
         // Verifica que el token existe y si este es valido
         if(localStorage.getItem('token') != null && this.validateToken(`${localStorage.getItem('token')}`)){
-            this.solicitarSociedad()
+            
+
+
         }else{
             //elimina el token y devuleve al login
             this.$router.push("/login")

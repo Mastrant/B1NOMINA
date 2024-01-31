@@ -10,9 +10,9 @@
             <div class="contend">
                 <!--Botones superiores-->
                 <div class="contend1">
-                    <div class="options" v-for="modulo in listaModulos" :key="modulo.idModulo">
+                    <div class="options" v-for="modulo in listaModulos2" :key="modulo.idModulo">
                         <!--Dashboard-->
-                        <NavButton >
+                        <NavButton v-if="modulo.asignado">
                             <template #direccion>
                                 <router-link :to="modulo.urlModulo">
                                     <CuboIcon />
@@ -140,37 +140,26 @@ import {onMounted, ref} from 'vue';
 
 const desplegarMenu = ref(false)
 
-const listaModulos2 = ref([])
-
-const listaModulos = [
-  {
+//valor por
+const listaModulos2 = ref([
+{
     "idModulo": 1,
-    "nombreModulo": "Gestion de Empleados",
-    "urlModulo": "empleados",
+    "nombreModulo": "DashBoard",
+    "urlModulo": "dashboard",
     "iconoModulo": "",
-    "asignado": false
+    "asignado": true,
   },
-  {
-    "idModulo": 3,
-    "nombreModulo": "Eventos",
-    "urlModulo": "eventos",
-    "iconoModulo": "",
-    "asignado": false
-  },
-  {
-    "idModulo": 4,
-    "nombreModulo": "Gestión de Nómina",
-    "urlModulo": "gestionNomina",
-    "iconoModulo": "",
-    "asignado": false
-  },
-]
+])
 
+
+//solicita los modulos disponibles
 const OptenerModulos = () => {
     return axios.get(`user/${localStorage.getItem('userId')}/asignated_modules`, localStorage.getItem('userId'))
     .then(
         (respuesta) => {
-            console.log(respuesta)
+            //asigna el valor de la consulta a la lista de modulos
+            listaModulos2.value =respuesta.data
+
         }
     )
     .catch(
@@ -183,7 +172,8 @@ const OptenerModulos = () => {
 
 //al momento de  montar el componente
 onMounted(() => {
-
+    //ejecuta la peticion
+    OptenerModulos()
 });
 
 

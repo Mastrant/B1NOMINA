@@ -1,14 +1,13 @@
 <template>
     <div class="contenedor">
         
-        <div>
+        <div class="cabecera">
             <slot name="cabecera">
-                cabecera
+
             </slot>
         </div>
-        <div>
+        <div class="formulario">
             <slot name="formulario">
-                tabla con empleados
        
             </slot>
         </div>
@@ -26,5 +25,11 @@ div.contenedor{
     align-items: center;
     width: 100%;
 
+}
+
+div.cabecera {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
 }
 </style>

@@ -145,6 +145,7 @@ export default {
 
                     } else if (error.response.status==500) {
                         this.loginError.server = true;
+
                     } else {
                         console.log(error.message)
                     }
@@ -153,7 +154,6 @@ export default {
         },
     },
 }
-
 </script>
 
 

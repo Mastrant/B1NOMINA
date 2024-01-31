@@ -13,7 +13,7 @@ const router = createRouter({
       redirect: '/Login',
       meta: {
         requiereToken: false, //establece si es requerido autorizacion para acceder
-      }
+      },
 
     },
     //Pagina de logIn
@@ -32,7 +32,7 @@ const router = createRouter({
       component: () => import('../views/SociedadView.vue'),
       meta: {
         requiereToken: true, //establece si es requerido autorizacion para acceder
-      }
+      },
     },
     //sociedad selecionada
     {
@@ -46,56 +46,73 @@ const router = createRouter({
       children: [
         //panel Dashboard
         {
-          path: '/sociedad/:sociedadId/dashboard',
+          path: 'dashboard',
           name: 'dashboard',
           component: () => import('../views/DashboardView.vue'),
           alias: ['dashboard']
         },
         //panel gestion de nomina
         {
-          path: '/sociedad/:sociedadId/gestionNomina',
+          path: 'gestionNomina',
           name: 'gestionNomina',
           component: () => import('../views/GestionNominaView.vue'),
+          alias: ['gestiosNomina']
         },
         //panel empleados
         {
-          path: '/sociedad/:sociedadId/empleados',
+          path: 'empleados',
           name: 'empleados',
           component: () => import('../views/EmpleadosView.vue'),
-          children: [
+          //componentes hijos de la ruta empleados
+          children:[
             {
-              path: '',
-              components: {
-                EMPLEADOS: () => import('../components/formularios/Form-empleados.vue'),
-                enContratacion : () => import('')
-              }
+              path: "",
+              component: () => import('../components/formularios/Form-empleados.vue'),
+              name: 'listar',
+              alias: 'listar'
+            },
+            {
+              path: 'enContratacion',
+              name: 'enContratacion',
+              component: () => import('../components/formularios/Form-login.vue'),            
             },
           ]
         },
+
         //panel informes
         {
-          path: '/sociedad/:sociedadId/informes',
+          path: 'informes',
           name: 'informes',
           component: () => import('../views/InformesView.vue'),
-                  },
+          alias: ['informes']
+        },
         //panel configuracion
         {
-          path: '/sociedad/:sociedadId/configuracion',
+          path: 'configuracion',
           name: 'configuracion',
           component: () => import('../views/ConfiguracionView.vue'),
-                  },
+          alias: ['configuracion']
+        },
         //panel eventos
         {
-          path: '/sociedad/:sociedadId/eventos',
+          path: 'eventos',
           name: 'eventos',
           component: () => import('../views/EventosView.vue'),
-                  },
+          alias: ['eventos']
+        },
         //panel notificaciones
         {
-          path: '/sociedad/:sociedadId/notificaciones',
+          path: 'notificaciones',
           name: 'notificaciones',
           component: () => import('../views/NotificacionesView.vue'),
-                  },
+          alias: ['notificaciones']
+        },
+        //si la ruta buscada no existe
+        {
+          path: ':pathMatch(.*)*',
+          name: 'not-fount',
+          component: () => import('@/components/Not-fount.vue')
+        }
       ]       
     },
     //panel de ayuda general
@@ -106,6 +123,7 @@ const router = createRouter({
       meta: {
         requiereToken: false, //establece si es requerido autorizacion para acceder
       },
+      
     },
   ]
 })
