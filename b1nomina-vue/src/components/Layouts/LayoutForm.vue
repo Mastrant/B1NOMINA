@@ -30,6 +30,16 @@ div.contenedor{
 div.cabecera {
     display: flex;
     flex-direction: row;
-    gap: 12px;
+    gap: 36px;
+    align-items: center;
+
+    width: 100%; 
+    height: 49px; 
+    background: #F8F9FA; 
+    border-radius: 6px; 
+    border: 1px #CDE0F1 solid;
+    padding: 0px 24px;
+    box-sizing: border-box;
 }
+
 </style>

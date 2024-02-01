@@ -74,7 +74,8 @@ const router = createRouter({
             {
               path: 'enContratacion',
               name: 'enContratacion',
-              component: () => import('../components/formularios/Form-login.vue'),            
+              component: () => import('../components/formularios/Form-login.vue'),   
+              alias: 'enContratacion'         
             },
           ]
         },
