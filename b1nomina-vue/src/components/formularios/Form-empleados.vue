@@ -1,9 +1,73 @@
 <template>
-    <div>
-        fomulARIO CON DATOS
-    </div>
+    <form class="formulario-empleados">
+        <div class="acciones-form">
+            <div class="filtros">
+                <InputShearch v-model="shearch"/>
+                <ListaTemplate v-model="sede" :options="ListaOptions" optionsSelected="Sede"/>
+                <ListaTemplate v-model="departamento" :options="ListaOptions" optionsSelected="Departamento"/>
+                <ListaTemplate v-model="grupo" :options="ListaOptions" optionsSelected="Grupo"/>
+            </div>
+            
+            <div>
+                <TemplateButton text="Agregar Empleado">
+                    <template #default >
+                        <PersonPlussIcon/>
+                    </template>
+                </TemplateButton>
+            </div>            
+        </div>
+        <div>
+            <ListaTemplate v-model="acciones" :options="ListaOptions" optionsSelected="Acciones en Lote"/>
+            <span>ashdaksjdhaskdhaskdhaskjdhakjdhaskjdha</span>
+        </div>
+        <div class="cuerpo de la tabla">
+            tabla
+        </div>
+    </form>
 </template>
 
 <script setup>
+//componentes
+import InputShearch from '../inputs/Input-shearch.vue';
+import TemplateButton from '../botones/Template-button.vue';
+import ListaTemplate from '../listas/Lista-template.vue';
 
+//iconos
+import PersonPlussIcon from '../icons/Person-Pluss-icon.vue';
+
+//librerias
+import { ref } from 'vue';
+
+//variables a utilizar
+const shearch = ref(''); //texto ingresado en el input
+const grupo = ref('')
+
+const ListaOptions = ref([
+  { text: 'One', value: 'A' },
+  { text: 'Two', value: 'B' },
+  { text: 'Three', value: 'C' }
+])
 </script>
+
+<style scoped>
+
+form.formulario-empleados{
+    gap: 24px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+div.acciones-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
+div.filtros {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+</style>

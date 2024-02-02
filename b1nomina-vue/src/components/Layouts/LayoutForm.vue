@@ -16,7 +16,7 @@
 
 <style scoped>
 div.contenedor{
-    gap: 8px;
+    gap: 24px;
     display: flex;
     flex-direction: column;
     margin: 0;
@@ -40,6 +40,10 @@ div.cabecera {
     border: 1px #CDE0F1 solid;
     padding: 0px 24px;
     box-sizing: border-box;
+}
+
+div.formulario {
+    width: 100%;
 }
 
 </style>
