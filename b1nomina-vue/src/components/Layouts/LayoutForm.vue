@@ -40,10 +40,12 @@ div.cabecera {
     border: 1px #CDE0F1 solid;
     padding: 0px 24px;
     box-sizing: border-box;
+    
 }
 
 div.formulario {
     width: 100%;
+    
 }
 
 </style>

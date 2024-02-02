@@ -8,7 +8,7 @@
         <template #panel>
             <LayoutForm>
                 <template #cabecera>
-                    <NavButtonPanel text="Empleados" direccion="listar" :cantidad="nEmpleados" :seleccionado="($route.name === 'listar')?true: false"/>
+                    <NavButtonPanel text="Empleados" direccion="listar" :cantidad="nEmpleados" :seleccionado="($route.name === 'listar')?true: false" />
                     <NavButtonPanel text="En Contratacion" direccion="enContratacion" :cantidad="nContratacion" :seleccionado="($route.name == 'enContratacion')?true: false" />
                     <NavButtonPanel text="Inactivos" direccion="listar" :cantidad="nInactivos" :eleccionado="($route.name == 'inactivos')?true: false" />
                 </template>
@@ -38,6 +38,12 @@ export default {
             selectedButton: null,
         }
     },
+    props: {
+        sociedadId: {
+            type: String,
+            default: ''
+        }
+    },
     components: {
         Headervue,
         LayoutPanel,
@@ -47,7 +53,7 @@ export default {
     
     //solicita la cantidad total de elementos para el panel
     async mounted(){
-        await axios.get('datos')
+        await axios.get(`${this.sociedadId}/datos`)
         .then(
             (respuesta)=>{
                 console.log(respuesta)

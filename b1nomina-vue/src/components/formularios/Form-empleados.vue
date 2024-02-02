@@ -16,9 +16,9 @@
                 </TemplateButton>
             </div>            
         </div>
-        <div>
+        <div class="acciones-masivas" v-show="false">
             <ListaTemplate v-model="acciones" :options="ListaOptions" optionsSelected="Acciones en Lote"/>
-            <span>ashdaksjdhaskdhaskdhaskjdhakjdhaskjdha</span>
+            <span>Has seleccionado {{ 1 }} de los {{ 12 }} empleados</span>
         </div>
         <div class="cuerpo de la tabla">
             tabla
@@ -27,26 +27,28 @@
 </template>
 
 <script setup>
-//componentes
-import InputShearch from '../inputs/Input-shearch.vue';
-import TemplateButton from '../botones/Template-button.vue';
-import ListaTemplate from '../listas/Lista-template.vue';
 
-//iconos
-import PersonPlussIcon from '../icons/Person-Pluss-icon.vue';
+    //componentes
+    import InputShearch from '../inputs/Input-shearch.vue';
+    import TemplateButton from '../botones/Template-button.vue';
+    import ListaTemplate from '../listas/Lista-template.vue';
 
-//librerias
-import { ref } from 'vue';
+    //iconos
+    import PersonPlussIcon from '../icons/Person-Pluss-icon.vue';
 
-//variables a utilizar
-const shearch = ref(''); //texto ingresado en el input
-const grupo = ref('')
+    //librerias
+    import { ref } from 'vue';
 
-const ListaOptions = ref([
-  { text: 'One', value: 'A' },
-  { text: 'Two', value: 'B' },
-  { text: 'Three', value: 'C' }
-])
+    //variables a utilizar
+    const shearch = ref(''); //texto ingresado en el input
+    const grupo = ref('');
+
+    const ListaOptions = ref([
+    { text: 'One', value: 'A' },
+    { text: 'Two', value: 'B' },
+    { text: 'Three', value: 'C' }
+    ]);
+
 </script>
 
 <style scoped>
@@ -69,5 +71,14 @@ div.filtros {
     display: flex;
     flex-direction: row;
     gap: 12px;
+    
 }
+
+div.acciones-masivas{
+    display: flex;
+    gap: 24px;
+    align-items: center;
+
+}
+
 </style>
