@@ -57,7 +57,16 @@
 <script setup>
 import { ref, defineProps } from 'vue';
 
+const props = defineProps({
+    listaEmpleados : {
+        type: Array,
+        default: []
+    }
+})
+const {empleadosSelecionados, listaEmpleados} = ref([])
 
+
+/*
 const listaEmpleados = ref([
     {
     "nombres": "Admin",
@@ -74,9 +83,7 @@ const listaEmpleados = ref([
   },
 ]) 
 
-const empleadosSelecionados = ref([])
-
-
+*/
 </script>
 
 <style scoped>

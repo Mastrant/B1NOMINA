@@ -50,10 +50,9 @@ export default {
         LayoutForm,
         NavButtonPanel,
     },
-    
-    //solicita la cantidad total de elementos para el panel
-    async mounted(){
-        await axios.get(`${this.sociedadId}/datos`)
+    methods: {
+        async pedirDatos() {
+            await axios.get(`${this.sociedadId}/datos`)
         .then(
             (respuesta)=>{
                 console.log(respuesta)
@@ -64,6 +63,11 @@ export default {
                 console.log(error)
             }
         )
+        }
+    },
+    //solicita la cantidad total de elementos para el panel
+    async mounted(){
+      //  await pedirDatos()
     }
 }
 </script>

@@ -69,7 +69,8 @@ const router = createRouter({
               path: "",
               component: () => import('../components/formularios/Form-empleados.vue'),
               name: 'listar',
-              alias: 'listar'
+              alias: 'listar',
+              props: true, //toma los parametros de la url con el mismo nombre que los recibe
             },
             {
               path: 'enContratacion',

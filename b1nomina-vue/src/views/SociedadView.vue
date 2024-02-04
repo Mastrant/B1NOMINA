@@ -65,6 +65,8 @@ export default {
             .catch( error => {
                 (error.status == 403)?location.reload():console.log(""); 
                 console.log(error + ' peticion de datos')
+                //si la peticion da error recarga la pagina
+                window.location.reload()
             })
         }
     }, 
@@ -125,8 +127,6 @@ article .text-sociedadview {
 }
 
 div.sociedadView-fondo-cards{
-
-    
     display: flex;
     justify-content: space-between;
 }

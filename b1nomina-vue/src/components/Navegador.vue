@@ -155,7 +155,6 @@ const showText = ref()
 //al pasar el mouse por el navegador
 const cambiarEstado = (id) => {
     showText.value = id 
-    console.log(id)
 };
 
 //valor por defecto
@@ -176,7 +175,6 @@ const OptenerModulos = () => {
         (respuesta) => {
             //asigna el valor de la consulta a la lista de modulos
             listaModulos2.value =respuesta.data
-
         }
     )
     .catch(

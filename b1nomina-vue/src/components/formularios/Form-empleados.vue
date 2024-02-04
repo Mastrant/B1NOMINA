@@ -4,9 +4,9 @@
             <div class="filtros">
                 <InputShearch v-model="shearch"/>
 
-                <ListaTemplate v-model="sede" :options="ListaSedes" optionsSelected="Sede"/>
-                <ListaTemplate v-model="departamento" :options="ListaDepartamentos" optionsSelected="Departamento"/>
-                <ListaTemplate v-model="grupo" :options="ListaGrupos" optionsSelected="Grupo"/>
+                <ListaTemplate v-model="filtroSede" :options="ListaSedes" optionsSelected="Sede"/>
+                <ListaTemplate v-model="filtroDepartamento" :options="ListaDepartamentos" optionsSelected="Departamento"/>
+                <ListaTemplate v-model="filtroGrupo" :options="ListaGrupos" optionsSelected="Grupo"/>
             </div>
             
             <div>
@@ -22,7 +22,7 @@
             <span>Has seleccionado {{ 1 }} de los {{ 12 }} empleados</span>
         </div>
         <div class="cuerpo de la tabla">
-            <EmpleadosGeneral />
+            <EmpleadosGeneral :listaEmpleados="ListaEmpleados"/>
         </div>
     </form>
 </template>
@@ -43,8 +43,16 @@
     import axios from 'axios';
 
     //variables a utilizar
-    const shearch = ref(''); //texto ingresado en el input
-    const grupo = ref('');
+
+    const {
+        ListaEmpleados,
+        ListaDepartamentos, 
+        ListaGrupos,
+        ListaSedes,
+        sociedadId,
+        grupo,
+        shearch
+    } = ref()  
 
     const ListaOptions = ref([
     { text: 'One', value: 'A' },
@@ -53,70 +61,84 @@
     ]);
 
     const props = defineProps({
-        idSociedad: {
+        sociedadId: {
             type: String,
+            default: ''
         }
     })
 
     const pedirSedes = () => {
-        axios.get('',idSociedad)
+        axios.get(`list_sede_sociedad?idSociedad=${sociedadId}&page=1&records=20`,{idSociedad: sociedadId})
         .then(
             res => {
-                console.log(res);
+                ListaSedes.value = res.data 
+                console.log(res.data)
             }
         )
         .then(
             err => {
-                console.log(err);
+                if (err.status === 404){
+                    console.log("sedes no encontradas")
+                }
             }
         )
     };
 
     const pedirDepartamentos = () => {
-        axios.get('',idSociedad)
+        axios.get(`list_departamento_sociedad?idSociedad=${sociedadId.value}&page=1&records=20`,{idSociedad :sociedadId.value})
         .then(
             res => {
-                console.log(res);
+                ListaDepartamentos.value = res.data
             }
         )
         .then(
             err => {
-                console.log(err);
+                if (err.status === 404){
+                    console.log("Departamentos no encontradas")
+                }
             }
         )
     };
 
     const pedirGrupos = () => {
-        axios.get('',idSociedad)
+        axios.get('',{idSociedad :sociedadId.value})
         .then(
             res => {
-                console.log(res);
+                ListaGrupos.value = res.data 
+                console.log(res.data)
             }
         )
         .then(
             err => {
-                console.log(err);
+                if (err.status === 404){
+                    console.log("Grupos no encontradas")
+                }
             }
         )
     };
 
     const pedirUsuarios = () => {
-        axios.get(`/user/list_users?page=1&records=2`,idSociedad)
+        axios.get(`/user/list_users?page=1&records=2`,{idSociedad :sociedadId.value})
         .then(
             res => {
-                console.log(res);
+                //almacena los datos de la peticion en la variable enviada como props
+                ListaEmpleados.value = res.data 
+                console.log(res.data)
             }
         )
         .then(
             err => {
-                console.log(err);
+                console.log(err)
             }
         )
     };
 
-    const {ListaDepartamentos, ListaGrupos, ListaSedes } = ref([{}])    
-
-    onMounted(pedirSedes,pedirDepartamentos,pedirGrupos, pedirUsuarios)
+    onMounted(() => {
+       pedirSedes();
+       pedirDepartamentos();
+       pedirGrupos();
+       pedirUsuarios();
+    });
 
 </script>
 
