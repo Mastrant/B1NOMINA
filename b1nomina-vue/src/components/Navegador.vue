@@ -1,5 +1,5 @@
 <template>    
-        <nav class="aside " id="aside">
+        <nav class="aside " id="aside" @mouseleave="desplegarMenu=false">
             <div class="head">
                 <div class="profile" v-show="desplegarMenu">
                     <LogoTextVue />
@@ -12,13 +12,16 @@
                 <div class="contend1">
                     <div class="options" v-for="modulo in listaModulos2" :key="modulo.idModulo">
                         <!--Dashboard-->
-                        <NavButton v-if="modulo.asignado">
+                        <NavButton v-if="modulo.asignado" @mouseover="cambiarEstado(modulo.idModulo)" @mouseleave="cambiarEstado()">
                             <template #direccion>
                                 <router-link :to="modulo.urlModulo">
                                     <CuboIcon />
                                     <span v-show="desplegarMenu">{{modulo.nombreModulo}}</span>
                                 </router-link>
-                            </template>
+                                <div v-show="(showText==modulo.idModulo && desplegarMenu === false)">
+                                    {{modulo.nombreModulo}}
+                                </div> 
+                            </template>               
                         </NavButton>
                     </div>
                     <div class="options">     
@@ -92,23 +95,27 @@
 
             <!--Si el panel esta desplegado despliega esta parte-->
             <div class="perfil" v-if="desplegarMenu">
-                <Avatar />
+                <Avatar class="Avatar" @click="seleccion"/>
                 <div class="perfil-text" >
                     <span class="text-perfil text-perfil-1">Nombre de Empresa</span>
                     <span class="text-perfil">Rut 0102030405</span>
                 </div>
                 <div v-if="desplegarMenu">
-                    <TresPuntosIcon />
+                    <TresPuntosIcon v-model="showOptios"/>
                 </div>            
             </div>
             <!--Si el panel esta recogido despliega esta parte-->
             <div class="perfil-hidden" v-else>
-                <Avatar />
+                <Avatar class="Avatar" @click="seleccion"/>
+            </div>
+            <div>
+
             </div>
         </nav>       
 </template>
 
 <script setup>
+// Componentes
 import LogoTextVue from './logos/Logo-text.vue';
 import MenuButton from './botones/Menu-button.vue';
 import NavButton from './botones/Nav-button.vue';
@@ -118,7 +125,6 @@ import CantidadNotificaciones from './CantidadNotificaciones.vue';
 //Iconos
 
 import CuboIcon from './icons/Cubo-icon.vue';
-import DolarIconBlanco from './icons/Dolar-icon-blanco.vue';
 import TwoPersonIcon from './icons/TwoPerson-icon.vue';
 import TableIcon from './icons/Table-icon.vue';
 import AjustesIcon from './icons/Ajustes-icon.vue';
@@ -127,8 +133,11 @@ import HelpCircleIcon from './icons/HelpCircle-icon.vue';
 import TuerquitaIcon from './icons/Tuerquita-icon.vue';
 import TresPuntosIcon from './icons/TresPuntos-icon.vue';
 
-//AVATAR
+//Redireccion
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
+//AVATAR
 import Avatar from './avatars/Avatar1.vue'
 
 //axios
@@ -137,10 +146,19 @@ import axios from 'axios';
 // Generar reactividad del componente
 import {onMounted, ref} from 'vue';
 
-
+//controla si se a acionado el desplegar menú
 const desplegarMenu = ref(false)
 
-//valor por
+//Controla el texto mostrado al pasar el mouse
+const showText = ref()
+
+//al pasar el mouse por el navegador
+const cambiarEstado = (id) => {
+    showText.value = id 
+    console.log(id)
+};
+
+//valor por defecto
 const listaModulos2 = ref([
 {
     "idModulo": 1,
@@ -149,8 +167,7 @@ const listaModulos2 = ref([
     "iconoModulo": "",
     "asignado": true,
   },
-])
-
+]);
 
 //solicita los modulos disponibles
 const OptenerModulos = () => {
@@ -169,6 +186,11 @@ const OptenerModulos = () => {
     )
 }
 
+//al selecionar el avatar
+const seleccion = () => {
+    //al selecionar
+    router.push('/sociedad')
+}
 
 //al momento de  montar el componente
 onMounted(() => {
@@ -285,6 +307,10 @@ div.perfil-hidden{
     color: #1A2771;
     text-decoration: none;
 
+}
+
+.Avatar {
+    cursor: pointer;
 }
 
 </style>

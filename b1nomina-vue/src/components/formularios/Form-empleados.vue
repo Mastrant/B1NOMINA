@@ -3,9 +3,10 @@
         <div class="acciones-form">
             <div class="filtros">
                 <InputShearch v-model="shearch"/>
-                <ListaTemplate v-model="sede" :options="ListaOptions" optionsSelected="Sede"/>
-                <ListaTemplate v-model="departamento" :options="ListaOptions" optionsSelected="Departamento"/>
-                <ListaTemplate v-model="grupo" :options="ListaOptions" optionsSelected="Grupo"/>
+
+                <ListaTemplate v-model="sede" :options="ListaSedes" optionsSelected="Sede"/>
+                <ListaTemplate v-model="departamento" :options="ListaDepartamentos" optionsSelected="Departamento"/>
+                <ListaTemplate v-model="grupo" :options="ListaGrupos" optionsSelected="Grupo"/>
             </div>
             
             <div>
@@ -17,11 +18,11 @@
             </div>            
         </div>
         <div class="acciones-masivas" v-show="false">
-            <ListaTemplate v-model="acciones" :options="ListaOptions" optionsSelected="Acciones en Lote"/>
+            <ListaTemplate :options="ListaOptions" optionsSelected="Acciones en Lote"/>
             <span>Has seleccionado {{ 1 }} de los {{ 12 }} empleados</span>
         </div>
         <div class="cuerpo de la tabla">
-            tabla
+            <EmpleadosGeneral />
         </div>
     </form>
 </template>
@@ -32,12 +33,14 @@
     import InputShearch from '../inputs/Input-shearch.vue';
     import TemplateButton from '../botones/Template-button.vue';
     import ListaTemplate from '../listas/Lista-template.vue';
+    import EmpleadosGeneral from '../tablas/Empleados/Empleados-general.vue';
 
     //iconos
     import PersonPlussIcon from '../icons/Person-Pluss-icon.vue';
 
     //librerias
-    import { ref } from 'vue';
+    import { ref, defineProps, onMounted } from 'vue';
+    import axios from 'axios';
 
     //variables a utilizar
     const shearch = ref(''); //texto ingresado en el input
@@ -48,6 +51,72 @@
     { text: 'Two', value: 'B' },
     { text: 'Three', value: 'C' }
     ]);
+
+    const props = defineProps({
+        idSociedad: {
+            type: String,
+        }
+    })
+
+    const pedirSedes = () => {
+        axios.get('',idSociedad)
+        .then(
+            res => {
+                console.log(res);
+            }
+        )
+        .then(
+            err => {
+                console.log(err);
+            }
+        )
+    };
+
+    const pedirDepartamentos = () => {
+        axios.get('',idSociedad)
+        .then(
+            res => {
+                console.log(res);
+            }
+        )
+        .then(
+            err => {
+                console.log(err);
+            }
+        )
+    };
+
+    const pedirGrupos = () => {
+        axios.get('',idSociedad)
+        .then(
+            res => {
+                console.log(res);
+            }
+        )
+        .then(
+            err => {
+                console.log(err);
+            }
+        )
+    };
+
+    const pedirUsuarios = () => {
+        axios.get(`/user/list_users?page=1&records=2`,idSociedad)
+        .then(
+            res => {
+                console.log(res);
+            }
+        )
+        .then(
+            err => {
+                console.log(err);
+            }
+        )
+    };
+
+    const {ListaDepartamentos, ListaGrupos, ListaSedes } = ref([{}])    
+
+    onMounted(pedirSedes,pedirDepartamentos,pedirGrupos, pedirUsuarios)
 
 </script>
 

@@ -3,7 +3,7 @@
         <div class="cardsociedad-body">
             <h3 class="cardsociedad-titulo">{{ name }}</h3>
             <img class="cardAvatar" :href="icon" alt="ICON sociedad">
-            <router-link class="cardsociedad-button" :to="`/sociedad/${id}/dashboard`">
+            <router-link class="cardsociedad-button" :to="`/sociedad/${id}/`">
                     Selecionar
             </router-link>
         </div>
@@ -18,7 +18,10 @@ export default {
         //nombre de la sociedad
         name: {String},
         //ID de la sociedad
-        id : {Number},
+        id : {
+            Number,
+            default: null,
+        },
         //icono de la sociedad
         icon : {
             String,

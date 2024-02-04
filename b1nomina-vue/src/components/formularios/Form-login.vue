@@ -37,22 +37,21 @@
 </template>
 
 <script>
-
-import { defineAsyncComponent } from 'vue';
-
 //componentes
 const InputLogin = defineAsyncComponent(() => import('@/components/inputs/Input-Login.vue') )
 const EmailIcon = defineAsyncComponent(() => import('@/components/icons/Email-icon.vue'));
 const PasswordIcon = defineAsyncComponent(() => import('../icons/Password-icon.vue'));
 const HiddenButton = defineAsyncComponent(() => import('../botones/Hidden-button.vue'));
-import LayoutLogin from '../Layouts/LayoutLogin.vue';
 const InputCheckboxText = defineAsyncComponent(() => import('../inputs/Input-Checkbox-Text.vue'));
 const SubmitButton = defineAsyncComponent(() => import('../botones/Submit-button.vue'));
 const alertError = defineAsyncComponent(() => import('@/components/alertas/alert-Error.vue'));
 const alertWarning = defineAsyncComponent(() => import('@/components/alertas/alert-Warning.vue'));
 
+import LayoutLogin from '../Layouts/LayoutLogin.vue';
+
 //librerias
 import axios from 'axios';
+import { defineAsyncComponent } from 'vue';
 
 export default {
     //nombre componente
@@ -117,7 +116,6 @@ export default {
             }
 
             //Muestra los datos enviado Test
-            //console.log(payload)
 
             // Genera la peticion POST
             await axios.post(`/login?username=${this.Usuario}&password=${this.Password}`, payload, config)
@@ -133,21 +131,27 @@ export default {
                         //almacena el id del usuario en el local Storage
                         localStorage.setItem('userId', res.data.userId)
                         // Envia a la pagina sociedad
-                        this.$router.push('sociedad')
+                        this.$router.push('/sociedad')
                     }
                 }
             )
             .catch (
                 error => {
+                    if (error.code === 'ERR_NETWORK'){
+                        
+                         this.loginError.server = true;
 
-                    if(error.response.status==401){
-                        this.loginError.credenciales = true
+                    }else {
 
-                    } else if (error.response.status==500) {
-                        this.loginError.server = true;
+                        if(error.response.status==401){
+                            this.loginError.credenciales = true
 
-                    } else {
-                        console.log(error.message)
+                        } else if (error.response.status==500) {
+                            this.loginError.server = true;
+
+                        } else {
+                            console.log(error.message)
+                    }
                     }
                 }
             )

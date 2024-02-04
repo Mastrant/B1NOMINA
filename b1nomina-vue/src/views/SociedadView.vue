@@ -8,7 +8,7 @@
                 </p>
             </article>
         </div>
-        <listaSociedades/>  
+        <listaSociedades v-if="autorizado" :sociedades="SociedadesAccesibles"/> 
     </div> 
 </template>
 
@@ -33,7 +33,11 @@ export default {
     data() {
         return {
             //data de las sociedades
-            SociedadesAccesibles: []
+            SociedadesAccesibles: [{}],
+            autorizado: {
+                type: Boolean,
+                default: false
+            }
         }
     },
     methods: {
@@ -50,20 +54,33 @@ export default {
             //captura el error
             .catch( error => {
                 return false
-                
             })
         },
+        //solicita las sociedades a las que puede acceder el usuario por su id
+        async solicitarSociedad() {
+            await axios.get('/list_sociedad')
+            .then( res => {
+                this.SociedadesAccesibles = res.data
+            })
+            .catch( error => {
+                (error.status == 403)?location.reload():console.log(""); 
+                console.log(error + ' peticion de datos')
+            })
+        }
     }, 
     //al momento de crear el componente verifica el toquen y pide las sociedades disponibles
     async mounted() {
         // Verifica que el token existe y si este es valido
         if(localStorage.getItem('token') != null && this.validateToken(`${localStorage.getItem('token')}`)){
             
+            this.autorizado = true;
 
+            this.solicitarSociedad()
 
         }else{
             //elimina el token y devuleve al login
-            this.$router.push("/login")
+            this.autorizado = false;
+            this.$router.push("login")
         }
     },
     

@@ -46,7 +46,7 @@ const router = createRouter({
       children: [
         //panel Dashboard
         {
-          path: 'dashboard',
+          path: '',
           name: 'dashboard',
           component: () => import('../views/DashboardView.vue'),
           alias: ['dashboard']
@@ -56,7 +56,7 @@ const router = createRouter({
           path: 'gestionNomina',
           name: 'gestionNomina',
           component: () => import('../views/GestionNominaView.vue'),
-          alias: ['gestiosNomina']
+          alias: ['gestiosNomina', 'nomina']
         },
         //panel empleados
         {
@@ -79,7 +79,6 @@ const router = createRouter({
             },
           ]
         },
-
         //panel informes
         {
           path: 'informes',
@@ -108,6 +107,7 @@ const router = createRouter({
           component: () => import('../views/NotificacionesView.vue'),
           alias: ['notificaciones']
         },
+        
         //si la ruta buscada no existe
         {
           path: ':pathMatch(.*)*',

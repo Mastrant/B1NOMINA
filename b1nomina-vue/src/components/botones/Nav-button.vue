@@ -3,7 +3,6 @@
         <slot name="direccion">
 
         </slot>
-
     </div>
 </template>
 

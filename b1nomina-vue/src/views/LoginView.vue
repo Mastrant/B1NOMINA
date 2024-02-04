@@ -1,7 +1,7 @@
 <template>
     <main>
         <section class="login-section">
-            <div class="login-box">
+            <div class="login-box info">
                 <InfoLogin />
             </div>
 
@@ -41,5 +41,31 @@ div.contend-actionsLogin {
     justify-content: center;
     width: 70%;
     height: 100vh;
+}
+
+@media (max-width: 960px) {
+    .info {
+        display: none;
+    }
+
+    .contend-actionsLogin {
+        width: 100%;
+    }
+    .login-box {
+        max-width: 430px;
+    }
+}
+
+@media (max-width: 960px) {
+    .info {
+        display: none;
+    }
+
+    .contend-actionsLogin {
+        width: 100%;
+    }
+    .login-box {
+        width: 100%;
+    }
 }
 </style>
