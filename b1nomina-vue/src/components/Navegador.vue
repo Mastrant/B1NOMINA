@@ -12,13 +12,13 @@
                 <div class="contend1">
                     <div class="options" v-for="modulo in listaModulos2" :key="modulo.idModulo">
                         <!--Dashboard-->
-                        <NavButton v-if="modulo.asignado" @mouseover="cambiarEstado(modulo.idModulo)" @mouseleave="cambiarEstado()">
+                        <NavButton v-if="modulo.asignado" @mouseover="cambiarEstado(modulo.idModulo)" >
                             <template #direccion>
                                 <router-link :to="modulo.urlModulo">
                                     <CuboIcon />
                                     <span v-show="desplegarMenu">{{modulo.nombreModulo}}</span>
                                 </router-link>
-                                <div v-show="(showText==modulo.idModulo && desplegarMenu === false)">
+                                <div v-show="(showText==modulo.idModulo)">
                                     {{modulo.nombreModulo}}
                                 </div> 
                             </template>               
@@ -102,15 +102,15 @@
                 </div>
                 <div v-if="desplegarMenu">
                     <TresPuntosIcon v-model="showOptios"/>
-                </div>            
+                </div>           
             </div>
             <!--Si el panel esta recogido despliega esta parte-->
             <div class="perfil-hidden" v-else>
                 <Avatar class="Avatar" @click="seleccion"/>
             </div>
-            <div>
-
-            </div>
+            <div v-show="showOptios">
+                opciones mostrar
+            </div> 
         </nav>       
 </template>
 
@@ -144,17 +144,20 @@ import Avatar from './avatars/Avatar1.vue'
 import axios from 'axios';
 
 // Generar reactividad del componente
-import {onMounted, ref} from 'vue';
+import {onMounted, ref, toRefs} from 'vue';
 
 //controla si se a acionado el desplegar menú
 const desplegarMenu = ref(false)
 
 //Controla el texto mostrado al pasar el mouse
-const showText = ref()
+const { showOptios} = ref()
 
+const showText = toRefs
 //al pasar el mouse por el navegador
 const cambiarEstado = (id) => {
-    showText.value = id 
+    console.log(id)
+    showOptios.value = id
+    console.log(showOptios)
 };
 
 //valor por defecto
