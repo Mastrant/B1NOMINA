@@ -42,10 +42,6 @@
     import { ref, defineProps, onMounted, toRefs, reactive } from 'vue';
     import axios from 'axios';
 
-<<<<<<< HEAD
-    //props
-=======
->>>>>>> d8cbdee1ffc0492d7ea1d238930489d7fd7cac75
     const props = defineProps({
         sociedadId: {
             type: String,
@@ -54,8 +50,6 @@
     })
 
     //variables a utilizar
-<<<<<<< HEAD
-=======
     const state = reactive({
         ListaEmpleados: [],
         ListaDepartamentos: [],
@@ -65,34 +59,12 @@
         grupo: '',
         shearch: ''
     });
->>>>>>> d8cbdee1ffc0492d7ea1d238930489d7fd7cac75
 
     const {
         ListaEmpleados,
         ListaDepartamentos, 
         ListaGrupos,
         ListaSedes,
-<<<<<<< HEAD
-        grupo,
-    } = ref([])  
-
-    const { 
-        sociedadId,
-        shearch
-    } = ref('')  
-    
-
-    const ListaOptions = ref([
-    { id: 1, text: 'One', value: 'A' },
-    { id: 2, text: 'Two', value: 'B' },
-    { id: 3, text: 'Three', value: 'C' }
-    ]);
-
-  
-
-    const pedirDepartamentos = () => {
-        axios.get(`/sociedad/${sociedadId}/list_departamentos?page=1&records=20`,{id: sociedadId})
-=======
         sociedadId,
         grupo,
         shearch
@@ -125,31 +97,20 @@
 
     const pedirDepartamentos = async () => {
         await axios.get(`list_departamento_sociedad?idSociedad=${sociedadId}&page=1&records=20`,{idSociedad :sociedadId})
->>>>>>> d8cbdee1ffc0492d7ea1d238930489d7fd7cac75
         .then(
-            (respuesta) => {
-                console.log(respuesta)
+            res => {
+                ListaDepartamentos.value = res.data
             }
         )
-<<<<<<< HEAD
-        .catch(
-            (error) => {
-                console.log(error)
-=======
         .then(
             err => {
                 if (err.request.status === 422){
                     console.log("Departamentos no encontradas")
                 }
->>>>>>> d8cbdee1ffc0492d7ea1d238930489d7fd7cac75
             }
         )
     };
 
-<<<<<<< HEAD
-    onMounted(
-        pedirDepartamentos);
-=======
     const pedirGrupos = async () => {
         await axios.get('',{idSociedad :sociedadId})
         .then(
@@ -188,7 +149,6 @@
        pedirGrupos();
        pedirUsuarios();
     });
->>>>>>> d8cbdee1ffc0492d7ea1d238930489d7fd7cac75
 
 </script>
 
