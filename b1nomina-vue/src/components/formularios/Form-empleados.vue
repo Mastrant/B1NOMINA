@@ -39,10 +39,13 @@
     import PersonPlussIcon from '../icons/Person-Pluss-icon.vue';
 
     //librerias
-    import { ref, defineProps, onMounted } from 'vue';
+    import { ref, defineProps, onMounted, toRefs, reactive } from 'vue';
     import axios from 'axios';
 
+<<<<<<< HEAD
     //props
+=======
+>>>>>>> d8cbdee1ffc0492d7ea1d238930489d7fd7cac75
     const props = defineProps({
         sociedadId: {
             type: String,
@@ -51,12 +54,25 @@
     })
 
     //variables a utilizar
+<<<<<<< HEAD
+=======
+    const state = reactive({
+        ListaEmpleados: [],
+        ListaDepartamentos: [],
+        ListaGrupos: [],
+        ListaSedes: [],
+        sociedadId: '',
+        grupo: '',
+        shearch: ''
+    });
+>>>>>>> d8cbdee1ffc0492d7ea1d238930489d7fd7cac75
 
     const {
         ListaEmpleados,
         ListaDepartamentos, 
         ListaGrupos,
         ListaSedes,
+<<<<<<< HEAD
         grupo,
     } = ref([])  
 
@@ -76,20 +92,103 @@
 
     const pedirDepartamentos = () => {
         axios.get(`/sociedad/${sociedadId}/list_departamentos?page=1&records=20`,{id: sociedadId})
+=======
+        sociedadId,
+        grupo,
+        shearch
+    } = toRefs(state)  
+
+    const ListaOptions = ref([
+        { text: 'One', valor: 'A' },
+        { text: 'Two', valor: 'B' },
+        { text: 'Three', valor: 'C' },
+    ]);
+
+    const pedirSedes = async () => {
+        await axios.get(`list_sede_sociedad?idSociedad=${sociedadId}&page=1&records=20`,{idSociedad: sociedadId})
+        .then(
+            res => {
+                ListaSedes.value = res.data 
+                console.log(res.data)
+            }
+        )
+        .then(
+            err => {
+                if (err.request.status == 404){
+                    console.log("sedes no encontradas")
+                } else if (err.request.status == 422){
+                    console.log("Error Sedes 422")
+                }
+            }
+        )
+    };
+
+    const pedirDepartamentos = async () => {
+        await axios.get(`list_departamento_sociedad?idSociedad=${sociedadId}&page=1&records=20`,{idSociedad :sociedadId})
+>>>>>>> d8cbdee1ffc0492d7ea1d238930489d7fd7cac75
         .then(
             (respuesta) => {
                 console.log(respuesta)
             }
         )
+<<<<<<< HEAD
         .catch(
             (error) => {
                 console.log(error)
+=======
+        .then(
+            err => {
+                if (err.request.status === 422){
+                    console.log("Departamentos no encontradas")
+                }
+>>>>>>> d8cbdee1ffc0492d7ea1d238930489d7fd7cac75
             }
         )
     };
 
+<<<<<<< HEAD
     onMounted(
         pedirDepartamentos);
+=======
+    const pedirGrupos = async () => {
+        await axios.get('',{idSociedad :sociedadId})
+        .then(
+            (res) => {
+                ListaGrupos.value = res.data 
+                console.log(res.data)
+            }
+        )
+        .then(
+            (err) => {
+                console.log(err)
+            }
+        )
+    };
+
+    const pedirUsuarios = () => {
+        axios.get(`/user/${sociedadId}/associate_user_company`)
+        .then(
+            (res) => {
+                //almacena los datos de la peticion en la variable enviada como props
+                //ListaEmpleados.value = res.data 
+                console.log(res)
+            }
+        )
+        .then(
+            (err) => {
+                console.log("error al pedir los usuarios")
+            }
+        )
+    };
+
+    //al montar el componente
+    onMounted(() => {
+       pedirSedes();
+       pedirDepartamentos();
+       pedirGrupos();
+       pedirUsuarios();
+    });
+>>>>>>> d8cbdee1ffc0492d7ea1d238930489d7fd7cac75
 
 </script>
 
