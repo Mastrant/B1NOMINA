@@ -6,7 +6,7 @@
 
                 <ListaTemplate v-model="filtroSede" :options="ListaSedes" optionsSelected="Sede"/>
                 <ListaTemplate v-model="filtroDepartamento" :options="ListaDepartamentos" optionsSelected="Departamento"/>
-                <ListaTemplate v-model="filtroGrupo" :options="ListaGrupos" optionsSelected="Grupo"/>
+                <ListaTemplate v-model="filtroGrupo" :options="ListaOptions" optionsSelected="Grupo"/>
             </div>
             
             <div>
@@ -39,10 +39,26 @@
     import PersonPlussIcon from '../icons/Person-Pluss-icon.vue';
 
     //librerias
-    import { ref, defineProps, onMounted } from 'vue';
+    import { ref, defineProps, onMounted, toRefs, reactive } from 'vue';
     import axios from 'axios';
 
+    const props = defineProps({
+        sociedadId: {
+            type: String,
+            default: ''
+        }
+    })
+
     //variables a utilizar
+    const state = reactive({
+        ListaEmpleados: [],
+        ListaDepartamentos: [],
+        ListaGrupos: [],
+        ListaSedes: [],
+        sociedadId: '',
+        grupo: '',
+        shearch: ''
+    });
 
     const {
         ListaEmpleados,
@@ -52,23 +68,16 @@
         sociedadId,
         grupo,
         shearch
-    } = ref()  
+    } = toRefs(state)  
 
     const ListaOptions = ref([
-    { text: 'One', value: 'A' },
-    { text: 'Two', value: 'B' },
-    { text: 'Three', value: 'C' }
+        { text: 'One', valor: 'A' },
+        { text: 'Two', valor: 'B' },
+        { text: 'Three', valor: 'C' },
     ]);
 
-    const props = defineProps({
-        sociedadId: {
-            type: String,
-            default: ''
-        }
-    })
-
-    const pedirSedes = () => {
-        axios.get(`list_sede_sociedad?idSociedad=${sociedadId}&page=1&records=20`,{idSociedad: sociedadId})
+    const pedirSedes = async () => {
+        await axios.get(`list_sede_sociedad?idSociedad=${sociedadId}&page=1&records=20`,{idSociedad: sociedadId})
         .then(
             res => {
                 ListaSedes.value = res.data 
@@ -77,15 +86,17 @@
         )
         .then(
             err => {
-                if (err.status === 404){
+                if (err.request.status == 404){
                     console.log("sedes no encontradas")
+                } else if (err.request.status == 422){
+                    console.log("Error Sedes 422")
                 }
             }
         )
     };
 
-    const pedirDepartamentos = () => {
-        axios.get(`list_departamento_sociedad?idSociedad=${sociedadId.value}&page=1&records=20`,{idSociedad :sociedadId.value})
+    const pedirDepartamentos = async () => {
+        await axios.get(`list_departamento_sociedad?idSociedad=${sociedadId}&page=1&records=20`,{idSociedad :sociedadId})
         .then(
             res => {
                 ListaDepartamentos.value = res.data
@@ -93,46 +104,45 @@
         )
         .then(
             err => {
-                if (err.status === 404){
+                if (err.request.status === 422){
                     console.log("Departamentos no encontradas")
                 }
             }
         )
     };
 
-    const pedirGrupos = () => {
-        axios.get('',{idSociedad :sociedadId.value})
+    const pedirGrupos = async () => {
+        await axios.get('',{idSociedad :sociedadId})
         .then(
-            res => {
+            (res) => {
                 ListaGrupos.value = res.data 
                 console.log(res.data)
             }
         )
         .then(
-            err => {
-                if (err.status === 404){
-                    console.log("Grupos no encontradas")
-                }
-            }
-        )
-    };
-
-    const pedirUsuarios = () => {
-        axios.get(`/user/list_users?page=1&records=2`,{idSociedad :sociedadId.value})
-        .then(
-            res => {
-                //almacena los datos de la peticion en la variable enviada como props
-                ListaEmpleados.value = res.data 
-                console.log(res.data)
-            }
-        )
-        .then(
-            err => {
+            (err) => {
                 console.log(err)
             }
         )
     };
 
+    const pedirUsuarios = () => {
+        axios.get(`/user/${sociedadId}/associate_user_company`)
+        .then(
+            (res) => {
+                //almacena los datos de la peticion en la variable enviada como props
+                //ListaEmpleados.value = res.data 
+                console.log(res)
+            }
+        )
+        .then(
+            (err) => {
+                console.log("error al pedir los usuarios")
+            }
+        )
+    };
+
+    //al montar el componente
     onMounted(() => {
        pedirSedes();
        pedirDepartamentos();
