@@ -8,7 +8,7 @@
         <template #panel>
             <LayoutForm>
                 <template #cabecera>
-                    <NavButtonPanel text="Empleados" direccion="listar" :cantidad="datos.empleados" :seleccionado="($route.name === 'listar')?true: false" />
+                    <NavButtonPanel text="Empleados" direccion="listar" :cantidad="datos.empleados" :seleccionado="($route.name === 'listar')? true: false" />
                     <NavButtonPanel text="En Contratacion" direccion="enContratacion" :cantidad="datos.contratacion" :seleccionado="($route.name == 'enContratacion')?true: false" />
                     <NavButtonPanel text="Inactivos" direccion="listar" :cantidad="datos.inactivos" :eleccionado="($route.name == 'inactivos')?true: false" />
                 </template>
@@ -61,11 +61,11 @@ export default {
 
             await axios.get(`/sociedad/${this.sociedadId}/resumen_empleados`, {"id": this.sociedadId})
         .then(
-            (respuesta)=>{
+            (respuesta)=> {
                 this.datos = respuesta.data;
                 console.log(this.datos)
             }
-        )<a
+        )
         .catch(
             error => {
                 console.log(error)

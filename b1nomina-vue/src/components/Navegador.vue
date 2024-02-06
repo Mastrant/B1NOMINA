@@ -12,15 +12,14 @@
                 <div class="contend1">
                     <div class="options" v-for="modulo in listaModulos2" :key="modulo.idModulo">
                         <!--Dashboard-->
-                        <NavButton v-if="modulo.asignado" @mouseover="cambiarEstado(modulo.idModulo)" >
+                        <NavButton v-show="modulo.asignado" @mouseover="cambiarEstado(modulo.idModulo)" @mouseleave="cambiarEstado(null)">
                             <template #direccion>
                                 <router-link :to="modulo.urlModulo">
                                     <CuboIcon />
-                                    <span v-show="desplegarMenu">{{modulo.nombreModulo}}</span>
+                                    <span v-show="(desplegarMenu) || (showText === modulo.idModulo && desplegarMenu === false)">
+                                        {{modulo.nombreModulo}}
+                                    </span>
                                 </router-link>
-                                <div v-show="(showText==modulo.idModulo)">
-                                    {{modulo.nombreModulo}}
-                                </div> 
                             </template>               
                         </NavButton>
                     </div>
@@ -103,14 +102,15 @@
                 <div v-if="desplegarMenu">
                     <TresPuntosIcon v-model="showOptios"/>
                 </div>           
+                <div v-show="showOptios">
+                opciones mostrar
+                </div> 
             </div>
             <!--Si el panel esta recogido despliega esta parte-->
             <div class="perfil-hidden" v-else>
                 <Avatar class="Avatar" @click="seleccion"/>
             </div>
-            <div v-show="showOptios">
-                opciones mostrar
-            </div> 
+            
         </nav>       
 </template>
 
@@ -150,14 +150,14 @@ import {onMounted, ref, toRefs} from 'vue';
 const desplegarMenu = ref(false)
 
 //Controla el texto mostrado al pasar el mouse
-const { showOptios} = ref()
+const showOptios = ref('')
 
-const showText = toRefs
+const showText = ref('')
+
 //al pasar el mouse por el navegador
 const cambiarEstado = (id) => {
     console.log(id)
-    showOptios.value = id
-    console.log(showOptios)
+    showText.value = id
 };
 
 //valor por defecto
@@ -204,6 +204,7 @@ onMounted(() => {
 
 <style scoped>
 
+/*Contenedor general */
 .aside {
     z-index: 5;
     height: 100%;
@@ -218,6 +219,7 @@ onMounted(() => {
     position: absolute;
     box-sizing: border-box;
 }
+/*logo y boton de aprtura */
 .head {
     margin-top: 40px;
     display: flex;
@@ -227,9 +229,11 @@ onMounted(() => {
     margin-bottom: 32px;
     gap: 12px;
 }
+/*logo*/
 .head > img {
     cursor: pointer;
 }
+/*Imagensociedad */
 .profile img {
     display: flex;
     width: 188.978px;
@@ -239,26 +243,29 @@ onMounted(() => {
     gap: 6px;
     flex-shrink: 0;
 }
+/*contenedor general de las listas de modulos*/
 div.contend {
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
-
+/*Icono dentro de las opciones*/
 .options img {
     margin-right: 16px;
 }
-
+/*link correspondiente dentro de las opciones */
 .options a {
     font-family: 'Poppins' , helvetica;
     color: #CDE0F1;
     text-decoration: none;
 }
-
-
+/*Contenedor general de las opcines */
+.options {
+    z-index: 3;
+}
+/*Contenedor del perfil */
 div.perfil {
-    
     display: flex;
     justify-content: center;
     padding: 24px 0px;
@@ -271,43 +278,36 @@ div.perfil {
     box-sizing: content-box;
     width: 100%;
     justify-content: space-evenly;
-
 }
-
+/*Estilos cuando menú esta cerrado */
 div.perfil-hidden{
     margin: 48px 0px;
     display: flex;
     justify-content: center;
 }
-
+/*estilos del avatar de la sociedad */
 .avatar {
     margin-right: 16px;
     cursor: pointer;
 }
-
+/*Texto del perfil */
 .text-perfil {
     font-size: 12px;
 }
-
+/*estilos especificos*/
 .text-perfil-1 {
     font-size: 14px;
 }
-
+/*Contenedor de los textos del perfil */
 .perfil-text {
     display: flex;
     flex-direction: column;
 }
-
+/*Estilo de los iconos */
 .icon {
     height: 20.5px;
     width: 20.5px;
     cursor: pointer;
-}
-
-.Name-page a {
-    color: #1A2771;
-    text-decoration: none;
-
 }
 
 .Avatar {

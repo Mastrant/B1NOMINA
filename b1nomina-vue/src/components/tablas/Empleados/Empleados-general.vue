@@ -25,8 +25,7 @@
                 </th>
             </tr>
         </thead>
-        <tbody v-for="(item) in listaEmpleados" :key="item.id">
-            
+        <tbody v-for="(item) in Lista" :key="item.id">
             <tr class="rowTabla">
                 <th class="columna">
                     <input type="checkbox">
@@ -35,13 +34,13 @@
                    {{item.nombres}}
                 </th>
                 <th class="columna">
-                    {{item.rut || item.rut_provisorio}}
+                    {{item.rut}}
                 </th>
                 <th class="columna">
                     {{ item.cargo }}
                 </th>
                 <th class="columna">
-                    ${{ item.salarioBase }}
+                    {{ item.sueldo }}
                 </th>
                 <th class="columna">
                     {{ item.activo }}
@@ -55,35 +54,22 @@
 </template>
 
 <script setup>
-import { ref, defineProps } from 'vue';
+import { ref, defineProps, onMounted } from 'vue';
 
 const props = defineProps({
-    listaEmpleados : {
+    listaEmpleado : {
         type: Array,
         default: []
     }
 })
-const {empleadosSelecionados, listaEmpleados} = ref([])
+
+const Lista = ref(props, 'listaEmpleado')
+
+onMounted(() => {
+    console.log(Lista.value)
+})
 
 
-/*
-const listaEmpleados = ref([
-    {
-    "nombres": "Admin",
-    "apellido_paterno": "Root",
-    "activo": true,
-    "id": 1,
-    "updater_user": 1,
-    "orden": 1,
-    "rut": "1",
-    "email": null,
-    "rut_provisorio": "",
-    "cargo": "admin",
-    "salarioBase": "200000",
-  },
-]) 
-
-*/
 </script>
 
 <style scoped>

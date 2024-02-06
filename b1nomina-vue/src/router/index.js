@@ -55,7 +55,6 @@ const router = createRouter({
         //panel gestion de nomina
         {
           path: 'gestionNomina',
-          name: 'gestionNomina',
           component: () => import('../views/GestionNominaView.vue'),
           alias: ['gestiosNomina', 'nomina']
         },

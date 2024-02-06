@@ -22,7 +22,7 @@
             <span>Has seleccionado {{ 1 }} de los {{ 12 }} empleados</span>
         </div>
         <div class="cuerpo de la tabla">
-            <EmpleadosGeneral :listaEmpleados="ListaEmpleados"/>
+            <EmpleadosGeneral :listaEmpleado="ListaEmpleados"/>
         </div>
     </form>
 </template>
@@ -114,10 +114,10 @@
 
     const pedirEmpleados = async () => {
      //   await axios.get(`list_sede_sociedad?idSociedad=${sociedadId}&page=1&records=20`)
-        await axios.get(`/sociedad/${id}/resumen_empleados`, {"id": id})
+        await axios.get(`/sociedad/${id}/list_empleados`, {"id": id})
         .then(
             (res) => {
-                ListaEmpleados.value = res.data
+                ListaEmpleados.value = res.data //almacena los datos devueltos por la api
             }
         )
         .catch(
