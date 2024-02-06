@@ -30,7 +30,7 @@ axios.interceptors.response.use(
         localStorage.removeItem('token');
   
         // Utiliza Vue Router para redirigir al usuario a la página de inicio de sesión
-        router.replace('login');
+        router.replace('/login');
       }
   
       // Retorna el error para que pueda ser manejado posteriormente

@@ -5,18 +5,18 @@
             <Headervue nombrePagina="Empleados" />
         </template>
         
-        <template #panel>
+        <template v-slot:panel>
             <LayoutForm>
-                <template #cabecera>
-                    <NavButtonPanel text="Empleados" direccion="listar" :cantidad="datos.empleados" :seleccionado="($route.name === 'listar')? true: false" />
-                    <NavButtonPanel text="En Contratacion" direccion="enContratacion" :cantidad="datos.contratacion" :seleccionado="($route.name == 'enContratacion')?true: false" />
-                    <NavButtonPanel text="Inactivos" direccion="listar" :cantidad="datos.inactivos" :eleccionado="($route.name == 'inactivos')?true: false" />
+                <template v-slot:cabecera>
+                    <NavButtonPanel text="Empleados" direccion="listar" :cantidad="datos.empleados" :seleccionado="$route.name === 'listar'" />
+                    <NavButtonPanel text="En Contratacion" direccion="enContratacion" :cantidad="datos.contratacion" :seleccionado="$route.name == 'enContratacion'" />
+                    <NavButtonPanel text="Inactivos" direccion="listar" :cantidad="datos.inactivos" :eleccionado="$route.name == 'inactivos'" />
                 </template>
-                <template #formulario>
+                <template v-slot:formulario>
                     <router-view />
                 </template>
             </LayoutForm>
-        </template>
+          </template>
     </LayoutPanel>
 </template>
 
@@ -59,11 +59,11 @@ export default {
     methods: {
         async pedirDatos() {
 
-            await axios.get(`/sociedad/${this.sociedadId}/resumen_empleados`, {"id": this.sociedadId})
+        await axios.get(`/sociedad/${this.sociedadId}/resumen_empleados`, {"id": this.sociedadId})
         .then(
-            (respuesta)=> {
+            (respuesta) => {
                 this.datos = respuesta.data;
-                console.log(this.datos)
+                console.log(respuesta.data["contratacion"])
             }
         )
         .catch(

@@ -22,7 +22,7 @@
             <span>Has seleccionado {{ 1 }} de los {{ 12 }} empleados</span>
         </div>
         <div class="cuerpo de la tabla">
-            <EmpleadosGeneral :listaEmpleado="ListaEmpleados"/>
+            <EmpleadosGeneral listaEmpleado="ListaEmpleados"/>
         </div>
     </form>
 </template>
