@@ -8,9 +8,9 @@
         <template #panel>
             <LayoutForm>
                 <template #cabecera>
-                    <NavButtonPanel text="Empleados" direccion="listar" :cantidad="nEmpleados" :seleccionado="($route.name === 'listar')?true: false" />
-                    <NavButtonPanel text="En Contratacion" direccion="enContratacion" :cantidad="nContratacion" :seleccionado="($route.name == 'enContratacion')?true: false" />
-                    <NavButtonPanel text="Inactivos" direccion="listar" :cantidad="nInactivos" :eleccionado="($route.name == 'inactivos')?true: false" />
+                    <NavButtonPanel text="Empleados" direccion="listar" :cantidad="datos.empleados" :seleccionado="($route.name === 'listar')?true: false" />
+                    <NavButtonPanel text="En Contratacion" direccion="enContratacion" :cantidad="datos.contratacion" :seleccionado="($route.name == 'enContratacion')?true: false" />
+                    <NavButtonPanel text="Inactivos" direccion="listar" :cantidad="datos.inactivos" :eleccionado="($route.name == 'inactivos')?true: false" />
                 </template>
                 <template #formulario>
                     <router-view />
@@ -32,9 +32,10 @@ export default {
     name: 'empleados',
     data() {
         return {
-            nEmpleados : 0,
-            nContratacion: 0,
-            nInactivos: 0,
+            datos: {
+                Array,
+                default: []
+            },
             selectedButton: null,
         }
     },
@@ -44,6 +45,11 @@ export default {
             default: ''
         }
     },
+    provide() {
+        return {
+            IDsociedad: this.sociedadId
+        };
+    },
     components: {
         Headervue,
         LayoutPanel,
@@ -52,12 +58,14 @@ export default {
     },
     methods: {
         async pedirDatos() {
-            await axios.get(`${this.sociedadId}/datos`)
+
+            await axios.get(`/sociedad/${this.sociedadId}/resumen_empleados`, {"id": this.sociedadId})
         .then(
             (respuesta)=>{
-                console.log(respuesta)
+                this.datos = respuesta.data;
+                console.log(this.datos)
             }
-        )
+        )<a
         .catch(
             error => {
                 console.log(error)
@@ -67,7 +75,8 @@ export default {
     },
     //solicita la cantidad total de elementos para el panel
     async mounted(){
-      //  await pedirDatos()
+      await this.pedirDatos()
+     // console.log("empleadosView " + this.sociedadId)
     }
 }
 </script>

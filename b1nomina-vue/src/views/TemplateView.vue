@@ -27,20 +27,18 @@ export default {
     //al montar el componente
     async mounted() {
         //si el token existe y la validacion en TRUE
-        ((localStorage.getItem('token') != null) && (this.validateToken(`${localStorage.getItem('token')}`))) ? console.log(""): this.$router.push("/login")
+        ((localStorage.getItem('token') != null) && (this.validateToken(`${localStorage.getItem('token')}`))) ? console.log(this.sociedadId): this.$router.push("/login")
          //eliminar el token generado y enviar al login
-            //realizar peticiones
-            
+
     },
     //metodos
     methods: {
         // funcion para realizar peticion y valiodar el token  optenido
         async validateToken(TOKEN) {
             await axios.post(`/validate?token=${TOKEN}`)
-            .then( respuesta => {
+            .then(respuesta => {
                 //si es authorizado devuelve verdadero
                 if (respuesta.status==201 || respuesta.status==202){
-                    console.log("valido")
                     return true
                 }
             })

@@ -42,6 +42,7 @@ const router = createRouter({
         requiereToken: true, //establece si es requerido autorizacion para acceder
       },
       
+      
       // rutas derivadas de la seleccion de la sociedad
       children: [
         //panel Dashboard
@@ -63,6 +64,8 @@ const router = createRouter({
           path: 'empleados',
           name: 'empleados',
           component: () => import('../views/EmpleadosView.vue'),
+          props: true,
+         
           //componentes hijos de la ruta empleados
           children:[
             {
@@ -70,7 +73,8 @@ const router = createRouter({
               component: () => import('../components/formularios/Form-empleados.vue'),
               name: 'listar',
               alias: 'listar',
-              props: true, //toma los parametros de la url con el mismo nombre que los recibe
+              props: true,
+               //toma los parametros de la url con el mismo nombre que los recibe
             },
             {
               path: 'enContratacion',

@@ -72,10 +72,12 @@ export default {
     }, 
     //al momento de crear el componente verifica el toquen y pide las sociedades disponibles
     async mounted() {
+        
         // Verifica que el token existe y si este es valido
         if(localStorage.getItem('token') != null && this.validateToken(`${localStorage.getItem('token')}`)){
             
             this.autorizado = true;
+            
 
             this.solicitarSociedad()
 
