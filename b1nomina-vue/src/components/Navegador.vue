@@ -23,35 +23,6 @@
                             </template>               
                         </NavButton>
                     </div>
-                    <div class="options">     
-                        <!--Empleados-->
-                        <NavButton>
-                            <template #direccion>
-                                <router-link to="empleados">
-                                    <TwoPersonIcon />
-                                    <span v-show="desplegarMenu">Empleados</span>
-                                </router-link>
-                            </template>
-                        </NavButton>
-                        <!--Eventos-->
-                        <NavButton>
-                            <template #direccion>
-                                <router-link to="eventos">
-                                    <TableIcon />
-                                    <span v-show="desplegarMenu">Eventos</span>
-                                </router-link>
-                            </template>
-                        </NavButton>
-                        <!--Informes-->
-                        <NavButton>
-                            <template #direccion>
-                                <router-link to="informes">
-                                    <AjustesIcon />
-                                    <span v-if="desplegarMenu">Informes</span>
-                                </router-link>
-                            </template>
-                        </NavButton>  
-                    </div>   
                 </div>
                 <!--Botones inferiores-->
                 <div class="contend2">
@@ -100,11 +71,8 @@
                     <span class="text-perfil">Rut 0102030405</span>
                 </div>
                 <div v-if="desplegarMenu">
-                    <TresPuntosIcon v-model="showOptios"/>
+                    <TresPuntosIcon class="icon" @click="logOut"/>
                 </div>           
-                <div v-show="showOptios">
-                opciones mostrar
-                </div> 
             </div>
             <!--Si el panel esta recogido despliega esta parte-->
             <div class="perfil-hidden" v-else>
@@ -156,7 +124,6 @@ const showText = ref('')
 
 //al pasar el mouse por el navegador
 const cambiarEstado = (id) => {
-    console.log(id)
     showText.value = id
 };
 
@@ -191,6 +158,13 @@ const OptenerModulos = () => {
 const seleccion = () => {
     //al selecionar
     router.push('/sociedad')
+}
+
+const logOut = () => {
+
+    localStorage.clear();
+    // Utiliza Vue Router para redirigir al usuario a la página de inicio de sesión
+    router.replace('/login');
 }
 
 //al momento de  montar el componente

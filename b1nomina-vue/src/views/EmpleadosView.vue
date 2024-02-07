@@ -33,8 +33,8 @@ export default {
     data() {
         return {
             datos: {
-                Array,
-                default: []
+               
+
             },
             selectedButton: null,
         }
@@ -62,8 +62,8 @@ export default {
         await axios.get(`/sociedad/${this.sociedadId}/resumen_empleados`, {"id": this.sociedadId})
         .then(
             (respuesta) => {
-                this.datos = respuesta.data;
-                console.log(respuesta.data["contratacion"])
+                //asigna los valores entregados a las variables
+                this.datos = respuesta.data.data            
             }
         )
         .catch(

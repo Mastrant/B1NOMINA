@@ -1,7 +1,7 @@
 <template>
     <select class="lista-general" v-model="selected">
 
-        <option disabled value=""> 
+        <option value=""> 
             {{optionsSelected}}
         </option>
 
@@ -20,8 +20,7 @@ import { ref, defineProps } from 'vue';
 const props = defineProps({
     //Lista de opciones
     options: {
-        type: Array ,
-        default: [{}]
+        default: () => [{}]
     },
     //Titulo de la opcion
     optionsSelected: {

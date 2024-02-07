@@ -2,7 +2,7 @@
 
     <router-link :class="{'activate' : seleccionado}" :to="{name: direccion}">
         {{text}}
-        <span>
+        <span class="cantidad">
             {{ cantidad }}
         </span>
     </router-link>
@@ -14,13 +14,19 @@
 import { defineProps, toRefs } from 'vue';
 
 const props = defineProps({
-    text: String,
-    direccion: String,
-    cantidad: Number,
-    seleccionado: Boolean,
-})
+    text: {
+        type: String,
+        default: ""
+    },
+    direccion: {type:String},
+    cantidad: {
+        type: String,
+        default: '0',
+    },
+    seleccionado: {type:Boolean},
+});
 
-const {cantidad, seleccionado} = toRefs(props)
+const {cantidad, seleccionado} = toRefs(props);
 
 </script>
 
@@ -45,8 +51,10 @@ a {
     text-decoration: none;
 }
 
-a > span {
-    width: 24px;
+a > span.cantidad {
+    padding: 1px;
+    min-width: 24px;
+    width: fit-content;
     height: 24px;
     box-sizing: border-box;
     padding: 8px 4px;

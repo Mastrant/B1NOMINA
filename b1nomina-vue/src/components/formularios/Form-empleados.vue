@@ -2,11 +2,11 @@
     <form class="formulario-empleados">
         <div class="acciones-form">
             <div class="filtros">
-                <InputShearch v-model="shearch"/>
+                <InputShearch v-model="shearch" @update:modelValue="shearch = $event" />
 
                 <ListaTemplate v-model="filtroSede" :options="ListaSedes" optionsSelected="Sede"/>
-                <ListaTemplate v-model="filtroDepartamento" :options="ListaDepartamentos" optionsSelected="Departamento"/>
-                <ListaTemplate v-model="filtroGrupo" :options="ListaOptions" optionsSelected="Grupo"/>
+                <ListaTemplate v-model="filtroDepartamento" :options="Object.values(ListaDepartamentos)" optionsSelected="Departamento"/>
+                <ListaTemplate v-model="filtroGrupo" :options="ListaGrupos" optionsSelected="Grupo"/>
             </div>
             
             <div>
@@ -21,8 +21,9 @@
             <ListaTemplate :options="ListaOptions" optionsSelected="Acciones en Lote"/>
             <span>Has seleccionado {{ 1 }} de los {{ 12 }} empleados</span>
         </div>
+        <!--tabla con los datos-->
         <div class="cuerpo de la tabla">
-            <EmpleadosGeneral listaEmpleado="ListaEmpleados"/>
+            <EmpleadosGeneral :listaEmpleados="ListaEmpleados"/>
         </div>
     </form>
 </template>
@@ -47,26 +48,28 @@
 // Inyectar el valor proporcionado
     const id = inject('IDsociedad');
 
-    //variables a utilizar
+    //variables a utilizar de forma reactiva
     const state = reactive({
-        grupo: '',
-        shearch: ''
+        ListaEmpleados: []
     });
 
-    const {
-        grupo,
-        shearch,
-    } = ref(state);
-
+    //lista de sedes
     const ListaSedes = ref([]);
-    const ListaDepartamentos = ref({});
-    const ListaGrupos = ref([]);
-    const ListaEmpleados = ref({});
 
+    //lista de Departamentos
+    const ListaDepartamentos = ref({});
+
+    //lista de grupos
+    const ListaGrupos = ref([]);
+
+    //lista de empleados
+    const {ListaEmpleados} = toRefs(state);
+
+    //ejemplo de acciones
     const ListaOptions = ref([
-        { text: 'One', valor: 'A' },
-        { text: 'Two', valor: 'B' },
-        { text: 'Three', valor: 'C' },
+        { nombre: 'One', valor: 'A' },
+        { nombre: 'Two', valor: 'B' },
+        { nombre: 'Three', valor: 'C' },
     ]);
 
     const pedirSedes = async () => {
@@ -99,7 +102,7 @@
     };
     const pedirGrupos = async () => {
      //   await axios.get(`list_sede_sociedad?idSociedad=${sociedadId}&page=1&records=20`)
-        await axios.get(`/sociedad/${id}/list_departamentos?page=${1}&records=20`, {"id": id})
+        await axios.get(`/sociedad/${id}/list_grupos_empleados`, {"id": id})
         .then(
             (res) => {
                 ListaGrupos.value = res.data
@@ -113,7 +116,6 @@
     };
 
     const pedirEmpleados = async () => {
-     //   await axios.get(`list_sede_sociedad?idSociedad=${sociedadId}&page=1&records=20`)
         await axios.get(`/sociedad/${id}/list_empleados`, {"id": id})
         .then(
             (res) => {
@@ -127,6 +129,19 @@
         )
     };
 
+    //filtros
+
+    const filtroDepartamento = (value) => {
+        console.log("Aplicado filtro por departamento")
+    }
+    const filtroSede = (value) => {
+        console.log("Aplicado filtro por sede")
+    }
+    const filtroGrupo = (value) => {
+        console.log("Aplicado filtro por grupo")
+    }
+
+    const shearch = ref('')
 
     
     //al montar el componente
