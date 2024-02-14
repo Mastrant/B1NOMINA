@@ -1,69 +1,86 @@
 <template>
     <div class="conted"> 
+        <!--Contenedor de la tabla-->
         <table class="TablaEmpleados">
-            <thead class="TablaEmpleados">
-                <tr class="rowTabla">
-                    <th class="columna"> 
-                        <input type="checkbox">
-                    </th>
-                    <th class="columna rowNombre">
-                        EMPLEADOS 
-                    </th>
-                    <th class="columna">
-                        RUT
-                    </th>
-                    <th class="columna"> 
-                        CARGO
-                    </th>
-                    <th class="columna"> 
-                        SALARIO BASE
-                    </th>
-                    <th class="columna"> 
-                        ESTADO 
-                    </th>
-                    <th class="columna"> 
-                        ACCIONES 
-                    </th>
-                </tr>
-            </thead>
-            <tbody v-for="(item) in DatosPaginados" :key="item.id">
-                <tr class="rowTabla">
-                    <td class="checkbox columna ">
-                        <input type="checkbox">
-                    </td>
-                    <td class="columna rowNombre">
-                        {{item.nombres}}
-                    </td>
-                    <td class="columna">
-                        {{item.rut}}
-                    </td>
-                    <td class="columna">
-                        {{ item.cargo }}
-                    </td>
-                    <td class="columna ">
-                        {{ item.sueldo }}
-                    </td>
-                    <td class="columna">
-                        {{ item.activo }}
-                    </td>
-                    <td class="columna acciones">
-                        <OjitoIcon @click="console.log('ir a info' + item.id)" class="icon" />
-                        <DescargaIcon @click="console.log('descargar info' + item.id)" class="icon" />
-                    </td>
-                </tr>
-            </tbody>
+            <!--Encabezado de la tabla-->
+            <tr class="rowTabla encabezado">
+                <th class="filaCheckbox"> 
+                    <input type="checkbox">
+                </th>
+                <th class="rowNombre">
+                    EMPLEADOS 
+                </th>
+                <th class="">
+                    RUT
+                </th>
+                <th class=""> 
+                    CARGO
+                </th>
+                <th class=""> 
+                    SALARIO BASE
+                </th>
+                <th class="Estado"> 
+                    ESTADO 
+                </th>
+                <th class=""> 
+                    ACCIONES 
+                </th>
+            </tr>
+            <!--Final encabezado-->
+
+            <!--Cuerpo de la tabla-->
+            <tr class="rowTabla cuerpo" v-for="(item) in DatosPaginados" :key="item.id">
+                <td class="filaCheckbox">
+                    <input type="checkbox">
+                </td>
+                <td class="rowNombre">
+                    {{item.nombres}}
+                </td>
+                <td class="">
+                    {{item.rut}}
+                </td>
+                <td class="">
+                    {{ item.cargo }}
+                </td>
+                <td class=" ">
+                    {{ item.sueldo }}
+                </td>
+                <td class="Estado">
+                    <InterruptorButton @click="console.log('estado cambiado' + item.id)" :Objid="item.id" :Estado="(item.activo == true)? true: false" />
+                    <span v-if="item.activo == true">Activo</span>
+                    <span v-else>Inactivo</span>
+                </td>
+                
+                <td class="acciones">
+                    <OjitoIcon @click="console.log('ir a info' + item.id)" class="icon" />
+                    <DescargaIcon @click="console.log('descargar info' + item.id)" class="icon" />
+                </td>
+            </tr>
+            <!--Final cuerpo-->
         </table>
 
-        <div class="pagination">
-            <button class="page-item previo">
-                <span class="page-link" @click="previosPage" >Previa</span>
-            </button>
-            <button class="page-item" v-for="pagina in totalpaginas()" :key="pagina" @click="getDataPorPagina(pagina)">
-                <span class="page-link" >{{ pagina }}</span>
-            </button>
-            <button class="page-item next">
-                <span class="page-link" @click="nextPage">Siguiente</span>
-            </button>
+        <!--Fin Tabla-->
+        <div class="conted-pagination">
+            <!--Espacio para paginacion-->
+            <div class="pagination">
+
+            <!--Boton de Previo-->
+            <PaginateButton @click="previosPage">
+                <template #icono>
+                    <img src="../../../assets/OneLeft-icon.svg" alt="prev"> 
+                </template>
+            </PaginateButton>
+
+            <!--Listado de opciones-->
+            <PaginateButton  v-for="pagina in totalpaginas()" :key="pagina" :texto="pagina" @click="getDataPorPagina(pagina)" />
+
+            <!--Boton de siguiente-->
+            <PaginateButton @click="nextPage">
+                <template #icono>
+                    <img src="../../../assets/OneRigth-icon.svg" alt="next">  
+                </template>
+            </PaginateButton>
+            </div>
         </div>
     </div>
    
@@ -72,8 +89,10 @@
 <script setup>
 import OjitoIcon from '@/components/icons/Ojito-icon.vue';
 import DescargaIcon from '@/components/icons/Descarga-icon.vue';
+import PaginateButton from '@/components/botones/Paginate-button.vue';
+import InterruptorButton from '@/components/botones/Interruptor-button.vue';
 
-import { ref, defineProps, watchEffect, onMounted, onBeforeMount } from 'vue';
+import { ref, defineProps, watchEffect, onMounted } from 'vue';
 
 // Define tus props
 const props = defineProps({
@@ -86,8 +105,10 @@ const props = defineProps({
 // Accede a la lista de empleados desde props
 const ListaEmpleados = ref(props.listaEmpleados);
 
-//configuracion del paginado
+//lista empleados Selecionados
 
+
+//configuracion del paginado
 const DatosPaginados = ref([]) //arreglo con los datos picados
 const paginaActual = ref(1); //inicializacion de la pagina
 const elementosPorPagina = 12; //numero de filas por pagina
@@ -137,7 +158,6 @@ const nextPage = () => {
 //al cambiar los datos reinicia el renderizado
 watchEffect(() => {
   ListaEmpleados.value = props.listaEmpleados;
-  console.log("datos actualizados")
 });
 
 //al montar el componente solicita la data
@@ -146,14 +166,6 @@ onMounted(()=> {
     ListaEmpleados.value = props.listaEmpleados;
 });
 
-
-onBeforeMount(() => {
-    console.log("solicitando datos")
-    getDataPorPagina()
-});
-    
-
-
 </script>
 
 <style scoped>
@@ -161,9 +173,35 @@ onBeforeMount(() => {
     width: 100%;
 }
 
-thead > tr {
+/**Contenedor general */
+.conted {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    gap: 24px;
+}
+
+/**Paginacion */
+div.contend-pagination {
     width: 100%;
-    height: 48px;
+    display: flex;
+    justify-content: end;
+}
+.pagination {
+    display: flex;
+    width: 100%;
+    gap: 4px;
+    justify-content: end;
+}
+.pagination button {
+    box-sizing: border-box;
+    padding: 4px 12px;
+}
+
+/**Estilos del encabezado de la tabla */
+tr.encabezado {
+    width: 100%;
+    height: 24px;
     box-sizing: border-box;
     background: #FCFCFD;
     border-bottom: 0.96px #EAECF0 solid;
@@ -178,22 +216,30 @@ thead > tr {
     word-wrap: break-word;
 }
 
-tbody {
-display: block;
+/**evitar que el texto sobre salga de la celda */
+td,th {
+  word-break: break-word;
+  white-space: nowrap;
 }
 
-tbody > tr {
+/**Estilo del cuerpo de la tabla */
+
+tr.cuerpo {
     width: 100%;
     height: 48px;
     box-sizing: border-box;
 }
-.formato {
-    background-color: red;
-}
+
+/**Estilo de la fila */
 tr.rowTabla {
     width: 100%;
+    box-sizing: content-box;
+    height: 48px;
+    display: table-row;
 }
-tbody > tr > td.columna {
+
+/*Estilos de cada espacio */
+tr.cuerpo > td {
     width: auto;
     height: 50px;
     background: none;
@@ -202,38 +248,48 @@ tbody > tr > td.columna {
     border:#FCFCFD;
     border-bottom: 0.96px #EAECF0 solid;
     align-self: center;
+    align-items: center;
+    text-align: center;
+    margin: auto;
 }
-th.rowNombre{
-    text-align: start;
-    max-width: 290px;
-}
+/**Columna acciones encabezado */
 th.acciones {
     display: flex;
     gap: 12px;
     justify-content: center;
     box-sizing: border-box;
 }
-.checkbox {
-    max-width: 64px;
+/* Primera columna */
+.filaCheckbox {
+    max-width: 80px;
     box-sizing: border-box;
-    padding: 24px;
+    margin: auto;
 }
-.icon {
-    cursor: pointer;
-}
-.pagination {
-    display: flex;
-    width: 400px;
-    display: flex;
-}
-.pagination button {
-    box-sizing: border-box;
-    padding: 4px 12px;
+/**Estilos Columna Empleados */
+th.rowNombre,
+td.rowNombre {
+    text-align: start !important;
+    max-width: 290px;
 }
 
-.conted {
+td.Estado, th.Estado {
     display: flex;
-    flex-direction: column;
-    gap: 24px;
+    gap: 10px;
+    justify-content: center;
+    box-sizing: border-box;
+    height: 100%;
 }
+
+/*columna que contiene los iconos*/
+
+.acciones {
+    gap:  24px;
+    justify-content: center;
+    white-space: nowrap;
+}
+/**Clase de los iconos */
+.icon { 
+    cursor: pointer;
+}
+
 </style>

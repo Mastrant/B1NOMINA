@@ -13,8 +13,8 @@
 import { ref, defineProps } from 'vue';
 
 const props = defineProps({
-    text: ref('')
-})
+    text: ref(''),
+});
 </script>
 
 <style scoped>
@@ -40,7 +40,7 @@ button:hover {
     background: #002E99;
 }
 
-span {
+button > span {
     /*estilos de fuente*/
 
     color: #F8F8F8;
@@ -48,6 +48,6 @@ span {
     font-family: Poppins;
     font-weight: 500;
     line-height: 19.23px;
-    word-wrap: break-word
+    word-wrap: break-word;
 }
 </style>
