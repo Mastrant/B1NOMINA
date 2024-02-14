@@ -72,6 +72,9 @@
         { nombre: 'Three', valor: 'C' },
     ]);
 
+    
+    // solicita a la api los datos de las Sedes y lo envia al componente ListaTemplate como props
+
     const pedirSedes = async () => {
      //   await axios.get(`list_sede_sociedad?idSociedad=${sociedadId}&page=1&records=20`)
         await axios.get(`/sociedad/${id}/list_sede?page=${1}&records=20`, {"id": id})
@@ -86,6 +89,9 @@
             }
         )
     };
+
+    // solicita a la api los datos de los Departamentos y lo envia al componente ListaTemplate como props
+
     const pedirDepartamentos = async () => {
      //   await axios.get(`list_sede_sociedad?idSociedad=${sociedadId}&page=1&records=20`)
         await axios.get(`/sociedad/${id}/list_departamentos?page=${1}&records=20`, {"id": id})
@@ -100,6 +106,8 @@
             }
         )
     };
+
+    // solicita a la api los datos de los grupos y lo envia al componente ListaTemplate como props
     const pedirGrupos = async () => {
      //   await axios.get(`list_sede_sociedad?idSociedad=${sociedadId}&page=1&records=20`)
         await axios.get(`/sociedad/${id}/list_grupos_empleados`, {"id": id})
@@ -114,7 +122,8 @@
             }
         )
     };
-
+    
+    // solicita a la api los datos de los empleados y lo envia al componente ListaTemplate como props
     const pedirEmpleados = async () => {
         await axios.get(`/sociedad/${id}/list_empleados`, {"id": id})
         .then(
@@ -124,13 +133,14 @@
         )
         .catch(
             (err) => {
-                console.log(err)
+                console.log(err) //muestra el error
             }
         )
     };
 
     //filtros
 
+    //Ordena y actualiza los datos de la variable 
     const filtroDepartamento = (value) => {
         console.log("Aplicado filtro por departamento")
     }

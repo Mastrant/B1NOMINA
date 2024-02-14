@@ -28,32 +28,32 @@
             </thead>
             <tbody v-for="(item) in DatosPaginados" :key="item.id">
                 <tr class="rowTabla">
-                    <th class="checkbox columna ">
+                    <td class="checkbox columna ">
                         <input type="checkbox">
-                    </th>
-                    <th class="columna rowNombre">
-                    {{item.nombres}}
-                    </th>
-                    <th class="columna">
+                    </td>
+                    <td class="columna rowNombre">
+                        {{item.nombres}}
+                    </td>
+                    <td class="columna">
                         {{item.rut}}
-                    </th>
-                    <th class="columna">
+                    </td>
+                    <td class="columna">
                         {{ item.cargo }}
-                    </th>
-                    <th class="columna ">
+                    </td>
+                    <td class="columna ">
                         {{ item.sueldo }}
-                    </th>
-                    <th class="columna">
+                    </td>
+                    <td class="columna">
                         {{ item.activo }}
-                    </th>
-                    <th class="columna acciones">
-                        <OjitoIcon class="icon" />
-                        <DescargaIcon class="icon" />
-                    </th>
+                    </td>
+                    <td class="columna acciones">
+                        <OjitoIcon @click="console.log('ir a info' + item.id)" class="icon" />
+                        <DescargaIcon @click="console.log('descargar info' + item.id)" class="icon" />
+                    </td>
                 </tr>
             </tbody>
         </table>
-        
+
         <div class="pagination">
             <button class="page-item previo">
                 <span class="page-link" @click="previosPage" >Previa</span>
@@ -73,7 +73,7 @@
 import OjitoIcon from '@/components/icons/Ojito-icon.vue';
 import DescargaIcon from '@/components/icons/Descarga-icon.vue';
 
-import { ref, defineProps, watchEffect, onMounted } from 'vue';
+import { ref, defineProps, watchEffect, onMounted, onBeforeMount } from 'vue';
 
 // Define tus props
 const props = defineProps({
@@ -86,9 +86,6 @@ const props = defineProps({
 // Accede a la lista de empleados desde props
 const ListaEmpleados = ref(props.listaEmpleados);
 
-
-
-
 //configuracion del paginado
 
 const DatosPaginados = ref([]) //arreglo con los datos picados
@@ -98,7 +95,6 @@ const elementosPorPagina = 12; //numero de filas por pagina
 //total de paginas
 const totalpaginas = () => {
     //devuelve el numero de paginas segun los datos y redondea el resultado
-
     return Math.ceil(ListaEmpleados.value.length / elementosPorPagina);
 };
 
@@ -106,7 +102,6 @@ const totalpaginas = () => {
 function getDataPorPagina(numeroPagina){
     //vacia la lista al cambiar iniciar
 
-    
     paginaActual.value = numeroPagina;
     
     DatosPaginados.value = ([])
@@ -142,13 +137,22 @@ const nextPage = () => {
 //al cambiar los datos reinicia el renderizado
 watchEffect(() => {
   ListaEmpleados.value = props.listaEmpleados;
+  console.log("datos actualizados")
 });
 
 //al montar el componente solicita la data
 onMounted(()=> {
     //ejecuta la actualizacion del paginado
-    getDataPorPagina(paginaActual.value)
-})
+    ListaEmpleados.value = props.listaEmpleados;
+});
+
+
+onBeforeMount(() => {
+    console.log("solicitando datos")
+    getDataPorPagina()
+});
+    
+
 
 </script>
 
@@ -174,6 +178,10 @@ thead > tr {
     word-wrap: break-word;
 }
 
+tbody {
+display: block;
+}
+
 tbody > tr {
     width: 100%;
     height: 48px;
@@ -185,7 +193,7 @@ tbody > tr {
 tr.rowTabla {
     width: 100%;
 }
-tbody > tr > th.columna {
+tbody > tr > td.columna {
     width: auto;
     height: 50px;
     background: none;
@@ -221,10 +229,6 @@ th.acciones {
 .pagination button {
     box-sizing: border-box;
     padding: 4px 12px;
-}
-
-.pagination button.next{
-
 }
 
 .conted {
