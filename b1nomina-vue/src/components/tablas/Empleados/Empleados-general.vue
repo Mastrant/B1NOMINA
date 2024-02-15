@@ -90,7 +90,7 @@
 import OjitoIcon from '@/components/icons/Ojito-icon.vue';
 import DescargaIcon from '@/components/icons/Descarga-icon.vue';
 import PaginateButton from '@/components/botones/Paginate-button.vue';
-import InterruptorButton from '@/components/botones/Interruptor-button.vue';
+import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
 
 import { ref, defineProps, watchEffect, onMounted } from 'vue';
 
@@ -105,11 +105,8 @@ const props = defineProps({
 // Accede a la lista de empleados desde props
 const ListaEmpleados = ref(props.listaEmpleados);
 
-//lista empleados Selecionados
-
-
 //configuracion del paginado
-const DatosPaginados = ref([]) //arreglo con los datos picados
+const DatosPaginados = ref([]); //arreglo con los datos picados
 const paginaActual = ref(1); //inicializacion de la pagina
 const elementosPorPagina = 12; //numero de filas por pagina
 
@@ -123,7 +120,8 @@ const totalpaginas = () => {
 function getDataPorPagina(numeroPagina){
     //vacia la lista al cambiar iniciar
 
-    paginaActual.value = numeroPagina;
+    //si el valor de numeroPagina es null o undefined le asigna 1
+    (numeroPagina == undefined || numeroPagina == null)? numeroPagina = 1: paginaActual.value = numeroPagina;   
     
     DatosPaginados.value = ([])
     //rango del indice
@@ -158,6 +156,8 @@ const nextPage = () => {
 //al cambiar los datos reinicia el renderizado
 watchEffect(() => {
   ListaEmpleados.value = props.listaEmpleados;
+  //al detectar el cambio en la lista solicita los datos
+  getDataPorPagina();
 });
 
 //al montar el componente solicita la data
@@ -228,6 +228,9 @@ tr.cuerpo {
     width: 100%;
     height: 48px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-self: end;
 }
 
 /**Estilo de la fila */
@@ -241,7 +244,7 @@ tr.rowTabla {
 /*Estilos de cada espacio */
 tr.cuerpo > td {
     width: auto;
-    height: 50px;
+    height: 48px;
     background: none;
     box-sizing: border-box;
     padding: 12px;
@@ -271,19 +274,21 @@ td.rowNombre {
     text-align: start !important;
     max-width: 290px;
 }
-
-td.Estado, th.Estado {
+/**Estilo columna estados */
+td.Estado {
     display: flex;
     gap: 10px;
     justify-content: center;
     box-sizing: border-box;
-    height: 100%;
+    height: 52.2px !important;
+    margin: 0px;
+
 }
 
 /*columna que contiene los iconos*/
 
-.acciones {
-    gap:  24px;
+.acciones { 
+    gap: 24px;
     justify-content: center;
     white-space: nowrap;
 }

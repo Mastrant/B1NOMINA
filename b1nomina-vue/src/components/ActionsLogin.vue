@@ -22,6 +22,7 @@
                 <p>¿No tienes cuenta?<a href="">Solicita una prueba</a></p>
                 <!--Componente con link a pagina oficial-->
                 <Copyright />
+                <InputCheckbox/>
             </div>
         </div>
     </div>
@@ -32,6 +33,7 @@
 import Copyright from '@/components/CopyRight.vue';
 import Logo from '@/components/logos/Logo-box.vue';
 import FormularioLogin from '@/components/formularios/Form-login.vue';
+import InputCheckbox from './inputs/Input-Checkbox.vue';
 </script>
 
 <style scoped>
