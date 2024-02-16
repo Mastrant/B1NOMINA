@@ -5,7 +5,7 @@
             <!--Encabezado de la tabla-->
             <tr class="rowTabla encabezado">
                 <th class="filaCheckbox"> 
-                    <input type="checkbox">
+                    <InputCheckbox />
                 </th>
                 <th class="rowNombre">
                     EMPLEADOS 
@@ -31,7 +31,7 @@
             <!--Cuerpo de la tabla-->
             <tr class="rowTabla cuerpo" v-for="(item) in DatosPaginados" :key="item.id">
                 <td class="filaCheckbox">
-                    <input type="checkbox">
+                    <InputCheckbox :Objid="item.id"/>
                 </td>
                 <td class="rowNombre">
                     {{item.nombres}}
@@ -67,7 +67,7 @@
             <!--Boton de Previo-->
             <PaginateButton @click="previosPage">
                 <template #icono>
-                    <img src="../../../assets/OneLeft-icon.svg" alt="prev"> 
+                    <img src="../../icons/svg/OneLeft-icon.svg" alt="prev"> 
                 </template>
             </PaginateButton>
 
@@ -77,7 +77,7 @@
             <!--Boton de siguiente-->
             <PaginateButton @click="nextPage">
                 <template #icono>
-                    <img src="../../../assets/OneRigth-icon.svg" alt="next">  
+                    <img src='../../icons/svg/OneRigth-icon.svg' alt="next">  
                 </template>
             </PaginateButton>
             </div>
@@ -91,6 +91,7 @@ import OjitoIcon from '@/components/icons/Ojito-icon.vue';
 import DescargaIcon from '@/components/icons/Descarga-icon.vue';
 import PaginateButton from '@/components/botones/Paginate-button.vue';
 import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
+import InputCheckbox from '@/components/inputs/Input-Checkbox.vue';
 
 import { ref, defineProps, watchEffect, onMounted } from 'vue';
 
@@ -264,7 +265,7 @@ th.acciones {
 }
 /* Primera columna */
 .filaCheckbox {
-    max-width: 80px;
+    max-width: 80px !important;
     box-sizing: border-box;
     margin: auto;
 }
