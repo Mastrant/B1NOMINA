@@ -18,13 +18,13 @@
             </div>            
         </div>
         <div class="acciones-masivas" v-show="false">
-            <ListaTemplate :options="ListaOptions" optionsSelected="Acciones en Lote"/>
+            <ListaTemplate optionsSelected="Acciones en Lote"/>
             <span>Has seleccionado {{ 1 }} de los {{ 12 }} empleados</span>
         </div>
 
         <!--tabla con los datos-->
         <div class="cuerpo de la tabla">
-            <span v-if="ListaEmpleados == []">No hay datos</span>
+            <span v-if="(ListaEmpleados.value == [])? true : false">No hay datos</span>
             <EmpleadosGeneral v-else :listaEmpleados="ListaEmpleados"/>
         </div>
     </form>
@@ -67,6 +67,9 @@
     const ListaGrupos = ref([]);
     const filtroGrupo = ref('')
 
+    //valor ingresado por el usuario
+    const shearch = ref('')
+    
     //lista de empleados
     const {ListaEmpleados} = toRefs(state);
     
@@ -134,11 +137,14 @@
         .then(
             (res) => {
                 ListaEmpleados.value = res.data //almacena los datos devueltos por la api
+                console.log(ListaEmpleados.value)
             }
         )
         .catch(
             (err) => {
                 if (err.status == 404){
+                    ListaEmpleados.value = []
+                }else {
                     ListaEmpleados.value = []
                 }
                 console.log(err) //muestra el error
@@ -183,6 +189,17 @@
         pedirEmplead2();
     };
 
+    const filtrar = (text) => {
+        const normalizarText = text.toLowerCase().trim();
+
+        const usuariosFiltrados = ListaEmpleados.value.filter(
+            function(empleado) {                
+                return empleado.nombre.toLowerCase().includes(normalizarText);
+            });
+        console.log(usuariosFiltrados);
+        console.log(`filtro: ${normalizarText}`)
+    };
+
     //escucha el cambio de la variable y ejecuta la funcion
     watch(filtroSede, addSede);
     watch(filtroDepartamento, addDepartamento);
@@ -191,8 +208,7 @@
     //al tener cambios en los parametros activa la peticion de empleados
     // test watch(parametrosPeticionEmpleados.departamento_id, console.log("cambios detectados"), { deep: true });
 
-    //valor ingresado por el usuario
-    const shearch = ref('')
+    watch(shearch, filtrar);
 
     
     //al montar el componente
