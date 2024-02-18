@@ -20,20 +20,21 @@ if(token){
 
 import router from '@/router'; // Asegúrate de importar tu instancia de Vue Router
 
-//captura las peticiones
+//captura las peticiones y ejecuta codigo segun el caso
 
 axios.interceptors.response.use(
     response => response,
     error => {
-      // Verifica si el error es un error  500 internal server
-      if (error.response && error.response.status ===  499 ) {
+      // Verifica si el error es un error  422 internal server
+      if (error.response && error.response.status ===  4220 ) {
         // Elimina el token del almacenamiento local
         localStorage.clear();
   
         // Utiliza Vue Router para redirigir al usuario a la página de inicio de sesión
         router.replace('/login');
       }
-      //error de autoreizacion
+      
+      //error de autorizacion
       if (error.response && error.response.status ===  403 ) {
   
         // Utiliza Vue Router para redirigir al usuario a la página de inicio de sesión
