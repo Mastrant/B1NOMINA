@@ -67,14 +67,6 @@
 
     //lista de empleados
     const {ListaEmpleados} = toRefs(state);
-
-    //ejemplo de acciones
-    const ListaOptions = ref([
-        { nombre: 'One', valor: 'A' },
-        { nombre: 'Two', valor: 'B' },
-        { nombre: 'Three', valor: 'C' },
-    ]);
-
     
     // solicita a la api los datos de las Sedes y lo envia al componente ListaTemplate como props
     const pedirSedes = async () => {
@@ -88,6 +80,7 @@
         .catch(
             (err) => {
                 console.log(err)
+                ListaSedes.value = []
             }
         )
     };
@@ -104,6 +97,7 @@
         .catch(
             (err) => {
                 console.log(err)
+                ListaDepartamentos.value = []
             }
         )
     };
@@ -120,15 +114,17 @@
         .catch(
             (err) => {
                 console.log(err)
+                ListaGrupos.value = []
             }
         )
     };
 
+    //parametros a pasar con la peticion
     const parametrosPeticionEmpleados = {
-        "id": id,
-        "idSede": null,
-        "idGrupo": null,
-        "idDepartamento": null
+        "id": idSociedad,
+        "departamento_id": null,
+        "grupo_id": null,
+        "sede_id": null
     }
     
     // solicita a la api los datos de los empleados y lo envia al componente ListaTemplate como props
@@ -144,21 +140,36 @@
                 console.log(err) //muestra el error
             }
         )
-    };
 
-    
+        // solicita a la api los datos de los empleados y lo envia al componente ListaTemplate como props
+    const pedirEmpleados = async () => {
+        await axios.get(`/sociedad/${idSociedad}/searchsdg`, parametrosPeticionEmpleados)
+        .then(
+            (res) => {
+                ListaEmpleados.value = res.data //almacena los datos devueltos por la api
+            }
+        )
+        .catch(
+            (err) => {
+                console.log(err) //muestra el error
+            }
+        )
+    };
+    };
 
     //filtros
 
-
+    //asigna el valor "departamento" al arreglo de parametros peticion empleados
     const addDepartamento = (valor) => {
-        console.log(valor);
+        parametrosPeticionEmpleados.departamento_id = valor;
     };
+    //asigna el valor "sede" al arreglo de parametros peticion empleados
     const addSede = (valor) => {
-        console.log(valor);
+        parametrosPeticionEmpleados.sede_id = valor;
     };
+    //asigna el valor "grupo" al arreglo de parametros peticion empleados
     const addGrupo = (valor) => {
-        console.log(valor);
+        parametrosPeticionEmpleados.grupo_id = valor;
     };
 
     //escucha el cambio de la variable y ejecuta la funcion
@@ -166,8 +177,10 @@
     watch(filtroDepartamento, addDepartamento);
     watch(filtroGrupo, addGrupo);
 
+    //al tener cambios en los parametros activa la peticion de empleados
+    watch(parametrosPeticionEmpleados, pedirEmpleados);
 
-
+    //valor ingresado por el usuario
     const shearch = ref('')
 
     
