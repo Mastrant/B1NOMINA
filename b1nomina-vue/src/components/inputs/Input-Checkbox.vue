@@ -56,10 +56,10 @@ const valor = ref()
 [type="checkbox"]:checked + label::after {
   content: "";
   position: absolute;
-  left: 0.25rem;
-  top: -0.625rem;
-  width: 0.875rem;
-  height: 0.875rem;
+  left: 3px;
+  top: -10px;
+  width: 14px;
+  height: 12px;
 
   background-image:url(../icons/svg/check.svg); 
   background-size: contain;

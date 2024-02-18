@@ -125,9 +125,13 @@
     };
 
     const parametrosPeticionEmpleados = {
+        //id sociedad
         "id": id,
+        //id de la sede
         "idSede": null,
+        //id grupo
         "idGrupo": null,
+        //id departamento
         "idDepartamento": null
     }
     
@@ -146,7 +150,7 @@
         )
     };
 
-    
+    const shearch = ref('')
 
     //filtros
 
@@ -160,15 +164,17 @@
     const addGrupo = (valor) => {
         console.log(valor);
     };
+    const addTexto = (valor) => {
+        console.log(valor);
+    };
 
     //escucha el cambio de la variable y ejecuta la funcion
     watch(filtroSede, addSede);
     watch(filtroDepartamento, addDepartamento);
     watch(filtroGrupo, addGrupo);
-
-
-
-    const shearch = ref('')
+    watch(shearch, addTexto);
+    
+    
 
     
     //al montar el componente
