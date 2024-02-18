@@ -21,9 +21,11 @@
             <ListaTemplate :options="ListaOptions" optionsSelected="Acciones en Lote"/>
             <span>Has seleccionado {{ 1 }} de los {{ 12 }} empleados</span>
         </div>
+
         <!--tabla con los datos-->
         <div class="cuerpo de la tabla">
-            <EmpleadosGeneral :listaEmpleados="ListaEmpleados"/>
+            <span v-if="ListaEmpleados == []">No hay datos</span>
+            <EmpleadosGeneral v-else :listaEmpleados="ListaEmpleados"/>
         </div>
     </form>
 </template>
@@ -46,7 +48,7 @@
     import { inject } from 'vue';
 
     // Inyectar el valor proporcionado por la url
-    const id = inject('IDsociedad');
+    const idSociedad = inject('IDsociedad');
 
     //variables a utilizar de forma reactiva
     const state = reactive({
@@ -71,7 +73,7 @@
     // solicita a la api los datos de las Sedes y lo envia al componente ListaTemplate como props
     const pedirSedes = async () => {
      //   await axios.get(`list_sede_sociedad?idSociedad=${sociedadId}&page=1&records=20`)
-        await axios.get(`/sociedad/${id}/list_sede?page=${1}&records=20`, {"id": id})
+        await axios.get(`/sociedad/${idSociedad}/list_sede?page=${1}&records=20`, {"id": idSociedad})
         .then(
             (res) => {
                 ListaSedes.value = res.data
@@ -88,7 +90,7 @@
     // solicita a la api los datos de los Departamentos y lo envia al componente ListaTemplate como props
     const pedirDepartamentos = async () => {
      //   await axios.get(`list_sede_sociedad?idSociedad=${sociedadId}&page=1&records=20`)
-        await axios.get(`/sociedad/${id}/list_departamentos?page=${1}&records=20`, {"id": id})
+        await axios.get(`/sociedad/${idSociedad}/list_departamentos?page=${1}&records=20`, {"id": idSociedad})
         .then(
             (res) => {
                 ListaDepartamentos.value = res.data
@@ -105,7 +107,7 @@
     // solicita a la api los datos de los grupos y lo envia al componente ListaTemplate como props
     const pedirGrupos = async () => {
      //   await axios.get(`list_sede_sociedad?idSociedad=${sociedadId}&page=1&records=20`)
-        await axios.get(`/sociedad/${id}/list_grupos_empleados`, {"id": id})
+        await axios.get(`/sociedad/${idSociedad}/list_grupos_empleados`, {"id": idSociedad})
         .then(
             (res) => {
                 ListaGrupos.value = res.data
@@ -121,15 +123,14 @@
 
     //parametros a pasar con la peticion
     const parametrosPeticionEmpleados = {
-        "id": idSociedad,
-        "departamento_id": null,
-        "grupo_id": null,
-        "sede_id": null
-    }
+        "departamento_id": 0,
+        "grupo_id": 0,
+        "sede_id": 0
+    };
     
     // solicita a la api los datos de los empleados y lo envia al componente ListaTemplate como props
     const pedirEmpleados = async () => {
-        await axios.get(`/sociedad/${id}/list_empleados`, parametrosPeticionEmpleados)
+        await axios.get(`/sociedad/${idSociedad}/list_empleados`, {"id": idSociedad,})
         .then(
             (res) => {
                 ListaEmpleados.value = res.data //almacena los datos devueltos por la api
@@ -137,24 +138,28 @@
         )
         .catch(
             (err) => {
-                console.log(err) //muestra el error
-            }
-        )
-
-        // solicita a la api los datos de los empleados y lo envia al componente ListaTemplate como props
-    const pedirEmpleados = async () => {
-        await axios.get(`/sociedad/${idSociedad}/searchsdg`, parametrosPeticionEmpleados)
-        .then(
-            (res) => {
-                ListaEmpleados.value = res.data //almacena los datos devueltos por la api
-            }
-        )
-        .catch(
-            (err) => {
+                if (err.status == 404){
+                    ListaEmpleados.value = []
+                }
                 console.log(err) //muestra el error
             }
         )
     };
+
+    // solicita a la api los datos de los empleados segun el filtro y lo envia al componente ListaTemplate como props
+    const pedirEmplead2 = async () => {
+        console.log("ejecutando")
+        await axios.post(`/user/1/searchsdg`, parametrosPeticionEmpleados)
+        .then(
+            (res) => {
+                ListaEmpleados.value = res.data; //almacena los datos devueltos por la api
+            }
+        )
+        .catch(
+            (err) => {
+                console.log(err) //muestra el error
+            }
+        )
     };
 
     //filtros
@@ -162,14 +167,20 @@
     //asigna el valor "departamento" al arreglo de parametros peticion empleados
     const addDepartamento = (valor) => {
         parametrosPeticionEmpleados.departamento_id = valor;
+        //solicita la actualizaion de los datos
+        pedirEmplead2();
     };
     //asigna el valor "sede" al arreglo de parametros peticion empleados
     const addSede = (valor) => {
         parametrosPeticionEmpleados.sede_id = valor;
+        //solicita la actualizaion de los datos
+        pedirEmplead2();
     };
     //asigna el valor "grupo" al arreglo de parametros peticion empleados
     const addGrupo = (valor) => {
         parametrosPeticionEmpleados.grupo_id = valor;
+        //solicita la actualizaion de los datos
+        pedirEmplead2();
     };
 
     //escucha el cambio de la variable y ejecuta la funcion
@@ -178,7 +189,7 @@
     watch(filtroGrupo, addGrupo);
 
     //al tener cambios en los parametros activa la peticion de empleados
-    watch(parametrosPeticionEmpleados, pedirEmpleados);
+    // test watch(parametrosPeticionEmpleados.departamento_id, console.log("cambios detectados"), { deep: true });
 
     //valor ingresado por el usuario
     const shearch = ref('')
