@@ -24,7 +24,7 @@
 
         <!--tabla con los datos-->
         <div class="cuerpo de la tabla">
-            <span v-if="(ListaEmpleados.value == [])? true : false">No hay datos</span>
+            <span v-if="(ListaEmpleados.length === 0)? true : false">No hay datos asociados a los filtros</span>
             <EmpleadosGeneral v-else :listaEmpleados="ListaEmpleados"/>
         </div>
     </form>
@@ -57,15 +57,15 @@
 
     //lista de sedes
     const ListaSedes = ref([]);
-    const filtroSede = ref('');
+    const filtroSede = ref(0);
 
     //lista de Departamentos
     const ListaDepartamentos = ref({});
-    const filtroDepartamento = ref('')
+    const filtroDepartamento = ref(0)
 
     //lista de grupos
     const ListaGrupos = ref([]);
-    const filtroGrupo = ref('')
+    const filtroGrupo = ref(0)
 
     //valor ingresado por el usuario
     const shearch = ref('')
@@ -137,7 +137,6 @@
         .then(
             (res) => {
                 ListaEmpleados.value = res.data //almacena los datos devueltos por la api
-                console.log(ListaEmpleados.value)
             }
         )
         .catch(
@@ -154,8 +153,8 @@
 
     // solicita a la api los datos de los empleados segun el filtro y lo envia al componente ListaTemplate como props
     const pedirEmplead2 = async () => {
-        console.log("ejecutando")
-        await axios.post(`/user/1/searchsdg`, parametrosPeticionEmpleados)
+        console.log(parametrosPeticionEmpleados)
+        await axios.post(`/sociedad/${idSociedad}/searchsdg`, parametrosPeticionEmpleados)
         .then(
             (res) => {
                 ListaEmpleados.value = res.data; //almacena los datos devueltos por la api
@@ -163,7 +162,7 @@
         )
         .catch(
             (err) => {
-                console.log(err) //muestra el error
+                ListaEmpleados.value = [] //muestra el error
             }
         )
     };
@@ -172,32 +171,57 @@
 
     //asigna el valor "departamento" al arreglo de parametros peticion empleados
     const addDepartamento = (valor) => {
-        parametrosPeticionEmpleados.departamento_id = valor;
-        //solicita la actualizaion de los datos
+        if (valor == '' || valor == null) {
+            parametrosPeticionEmpleados.departamento_id = 0;
+        } else {
+            parametrosPeticionEmpleados.departamento_id = parseInt(valor);
+            //solicita la actualizaion de los datos            
+        }
+
+        (parametrosPeticionEmpleados.departamento_id === 0 & parametrosPeticionEmpleados.grupo_id === 0 & parametrosPeticionEmpleados.sede_id === 0)?
+        pedirEmpleados(): //si los valores son 
         pedirEmplead2();
+
+        
     };
+
     //asigna el valor "sede" al arreglo de parametros peticion empleados
     const addSede = (valor) => {
-        parametrosPeticionEmpleados.sede_id = valor;
+        if (valor == '' || valor == null) {
+            //si el valor es vacio o nulo, asigna 0
+            parametrosPeticionEmpleados.sede_id = 0
+        }else {
+            //convierte el valor a entero y lo guarda en el arreglo
+            parametrosPeticionEmpleados.sede_id = parseInt(valor);
+        }
+
         //solicita la actualizaion de los datos
+        (parametrosPeticionEmpleados.departamento_id === 0 & parametrosPeticionEmpleados.grupo_id === 0 & parametrosPeticionEmpleados.sede_id === 0)?
+        pedirEmpleados(): //si los valores son 
         pedirEmplead2();
     };
+
     //asigna el valor "grupo" al arreglo de parametros peticion empleados
     const addGrupo = (valor) => {
-        parametrosPeticionEmpleados.grupo_id = valor;
+        if (valor == '' || valor == null) {
+            parametrosPeticionEmpleados.grupo_id = 0
+        } else {
+            //convierte el valor a entero y lo guarda en el arreglo
+            parametrosPeticionEmpleados.grupo_id = parseInt(valor);
+        }
+       
         //solicita la actualizaion de los datos
+        (parametrosPeticionEmpleados.departamento_id === 0 & parametrosPeticionEmpleados.grupo_id === 0 & parametrosPeticionEmpleados.sede_id === 0)?
+        pedirEmpleados(): //si los valores son 0
         pedirEmplead2();
     };
 
+    //aplica un filtro segun el texto
     const filtrar = (text) => {
+        //convierte la entrada de texto a minusculas y elimina los espacion del inicio
         const normalizarText = text.toLowerCase().trim();
 
-        const usuariosFiltrados = ListaEmpleados.value.filter(
-            function(empleado) {                
-                return empleado.nombre.toLowerCase().includes(normalizarText);
-            });
-        console.log(usuariosFiltrados);
-        console.log(`filtro: ${normalizarText}`)
+        console.log(normalizarText)
     };
 
     //escucha el cambio de la variable y ejecuta la funcion

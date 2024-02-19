@@ -1,7 +1,7 @@
 <template>
     <select class="lista-general" v-model="selected">
 
-        <option value=""> 
+        <option value=''> 
             {{optionsSelected}}
         </option>
 
@@ -25,7 +25,7 @@ const props = defineProps({
     //Titulo de la opcion
     optionsSelected: {
         type: String ,
-        default: ""
+        default: 0
     }
 })
 
