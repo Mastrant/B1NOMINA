@@ -143,14 +143,14 @@ export default {
 
                     }else {
 
-                        if(error.response.status==401){
+                        if(error.status == "401") {
                             this.loginError.credenciales = true
 
-                        } else if (error.response.status==500) {
+                        } else if (error.status == "500" ) {
                             this.loginError.server = true;
 
                         } else {
-                            console.log(error.message)
+                            this.loginError.server = true;
                     }
                     }
                 }
