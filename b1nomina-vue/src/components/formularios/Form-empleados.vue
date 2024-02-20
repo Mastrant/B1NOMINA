@@ -24,7 +24,7 @@
 
         <!--tabla con los datos-->
         <div class="cuerpo de la tabla">
-            <span v-if="(ListaEmpleados.length === 0)? true : false">No hay datos asociados a los filtros</span>
+            <span class="NoEncontrado" v-if="(ListaEmpleados.length === 0)? true : false">No hay datos asociados a los filtros</span>
             <EmpleadosGeneral v-else :listaEmpleados="ListaEmpleados"/>
         </div>
     </form>
@@ -73,53 +73,78 @@
     //lista de empleados
     const {ListaEmpleados} = toRefs(state);
     
-    // solicita a la api los datos de las Sedes y lo envia al componente ListaTemplate como props
+    /**
+    * Realiza una solicitud GET a la API para obtener la lista de sedes asociadas a una sociedad.
+    *
+    * @function pedirSedes
+    * @returns {Promise<void>} - Retorna una promesa que se resuelve cuando se completa la solicitud.
+    *
+    * @example
+    * // Ejemplo de uso:
+    * pedirSedes();
+    */
     const pedirSedes = async () => {
      //   await axios.get(`list_sede_sociedad?idSociedad=${sociedadId}&page=1&records=20`)
         await axios.get(`/sociedad/${idSociedad}/list_sede?page=${1}&records=20`, {"id": idSociedad})
         .then(
             (res) => {
-                ListaSedes.value = res.data
+                ListaSedes.value = res.data; //asigna el valor de la consulta a la variable
             }
         )
         .catch(
             (err) => {
-                console.log(err)
-                ListaSedes.value = []
+                if (err.status == 404) {
+                    ListaSedes.value = []; //asigna el valor vacio si no hay datos.
+                }
+                ListaSedes.value = [];
             }
         )
     };
 
-    // solicita a la api los datos de los Departamentos y lo envia al componente ListaTemplate como props
+    /**
+    * Función asíncrona que solicita a la API los datos de los Departamentos y los asigna al componente ListaTemplate.
+    *
+    * @async
+    * @function pedirDepartamentos
+    * @returns {Promise<void>} No devuelve nada, pero actualiza el estado de ListaDepartamentos con los datos obtenidos.
+    * @throws {Error} Si la solicitud falla, se lanza un error y ListaDepartamentos se establece en un array vacío.
+    */
     const pedirDepartamentos = async () => {
-     //   await axios.get(`list_sede_sociedad?idSociedad=${sociedadId}&page=1&records=20`)
         await axios.get(`/sociedad/${idSociedad}/list_departamentos?page=${1}&records=20`, {"id": idSociedad})
         .then(
             (res) => {
-                ListaDepartamentos.value = res.data
+                ListaDepartamentos.value = res.data;  //asigna el valor de la consulta a la variable
             }
         )
         .catch(
             (err) => {
-                console.log(err)
-                ListaDepartamentos.value = []
+                if (err){
+                    ListaDepartamentos.value = []; //asigna el valor vacio a la variable
+                }
             }
         )
     };
 
-    // solicita a la api los datos de los grupos y lo envia al componente ListaTemplate como props
+    /**
+    * Función asíncrona que solicita a la API los datos de los Departamentos y los asigna al componente ListaTemplate.
+    *
+    * @async
+    * @param idSociedad parametro que recibe de los props
+    * @function pedirDepartamentos
+    * @returns {Promise<void>} No devuelve nada, pero actualiza el estado de ListaGrupos con los datos obtenidos.
+    * @throws {Error} Si la solicitud falla, se lanza un error y ListaGrupos se establece en un array vacío.
+    */
     const pedirGrupos = async () => {
-     //   await axios.get(`list_sede_sociedad?idSociedad=${sociedadId}&page=1&records=20`)
         await axios.get(`/sociedad/${idSociedad}/list_grupos_empleados`, {"id": idSociedad})
         .then(
             (res) => {
-                ListaGrupos.value = res.data
+                ListaGrupos.value = res.data;  //asigna el valor de la consulta a la variable
             }
         )
         .catch(
             (err) => {
                 console.log(err)
-                ListaGrupos.value = []
+                ListaGrupos.value = [];  //asigna vacio a la data sino hay respuesta
             }
         )
     };
@@ -131,29 +156,47 @@
         "sede_id": 0
     };
     
-    // solicita a la api los datos de los empleados y lo envia al componente ListaTemplate como props
+    /**
+    * Solicita a la API los datos de los empleados y los almacena en el componente ListaTemplate como props.
+    *
+    * @async
+    * @function pedirEmpleados
+    * @param parametrosPeticionEmpleados Json con los datos de la consulta
+    * @returns {Promise<void>} No devuelve nada, pero actualiza el valor de ListaEmpleados.
+    *
+    * @example
+    * // Llamada a la función para obtener los datos de los empleados
+    * pedirEmpleados();
+    *
+    * @throws {Error} Si ocurre un error durante la solicitud, se asigna un array vacío a ListaEmpleados.
+    */
     const pedirEmpleados = async () => {
         await axios.get(`/sociedad/${idSociedad}/list_empleados`, {"id": idSociedad,})
         .then(
             (res) => {
-                ListaEmpleados.value = res.data //almacena los datos devueltos por la api
+                ListaEmpleados.value = res.data; //almacena los datos devueltos por la api
             }
         )
         .catch(
             (err) => {
-                if (err.status == 404){
-                    ListaEmpleados.value = []
-                }else {
-                    ListaEmpleados.value = []
-                }
-                console.log(err) //muestra el error
+                ListaEmpleados.value = []; // si hay un error asigna un valor vacio
             }
         )
     };
 
-    // solicita a la api los datos de los empleados segun el filtro y lo envia al componente ListaTemplate como props
+    /**
+    * Solicita a la API los datos de los empleados según el filtro proporcionado y los almacena en ListaEmpleados.
+    *
+    * @async
+    * @function pedirEmpleado2
+    * @returns {Promise} - Una promesa que se resuelve cuando la solicitud HTTP se completa.
+    * @throws {Error} - Si ocurre un error durante la solicitud HTTP, se lanzará un error.
+    *
+    * @example
+    * // Llamar a la función para obtener empleados con ciertos parámetros
+    * pedirEmpleado2();
+    */
     const pedirEmplead2 = async () => {
-        console.log(parametrosPeticionEmpleados)
         await axios.post(`/sociedad/${idSociedad}/searchsdg`, parametrosPeticionEmpleados)
         .then(
             (res) => {
@@ -162,30 +205,46 @@
         )
         .catch(
             (err) => {
-                ListaEmpleados.value = [] //muestra el error
+                if (err){
+                    ListaEmpleados.value = []; //muestra el error
+                }
             }
         )
     };
 
     //filtros
 
-    //asigna el valor "departamento" al arreglo de parametros peticion empleados
+    /**
+    * Asigna el valor de "departamento" al arreglo de parámetros de la petición de empleados.
+    * Si el valor es vacío o nulo, asigna  0 a 'departamento_id'. Si el valor es un número,
+    * lo convierte a entero y lo asigna a 'departamento_id'. Luego, según los valores de
+    * los parámetros, llama a la función 'pedirEmpleados' o 'pedirEmplead2'.
+    *
+    * @param {string | number} valor - El valor del departamento que se asignará.
+    * @returns {void} No devuelve ningún valor, pero modifica el objeto 'parametrosPeticionEmpleados'.
+    */
     const addDepartamento = (valor) => {
         if (valor == '' || valor == null) {
+            // si el valor de la seleccion es texto o nulo asigna 0
             parametrosPeticionEmpleados.departamento_id = 0;
         } else {
-            parametrosPeticionEmpleados.departamento_id = parseInt(valor);
-            //solicita la actualizaion de los datos            
+            //si el valor es un numero, asigna el valor en entero al arreglo
+            parametrosPeticionEmpleados.departamento_id = parseInt(valor);         
         }
-
-        (parametrosPeticionEmpleados.departamento_id === 0 & parametrosPeticionEmpleados.grupo_id === 0 & parametrosPeticionEmpleados.sede_id === 0)?
-        pedirEmpleados(): //si los valores son 
-        pedirEmplead2();
-
-        
+        (parametrosPeticionEmpleados.departamento_id === 0 & parametrosPeticionEmpleados.grupo_id === 0 & parametrosPeticionEmpleados.sede_id === 0)
+        ? pedirEmpleados() //si los valores de parametrosPeticionEmpleados son 0
+        : pedirEmplead2(); //si los valores de parametrosPeticionEmpleados varian de 0        
     };
 
-    //asigna el valor "sede" al arreglo de parametros peticion empleados
+    /**
+    * Asigna el valor de "sede" al objeto de parámetros de la petición de empleados.
+    * Si el valor es vacío o nulo, asigna   0 a 'sede_id'. Si el valor es un número,
+    * lo convierte a entero y lo asigna a 'sede_id'. Luego, según los valores de
+    * los parámetros, llama a la función 'pedirEmpleados' o 'pedirEmplead2'.
+    *
+    * @param {string | number} valor - El valor de la sede que se asignará.
+    * @returns {void} No devuelve ningún valor, pero modifica el objeto 'parametrosPeticionEmpleados'.
+    */ 
     const addSede = (valor) => {
         if (valor == '' || valor == null) {
             //si el valor es vacio o nulo, asigna 0
@@ -197,11 +256,19 @@
 
         //solicita la actualizaion de los datos
         (parametrosPeticionEmpleados.departamento_id === 0 & parametrosPeticionEmpleados.grupo_id === 0 & parametrosPeticionEmpleados.sede_id === 0)?
-        pedirEmpleados(): //si los valores son 
-        pedirEmplead2();
+        pedirEmpleados(): //si los valores de parametrosPeticionEmpleados son 0
+        pedirEmplead2(); //si los valores de parametrosPeticionEmpleados varian de 0     
     };
 
-    //asigna el valor "grupo" al arreglo de parametros peticion empleados
+    /**
+    * Asigna el valor de "grupo" al arreglo de parámetros de la petición de empleados.
+    * Si el valor es vacío o nulo, asigna  0 a 'grupo_id'. Si el valor es un número,
+    * lo convierte a entero y lo asigna a 'grupo_id'. Luego, según los valores de
+    * los parámetros, llama a la función 'pedirEmpleados' o 'pedirEmplead2'.
+    *
+    * @param {string | number} valor - El valor del grupo que se asignará.
+    * @returns {void} No devuelve ningún valor, pero modifica el objeto 'parametrosPeticionEmpleados'.
+    */ 
     const addGrupo = (valor) => {
         if (valor == '' || valor == null) {
             parametrosPeticionEmpleados.grupo_id = 0
@@ -212,30 +279,50 @@
        
         //solicita la actualizaion de los datos
         (parametrosPeticionEmpleados.departamento_id === 0 & parametrosPeticionEmpleados.grupo_id === 0 & parametrosPeticionEmpleados.sede_id === 0)?
-        pedirEmpleados(): //si los valores son 0
-        pedirEmplead2();
+        pedirEmpleados(): //si los valores de parametrosPeticionEmpleados son 0
+        pedirEmplead2(); //si los valores de parametrosPeticionEmpleados varian de 0     
     };
 
-    //aplica un filtro segun el texto
+    // Arreglo que contiene el arreglo original
+    let listaEmpleadosOriginal = null;
+    /**
+     * aplica un filtro segun el texto ingresado
+     * @param {String} text - entrada del texto del usuario
+    
+    */
     const filtrar = (text) => {
+        // Si no se ha establecido la lista original, se guarda
+        if (listaEmpleadosOriginal === null) {
+            listaEmpleadosOriginal = [...ListaEmpleados.value];
+        }
+
+        // Si el texto de entrada es diferente al texto ingresado reasigna el arreglo original
+        if (text.trim() === '') {
+           ListaEmpleados.value = [...listaEmpleadosOriginal];
+           return;
+        }
+
         //convierte la entrada de texto a minusculas y elimina los espacion del inicio
         const normalizarText = text.toLowerCase().trim();
+        const filtrado = ListaEmpleados.value.filter(
+            (empleado) => empleado.nombres.toLowerCase().includes(normalizarText)
+        );
 
-        console.log(normalizarText)
+        //asigna el valor del arreglo con el filtro a la variable.
+        ListaEmpleados.value = filtrado
     };
 
     //escucha el cambio de la variable y ejecuta la funcion
     watch(filtroSede, addSede);
+    //escucha el cambio de la variable y ejecuta la funcion
     watch(filtroDepartamento, addDepartamento);
+    //escucha el cambio de la variable y ejecuta la funcion
     watch(filtroGrupo, addGrupo);
 
-    //al tener cambios en los parametros activa la peticion de empleados
-    // test watch(parametrosPeticionEmpleados.departamento_id, console.log("cambios detectados"), { deep: true });
-
+    //escucha los cambios en la variable y ejecuta la funcion filtrar
     watch(shearch, filtrar);
 
-    
-    //al montar el componente
+    // al montar el componente ejecuta las funciones
     onMounted(async () => {
 
         await pedirEmpleados(); //solicita los empleados
@@ -244,11 +331,9 @@
         await pedirGrupos(); //solicita los grupos
         
     });
-
 </script>
 
 <style scoped>
-
 form.formulario-empleados{
     gap: 24px;
     width: 100%;
@@ -260,21 +345,19 @@ div.acciones-form {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-
 }
-
 div.filtros {
     display: flex;
     flex-direction: row;
     gap: 12px;
-    
 }
-
 div.acciones-masivas{
     display: flex;
     gap: 24px;
     align-items: center;
-
 }
-
+span.NoEncontrado {
+    font-size: 24px;
+    color: rgb(56, 56, 56);
+}
 </style>
