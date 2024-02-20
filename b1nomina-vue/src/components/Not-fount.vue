@@ -6,7 +6,7 @@
         <template #panel>
             <div class="contenedor-NotFound">
                 <div class="Contenedor-imagen">
-                    <img src="@/assets/404-pages 1.svg">
+                    <img src="../components/icons/svg/404-pages 1.svg">
                 </div>
                 <div class="contenedor-text">
                     <h2>LO SENTIMOS, PÁGINA NO ENCONTRADA</h2>

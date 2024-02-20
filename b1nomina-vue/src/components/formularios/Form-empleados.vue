@@ -9,14 +9,30 @@
                 <ListaTemplate v-model="filtroGrupo" :options="ListaGrupos" optionsSelected="Grupo"/>
             </div>
             
+            <!--Boton para agregar usuarios-->
             <div>
-                <TemplateButton text="Agregar Empleado">
+                <TemplateButton text="Agregar Empleado" @click="mostrarOpciones = !mostrarOpciones">
                     <template #default >
                         <PersonPlussIcon/>
                     </template>
-                </TemplateButton>
-            </div>            
+                </TemplateButton> 
+                <ListaOpciones>
+                    <template #opcion1>
+                        
+                    </template>
+                    <template #opcion2>
+                        
+                    </template>
+                    <template #opcion3>
+                        
+                    </template>
+                </ListaOpciones>
+                
+            </div>
+
         </div>
+
+
         <div class="acciones-masivas" v-show="false">
             <ListaTemplate optionsSelected="Acciones en Lote"/>
             <span>Has seleccionado {{ 1 }} de los {{ 12 }} empleados</span>
@@ -37,6 +53,7 @@
     import TemplateButton from '../botones/Template-button.vue';
     import ListaTemplate from '../listas/Lista-template.vue';
     import EmpleadosGeneral from '../tablas/Empleados/Empleados-general.vue';
+    import ListaOpciones from '../listas/Lista-Opciones.vue'
 
     //iconos
     import PersonPlussIcon from '../icons/Person-Pluss-icon.vue';
