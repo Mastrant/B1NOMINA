@@ -9,33 +9,34 @@
                 <ListaTemplate v-model="filtroGrupo" :options="ListaGrupos" optionsSelected="Grupo"/>
             </div>
             
-            <!--Boton para agregar usuarios-->
-            <div>
+            <!--contenedor-->
+            <div class="Add-user-button">
+                <!--Boton para agregar usuarios-->
                 <TemplateButton text="Agregar Empleado" @click="mostrarOpciones = !mostrarOpciones">
                     <template #default >
                         <PersonPlussIcon/>
                     </template>
-                </TemplateButton> 
+                </TemplateButton>
+                
+                <!--Lista de opciones que se despliega-->
                 <ListaOpciones>
                     <template #opcion1>
-                        
+                        <BigOptionButton />
                     </template>
                     <template #opcion2>
-                        
+                        <BigOptionButton />
                     </template>
                     <template #opcion3>
-                        
+                        <BigOptionButton />
                     </template>
                 </ListaOpciones>
-                
-            </div>
+            </div><!--final contenedor add user-->
 
-        </div>
+        </div><!--final contenedor acciones-form-->
 
-
-        <div class="acciones-masivas" v-show="false">
+        <div class="acciones-masivas" v-show="ListaIds.length > 0">
             <ListaTemplate optionsSelected="Acciones en Lote"/>
-            <span>Has seleccionado {{ 1 }} de los {{ 12 }} empleados</span>
+            <span>Has seleccionado {{ ListaIds.length }} de los {{ 12 }} empleados</span>
         </div>
 
         <!--tabla con los datos-->
@@ -54,6 +55,7 @@
     import ListaTemplate from '../listas/Lista-template.vue';
     import EmpleadosGeneral from '../tablas/Empleados/Empleados-general.vue';
     import ListaOpciones from '../listas/Lista-Opciones.vue'
+    import BigOptionButton from '../botones/Big-Option-button.vue'
 
     //iconos
     import PersonPlussIcon from '../icons/Person-Pluss-icon.vue';
@@ -66,6 +68,8 @@
 
     // Inyectar el valor proporcionado por la url
     const idSociedad = inject('IDsociedad');
+
+    const ListaIds = ref([])
 
     //variables a utilizar de forma reactiva
     const state = reactive({
@@ -376,5 +380,10 @@ div.acciones-masivas{
 span.NoEncontrado {
     font-size: 24px;
     color: rgb(56, 56, 56);
+}
+
+div.Add-user-button > div {
+    z-index: 50;
+
 }
 </style>
