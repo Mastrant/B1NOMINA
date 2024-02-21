@@ -1,5 +1,5 @@
 <template>
-    <form class="formulario-empleados">
+    <form class="formulario-empleados" id="formulario-empleados">
         <div class="acciones-form">
             <div class="filtros">
                 <InputShearch v-model="shearch" @update:modelValue="shearch = $event" />
@@ -12,22 +12,34 @@
             <!--contenedor-->
             <div class="Add-user-button">
                 <!--Boton para agregar usuarios-->
-                <TemplateButton text="Agregar Empleado" @click="mostrarOpciones = !mostrarOpciones">
+                <TemplateButton text="Agregar Empleado" @click="showOptions">
                     <template #default >
                         <PersonPlussIcon/>
                     </template>
                 </TemplateButton>
                 
                 <!--Lista de opciones que se despliega-->
-                <ListaOpciones>
+                <ListaOpciones v-show="mostrarOpciones" @mouseleave="mostrarOpciones = !mostrarOpciones">
                     <template #opcion1>
-                        <BigOptionButton />
+                        <!--Boton de carga basica-->
+                        <BigOptionButton 
+                            Accion="Crear empleado"
+                            Texto="Agrega un nuevo empleado y accede directamente a su perfil para completar sus datos."
+                        />
                     </template>
                     <template #opcion2>
-                        <BigOptionButton />
+                        <!--Boton de carga masiva-->
+                        <BigOptionButton  
+                            Accion="Importación Masiva"
+                            Texto="Importa de forma masiva los campos personalizados de tus empleados desde un único archivo, para crear múltiples empleados a la vez."
+                        />
                     </template>
                     <template #opcion3>
-                        <BigOptionButton />
+                        <!--Boton de actualizacion masiva-->
+                        <BigOptionButton 
+                            Accion="Actualización Masiva"
+                            Texto="Actualiza de forma masiva los campos personalizados para todos los empleados desde un único archivo."
+                        />
                     </template>
                 </ListaOpciones>
             </div><!--final contenedor add user-->
@@ -40,7 +52,7 @@
         </div>
 
         <!--tabla con los datos-->
-        <div class="cuerpo de la tabla">
+        <div class="cuerpo-tabla">
             <span class="NoEncontrado" v-if="(ListaEmpleados.length === 0)? true : false">No hay datos asociados a los filtros</span>
             <EmpleadosGeneral v-else :listaEmpleados="ListaEmpleados"/>
         </div>
@@ -70,6 +82,12 @@
     const idSociedad = inject('IDsociedad');
 
     const ListaIds = ref([])
+
+    const mostrarOpciones = ref(false)
+
+    const showOptions = () => {
+        mostrarOpciones.value = !mostrarOpciones.value
+    }
 
     //variables a utilizar de forma reactiva
     const state = reactive({
@@ -306,6 +324,7 @@
 
     // Arreglo que contiene el arreglo original
     let listaEmpleadosOriginal = null;
+
     /**
      * aplica un filtro segun el texto ingresado
      * @param {String} text - entrada del texto del usuario

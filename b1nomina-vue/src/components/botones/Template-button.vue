@@ -42,7 +42,7 @@ button {
     width: fit-content;
     max-height: 54px;
     min-height: 48px;
-
+    cursor: pointer;
 }
 
 button:hover {

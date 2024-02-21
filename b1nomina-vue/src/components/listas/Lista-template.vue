@@ -25,12 +25,12 @@ const props = defineProps({
     //Titulo de la opcion
     optionsSelected: {
         type: String ,
-        default: 0
+        default: 0,
     }
-})
+});
 
 //reactividad a la opcion selecionada
-const selected = ref('')
+const selected = ref('');
 
 </script>
 
@@ -39,13 +39,15 @@ select.lista-general {
     gap: 24px;
     width: fit-content;
     height: 48px;
-    padding: 0px 24px;
+    padding: 0px 16px;
     border-radius: 6px;
     border: 1px #363855 solid;
     justify-content: space-between;
     align-items: center;
     display: inline-flex;
     text-align: center;
+    cursor: pointer;
+    box-sizing: border-box;
 
     /*Estilos de fuente*/
     color: #1A245B;
@@ -54,6 +56,10 @@ select.lista-general {
     font-weight: 400;
     line-height: 26px;
     word-wrap: break-word;
+}
+
+select.lista-general:focus {
+    border-radius: 6px;
 }
 
 option {
