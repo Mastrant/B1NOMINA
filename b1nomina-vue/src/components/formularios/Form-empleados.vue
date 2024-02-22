@@ -1,5 +1,5 @@
 <template>
-    <form class="formulario-empleados" id="formulario-empleados">
+    <div class="formulario-empleados" id="formulario-empleados">
         <div class="acciones-form">
             <div class="filtros">
                 <InputShearch v-model="shearch" @update:modelValue="shearch = $event" />
@@ -25,8 +25,10 @@
                         <BigOptionButton 
                             Accion="Crear empleado"
                             Texto="Agrega un nuevo empleado y accede directamente a su perfil para completar sus datos."
+                            @click="showModal"
                         />
                     </template>
+
                     <template #opcion2>
                         <!--Boton de carga masiva-->
                         <BigOptionButton  
@@ -34,6 +36,7 @@
                             Texto="Importa de forma masiva los campos personalizados de tus empleados desde un único archivo, para crear múltiples empleados a la vez."
                         />
                     </template>
+                    
                     <template #opcion3>
                         <!--Boton de actualizacion masiva-->
                         <BigOptionButton 
@@ -51,12 +54,22 @@
             <span>Has seleccionado {{ ListaIds.length }} de los {{ 12 }} empleados</span>
         </div>
 
+        <TemplateModal @closeModal="showModal" :activarModal="mostrarModal" NombreAccion="Nuevo Registro">
+            <p>Esta es la descripcion del modal</p>
+            <div>
+                Paginacion
+            </div>
+            <form>
+                formulario
+            </form>
+        </TemplateModal>
+
         <!--tabla con los datos-->
         <div class="cuerpo-tabla">
             <span class="NoEncontrado" v-if="(ListaEmpleados.length === 0)? true : false">No hay datos asociados a los filtros</span>
             <EmpleadosGeneral v-else :listaEmpleados="ListaEmpleados"/>
         </div>
-    </form>
+    </div>
 </template>
 
 <script setup>
@@ -68,6 +81,8 @@
     import EmpleadosGeneral from '../tablas/Empleados/Empleados-general.vue';
     import ListaOpciones from '../listas/Lista-Opciones.vue'
     import BigOptionButton from '../botones/Big-Option-button.vue'
+    import TemplateModal from '../modal/Template-modal.vue'
+
 
     //iconos
     import PersonPlussIcon from '../icons/Person-Pluss-icon.vue';
@@ -81,17 +96,30 @@
     // Inyectar el valor proporcionado por la url
     const idSociedad = inject('IDsociedad');
 
-    const ListaIds = ref([])
+    const ListaIds = ref([]); //Contiene los id de los empleados seleccionados
 
-    const mostrarOpciones = ref(false)
-
+    //controla la visualizacion de las opciones
+    const mostrarOpciones = ref(false);
+    /**
+     * Controla la visualizacion de la lista de opciones de agregar empleado
+     * @param mostrarOpciones - variable que cambia de valor
+    */
     const showOptions = () => {
         mostrarOpciones.value = !mostrarOpciones.value
     }
 
+    const mostrarModal = ref(false)
+    /**
+     * Controla el despliegue del modal
+     * @param mostrarModal
+     */
+    const showModal = () => {
+        mostrarModal.value = !mostrarModal.value
+    }
+
     //variables a utilizar de forma reactiva
     const state = reactive({
-        ListaEmpleados: [],
+        ListaEmpleados: [], // areglo con los datos de los empleados
     });
 
     //lista de sedes
@@ -260,7 +288,7 @@
     * los parámetros, llama a la función 'pedirEmpleados' o 'pedirEmplead2'.
     *
     * @param {string | number} valor - El valor del departamento que se asignará.
-    * @returns {void} No devuelve ningún valor, pero modifica el objeto 'parametrosPeticionEmpleados'.
+    * @returns {void} Modifica el objeto 'parametrosPeticionEmpleados.departamento_id'.
     */
     const addDepartamento = (valor) => {
         if (valor == '' || valor == null) {
