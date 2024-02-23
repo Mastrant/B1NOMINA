@@ -3,13 +3,24 @@
         <h2 class="titulo-form">Datos básicos</h2>
 
         <div class="row-form">
-            <ListaTemplateLineal />
-            <InputLinealDescripcion Placeholder="" Titulo="Número de documento"/>
+            <ListaTemplateLineal 
+                v-model="tipoDocumentoSelect" 
+                :options="TiposDocumentos" 
+                optionsSelected="Documento" 
+                textLabel="Tipo de documento"
+            />
+            <InputLinealDescripcion 
+                :Deshabilitar="tipoDocumentoSelect == 0 " 
+                v-model="NumeroDocumento" 
+
+                Placeholder="Ejemplo: 1234567-8" 
+                Titulo="Número de documento"
+            />
         </div>
 
         <div class="row-form">
-            <InputLinealDescripcion Placeholder="" Titulo="Nombres"/>
-            <InputLinealDescripcion Placeholder="" Titulo="Apellidos"/>
+            <InputLinealDescripcion Placeholder="Exaple: Juan" Titulo="Nombres"/>
+            <InputLinealDescripcion Placeholder="Ejemplo: Peres" Titulo="Apellidos"/>
         </div>
 
         <div class="row-form">
@@ -34,6 +45,41 @@
 import InputLinealDescripcion from '../inputs/Input-Lineal-descripcion.vue';
 import ListaTemplateLineal from '../listas/Lista-template-lineal.vue';
 import TemplateButton2 from '../botones/Template-button2.vue';
+
+import { ref, watch } from 'vue';
+
+const TiposDocumentos = [
+    {
+        id: 1,
+        nombre: "Pasaporte"
+    },
+    {
+        id: 2,
+        nombre: "RUT"
+    }
+]
+
+//valores
+    const nombres = ref('')
+    const apellidos = ref('')
+    const tipoDocumento = ref('')
+    const numeroDocumento = ref('')
+    const correo = ref('')
+    const foto = ref('')
+    const invitacion = ref(0)
+
+const payload = {
+    
+    nombres: "Pedro",
+    apellidos: '',
+    tipoDocumento: "",
+    numeroDocumento: "",
+    correo: '',
+    foto: '',
+    invitacion: 0
+}
+
+
 </script>
 
 <style scoped>

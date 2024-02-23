@@ -9,6 +9,7 @@
         
         <input
            required
+           :disabled="Deshabilitar"
            :type="Tipo" 
            :placeholder="Placeholder"
            :value="modelValue"
@@ -37,6 +38,10 @@ const props = defineProps({
     Tipo: {
         String,
         default: 'text'
+    },
+    Deshabilitar: {
+        type: Boolean,
+        default:false,
     }
 });
 
@@ -75,8 +80,7 @@ input.input-template {
     color: #1A245B; 
     font-size: 18px;
     border: none;
-
-    height: fit-content;
+    height: 50px;
 }
 
 input.input-template:focus {

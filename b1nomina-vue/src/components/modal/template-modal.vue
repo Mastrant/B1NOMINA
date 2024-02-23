@@ -11,11 +11,11 @@
                         </div>
 
                         <!--contenedor  data principal-->
-                        <slot />
+                        <slot></slot>
 
                         <!--contenedor botones-->
                         <div class="contend-button-modal">
-                            <TemplateButton Tipo="submit" text="Siguiente"/>
+                            <TemplateButton Tipo="submit" :text="textSubmit"/>
                             <TemplateButton2 text="Cancelar" @click="close" />
                         </div>
                     </div>
@@ -26,7 +26,7 @@
 </template>-
 
 <script setup>
-import {defineProps, ref, defineEmits} from 'vue'
+import {defineProps, ref, defineEmits} from 'vue';
 import CloseIconVue from '../icons/Close-icon.vue';
 import TemplateButton2 from '../botones/Template-button2.vue'
 import TemplateButton from '../botones/Template-button.vue'
@@ -39,6 +39,10 @@ const props = defineProps({
     },
     NombreAccion: {
         type: String,
+    },
+    textSubmit: {
+        type: String,
+        default: 'Siguiente'
     }
 });
 
@@ -49,7 +53,7 @@ const emit = defineEmits([
 
 const close = () => {
     emit('closeModal');
-}
+};
 
 
 </script>
