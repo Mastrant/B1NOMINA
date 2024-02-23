@@ -55,13 +55,13 @@
         </div>
 
         <TemplateModal @closeModal="showModal" :activarModal="mostrarModal" NombreAccion="Nuevo Registro">
-            <p>Esta es la descripcion del modal</p>
+            <p>
+                La información de la persona será utilizada para ayudarte a generar la nómina más rápida que has visto, recuerda que siempre podrás regresar a editar cualquier valor.
+            </p>
             <div>
                 Paginacion
             </div>
-            <form>
-                formulario
-            </form>
+            <FormDatosBasicos />
         </TemplateModal>
 
         <!--tabla con los datos-->
@@ -82,6 +82,7 @@
     import ListaOpciones from '../listas/Lista-Opciones.vue'
     import BigOptionButton from '../botones/Big-Option-button.vue'
     import TemplateModal from '../modal/Template-modal.vue'
+    import FormDatosBasicos from './Form-datosBasicos.vue';
 
 
     //iconos
@@ -408,6 +409,7 @@ form.formulario-empleados{
     height: 100%;
     display: flex;
     flex-direction: column;
+    gap:24px;
 }
 div.acciones-form {
     display: flex;

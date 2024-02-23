@@ -1,8 +1,6 @@
 <template>
-    <button type="button">
-        <slot name="default">
-
-        </slot>
+    <button :type="Tipo">
+        <slot/>
         <span>
             {{ text }}
         </span>
@@ -14,6 +12,10 @@ import { ref, defineProps } from 'vue';
 
 const props = defineProps({
     text: ref(''),
+    Tipo: {
+        String,
+        default: "button"
+    },
 });
 </script>
 

@@ -34,6 +34,8 @@ button {
     gap: 7.69px;
     display: flex;
     justify-content: space-between;
+    cursor: pointer;
+
 }
 
 button:hover {

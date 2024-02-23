@@ -4,19 +4,19 @@
             <div v-show="activarModal" class="modal">
                 <transition name="Animacion-Modal-inner">
                     <div v-show="activarModal" class="modal-inner">
+                        <!--contenedor cabecera-->
                         <div class="header-modal">
-                            <span>{{NombreAccion}}</span>
-                            <CloseIconVue @click="close" />
+                            <span class="NombreAccion">{{NombreAccion}}</span>
+                            <CloseIconVue class="icon" @click="close" />
                         </div>
-                        
+
+                        <!--contenedor  data principal-->
                         <slot />
+
+                        <!--contenedor botones-->
                         <div class="contend-button-modal">
-                            <button type="button" @click="Siguiente">
-                                Siguiente
-                            </button>
-                            <button type="button" @click="close">
-                                close
-                            </button>
+                            <TemplateButton Tipo="submit" text="Siguiente"/>
+                            <TemplateButton2 text="Cancelar" @click="close" />
                         </div>
                     </div>
                 </transition>
@@ -28,6 +28,8 @@
 <script setup>
 import {defineProps, ref, defineEmits} from 'vue'
 import CloseIconVue from '../icons/Close-icon.vue';
+import TemplateButton2 from '../botones/Template-button2.vue'
+import TemplateButton from '../botones/Template-button.vue'
 
 
 // Define las props correctamente
@@ -49,6 +51,7 @@ const close = () => {
     emit('closeModal');
 }
 
+
 </script>
 
 <style scoped>
@@ -67,6 +70,8 @@ div.modal {
 }
 
 div.modal-inner {
+    display:flex;
+    flex-direction: column;
     position: relative;
     max-width: 810px;
     width: 80%;
@@ -74,6 +79,38 @@ div.modal-inner {
     box-sizing: border-box;
     padding: 38px;
     background: #FFFFFF;
+    gap: 24px;
 
+    border-radius: 8px;
+}
+
+div.modal-inner > div {
+    display: flex;
+    gap:24px;
+}
+
+div.header-modal {
+    background-color: rgb(255, 255, 255);
+    display:flex;
+    justify-content: space-between;
+    align-items:center
+}
+
+div.header-modal > span.NombreAccion {
+  font-family: "Poppins-Medium", Helvetica;
+  font-weight: 500;
+  color: rgba(26, 36, 91, 1);
+  font-size: 24px;
+  letter-spacing: 0;
+  line-height: 34px;
+  white-space: nowrap;
+}
+
+.icon {
+    cursor: pointer;
+}
+div.contend-button-modal {
+    display: flex;
+    justify-content: start;
 }
 </style>
