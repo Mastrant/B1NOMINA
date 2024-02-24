@@ -81,7 +81,7 @@
     import EmpleadosGeneral from '../tablas/Empleados/Empleados-general.vue';
     import ListaOpciones from '../listas/Lista-Opciones.vue'
     import BigOptionButton from '../botones/Big-Option-button.vue'
-    import TemplateModal from '@/components/modal/template-modal.vue'
+    import TemplateModal from '@/components/modal/Template-modal.vue';
     import FormDatosBasicos from './Form-datosBasicos.vue';
 
 

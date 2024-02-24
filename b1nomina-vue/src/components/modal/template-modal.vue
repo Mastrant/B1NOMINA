@@ -15,7 +15,7 @@
 
                         <!--contenedor botones-->
                         <div class="contend-button-modal">
-                            <TemplateButton Tipo="submit" :text="textSubmit"/>
+                            <TemplateButton form="datosBasicos" Tipo="submit" :text="textSubmit"/>
                             <TemplateButton2 text="Cancelar" @click="close" />
                         </div>
                     </div>
@@ -23,7 +23,7 @@
             </div>
         </transition>
     </teleport>
-</template>-
+</template>
 
 <script setup>
 import {defineProps, ref, defineEmits} from 'vue';

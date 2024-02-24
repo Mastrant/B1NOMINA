@@ -1,21 +1,16 @@
 <template>
-    <div class="contend-select">
-        <p>
-            {{textLabel}}
-            <span>*</span>
-        </p>
-        <select class="lista-general" v-model="selected">        
-            <option value=''> 
-                {{optionsSelected}}
-            </option>
+    <select class="lista-general" v-model="selected">
 
-            <!---->
-            <option v-for="option in options" :key="option.id" :value="option.id">
-            {{ option.nombre }}
-            </option>
+        <option value=''> 
+            {{optionsSelected}}
+        </option>
 
-        </select>
-    </div>
+        <!---->
+        <option v-for="option in options" :key="option.id" :value="option.id">
+          {{ option.nombre }}
+        </option>
+
+    </select>
 </template>
 
 <script setup>
@@ -24,24 +19,14 @@ import { ref, defineProps } from 'vue';
 //valores recibidos
 const props = defineProps({
     //Lista de opciones
-    /**
-     * id: Number 
-     * nombre: String
-     */
     options: {
-        type: Array,
-        default: () => []
+        default: () => [{}]
     },
     //Titulo de la opcion
     optionsSelected: {
         type: String ,
-        default: "Ingrese Valor",
-    },
-    textLabel: {
-        type: String,
-        default: "titulo",
+        default: 0,
     }
-
 });
 
 //reactividad a la opcion selecionada
@@ -50,13 +35,6 @@ const selected = ref('');
 </script>
 
 <style scoped>
-
-div.contend-select {
-    display: flex;
-    flex-direction: column;
-    width: 48%;
-    gap: 1px;
-}
 select.lista-general {
     width: 100%;
     height: 44px;
@@ -70,9 +48,12 @@ select.lista-general {
     margin: 0;
     
     background: #ffffff;
-    overflow: hidden;
-    border-color:white;
-    border-bottom: 2.5px solid #1A245B;
+    
+    border-color: white;
+    border-bottom: solid 3px #1A245B;
+    
+    outline: none;
+    
 
 
     /*Estilos de fuente*/
@@ -88,29 +69,17 @@ select.lista-general:focus {
     background: #ffffff;
     overflow: hidden;
     border-color:white;
-    border-bottom: 2.5px solid #1A245B;
+    border-bottom: solid 3px #1A245B;
     outline: none;
 }
+
+select.lista-general::after {
+    outline: none;
+}
+
 option {
     box-sizing: border-box;
     text-align: start;
     
-}
-
-p {
-    font-size: 13px;
-    font-family: Poppins;
-    font-weight: 500;
-    word-wrap: break-word;
-    color: #888888;
-    margin: 1px;
-}
-
-p span{
-    color: #E32A40;
-    font-size: 13px;
-    font-family: Poppins;
-    font-weight: 500;
-    word-wrap: break-word;
 }
 </style>

@@ -1,30 +1,47 @@
 <template>
-    <form class="formulario">
+    <form class="formulario" id="datosBasicos" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos básicos</h2>
 
         <div class="row-form">
-            <ListaTemplateLineal 
-                v-model="tipoDocumentoSelect" 
-                :options="TiposDocumentos" 
-                optionsSelected="Documento" 
-                textLabel="Tipo de documento"
+            <LayoutInputLineal textLabel="Tipo de Documento">
+                <template v-slot>
+                    <ListaTemplateLineal  v-model="tipoDocumentoSelect" :options="ListaTiposDocumentos" optionsSelected="Sede"/>
+                </template>
+            </LayoutInputLineal>
+
+            <InputLinealDescripcion  
+                Placeholder="Ejemplo:  1234567-8"  
+                Titulo="Número de documento"
+                v-model="numeroDocumento"
+                @update:modelValue="numeroDocumento = $event"
+            />
+
+        </div>
+
+        <div class="row-form">
+            <InputLinealDescripcion 
+                Placeholder="Exaple: Juan" 
+                Titulo="Nombres"
+                v-model="nombres"
+                @update:modelValue="nombres = $event"
             />
             <InputLinealDescripcion 
-                :Deshabilitar="tipoDocumentoSelect == 0 " 
-                v-model="NumeroDocumento" 
-
-                Placeholder="Ejemplo: 1234567-8" 
-                Titulo="Número de documento"
+                Placeholder="Ejemplo: Peres" 
+                Titulo="Apellidos"
+                v-model="apellidos"
+                @update:modelValue="apellidos = $event"
+                
             />
         </div>
 
         <div class="row-form">
-            <InputLinealDescripcion Placeholder="Exaple: Juan" Titulo="Nombres"/>
-            <InputLinealDescripcion Placeholder="Ejemplo: Peres" Titulo="Apellidos"/>
-        </div>
-
-        <div class="row-form">
-            <InputLinealDescripcion Placeholder="Exaple@gmail.com" Titulo="Correo electrónico" />
+            <InputLinealDescripcion 
+                Placeholder="Exaple@gmail.com" 
+                Titulo="Correo electrónico" 
+                v-model="correo"
+                @update:modelValue="correo = $event"
+                Tipo="email"
+            />
             <div>
                 <span>Enviar invitación a B1 Nomina por email</span> 
                 <img src="" alt=" (?)">
@@ -37,7 +54,6 @@
                 <TemplateButton2 text="Seleccionar Archivo"/>
             </div>
         </div>
-
     </form>
 </template>
 
@@ -45,10 +61,12 @@
 import InputLinealDescripcion from '../inputs/Input-Lineal-descripcion.vue';
 import ListaTemplateLineal from '../listas/Lista-template-lineal.vue';
 import TemplateButton2 from '../botones/Template-button2.vue';
+import LayoutInputLineal from '../Layouts/LayoutInputLineal.vue';
 
 import { ref, watch } from 'vue';
 
-const TiposDocumentos = [
+//lista de 
+const ListaTiposDocumentos = [
     {
         id: 1,
         nombre: "Pasaporte"
@@ -56,18 +74,21 @@ const TiposDocumentos = [
     {
         id: 2,
         nombre: "RUT"
-    }
-]
+    },
+
+];
 
 //valores
-    const nombres = ref('')
-    const apellidos = ref('')
-    const tipoDocumento = ref('')
-    const numeroDocumento = ref('')
-    const correo = ref('')
-    const foto = ref('')
-    const invitacion = ref(0)
+const numeroDocumento = ref('');
 
+    const nombres = ref('');
+    const apellidos = ref('');
+    const tipoDocumentoSelect = ref(0); //Documento selecionado
+    const correo = ref('');
+    const foto = ref('');
+    const invitacion = ref(0);
+
+// payload de la peticion
 const payload = {
     
     nombres: "Pedro",
@@ -78,6 +99,21 @@ const payload = {
     foto: '',
     invitacion: 0
 }
+
+const probarInput = (value) => {
+    console.log(value)
+}
+
+const Enviar = () => {
+    console.log("enviado datos basicos")
+}
+
+
+watch(tipoDocumentoSelect,probarInput)
+watch(numeroDocumento,probarInput)
+watch(nombres,probarInput)
+watch(apellidos,probarInput)
+watch(correo, probarInput)
 
 
 </script>

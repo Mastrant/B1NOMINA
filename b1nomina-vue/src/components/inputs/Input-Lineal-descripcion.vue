@@ -7,15 +7,15 @@
             </span>
         </label>
         
-        <input
+        <input class="input-template"
            required
            :disabled="Deshabilitar"
            :type="Tipo" 
            :placeholder="Placeholder"
+
            :value="modelValue"
            @input="$emit('update:modelValue', $event.target.value)"
-           class="input-template"
-        >
+           >
     </div>        
 </template>
 
@@ -23,20 +23,24 @@
 import { defineProps } from 'vue';
 
 const props = defineProps({
-    Placeholder : {
-        type: String,
-        default: 'Datos del campo',
-    },
+    
+    //props de funcionamiento
     modelValue: {
         type: String,
         default: '',
     },
+
+    //props de formato y estilos
+    Placeholder : {
+        type: String,
+        default: 'Datos del campo',
+    },
     Titulo: {
-        String,
+        type: String, // Corrección aquí
         default: "Titulo"
     },
     Tipo: {
-        String,
+        type: String, // Corrección aquí
         default: 'text'
     },
     Deshabilitar: {
@@ -44,8 +48,8 @@ const props = defineProps({
         default:false,
     }
 });
-
 </script>
+
 
 <style scoped>
 div.input-line-contend {
