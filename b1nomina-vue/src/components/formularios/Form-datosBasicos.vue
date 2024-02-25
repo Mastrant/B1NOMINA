@@ -10,6 +10,7 @@
             </LayoutInputLineal>
 
             <InputLinealDescripcion  
+                :Deshabilitar="tipoDocumentoSelect == 0"
                 Placeholder="Ejemplo:  1234567-8"  
                 Titulo="Número de documento"
                 v-model="numeroDocumento"
@@ -63,6 +64,7 @@ import ListaTemplateLineal from '../listas/Lista-template-lineal.vue';
 import TemplateButton2 from '../botones/Template-button2.vue';
 import LayoutInputLineal from '../Layouts/LayoutInputLineal.vue';
 
+
 import { ref, watch } from 'vue';
 
 //lista de 
@@ -78,20 +80,18 @@ const ListaTiposDocumentos = [
 
 ];
 
-//valores
+// inicializacion de variables reactivas
 const numeroDocumento = ref('');
-
-    const nombres = ref('');
-    const apellidos = ref('');
-    const tipoDocumentoSelect = ref(0); //Documento selecionado
-    const correo = ref('');
-    const foto = ref('');
-    const invitacion = ref(0);
+const nombres = ref('');
+const apellidos = ref('');
+const tipoDocumentoSelect = ref(0); //Documento selecionado
+const correo = ref('');
+const foto = ref('');
+const invitacion = ref(0);
 
 // payload de la peticion
 const payload = {
-    
-    nombres: "Pedro",
+    nombres: "",
     apellidos: '',
     tipoDocumento: "",
     numeroDocumento: "",
@@ -100,20 +100,41 @@ const payload = {
     invitacion: 0
 }
 
-const probarInput = (value) => {
-    console.log(value)
-}
-
+const addNombres = (value) => {
+    payload.nombres = value;
+};
+const addApellidos = (value) => {
+    payload.apellidos = value;
+};
+const addTipodocumento = (value) => {
+    payload.tipoDocumento = value;
+};
+const addNumeroDocumento = (value) => {
+    payload.numeroDocumento = value;
+};
+const addCorreo = (value) => {
+    payload.correo = value;
+};
+const addFoto = (value) => {
+    console.log(value);
+};
+/**
+ * Funcion emitida al enviar el formulario
+ * @params payload Contiene los datos que se pasaran
+ * Ejecuta la peticion con axios
+ */
 const Enviar = () => {
-    console.log("enviado datos basicos")
-}
+    (tipoDocumentoSelect.value == 0 | tipoDocumentoSelect.value == '')
+    ?console.log("falta seleccionar un tipo de documento")
+    :console.log(payload)
+};
 
 
-watch(tipoDocumentoSelect,probarInput)
-watch(numeroDocumento,probarInput)
-watch(nombres,probarInput)
-watch(apellidos,probarInput)
-watch(correo, probarInput)
+watch(tipoDocumentoSelect, addTipodocumento);
+watch(numeroDocumento, addNumeroDocumento);
+watch(nombres, addNombres);
+watch(apellidos,addApellidos);
+watch(correo, addCorreo);
 
 
 </script>

@@ -59,7 +59,7 @@
                 La información de la persona será utilizada para ayudarte a generar la nómina más rápida que has visto, recuerda que siempre podrás regresar a editar cualquier valor.
             </p>
             <div>
-                Paginacion
+                <NavForm />
             </div>
             <FormDatosBasicos />
         </TemplateModal>
@@ -83,6 +83,7 @@
     import BigOptionButton from '../botones/Big-Option-button.vue'
     import TemplateModal from '@/components/modal/Template-modal.vue';
     import FormDatosBasicos from './Form-datosBasicos.vue';
+    import NavForm from '@/components/navs/Nav-form.vue'
 
 
     //iconos
