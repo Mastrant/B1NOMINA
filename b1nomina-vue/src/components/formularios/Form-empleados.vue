@@ -7,8 +7,7 @@
                 <ListaTemplate v-model="filtroSede" :options="ListaSedes" optionsSelected="Sede"/>
                 <ListaTemplate v-model="filtroDepartamento" :options="ListaDepartamentos" optionsSelected="Departamento"/>
                 <ListaTemplate v-model="filtroGrupo" :options="ListaGrupos" optionsSelected="Grupo"/>
-            </div>
-            
+            </div>     
             <!--contenedor-->
             <div class="Add-user-button">
                 <!--Boton para agregar usuarios-->
@@ -55,13 +54,14 @@
         </div>
 
         <TemplateModal @closeModal="showModal" :activarModal="mostrarModal" NombreAccion="Nuevo Registro">
-            <p>
+            <p class="decripcion-modal">
                 La información de la persona será utilizada para ayudarte a generar la nómina más rápida que has visto, recuerda que siempre podrás regresar a editar cualquier valor.
             </p>
-            <div>
-                <NavForm />
-            </div>
+            
+            <NavForm :idFormularioActivo="2" />
+            
             <FormDatosBasicos />
+
         </TemplateModal>
 
         <!--tabla con los datos-->
@@ -434,6 +434,11 @@ span.NoEncontrado {
 
 div.Add-user-button > div {
     z-index: 50;
-
+}
+p.decripcion-modal{
+    margin: 0;
+    text-align: justify;
+    font-size: 16px;
+    font-weight: 400;
 }
 </style>
