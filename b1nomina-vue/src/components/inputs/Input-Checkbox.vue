@@ -1,18 +1,17 @@
 <template>
   <div class="conted-Input">
-    <input type="checkbox" :id="'checkbox'+Objid">    
-    <label :for="'checkbox'+Objid">{{valor}}</label>
+    <input type="checkbox" :value="Objid" :id="'checkbox'+Objid" @change="updateValue">    
+    <label :for="'checkbox'+Objid">{{texto}}</label>
   </div>
-  
 </template>
 
 <script setup>
-import { defineProps, ref, watchEffect } from 'vue';
+import { defineProps, defineEmits, withDefaults } from 'vue';
 
 const props = defineProps({
     texto: {
-        String,
-        default: '',
+        type: String,
+        default: ''
     },
     Objid: {
         type: [String, Number],
@@ -20,12 +19,15 @@ const props = defineProps({
     }
 });
 
-const valor = ref()
+const emit = defineEmits(['update']);
+
+const updateValue = (event) => {
+    emit('update', event.target.checked ? props.Objid : props.Objid);
+};
 </script>
 
+
 <style scoped> 
-
-
 /* Oculta el estilo por default*/
 [type="checkbox"] {
   opacity: 0;

@@ -50,6 +50,7 @@
             <div>
                 <span>Enviar invitación a B1 Nomina por email</span> 
                 <img src="" alt=" (?)">
+                <InputRadioButton />
             </div>
         </div>
         <div class="multimedia">
@@ -67,6 +68,7 @@ import InputLinealDescripcion from '../inputs/Input-Lineal-descripcion.vue';
 import ListaTemplateLineal from '../listas/Lista-template-lineal.vue';
 import TemplateButton2 from '../botones/Template-button2.vue';
 import LayoutInputLineal from '../Layouts/LayoutInputLineal.vue';
+import InputRadioButton from '../botones/Input-Radio-button.vue';
 
 
 import { ref, watch } from 'vue';
@@ -187,12 +189,20 @@ div.multimedia {
     gap:  12px;
 }
 
+div.multimedia > span {
+    color: #999999;
+    font-size: 13px;
+    font-family: Poppins;
+    font-weight: 500;
+    word-wrap: break-word;
+}
+
 /* Estilo para el botón de añadir una foto, con bordes 
 y un padding específico para un mejor aspecto visual */
 div.multimedia div.add-photo{
     border-radius:  6px;
     border:  0.5px #363855 dashed;
-    border-width:  5px;
+    border-width:  2px;
     box-sizing: border-box;
     padding:  12px  48px;
     display: flex;

@@ -31,7 +31,7 @@
             <!--Cuerpo de la tabla-->
             <tr class="rowTabla cuerpo" v-for="(item) in DatosPaginados" :key="item.id">
                 <td class="filaCheckbox">
-                    <InputCheckbox :Objid="item.id"/>
+                    <InputCheckbox :Objid="item.id" @update="InteraccionListaEmpleadosSelecionados" />
                 </td>
                 <td class="rowNombre">
                     {{item.nombres}}
@@ -42,11 +42,11 @@
                 <td class="">
                     {{ item.cargo }}
                 </td>
-                <td class=" ">
+                <td class="">
                     {{ item.sueldo }}
                 </td>
                 <td class="Estado">
-                    <InterruptorButton @click="console.log('estado cambiado' + item.id)" :Objid="item.id" :Estado="(item.activo == true)? true: false" />
+                    <InterruptorButton @click=" () => console.log('estado cambiado' + item.id)" :Objid="item.id" :Estado="(item.activo == true)? true :false" />
                     <span v-if="item.activo == true">Activo</span>
                     <span v-else>Inactivo</span>
                 </td>
@@ -93,18 +93,58 @@ import PaginateButton from '@/components/botones/Paginate-button.vue';
 import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
 import InputCheckbox from '@/components/inputs/Input-Checkbox.vue';
 
-import { ref, defineProps, watchEffect, onMounted } from 'vue';
+import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
 
-// Define tus props
+// Define los props
 const props = defineProps({
   listaEmpleados: {
     type: Array,
     default: () => []
   }
 });
-
+const emit = defineEmits(['upData']);
 // Accede a la lista de empleados desde props
 const ListaEmpleados = ref(props.listaEmpleados);
+
+const listaEmpleadosSelecionados = ref([])
+
+/**
+ * Función para manejar la interacción con una lista de empleados seleccionados.
+ * Esta función agrega o remueve un valor de la lista basado en si el valor ya está presente.
+ *
+ * @param {Number} value - El valor a agregar o remover de la lista.
+ */
+ const InteraccionListaEmpleadosSelecionados = (value) => {
+
+  // Verifica si el valor no es null
+  if (value !== null) {
+    // Verifica si el valor ya está en la lista
+    if (listaEmpleadosSelecionados.value.includes(value)) {
+      // Si el valor ya está en la lista, lo remueve
+      // Encuentra el índice del valor en la lista
+      const index = listaEmpleadosSelecionados.value.indexOf(value);
+      // Verifica si el índice es válido (mayor que -1)
+      if (index > -1) {
+        // Remueve el valor de la lista usando splice
+        listaEmpleadosSelecionados.value.splice(index,   1);
+      }
+    } else {
+      // Si el valor no está en la lista, lo agrega
+      // Agrega el valor al final de la lista
+      listaEmpleadosSelecionados.value.push(value);
+    }
+  }
+};
+
+const upData = (arrayData) => {
+    // Convertir el objeto proxy a un array real
+    const arrayReal = [...arrayData];
+    emit('upData', arrayReal);
+};
+
+watch(listaEmpleadosSelecionados.value, upData)
+
+
 
 //configuracion del paginado
 const DatosPaginados = ref([]); //arreglo con los datos picados
@@ -122,9 +162,12 @@ function getDataPorPagina(numeroPagina){
     //vacia la lista al cambiar iniciar
 
     //si el valor de numeroPagina es null o undefined le asigna 1
-    (numeroPagina == undefined || numeroPagina == null)? numeroPagina = 1: paginaActual.value = numeroPagina;   
+    (numeroPagina == undefined || numeroPagina == null)
+        ? numeroPagina = 1
+        : paginaActual.value = numeroPagina;   
     
-    DatosPaginados.value = ([])
+    DatosPaginados.value = ([]);
+
     //rango del indice
     let ini = (numeroPagina * elementosPorPagina) - elementosPorPagina;
     let fin = (numeroPagina * elementosPorPagina);

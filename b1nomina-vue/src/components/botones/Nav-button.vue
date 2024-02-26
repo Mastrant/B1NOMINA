@@ -13,7 +13,7 @@ const props = defineProps({
         Boolean,
         default:false,
     }
-})
+});
 </script>
 
 <style>
@@ -49,8 +49,8 @@ div.nav-contend > a > span {
 }
 
 .nav-contend-hoverclose {
+    display: block;
     position: absolute;
-    z-index: 500;
 }
 
 </style>

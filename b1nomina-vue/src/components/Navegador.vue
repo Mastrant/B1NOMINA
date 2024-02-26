@@ -12,7 +12,7 @@
                 <div class="contend1">
                     <div class="options" v-for="modulo in modulosAsignados" :key="modulo.idModulo">
                         <!--Dashboard-->
-                        <NavButton  @mouseover="console.log('moduloselecionado')" @mouseleave="console.log('mouse retirado')">
+                        <NavButton :class="{'order': !desplegarMenu}">
                             <template #direccion>
                                 <router-link :to="modulo.urlModulo">
                                     <CuboIcon />
@@ -28,7 +28,7 @@
                 <div class="contend2">
                     <div class="options">
                         <!--Notificaciones-->
-                        <NotificationButton>
+                        <NotificationButton :class="{'order': !desplegarMenu}">
                             <template #direccion>
                                 <router-link to="notificaciones">
                                     <CampanaIcon />
@@ -40,7 +40,7 @@
                             </template>
                         </NotificationButton>
                         <!-- Soporte y Asistencia-->
-                        <NavButton>
+                        <NavButton :class="{'order': !desplegarMenu}">
                             <template #direccion>
                                 <router-link to="/help">
                                     <HelpCircleIcon />
@@ -49,7 +49,7 @@
                             </template>
                         </NavButton>
                         <!--Configuración-->
-                        <NavButton>
+                        <NavButton :class="{'order': !desplegarMenu}">
                             <template #direccion>
                                 <router-link to="configuracion">
                                     <TuerquitaIcon />
@@ -64,22 +64,7 @@
             </div>
 
             <!--Parte inferior del navegados-->
-
-            <!--Si el panel esta desplegado despliega esta parte-->
-            <div class="perfil" v-if="desplegarMenu">
-                <Avatar class="Avatar" @click="seleccion"/>
-                <div class="perfil-text" >
-                    <span class="text-perfil text-perfil-1">Nombre de Empresa</span>
-                    <span class="text-perfil">Rut 0102030405</span>
-                </div>
-                <div v-show="desplegarMenu">
-                    <TresPuntosIcon class="icon" @click="logOut"/>
-                </div>           
-            </div>
-            <!--Si el panel esta recogido despliega esta parte-->
-            <div class="perfil-hidden" v-else>
-                <Avatar class="Avatar" @click="seleccion"/>
-            </div>
+            <SociedadBox :desplegarMenu="desplegarMenu"/>
             
         </nav>       
 </template>
@@ -101,14 +86,7 @@ import CuboIcon from './icons/Cubo-icon.vue';
 import CampanaIcon from './icons/Campana-icon.vue';
 import HelpCircleIcon from './icons/HelpCircle-icon.vue';
 import TuerquitaIcon from './icons/Tuerquita-icon.vue';
-import TresPuntosIcon from './icons/TresPuntos-icon.vue';
-
-//Redireccion
-import { useRouter } from 'vue-router';
-const router = useRouter();
-
-//AVATAR
-import Avatar from './avatars/Avatar1.vue'
+import SociedadBox from '@/components/box/Sociedad-box.vue';
 
 //axios
 import axios from 'axios';
@@ -153,19 +131,6 @@ const OptenerModulos = () => {
     )
 }
 
-//al selecionar el avatar
-const seleccion = () => {
-    //al selecionar
-    router.push('/sociedad')
-}
-
-const logOut = () => {
-
-    localStorage.clear();
-    // Utiliza Vue Router para redirigir al usuario a la página de inicio de sesión
-    router.replace('/login');
-}
-
 //al momento de  montar el componente
 onMounted(() => {
     //ejecuta la peticion
@@ -180,9 +145,9 @@ onMounted(() => {
 /*Contenedor general */
 .aside {
     z-index: 5;
-    height: 100%;
+    height: 100vh;
     width: fit-content;
-    padding: 0 17.75px;
+    padding: 48px 17.75px;
     background-color: #1A245B;
     color: #CDE0F1;
     justify-content: space-between;
@@ -194,7 +159,6 @@ onMounted(() => {
 }
 /*logo y boton de aprtura */
 .head {
-    margin-top: 40px;
     display: flex;
     align-items: center;
     height: 52.5px;
@@ -205,16 +169,6 @@ onMounted(() => {
 /*logo*/
 .head > img {
     cursor: pointer;
-}
-/*Imagensociedad */
-.profile img {
-    display: flex;
-    width: 188.978px;
-    height: 34.514px;
-    padding: 1px 0px;
-    align-items: center;
-    gap: 6px;
-    flex-shrink: 0;
 }
 /*contenedor general de las listas de modulos*/
 div.contend {
@@ -237,45 +191,8 @@ div.contend {
 .options {
     z-index: 3;
 }
-/*Contenedor del perfil */
-div.perfil {
-    display: flex;
-    justify-content: center;
-    padding: 24px 0px;
-    align-items: center;
-    border-radius: 8px;
-    border: 2px #4E5FBD solid;
-    background: #1A2771;
-    color: #CDE0F1;
-    margin: 48px 0px;
-    box-sizing: content-box;
-    width: 100%;
-    justify-content: space-evenly;
-}
-/*Estilos cuando menú esta cerrado */
-div.perfil-hidden{
-    margin: 48px 0px;
-    display: flex;
-    justify-content: center;
-}
-/*estilos del avatar de la sociedad */
-.avatar {
-    margin-right: 16px;
-    cursor: pointer;
-}
-/*Texto del perfil */
-.text-perfil {
-    font-size: 12px;
-}
-/*estilos especificos*/
-.text-perfil-1 {
-    font-size: 14px;
-}
-/*Contenedor de los textos del perfil */
-.perfil-text {
-    display: flex;
-    flex-direction: column;
-}
+
+
 /*Estilo de los iconos */
 .icon {
     height: 20.5px;
@@ -283,11 +200,12 @@ div.perfil-hidden{
     cursor: pointer;
 }
 
-.Avatar {
-    cursor: pointer;
-}
-
 .show {
     display: flex;
+}
+
+.order > a {
+    display: flex;
+    justify-content: center;
 }
 </style>

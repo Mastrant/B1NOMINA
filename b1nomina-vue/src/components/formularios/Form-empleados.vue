@@ -66,8 +66,8 @@
 
         <!--tabla con los datos-->
         <div class="cuerpo-tabla">
-            <span class="NoEncontrado" v-if="(ListaEmpleados.length === 0)? true : false">No hay datos asociados a los filtros</span>
-            <EmpleadosGeneral v-else :listaEmpleados="ListaEmpleados"/>
+            <span class="NoEncontrado" v-if="(ListaEmpleados.length == 0)? true : false">No hay datos asociados a los filtros</span>
+            <EmpleadosGeneral v-else :listaEmpleados="ListaEmpleados"   @upData="InteraccionListaEmpleadosSelecionados"/>
         </div>
     </div>
 </template>
@@ -99,6 +99,14 @@
     const idSociedad = inject('IDsociedad');
 
     const ListaIds = ref([]); //Contiene los id de los empleados seleccionados
+
+    const InteraccionListaEmpleadosSelecionados = (arreglo) => {
+        // Convertir el objeto proxy a un array real
+        ListaIds.value = Array.from(arreglo);
+        console.log(ListaIds.value); // Ahora debería mostrar un array real
+    }
+
+    
 
     //controla la visualizacion de las opciones
     const mostrarOpciones = ref(false);
@@ -404,8 +412,7 @@
 </script>
 
 <style scoped>
-form.formulario-empleados{
-    gap: 24px;
+div.formulario-empleados {
     width: 100%;
     height: 100%;
     display: flex;
