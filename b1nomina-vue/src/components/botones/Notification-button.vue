@@ -42,7 +42,7 @@ div.notificatioButton-contend {
 }
 
 .notificatioButton-contend > a > span {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: space-between;
     width: 100%;

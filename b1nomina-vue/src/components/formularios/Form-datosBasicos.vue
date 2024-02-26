@@ -70,6 +70,7 @@ import LayoutInputLineal from '../Layouts/LayoutInputLineal.vue';
 
 
 import { ref, watch } from 'vue';
+import axios from 'axios';
 
 //lista de 
 const ListaTiposDocumentos = [
@@ -95,13 +96,12 @@ const invitacion = ref(0);
 
 // payload de la peticion
 const payload = {
-    nombres: "",
-    apellidos: '',
-    tipoDocumento: "",
-    numeroDocumento: "",
-    correo: '',
-    foto: '',
-    invitacion: 0
+    
+  "apellidos": "",
+  "correo": "",
+  "documento": "",
+  "nombres": ""
+
 }
 
 const addNombres = (value) => {
@@ -110,11 +110,8 @@ const addNombres = (value) => {
 const addApellidos = (value) => {
     payload.apellidos = value;
 };
-const addTipodocumento = (value) => {
-    payload.tipoDocumento = value;
-};
 const addNumeroDocumento = (value) => {
-    payload.numeroDocumento = value;
+    payload.documento = value;
 };
 const addCorreo = (value) => {
     payload.correo = value;
@@ -122,19 +119,36 @@ const addCorreo = (value) => {
 const addFoto = (value) => {
     console.log(value);
 };
+
 /**
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
 const Enviar = () => {
-    (tipoDocumentoSelect.value == 0 | tipoDocumentoSelect.value == '')
-    ?console.log("falta seleccionar un tipo de documento")
-    :console.log(payload)
+    console.log(payload)
+    axios.post('/user/create_preuser', payload )
+        .then(res => {
+            console.log("registrado " + res)
+            
+        })
+        .catch(err => {
+        if (err.response) {
+            // La solicitud se realizó y el servidor respondió con un estado fuera del rango de  2xx
+            console.log(err.response.data);
+            console.log(err.response.status);
+            console.log(err.response.headers);
+        } else if (err.request) {
+            // La solicitud se realizó pero no se recibió ninguna respuesta
+            console.log(err.request);
+        } else {
+            // Algo sucedió al configurar la solicitud que desencadenó un Error
+            console.log('Error', err.message);
+        }
+        console.log(err.config);
+    });
 };
 
-
-watch(tipoDocumentoSelect, addTipodocumento);
 watch(numeroDocumento, addNumeroDocumento);
 watch(nombres, addNombres);
 watch(apellidos,addApellidos);

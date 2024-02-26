@@ -58,7 +58,7 @@
                 La información de la persona será utilizada para ayudarte a generar la nómina más rápida que has visto, recuerda que siempre podrás regresar a editar cualquier valor.
             </p>
             
-            <NavForm :idFormularioActivo="2" />
+            <NavForm :idFormularioActivo="1" />
             
             <FormDatosBasicos />
 

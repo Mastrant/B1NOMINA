@@ -10,13 +10,13 @@
             <div class="contend">
                 <!--Botones superiores-->
                 <div class="contend1">
-                    <div class="options" v-for="modulo in listaModulos2" :key="modulo.idModulo">
+                    <div class="options" v-for="modulo in modulosAsignados" :key="modulo.idModulo">
                         <!--Dashboard-->
-                        <NavButton v-show="modulo.asignado" @mouseover="cambiarEstado(modulo.idModulo)" @mouseleave="cambiarEstado(null)">
+                        <NavButton  @mouseover="console.log('moduloselecionado')" @mouseleave="console.log('mouse retirado')">
                             <template #direccion>
                                 <router-link :to="modulo.urlModulo">
                                     <CuboIcon />
-                                    <span v-show="(desplegarMenu) || (showText === modulo.idModulo && desplegarMenu === false)">
+                                    <span :class="{'show': desplegarMenu}">
                                         {{modulo.nombreModulo}}
                                     </span>
                                 </router-link>
@@ -32,7 +32,7 @@
                             <template #direccion>
                                 <router-link to="notificaciones">
                                     <CampanaIcon />
-                                    <span v-if="desplegarMenu">
+                                    <span :class="{'show': desplegarMenu}">
                                         Notificaciones
                                         <CantidadNotificaciones num="5"/>
                                     </span>
@@ -44,7 +44,7 @@
                             <template #direccion>
                                 <router-link to="/help">
                                     <HelpCircleIcon />
-                                    <span v-if="desplegarMenu">Soporte y Asistencia</span>
+                                    <span :class="{'show': desplegarMenu}">Soporte y Asistencia</span>
                                 </router-link>
                             </template>
                         </NavButton>
@@ -53,7 +53,9 @@
                             <template #direccion>
                                 <router-link to="configuracion">
                                     <TuerquitaIcon />
-                                    <span v-if="desplegarMenu">Configuración</span>
+                                    <span :class="{'show': desplegarMenu}">
+                                        Configuración
+                                    </span>
                                 </router-link>
                             </template>
                         </NavButton>
@@ -70,7 +72,7 @@
                     <span class="text-perfil text-perfil-1">Nombre de Empresa</span>
                     <span class="text-perfil">Rut 0102030405</span>
                 </div>
-                <div v-if="desplegarMenu">
+                <div v-show="desplegarMenu">
                     <TresPuntosIcon class="icon" @click="logOut"/>
                 </div>           
             </div>
@@ -93,9 +95,9 @@ import CantidadNotificaciones from './CantidadNotificaciones.vue';
 //Iconos
 
 import CuboIcon from './icons/Cubo-icon.vue';
-import TwoPersonIcon from './icons/TwoPerson-icon.vue';
-import TableIcon from './icons/Table-icon.vue';
-import AjustesIcon from './icons/Ajustes-icon.vue';
+//import TwoPersonIcon from './icons/TwoPerson-icon.vue';
+//import TableIcon from './icons/Table-icon.vue';
+//import AjustesIcon from './icons/Ajustes-icon.vue';
 import CampanaIcon from './icons/Campana-icon.vue';
 import HelpCircleIcon from './icons/HelpCircle-icon.vue';
 import TuerquitaIcon from './icons/Tuerquita-icon.vue';
@@ -112,31 +114,26 @@ import Avatar from './avatars/Avatar1.vue'
 import axios from 'axios';
 
 // Generar reactividad del componente
-import {onMounted, ref, toRefs} from 'vue';
+import {onMounted, ref} from 'vue';
 
 //controla si se a acionado el desplegar menú
 const desplegarMenu = ref(false)
 
-//Controla el texto mostrado al pasar el mouse
-const showOptios = ref('')
-
-const showText = ref('')
-
-//al pasar el mouse por el navegador
-const cambiarEstado = (id) => {
-    showText.value = id
-};
-
 //valor por defecto
-const listaModulos2 = ref([
-{
-    "idModulo": 1,
-    "nombreModulo": "DashBoard",
-    "urlModulo": "dashboard",
-    "iconoModulo": "",
-    "asignado": true,
-  },
-]);
+const modulosAsignados = ref(
+    [
+        {
+            "idModulo": 1,
+            "nombreModulo": "DashBoard",
+            "urlModulo": "dashboard",
+            "iconoModulo": "",
+            "asignado": true,
+        },
+    ]
+);
+
+const listaModulos2 = ref([{}])
+
 
 //solicita los modulos disponibles
 const OptenerModulos = () => {
@@ -144,7 +141,9 @@ const OptenerModulos = () => {
     .then(
         (respuesta) => {
             //asigna el valor de la consulta a la lista de modulos
-            listaModulos2.value =respuesta.data
+            listaModulos2.value = respuesta.data
+            // Crear un nuevo arreglo con los elementos donde "asignado" es verdadero
+            modulosAsignados.value = listaModulos2.value.filter(modulo => modulo.asignado);
         }
     )
     .catch(
@@ -288,4 +287,7 @@ div.perfil-hidden{
     cursor: pointer;
 }
 
+.show {
+    display: flex;
+}
 </style>

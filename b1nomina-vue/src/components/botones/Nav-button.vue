@@ -1,15 +1,19 @@
 <template>
-    <div class="nav-contend">
+    <div class="nav-contend" :class="{'nav-contend-hoverclose': activate}">
         <slot name="direccion">
 
         </slot>
     </div>
 </template>
 
-<script>
-export default {
-    name: 'nav-button'
-}
+<script setup>
+import { defineProps } from 'vue';
+const props = defineProps({
+    activate: {
+        Boolean,
+        default:false,
+    }
+})
 </script>
 
 <style>
@@ -38,6 +42,15 @@ div.nav-contend > a {
     height: 100%;
     gap: 8px;
     margin: auto;
+}
+
+div.nav-contend > a > span {
+    display: none;
+}
+
+.nav-contend-hoverclose {
+    position: absolute;
+    z-index: 500;
 }
 
 </style>
