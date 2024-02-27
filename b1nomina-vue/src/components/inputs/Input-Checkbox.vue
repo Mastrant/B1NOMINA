@@ -1,11 +1,14 @@
 <template>
   <div class="conted-Input">
     <input type="checkbox" :value="Objid" :id="'checkbox'+Objid" @change="updateValue">    
-    <label :for="'checkbox'+Objid">{{texto}}</label>
+    <label :for="'checkbox'+Objid"></label>
+    <span>{{texto}}</span>
   </div>
 </template>
 
 <script setup>
+
+//uso <InputCheckbox :Objid="" @update="" texto="" />
 import { defineProps, defineEmits, withDefaults } from 'vue';
 
 const props = defineProps({
@@ -30,12 +33,12 @@ const updateValue = (event) => {
 <style scoped> 
 /* Oculta el estilo por default*/
 [type="checkbox"] {
-  opacity: 0;
+  opacity: 4;
 }
 /*Estilo del texto*/
 [type="checkbox"] + label {
   position: relative;
-  padding-left: 30px;
+  padding-left: 3px;
   cursor: pointer;
   display: inline-block;
   color:#12013D;
@@ -45,8 +48,8 @@ const updateValue = (event) => {
 [type="checkbox"] + label::before {
   content: "";
   position: absolute;
-  left: 0;
-  top: -14px;
+  left: -21px;
+  top: -16px;
   width: 20px;
   height: 20px;
   outline: 1px solid #CDE0f1;
@@ -58,12 +61,28 @@ const updateValue = (event) => {
 [type="checkbox"]:checked + label::after {
   content: "";
   position: absolute;
-  left: 3px;
-  top: -10px;
+  left: -17.5px;
+  top: -11.5px;
   width: 14px;
   height: 12px;
 
   background-image:url(../icons/svg/check.svg); 
   background-size: contain;
+}
+
+.conted-input {
+  display: flex;
+  align-items: center;
+  align-self: center;
+  width: 100%;
+}
+
+.conted-input > span{
+  color: #12013D;
+  font-size: 16px;
+  font-family: Inter;
+  font-weight: 400;
+  line-height: 32px;
+  word-wrap: break-word;
 }
 </style>

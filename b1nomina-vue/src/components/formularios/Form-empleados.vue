@@ -54,16 +54,25 @@
         </div>
 
         <TemplateModal @closeModal="showModal" :activarModal="mostrarModal" NombreAccion="Nuevo Registro">
-            <p class="decripcion-modal">
-                La información de la persona será utilizada para ayudarte a generar la nómina más rápida que has visto, recuerda que siempre podrás regresar a editar cualquier valor.
-            </p>
             
-            <NavForm :idFormularioActivo="1" />
-            <!--
-            <FormDatosBasicos @closeModal="showModal" />
-            -->
+            <template #default>
             
-            <FormDatosPersonalesVue />
+                <p class="decripcion-modal">
+                    La información de la persona será utilizada para ayudarte a generar la nómina más rápida que has visto, recuerda que siempre podrás regresar a editar cualquier valor.
+                </p>
+                
+                <NavForm :idFormularioActivo="idFormularioActivo" />
+                
+                <FormDatosBasicos @closeModal="showModal" v-show="idFormularioActivo == 1"/>
+                
+                <FormDatosPersonalesVue v-show="idFormularioActivo == 2"/>
+                
+                <FormDatosLaborales v-show="idFormularioActivo == 3"/>
+            
+            </template>
+            <template #boton v-if="idFormularioActivo > 1">
+                <TemplateButton2 text="Atras" @click="console.log('Retroceder 1')"/>        
+            </template>
 
         </TemplateModal>
 
@@ -83,6 +92,7 @@
     //componentes
     import InputShearch from '../inputs/Input-shearch.vue';
     import TemplateButton from '../botones/Template-button.vue';
+    import TemplateButton2 from '../botones/Template-button2.vue'
     import ListaTemplate from '../listas/Lista-template.vue';
     import EmpleadosGeneral from '../tablas/Empleados/Empleados-general.vue';
     import ListaOpciones from '../listas/Lista-Opciones.vue'
@@ -91,8 +101,7 @@
     import NavForm from '@/components/navs/Nav-form.vue'
     import FormDatosBasicos from './Form-datosBasicos.vue';
     import FormDatosPersonalesVue from './Form-datosPersonales.vue';
-    
-
+    import FormDatosLaborales from './Form-datosLaborales.vue';
 
     //iconos
     import PersonPlussIcon from '../icons/Person-Pluss-icon.vue';
@@ -107,6 +116,9 @@
     const idSociedad = inject('IDsociedad');
 
     const ListaIds = ref([]); //Contiene los id de los empleados seleccionados
+
+    //variable con el valor del formulario a mostrar
+    const idFormularioActivo = ref(3);
 
     const InteraccionListaEmpleadosSelecionados = (arreglo) => {
         // Convertir el objeto proxy a un array real

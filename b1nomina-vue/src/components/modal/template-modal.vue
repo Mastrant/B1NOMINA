@@ -11,11 +11,16 @@
                         </div>
 
                         <!--contenedor  data principal-->
-                        <slot></slot>
+                        <slot>
+
+                        </slot>
 
                         <!--contenedor botones-->
                         <div class="contend-button-modal">
                             <TemplateButton form="datosBasicos" Tipo="submit" :text="textSubmit"/>
+                            <slot name="boton">
+
+                            </slot>
                             <TemplateButton2 text="Cancelar" @click="close" />
                         </div>
                     </div>

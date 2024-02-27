@@ -3,6 +3,7 @@
     <div class="switch">
         <input type="checkbox" :id="Objid" :checked="estado">
         <label :for="Objid"></label>
+        <span>{{ Texto }}</span>
     </div>       
 </template>
 
@@ -16,6 +17,10 @@ const props = defineProps({
     },
     Objid: {
         String,
+    },
+    Texto: {
+        type: String,
+        default: ""
     }
 });
 
@@ -23,7 +28,7 @@ const estado = ref(props.Estado);
 
 watchEffect(() => {
     const estado = props.Estado
-})
+});
 
 </script>
 
@@ -31,6 +36,17 @@ watchEffect(() => {
 /*elimina la apariencia regular */
 .switch {
     width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.switch > span {
+    color: #000842;
+    font-size: 20px;
+    font-family: Poppins;
+    font-weight: 400;
+    word-wrap: break-word;
 }
 .switch > input {
     display: none;
