@@ -12,7 +12,7 @@
                 :type="InputType" 
                 class="form-control" 
                 v-model="DataInput"
-                minlength="8"
+                minlength="3"
                 maxlength="32"    
             >
                 

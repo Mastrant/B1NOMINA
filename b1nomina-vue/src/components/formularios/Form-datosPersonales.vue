@@ -1,9 +1,9 @@
 <template>
-    <form class="formulario" id="datosBasicos" @submit.prevent="Enviar">
-        <h2 class="titulo-form">Datos básicos</h2>
+    <form class="formulario" id="datosPersonales" @submit.prevent="Enviar">
+        <h2 class="titulo-form">Datos personales</h2>
 
         <div class="row-form">
-            <LayoutInputLineal textLabel="Tipo de Documento">
+            <LayoutInputLineal textLabel="Nacionalidad">
                 <template v-slot>
                     <ListaTemplateLineal 
                         required 
@@ -14,60 +14,90 @@
                 </template>
             </LayoutInputLineal>
 
-            <InputLinealDescripcion  
-                :Deshabilitar="tipoDocumentoSelect == 0"
-                Placeholder="Ejemplo:  1234567-8"  
-                Titulo="Número de documento"
-                v-model="numeroDocumento"
-                @update:modelValue="numeroDocumento = $event"
-            />
+            <div>
+                <InputRadioButton name="SendInvitacion" :value="0"/> <span> Si</span>
+                <InputRadioButton name="SendInvitacion" :value="1"/> <span> No</span>
+            </div>
         </div>
 
         <div class="row-form">
             <InputLinealDescripcion 
-                Placeholder="Exaple: Juan" 
-                Titulo="Nombres"
+                Tipo="date"
+                Titulo="Fecha de nacimiento"
                 v-model="nombres"
                 @update:modelValue="nombres = $event"
             />
-            <InputLinealDescripcion 
-                Placeholder="Ejemplo: Peres" 
-                Titulo="Apellidos"
-                v-model="apellidos"
-                @update:modelValue="apellidos = $event"
-                
-            />
+            <LayoutInputLineal textLabel="Estado civil">
+                <template v-slot>
+                    <ListaTemplateLineal 
+                        required 
+                        v-model="tipoDocumentoSelect" 
+                        :options="ListaTiposDocumentos" 
+                        optionsSelected="Seleccionar"
+                    />
+                </template>
+            </LayoutInputLineal>
+        </div>
+
+        <h2 class="titulo-form">Datos de contacto</h2>
+
+        <div class="row-form">
+            <LayoutInputLineal textLabel="Estado civil">
+                <template v-slot>
+                    <ListaTemplateLineal 
+                        required 
+                        v-model="tipoDocumentoSelect" 
+                        :options="ListaTiposDocumentos" 
+                        optionsSelected="Seleccionar"
+                    />
+                </template>
+            </LayoutInputLineal>
+            <LayoutInputLineal textLabel="Estado civil">
+                <template v-slot>
+                    <ListaTemplateLineal 
+                        required 
+                        v-model="tipoDocumentoSelect" 
+                        :options="ListaTiposDocumentos" 
+                        optionsSelected="Seleccionar"
+                    />
+                </template>
+            </LayoutInputLineal>
         </div>
 
         <div class="row-form">
             <InputLinealDescripcion 
-                Placeholder="Exaple@gmail.com" 
-                Titulo="Correo electrónico" 
+                Placeholder="Ingresar dirección" 
+                Titulo="Direccion" 
                 v-model="correo"
                 @update:modelValue="correo = $event"
-                Tipo="email"
             />
-            <div>
-                <span>Enviar invitación a B1 Nomina por email</span> 
-                <img src="" alt=" (?)">
-            </div>
         </div>
-        <div class="multimedia">
-            <span>Cargar foto de perfil</span>
-            <div class="add-photo">
-                <span>Arrastrar imagen aqui</span>
-                <TemplateButton2 text="Seleccionar Archivo"/>
-            </div>
+
+        <div class="row-form">
+
+            <InputLinealDescripcion 
+                Placeholder="Ingresar Número" 
+                Titulo="Teléfono Celular" 
+                v-model="correo"
+                @update:modelValue="correo = $event"
+            />
+
+            <InputLinealDescripcion 
+                Placeholder="Ingresar Número" 
+                Titulo="Teléfono Local" 
+                v-model="correo"
+                @update:modelValue="correo = $event"
+            />
         </div>
+        
     </form>
 </template>
 
 <script setup>
 import InputLinealDescripcion from '../inputs/Input-Lineal-descripcion.vue';
 import ListaTemplateLineal from '../listas/Lista-template-lineal.vue';
-import TemplateButton2 from '../botones/Template-button2.vue';
 import LayoutInputLineal from '../Layouts/LayoutInputLineal.vue';
-
+import InputRadioButton from '../botones/Input-Radio-button.vue';
 
 import { ref, watch } from 'vue';
 
@@ -129,8 +159,8 @@ const addFoto = (value) => {
  */
 const Enviar = () => {
     (tipoDocumentoSelect.value == 0 | tipoDocumentoSelect.value == '')
-    ?console.log("falta seleccionar un tipo de documento")
-    :console.log(payload)
+    ? console.log("falta seleccionar un tipo de documento")
+    : console.log(payload)
 };
 
 

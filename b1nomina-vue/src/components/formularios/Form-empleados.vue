@@ -59,14 +59,20 @@
             </p>
             
             <NavForm :idFormularioActivo="1" />
-            
+            <!--
             <FormDatosBasicos @closeModal="showModal" />
+            -->
+            
+            <FormDatosPersonalesVue />
 
         </TemplateModal>
 
         <!--tabla con los datos-->
         <div class="cuerpo-tabla">
-            <span class="NoEncontrado" v-if="(ListaEmpleados.length == 0)? true : false">No hay datos asociados a los filtros</span>
+            <span class="NoEncontrado" v-if="(ListaEmpleados.length == 0)? true : false">
+                No hay datos asociados a los filtros
+            </span>
+
             <EmpleadosGeneral v-else :listaEmpleados="ListaEmpleados"   @upData="InteraccionListaEmpleadosSelecionados"/>
         </div>
     </div>
@@ -82,8 +88,10 @@
     import ListaOpciones from '../listas/Lista-Opciones.vue'
     import BigOptionButton from '../botones/Big-Option-button.vue'
     import TemplateModal from '@/components/modal/Template-modal.vue';
-    import FormDatosBasicos from './Form-datosBasicos.vue';
     import NavForm from '@/components/navs/Nav-form.vue'
+    import FormDatosBasicos from './Form-datosBasicos.vue';
+    import FormDatosPersonalesVue from './Form-datosPersonales.vue';
+    
 
 
     //iconos
@@ -105,8 +113,6 @@
         ListaIds.value = Array.from(arreglo);
         console.log(ListaIds.value); // Ahora debería mostrar un array real
     }
-
-    
 
     //controla la visualizacion de las opciones
     const mostrarOpciones = ref(false);

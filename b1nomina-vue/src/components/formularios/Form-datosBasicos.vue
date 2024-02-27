@@ -25,7 +25,7 @@
 
         <div class="row-form">
             <InputLinealDescripcion 
-                Placeholder="Exaple: Juan" 
+                Placeholder="Ejemplo: Juan" 
                 Titulo="Nombres"
                 v-model="nombres"
                 @update:modelValue="nombres = $event"
@@ -41,7 +41,7 @@
 
         <div class="row-form">
             <InputLinealDescripcion 
-                Placeholder="Exaple@gmail.com" 
+                Placeholder="Ejemplo@gmail.com" 
                 Titulo="Correo electrónico" 
                 v-model="correo"
                 @update:modelValue="correo = $event"

@@ -64,9 +64,8 @@ div.input-line-contend {
     border-bottom: 2.5px solid #000741 ;
     display: flex;
     flex-direction: column;
-    max-width: 351px;
     box-sizing: border-box;
-    width: 48%;
+    width: 100%;
     max-height: 66px;
     align-self: center;
 }

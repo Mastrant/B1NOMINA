@@ -34,7 +34,9 @@
                     <InputCheckbox :Objid="item.id" @update="InteraccionListaEmpleadosSelecionados" />
                 </td>
                 <td class="rowNombre">
-                    {{item.nombres}}
+                    {{item.nombres}} 
+                    {{ item.apellido_paterno }}
+                    {{ item.apellido_materno }}
                 </td>
                 <td class="">
                     {{item.rut}}
@@ -174,7 +176,6 @@ function getDataPorPagina(numeroPagina){
     
     //recorre los datos de lista y los indexa en la paginacion
     DatosPaginados.value = ListaEmpleados.value.slice(ini, fin)
-
 };
 
 //metodo para retroceder pagina
