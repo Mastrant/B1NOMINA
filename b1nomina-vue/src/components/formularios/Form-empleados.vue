@@ -60,7 +60,7 @@
             
             <NavForm :idFormularioActivo="1" />
             
-            <FormDatosBasicos />
+            <FormDatosBasicos @closeModal="showModal" />
 
         </TemplateModal>
 

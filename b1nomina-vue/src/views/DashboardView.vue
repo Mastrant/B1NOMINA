@@ -1,22 +1,18 @@
 <template>
-    <div>
-        <Header nombrePagina="DashBoard" />
-    </div>
+    <LayoutPanel>
+        <template #cabecera>
+            <Headervue nombrePagina="DashBoard" />
+        </template>
+
+        <template v-slot:panel>
+            <span>En Desarrollo, gracias por su paciencia.</span>
+        </template>
+    </LayoutPanel>
 </template>
 
-<script>
-import Header from '@/components/Header.vue';
-export default {
-    name: 'dashboardView',
-    components: {
-        Header,
-    },
-    data() {
-        return {
-            
-        }
-    },
-}
+<script setup>
+import Headervue from '@/components/Header.vue';
+import LayoutPanel from '@/components/Layouts/LayoutPanel.vue';
 </script>
 
 <style scoped>

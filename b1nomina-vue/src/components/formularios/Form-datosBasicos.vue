@@ -91,6 +91,16 @@ const ListaTiposDocumentos = [
 
 ];
 
+// Define los eventos que el componente puede emitir
+const emit = defineEmits([
+    'closeModal'
+]);
+
+const close = () => {
+    console.log("cerrar modal")
+    emit('closeModal');
+};
+
 // inicializacion de variables reactivas
 const numeroDocumento = ref('');
 const nombres = ref('');
@@ -111,16 +121,16 @@ const payload = {
 }
 
 const addNombres = (value) => {
-    payload.nombres = value;
+    payload.nombres = value.toLowerCase();
 };
 const addApellidos = (value) => {
-    payload.apellidos = value;
+    payload.apellidos = value.toLowerCase();
 };
 const addNumeroDocumento = (value) => {
     payload.documento = value;
 };
 const addCorreo = (value) => {
-    payload.correo = value;
+    payload.correo = value.toLowerCase();
 };
 const addFoto = (value) => {
     console.log(value);
@@ -132,7 +142,6 @@ const addFoto = (value) => {
  * Ejecuta la peticion con axios
  */
 const Enviar = () => {
-    console.log(payload)
     axios.post('/user/create_preuser', payload )
         .then(
             res => {
@@ -143,24 +152,18 @@ const Enviar = () => {
                     "documento": "",
                     "nombres": ""
                 }
-                numeroDocumento, nombres, apellidos, correo = ''
+                numeroDocumento, nombres, apellidos, correo = '';
+                
             }            
         })
         .catch(err => {
-        if (err.response) {
-            // La solicitud se realizó y el servidor respondió con un estado fuera del rango de  2xx
-            console.log(err.response.data);
-            console.log(err.response.status);
-            console.log(err.response.headers);
-        } else if (err.request) {
-            // La solicitud se realizó pero no se recibió ninguna respuesta
-            console.log(err.request);
-        } else {
-            // Algo sucedió al configurar la solicitud que desencadenó un Error
-            console.log('Error', err.message);
-        }
-        console.log(err.config);
+            if (err.response) { 
+                console.log(err.message)
+            }
+
+        //error 522 usuario ya creado o existente
     });
+    close();
 };
 
 watch(numeroDocumento, addNumeroDocumento);

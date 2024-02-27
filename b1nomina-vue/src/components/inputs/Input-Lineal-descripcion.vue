@@ -12,7 +12,8 @@
            :disabled="Deshabilitar"
            :type="Tipo" 
            :placeholder="Placeholder"
-
+           :minlength="minimoCaracteres"
+           :maxlength="maximoCaracteres"
            :value="modelValue"
            @input="$emit('update:modelValue', $event.target.value)"
            >
@@ -29,7 +30,6 @@ const props = defineProps({
         type: String,
         default: '',
     },
-
     //props de formato y estilos
     Placeholder : {
         type: String,
@@ -46,6 +46,14 @@ const props = defineProps({
     Deshabilitar: {
         type: Boolean,
         default:false,
+    },
+    minimoCaracteres: {
+        type: Number,
+        default: 3
+    },
+    maximoCaracteres: {
+        type: Number,
+        default: 100
     }
 });
 </script>

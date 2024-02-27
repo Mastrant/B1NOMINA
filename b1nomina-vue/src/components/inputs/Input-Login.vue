@@ -6,7 +6,16 @@
                 <slot name="FirtIcon" class="form-icon-conted"></slot>
             </span>
 
-            <input required :placeholder="Placeholder" :type="InputType" class="form-control" v-model="DataInput">
+            <input 
+                required 
+                :placeholder="Placeholder" 
+                :type="InputType" 
+                class="form-control" 
+                v-model="DataInput"
+                minlength="8"
+                maxlength="32"    
+            >
+                
             
             <span class="form-icon-conted">
                 <slot name="SecondIcon" class="form-button-conted"></slot>
