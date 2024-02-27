@@ -50,9 +50,13 @@
             <div>
                 <span>Enviar invitación a B1 Nomina por email</span> 
                 <img src="" alt=" (?)">
-                <InputRadioButton />
+                <div>
+                    <InputRadioButton name="SendInvitacion" :value="0"/> <span> Si</span>
+                    <InputRadioButton name="SendInvitacion" :value="1"/> <span> No</span>
+                </div>
             </div>
         </div>
+
         <div class="multimedia">
             <span>Cargar foto de perfil</span>
             <div class="add-photo">
@@ -130,9 +134,17 @@ const addFoto = (value) => {
 const Enviar = () => {
     console.log(payload)
     axios.post('/user/create_preuser', payload )
-        .then(res => {
-            console.log("registrado " + res)
-            
+        .then(
+            res => {
+            if (res.response){
+                payload = {
+                    "apellidos": "",
+                    "correo": "",
+                    "documento": "",
+                    "nombres": ""
+                }
+                numeroDocumento, nombres, apellidos, correo = ''
+            }            
         })
         .catch(err => {
         if (err.response) {
