@@ -4,11 +4,21 @@
             {{textLabel}}
             <span>*</span>
         </p>
-        <slot />
+        <div>
+            <slot/>
+        </div>
     </div>
 </template>
 
 <script setup>
+/*Uso 
+    <LayoutInputLineal textLabel="Género">
+        <template v-slot>
+                   
+        </template>
+    </LayoutInputLineal>
+*/
+
 import { defineProps } from 'vue';
 
 const props = defineProps({
@@ -24,8 +34,13 @@ const props = defineProps({
 div.contend-select {
     display: flex;
     flex-direction: column;
-    width: 48%;
+    width: 100%;
     gap: 1px;
+}
+
+div.contend-select > div {
+    display: flex;
+    gap: 16px;
 }
 
 p {

@@ -78,7 +78,7 @@ div.modal {
     top:0; /* Alinea el modal con el borde superior de la ventana del navegador */
     left:  0; /* Alinea el modal con el borde izquierdo de la ventana del navegador */
     background-color:  #00000080; /* Fondo negro con  50% de transparencia */
-    z-index:  500; /* Asegura que el modal se muestre por encima de otros elementos */
+    z-index:  100; /* Asegura que el modal se muestre por encima de otros elementos */
     box-sizing: border-box;
 }
 

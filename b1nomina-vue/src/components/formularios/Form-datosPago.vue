@@ -1,98 +1,45 @@
 <template>
-    <form class="formulario" id="datosPersonales" @submit.prevent="Enviar">
-        <h2 class="titulo-form">Datos personales</h2>
+    <form class="formulario" id="datosPago" @submit.prevent="Enviar">
+        <h2 class="titulo-form">Datos de Pago</h2>
 
         <div class="row-form">
             <LayoutInputLineal textLabel="Nacionalidad">
                 <template v-slot>
                     <ListaTemplateLineal 
                         required 
-                        v-model="nacionalidad" 
-                        :options="ListaNacionalidad" 
+                        v-model="tipoDocumentoSelect" 
+                        :options="ListaTiposDocumentos" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Género">
-                <template v-slot>
-                   <InputRadioButton v-model="genero" grupo="genero" texto="Masculino" :valor="0"/>
-                   <InputRadioButton v-model="genero" grupo="genero" texto="Femenino" :valor="1"/>
-                </template>
-            </LayoutInputLineal>
+            <div>
+                <InputRadioButton name="SendInvitacion" :value="0"/> <span> Si</span>
+                <InputRadioButton name="SendInvitacion" :value="1"/> <span> No</span>
+            </div>
         </div>
 
         <div class="row-form">
             <InputLinealDescripcion 
                 Tipo="date"
                 Titulo="Fecha de nacimiento"
-                v-model="fechaNacimiento"
-                @update:modelValue="fechaNacimiento = $event"
+                v-model="nombres"
+                @update:modelValue="nombres = $event"
             />
-
             <LayoutInputLineal textLabel="Estado civil">
                 <template v-slot>
                     <ListaTemplateLineal 
                         required 
-                        v-model="estadoCivil" 
-                        :options="ListaEstadoCivil" 
+                        v-model="tipoDocumentoSelect" 
+                        :options="ListaTiposDocumentos" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
             </LayoutInputLineal>
         </div>
 
-        <h2 class="titulo-form">Datos de contacto</h2>
-
-        <div class="row-form">
-            <LayoutInputLineal textLabel="Region">
-                <template v-slot>
-                    <ListaTemplateLineal 
-                        required 
-                        v-model="region" 
-                        :options="ListaRegion" 
-                        optionsSelected="Seleccionar"
-                    />
-                </template>
-            </LayoutInputLineal>
-
-            <LayoutInputLineal textLabel="Localidad">
-                <template v-slot>
-                    <ListaTemplateLineal 
-                        required 
-                        v-model="localidad" 
-                        :options="ListaLocalidad" 
-                        optionsSelected="Seleccionar"
-                    />
-                </template>
-            </LayoutInputLineal>
-        </div>
-
-        <div class="row-form">
-            <InputLinealDescripcion 
-                Placeholder="Ingresar dirección" 
-                Titulo="Direccion" 
-                v-model="direccion"
-                @update:modelValue="direccion = $event"
-            />
-        </div>
-
-        <div class="row-form">
-
-            <InputLinealDescripcion 
-                Placeholder="Ingresar Número" 
-                Titulo="Teléfono Celular" 
-                v-model="telefonoCelular"
-                @update:modelValue="telefonoCelular = $event"
-            />
-
-            <InputLinealDescripcion 
-                Placeholder="Ingresar Número" 
-                Titulo="Teléfono Local" 
-                v-model="telefonoLocal"
-                @update:modelValue="telefonoLocal = $event"
-            />
-        </div>
+        
         
     </form>
 </template>
@@ -105,48 +52,57 @@ import InputRadioButton from '../botones/Input-Radio-button.vue';
 
 import { ref, watch } from 'vue';
 
-//lista de nacionalidades
-const ListaNacionalidad = [
+//lista de 
+const ListaTiposDocumentos = [
     {
         id: 1,
-        nombre: "Nacional"
+        nombre: "Pasaporte"
     },
     {
         id: 2,
-        nombre: "Extrangero"
+        nombre: "RUT"
     },
 
 ];
 
-const ListaEstadoCivil = []
-
-const ListaRegion = [];
-
-const ListaLocalidad = []
-
 // inicializacion de variables reactivas
-//datos personales
-const nacionalidad = ref('');
-const genero = ref('');
-const fechaNacimiento = ref('');
-const estadoCivil = ref(''); 
-
-//datos de contacto
-const region = ref('');
-const localidad = ref('');
-const direccion = ref('');
-const telefonoCelular = ref('');
-const telefonoLocal = ref('');
+const numeroDocumento = ref('');
+const nombres = ref('');
+const apellidos = ref('');
+const tipoDocumentoSelect = ref(0); //Documento selecionado
+const correo = ref('');
+const foto = ref('');
+const invitacion = ref(0);
 
 // payload de la peticion
 const payload = {
-
+    nombres: "",
+    apellidos: '',
+    tipoDocumento: "",
+    numeroDocumento: "",
+    correo: '',
+    foto: '',
+    invitacion: 0
 }
 
-const TestValue = (value) => {
-    console.log(value)
+const addNombres = (value) => {
+    payload.nombres = value;
 };
-
+const addApellidos = (value) => {
+    payload.apellidos = value;
+};
+const addTipodocumento = (value) => {
+    payload.tipoDocumento = value;
+};
+const addNumeroDocumento = (value) => {
+    payload.numeroDocumento = value;
+};
+const addCorreo = (value) => {
+    payload.correo = value;
+};
+const addFoto = (value) => {
+    console.log(value);
+};
 /**
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
@@ -159,11 +115,11 @@ const Enviar = () => {
 };
 
 
-watch(nacionalidad, TestValue);
-watch(genero, TestValue);
-watch(fechaNacimiento, TestValue);
-watch(estadoCivil,TestValue);
-watch(region, TestValue);
+watch(tipoDocumentoSelect, addTipodocumento);
+watch(numeroDocumento, addNumeroDocumento);
+watch(nombres, addNombres);
+watch(apellidos,addApellidos);
+watch(correo, addCorreo);
 
 
 </script>

@@ -53,7 +53,7 @@
             <span>Has seleccionado {{ ListaIds.length }} de los {{ 12 }} empleados</span>
         </div>
 
-        <TemplateModal @closeModal="showModal" :activarModal="mostrarModal" NombreAccion="Nuevo Registro">
+        <TemplateModal @closeModal="showModal" :activarModal="mostrarModal" NombreAccion="Nuevo Registro" textSubmit="Guardar">
             
             <template #default>
             
@@ -63,11 +63,13 @@
                 
                 <NavForm :idFormularioActivo="idFormularioActivo" />
                 
-                <FormDatosBasicos @closeModal="showModal" v-show="idFormularioActivo == 1"/>
+                <FormDatosBasicos @closeModal="showModal" v-if="idFormularioActivo == 1"/>
                 
-                <FormDatosPersonalesVue v-show="idFormularioActivo == 2"/>
+                <FormDatosPersonalesVue v-if="idFormularioActivo == 2"/>
                 
-                <FormDatosLaborales v-show="idFormularioActivo == 3"/>
+                <FormDatosLaborales v-if="idFormularioActivo == 3"/>
+
+                <FormDatosPago  v-if="idFormularioActivo == 4"/>
             
             </template>
             <template #boton v-if="idFormularioActivo > 1">
@@ -88,7 +90,6 @@
 </template>
 
 <script setup>
-
     //componentes
     import InputShearch from '../inputs/Input-shearch.vue';
     import TemplateButton from '../botones/Template-button.vue';
@@ -102,6 +103,7 @@
     import FormDatosBasicos from './Form-datosBasicos.vue';
     import FormDatosPersonalesVue from './Form-datosPersonales.vue';
     import FormDatosLaborales from './Form-datosLaborales.vue';
+    import FormDatosPago from './Form-datosPago.vue';
 
     //iconos
     import PersonPlussIcon from '../icons/Person-Pluss-icon.vue';
@@ -143,6 +145,7 @@
      */
     const showModal = () => {
         mostrarModal.value = !mostrarModal.value
+        idFormularioActivo.value = 2;
     }
 
     //variables a utilizar de forma reactiva
@@ -430,40 +433,52 @@
 </script>
 
 <style scoped>
+/* Estilos para el contenedor principal del formulario de empleados, asegurando que ocupe todo el espacio disponible y organiza sus elementos en una columna */
 div.formulario-empleados {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
-    gap:24px;
+    gap:24px; /* Espaciado entre los elementos del formulario */
 }
+
+/* Estilos para la sección de acciones del formulario, distribuyendo los elementos en una fila y justificando el espacio entre ellos */
 div.acciones-form {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
+
+/* Estilos para la sección de filtros, organizando los elementos en una fila con un espaciado específico entre ellos */
 div.filtros {
     display: flex;
     flex-direction: row;
-    gap: 12px;
-}
-div.acciones-masivas{
-    display: flex;
-    gap: 24px;
-    align-items: center;
-}
-span.NoEncontrado {
-    font-size: 24px;
-    color: rgb(56, 56, 56);
+    gap: 12px; /* Espaciado entre los elementos de filtro */
 }
 
-div.Add-user-button > div {
-    z-index: 50;
+/* Estilos para las acciones masivas, asegurando que los elementos estén alineados verticalmente en el centro y tengan un espaciado específico entre ellos */
+div.acciones-masivas{
+    display: flex;
+    gap: 24px; /* Espaciado entre los elementos de acción masiva */
+    align-items: center; /* Alineación vertical de los elementos */
 }
+
+/* Estilos para el mensaje de "No encontrado", ajustando el tamaño de fuente y el color */
+span.NoEncontrado {
+    font-size: 24px;
+    color: rgb(56, 56, 56); /* Color gris oscuro */
+}
+
+/* Estilos específicos para el botón de agregar usuario, asegurando que su contenido tenga una posición superior en el eje Z */
+div.Add-user-button > div {
+    z-index: 50; /* Posicionamiento en el eje Z */
+}
+
+/* Estilos para el párrafo dentro del modal, ajustando el margen, alineación del texto y estilos de fuente */
 p.decripcion-modal{
-    margin: 0;
-    text-align: justify;
-    font-size: 16px;
-    font-weight: 400;
+    margin: 0; /* Elimina el margen por defecto */
+    text-align: justify; /* Justifica el texto */
+    font-size: 16px; /* Tamaño de fuente */
+    font-weight: 400; /* Peso de la fuente */
 }
 </style>

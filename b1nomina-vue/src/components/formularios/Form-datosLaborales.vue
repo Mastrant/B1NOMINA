@@ -7,8 +7,8 @@
                 <template v-slot>
                     <ListaTemplateLineal 
                         required 
-                        v-model="tipoDocumentoSelect" 
-                        :options="ListaTiposDocumentos" 
+                        v-model="nacionalidad" 
+                        :options="ListaNacionalidad" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -143,8 +143,8 @@ import InputCheckbox from '../inputs/Input-Checkbox.vue';
 
 import { ref, watch } from 'vue';
 
-//lista de 
-const ListaTiposDocumentos = [
+//lista de nacionalidades
+const ListaNacionalidad = [
     {
         id: 1,
         nombre: "Pasaporte"
@@ -156,41 +156,35 @@ const ListaTiposDocumentos = [
 
 ];
 
+const ListaEstadoCivil = []
+
+const ListaRegion = [];
+
+const ListaLocalidad = []
+
 // inicializacion de variables reactivas
-const numeroDocumento = ref('');
-const nombres = ref('');
-const apellidos = ref('');
-const tipoDocumentoSelect = ref(0); //Documento selecionado
-const correo = ref('');
-const foto = ref('');
-const invitacion = ref(0);
+//datos personales
+const nacionalidad = ref('');
+const genero = ref('');
+const fechaNacimiento = ref('');
+const estadoCivil = ref(''); 
+
+//datos de contacto
+const region = ref('');
+const localidad = ref('');
+const direccion = ref('');
+const telefonoCelular = ref('');
+const telefonoLocal = ref('');
 
 // payload de la peticion
 const payload = {
-    nombres: "",
-    apellidos: '',
-    tipoDocumento: "",
-    numeroDocumento: "",
-    correo: '',
-    foto: '',
-    invitacion: 0
+
 }
 
 const addNombres = (value) => {
     payload.nombres = value;
 };
-const addApellidos = (value) => {
-    payload.apellidos = value;
-};
-const addTipodocumento = (value) => {
-    payload.tipoDocumento = value;
-};
-const addNumeroDocumento = (value) => {
-    payload.numeroDocumento = value;
-};
-const addCorreo = (value) => {
-    payload.correo = value;
-};
+
 
 /**
  * Funcion emitida al enviar el formulario
@@ -205,10 +199,7 @@ const Enviar = () => {
 
 
 watch(tipoDocumentoSelect, addTipodocumento);
-watch(numeroDocumento, addNumeroDocumento);
-watch(nombres, addNombres);
-watch(apellidos,addApellidos);
-watch(correo, addCorreo);
+
 
 
 </script>
