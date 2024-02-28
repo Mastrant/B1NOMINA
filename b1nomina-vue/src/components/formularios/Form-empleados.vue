@@ -118,7 +118,7 @@
     const ListaIds = ref([]); //Contiene los id de los empleados seleccionados
 
     //variable con el valor del formulario a mostrar
-    const idFormularioActivo = ref(3);
+    const idFormularioActivo = ref(2);
 
     const InteraccionListaEmpleadosSelecionados = (arreglo) => {
         // Convertir el objeto proxy a un array real

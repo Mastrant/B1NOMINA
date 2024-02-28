@@ -81,6 +81,12 @@ const router = createRouter({
               component: () => import('../views/EnContratacionView.vue'),   
               alias: 'enContratacion'         
             },
+            {
+              path: 'inactivos',
+              name: 'inactivos',
+              component: () => import('../views/InactivosView.vue'),   
+              alias: 'inactivos'         
+            },
           ]
         },
         //panel informes

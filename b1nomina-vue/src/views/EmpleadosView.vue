@@ -8,9 +8,9 @@
         <template v-slot:panel>
             <LayoutForm>
                 <template v-slot:cabecera>
-                    <NavButtonPanel text="Empleados" direccion="listar" :cantidad="datos.empleados" :seleccionado="$route.name === 'listar'" />
+                    <NavButtonPanel text="Empleados" direccion="listar" :cantidad="datos.empleados" :seleccionado=" $route.name === 'listar'" />
                     <NavButtonPanel text="En Contratacion" direccion="enContratacion" :cantidad="datos.contratacion" :seleccionado="$route.name == 'enContratacion'" />
-                    <NavButtonPanel text="Inactivos" direccion="listar" :cantidad="datos.inactivos" :eleccionado="$route.name == 'inactivos'" />
+                    <NavButtonPanel text="Inactivos" direccion="inactivos" :cantidad="datos.inactivos" :eleccionado="$route.name == 'inactivos'" />
                 </template>
                 <template v-slot:formulario>
                     <router-view />

@@ -11,7 +11,7 @@
 
 <script setup>
 
-import { defineProps, toRefs } from 'vue';
+import { defineProps } from 'vue';
 
 const props = defineProps({
     text: {
@@ -25,9 +25,6 @@ const props = defineProps({
     },
     seleccionado: {type:Boolean},
 });
-
-const {cantidad, seleccionado} = toRefs(props);
-
 </script>
 
 <style scoped>

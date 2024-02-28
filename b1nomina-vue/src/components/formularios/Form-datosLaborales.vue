@@ -53,16 +53,12 @@
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Valor del salario">
-                <template v-slot>
-                    <ListaTemplateLineal 
-                        required 
-                        v-model="tipoDocumentoSelect" 
-                        :options="ListaTiposDocumentos" 
-                        optionsSelected="$..."
-                    />
-                </template>
-            </LayoutInputLineal>
+            <InputLinealDescripcion 
+                Placeholder="$..." 
+                Titulo="Valor del salario" 
+                v-model="text"
+                @update:modelValue="correo = $event"
+            />
         </div>
 
         <h2 class="titulo-form">Puesto de trabajo</h2>
@@ -143,7 +139,6 @@ import InputLinealDescripcion from '../inputs/Input-Lineal-descripcion.vue';
 import ListaTemplateLineal from '../listas/Lista-template-lineal.vue';
 import LayoutInputLineal from '../Layouts/LayoutInputLineal.vue';
 import InterruptorButton from '../inputs/Interruptor-button.vue';
-import InputRadioButton from '../botones/Input-Radio-button.vue';
 import InputCheckbox from '../inputs/Input-Checkbox.vue';
 
 import { ref, watch } from 'vue';
@@ -196,9 +191,7 @@ const addNumeroDocumento = (value) => {
 const addCorreo = (value) => {
     payload.correo = value;
 };
-const addFoto = (value) => {
-    console.log(value);
-};
+
 /**
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
