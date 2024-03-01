@@ -152,7 +152,7 @@ const Enviar = () => {
                     "documento": "",
                     "nombres": ""
                 }
-                numeroDocumento, nombres, apellidos, correo = '';
+                numeroDocumento, nombres, apellidos, correo.value = '';
                 
             }            
         })

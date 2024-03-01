@@ -7,8 +7,8 @@
                 <template v-slot>
                     <ListaTemplateLineal 
                         required 
-                        v-model="nacionalidad" 
-                        :options="ListaNacionalidad" 
+                        v-model="variable" 
+                        :options="{}" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -18,8 +18,8 @@
                 <template v-slot>
                     <ListaTemplateLineal 
                         required 
-                        v-model="tipoDocumentoSelect" 
-                        :options="ListaTiposDocumentos" 
+                         v-model="variable"
+                        :options="{}" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -30,14 +30,14 @@
             <InputLinealDescripcion 
                 Tipo="date"
                 Titulo="Fecha de Contratacion"
-                v-model="nombres"
-                @update:modelValue="nombres = $event"
+                v-model="variable"
+                @update:modelValue="variable = $event"
             />
             <InputLinealDescripcion 
                 Tipo="date"
                 Titulo="Fecha de Finalizacion de contrato"
-                v-model="nombres"
-                @update:modelValue="nombres = $event"
+                v-model="variable"
+                @update:modelValue="variable = $event"
             />
         </div>
 
@@ -46,8 +46,8 @@
                 <template v-slot>
                     <ListaTemplateLineal 
                         required 
-                        v-model="tipoDocumentoSelect" 
-                        :options="ListaTiposDocumentos" 
+                        v-model="variable" 
+                        :options="[{}]" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -56,8 +56,8 @@
             <InputLinealDescripcion 
                 Placeholder="$..." 
                 Titulo="Valor del salario" 
-                v-model="text"
-                @update:modelValue="correo = $event"
+                v-model="variable"
+                @update:modelValue="variable = $event"
             />
         </div>
 
@@ -68,8 +68,8 @@
                 <template v-slot>
                     <ListaTemplateLineal 
                         required 
-                        v-model="tipoDocumentoSelect" 
-                        :options="ListaTiposDocumentos" 
+                        v-model="variable" 
+                        :options="[{}]" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -78,8 +78,8 @@
                 <template v-slot>
                     <ListaTemplateLineal 
                         required 
-                        v-model="tipoDocumentoSelect" 
-                        :options="ListaTiposDocumentos" 
+                        v-model="variable" 
+                        :options="{}" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -91,8 +91,8 @@
                 <template v-slot>
                     <ListaTemplateLineal 
                         required 
-                        v-model="tipoDocumentoSelect" 
-                        :options="ListaTiposDocumentos" 
+                        v-model="variable" 
+                        :options="{}" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -101,8 +101,8 @@
                 <template v-slot>
                     <ListaTemplateLineal 
                         required 
-                        v-model="tipoDocumentoSelect" 
-                        :options="ListaTiposDocumentos" 
+                        v-model="variable" 
+                        :options="{}" 
                         optionsSelected="Sin Asignar"
                     />
                 </template>
@@ -144,44 +144,15 @@ import InputCheckbox from '../inputs/Input-Checkbox.vue';
 import { ref, watch } from 'vue';
 
 //lista de nacionalidades
-const ListaNacionalidad = [
-    {
-        id: 1,
-        nombre: "Pasaporte"
-    },
-    {
-        id: 2,
-        nombre: "RUT"
-    },
+const variable = ref('')
 
-];
-
-const ListaEstadoCivil = []
-
-const ListaRegion = [];
-
-const ListaLocalidad = []
-
-// inicializacion de variables reactivas
-//datos personales
-const nacionalidad = ref('');
-const genero = ref('');
-const fechaNacimiento = ref('');
-const estadoCivil = ref(''); 
-
-//datos de contacto
-const region = ref('');
-const localidad = ref('');
-const direccion = ref('');
-const telefonoCelular = ref('');
-const telefonoLocal = ref('');
 
 // payload de la peticion
 const payload = {
 
 }
 
-const addNombres = (value) => {
+const testInput = (value) => {
     payload.nombres = value;
 };
 
@@ -198,7 +169,7 @@ const Enviar = () => {
 };
 
 
-watch(tipoDocumentoSelect, addTipodocumento);
+watch(variable, testInput);
 
 
 

@@ -63,17 +63,17 @@
                 
                 <NavForm :idFormularioActivo="idFormularioActivo" />
                 
-                <FormDatosBasicos @closeModal="showModal" v-if="idFormularioActivo == 1"/>
+                <FormDatosBasicos @closeModal="showModal" v-show="idFormularioActivo == 1"/>
                 
-                <FormDatosPersonalesVue v-if="idFormularioActivo == 2"/>
+                <FormDatosPersonalesVue v-show="idFormularioActivo == 2"/>
                 
-                <FormDatosLaborales v-if="idFormularioActivo == 3"/>
+                <FormDatosLaborales v-show="idFormularioActivo == 3"/>
 
-                <FormDatosPago  v-if="idFormularioActivo == 4"/>
+                <FormDatosPago  v-show="idFormularioActivo == 4"/>
             
             </template>
-            <template #boton v-if="idFormularioActivo > 1">
-                <TemplateButton2 text="Atras" @click="console.log('Retroceder 1')"/>        
+            <template #boton v-show="idFormularioActivo > 1">
+                <TemplateButton2 text="Atras" @click="retrocederForm" />        
             </template>
 
         </TemplateModal>
@@ -98,7 +98,7 @@
     import EmpleadosGeneral from '../tablas/Empleados/Empleados-general.vue';
     import ListaOpciones from '../listas/Lista-Opciones.vue'
     import BigOptionButton from '../botones/Big-Option-button.vue'
-    import TemplateModal from '@/components/modal/Template-modal.vue';
+    import TemplateModal from '@/components/modal/TemplateModal.vue';
     import NavForm from '@/components/navs/Nav-form.vue'
     import FormDatosBasicos from './Form-datosBasicos.vue';
     import FormDatosPersonalesVue from './Form-datosPersonales.vue';
@@ -120,7 +120,7 @@
     const ListaIds = ref([]); //Contiene los id de los empleados seleccionados
 
     //variable con el valor del formulario a mostrar
-    const idFormularioActivo = ref(2);
+    const idFormularioActivo = ref(1);
 
     const InteraccionListaEmpleadosSelecionados = (arreglo) => {
         // Convertir el objeto proxy a un array real
@@ -145,8 +145,15 @@
      */
     const showModal = () => {
         mostrarModal.value = !mostrarModal.value
-        idFormularioActivo.value = 2;
+        idFormularioActivo.value = 4;
     }
+
+    const retrocederForm = () => {
+        if(idFormularioActivo.value > 1){
+            idFormularioActivo.value--
+        }
+        
+    };
 
     //variables a utilizar de forma reactiva
     const state = reactive({

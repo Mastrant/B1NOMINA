@@ -21,13 +21,3 @@
     </svg>
     
 </template>
-
-<script>
-export default {
-    name: "sociedad 1"
-}
-</script>
-
-<style scope>
-
-</style>

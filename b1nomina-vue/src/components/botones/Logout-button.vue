@@ -4,16 +4,8 @@
     </button>
 </template>
 
-<script>
-import axios from 'axios';
+<script setup>
 
-export default {
-    data() {
-        return {
-            
-        }
-    },
-}
 </script>
 
 <style scoped>
