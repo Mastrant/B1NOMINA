@@ -17,7 +17,7 @@
 
                         <!--contenedor botones-->
                         <div class="contend-button-modal">
-                            <TemplateButton form="datosBasicos" Tipo="submit" :text="textSubmit"/>
+                            <TemplateButton :form="FormId" Tipo="submit" :text="textSubmit"/>
                             <slot name="boton">
 
                             </slot>
@@ -50,6 +50,9 @@ const props = defineProps({
     textSubmit: {
         type: String,
         default: 'Siguiente'
+    },
+    FormId:{
+        String
     }
 });
 

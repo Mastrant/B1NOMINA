@@ -1,5 +1,5 @@
 <template>
-    <form class="formulario" id="datosPersonales" @submit.prevent="Enviar">
+    <form class="formulario" id="Form2" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos personales</h2>
 
         <div class="row-form">
@@ -105,6 +105,12 @@ import InputRadioButton from '../botones/Input-Radio-button.vue';
 
 import { ref, watch, defineEmits, defineProps } from 'vue';
 
+const props = defineProps({
+    EmpleadoID:{
+        Number,
+    }
+});
+
 //lista de nacionalidades
 const ListaNacionalidad = [
     {
@@ -133,11 +139,27 @@ const ListaEstadoCivil = [
     }
 ]
 
-const ListaRegion = [];
+const ListaRegion = [
+    {
+        id: 1,
+        nombre: "Region 1"
+    },
+    {
+        id: 2,
+        nombre: "region 2"
+    }
+];
 
-const ListaLocalidad = [];
-
-
+const ListaLocalidad = [
+    {
+        id: 1,
+        nombre: "Localidad 1"
+    },
+    {
+        id: 2,
+        nombre: "Localidad 2"
+    }
+];
 
 // inicializacion de variables reactivas
 //datos personales
@@ -155,46 +177,75 @@ const telefonoLocal = ref('');
 
 // payload de la peticion
 const payload = {
+    nacionalidad: '',
+    genero: 0,
+    fechaNacimiento: '',
+    estadoCivil: '',
 
-}
-
-const TestValue = (value) => {
-    console.log(value)
+    region: '',
+    localidad: '',
+    direccion: '',
+    telefonoCelular: '',
+    telefonoLocal: '',
 };
-defineProps({
-    EmpleadoID:{
-        Number,
-    }
-});
+
+//actualizar datos del payload
+const addNacionalidad = (value) => {
+    payload.nacionalidad = value
+};
+const addGenero = (value) => {
+    payload.genero = value
+};
+const addFechaNacimiento = (value) => {
+    payload.fechaNacimiento = value
+};
+const addEstadoCivil = (value) => {
+    payload.estadoCivil = value
+};
+const addRegion = (value) => {
+    payload.region = value
+};
+const addLocalidad = (value) => {
+    payload.localidad = value
+};
+const addDireccion = (value) => {
+    payload.direccion = value
+};
+const addTelefonoCelular = (value) => {
+    payload.telefonoCelular = value
+};
+const addTelefonoLocal = (value) => {
+    payload.telefonoLocal = value
+};
 
 // Define los eventos que el componente puede emitir
 const emit = defineEmits([
     'nextModal'
 ]);
-
 const NextModal = () => {
     console.log("NextModal")
     emit('nextModal');
 };
-
 /**
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
 const Enviar = () => {
-    (tipoDocumentoSelect.value == 0 | tipoDocumentoSelect.value == '')
-    ? console.log("falta seleccionar un tipo de documento")
-    : console.log(payload)
+    console.log("Datos User: " + props.EmpleadoID + '' + payload.value)
+    NextModal()
 };
 
-
-watch(nacionalidad, TestValue);
-watch(genero, TestValue);
-watch(fechaNacimiento, TestValue);
-watch(estadoCivil,TestValue);
-watch(region, TestValue);
-
+//Escuchar cambio en las entradas
+watch(nacionalidad, addNacionalidad);
+watch(genero, addGenero);
+watch(fechaNacimiento, addFechaNacimiento);
+watch(estadoCivil, addEstadoCivil);
+watch(region, addRegion);
+watch(localidad, addLocalidad);
+watch(direccion, addDireccion);
+watch(telefonoCelular, addTelefonoCelular);
+watch(telefonoLocal, addTelefonoLocal);
 
 </script>
 

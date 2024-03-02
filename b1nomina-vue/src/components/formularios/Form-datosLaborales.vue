@@ -1,5 +1,5 @@
 <template>
-    <form class="formulario" id="datosLaborales" @submit.prevent="Enviar">
+    <form class="formulario" id="Form3" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos Laborales</h2>
 
         <div class="row-form">
@@ -74,6 +74,7 @@
                     />
                 </template>
             </LayoutInputLineal>
+
             <LayoutInputLineal textLabel="Departamento">
                 <template v-slot>
                     <ListaTemplateLineal 
@@ -97,6 +98,7 @@
                     />
                 </template>
             </LayoutInputLineal>
+
             <LayoutInputLineal textLabel="Grupo">
                 <template v-slot>
                     <ListaTemplateLineal 
@@ -107,6 +109,7 @@
                     />
                 </template>
             </LayoutInputLineal>
+
             <LayoutInputLineal textLabel="Modalidad">
                 <template v-slot>
                     <InterruptorButton 
@@ -128,9 +131,7 @@
             <InputCheckbox Objid="Viernes" @update="false" texto="Viernes" />
             <InputCheckbox Objid="Sabado" @update="false" texto="Sábado" />
             <InputCheckbox Objid="Domingo" @update="false" texto="Domingo" />
-            
         </div>
-        
     </form>
 </template>
 
@@ -156,22 +157,17 @@ const testInput = (value) => {
     payload.nombres = value;
 };
 
-
 /**
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
-const Enviar = () => {
-    (tipoDocumentoSelect.value == 0 | tipoDocumentoSelect.value == '')
-    ? console.log("falta seleccionar un tipo de documento")
-    : console.log(payload)
+ const Enviar = () => {
+    console.log("Datos User: " + EmpleadoID + '' + payload)
+    NextModal()
 };
 
-
 watch(variable, testInput);
-
-
 
 </script>
 

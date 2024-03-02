@@ -1,5 +1,5 @@
 <template>
-    <form class="formulario" id="datosBasicos" @submit.prevent="Enviar">
+    <form class="formulario" id="Form1" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos básicos</h2>
 
         <div class="row-form">
@@ -117,13 +117,11 @@ const foto = ref('');
 const invitacion = ref(0);
 
 // payload de la peticion
-const payload = {
-    
+const payload = {  
   "apellidos": "",
   "correo": "",
   "documento": "",
   "nombres": ""
-
 }
 
 const addNombres = (value) => {
@@ -148,6 +146,8 @@ const addFoto = (value) => {
  * Ejecuta la peticion con axios
  */
 const Enviar = () => {
+    console.log("modal Datos Basicos")
+    console.log(payload)
     NextModal(4)
     /*
     axios.post('/user/create_preuser', payload )

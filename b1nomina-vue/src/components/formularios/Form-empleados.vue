@@ -53,7 +53,13 @@
             <span>Has seleccionado {{ ListaIds.length }} de los {{ 12 }} empleados</span>
         </div>
 
-        <TemplateModal @closeModal="showModal" :activarModal="mostrarModal" NombreAccion="Nuevo Registro" textSubmit="Guardar">
+        <TemplateModal 
+            @closeModal="showModal" 
+            :activarModal="mostrarModal" 
+            NombreAccion="Nuevo Registro" 
+            textSubmit="Guardar"
+            :FormId="'Form'+idFormularioActivo"
+        >
             
             <template #default>
             
