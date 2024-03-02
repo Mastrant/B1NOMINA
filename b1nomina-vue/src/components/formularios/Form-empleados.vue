@@ -61,21 +61,36 @@
                     La información de la persona será utilizada para ayudarte a generar la nómina más rápida que has visto, recuerda que siempre podrás regresar a editar cualquier valor.
                 </p>
                 
-                <NavForm :idFormularioActivo="idFormularioActivo" />
+                <NavForm 
+                    :idFormularioActivo="idFormularioActivo" 
+                />
                 
-                <FormDatosBasicos @closeModal="showModal" v-show="idFormularioActivo == 1"/>
+                <FormDatosBasicos 
+                    @nextModal="avanzarForm" 
+                    :EmpleadoID="ID_Usuario_Creado"
+                    v-show="idFormularioActivo == 1"
+                />
                 
-                <FormDatosPersonalesVue v-show="idFormularioActivo == 2"/>
+                <FormDatosPersonalesVue 
+                    @nextModal="avanzarForm"
+                    :EmpleadoID="ID_Usuario_Creado"
+                    v-show="idFormularioActivo == 2"
+                />
                 
-                <FormDatosLaborales v-show="idFormularioActivo == 3"/>
+                <FormDatosLaborales 
+                    :EmpleadoID="ID_Usuario_Creado"
+                    v-show="idFormularioActivo == 3"
+                />
 
-                <FormDatosPago  v-show="idFormularioActivo == 4"/>
+                <FormDatosPago 
+                    :EmpleadoID="ID_Usuario_Creado" 
+                    v-show="idFormularioActivo == 4"
+                />
             
             </template>
             <template #boton v-show="idFormularioActivo > 1">
                 <TemplateButton2 text="Atras" @click="retrocederForm" />        
             </template>
-
         </TemplateModal>
 
         <!--tabla con los datos-->
@@ -122,6 +137,8 @@
     //variable con el valor del formulario a mostrar
     const idFormularioActivo = ref(1);
 
+    const ID_Usuario_Creado = ref('')
+
     const InteraccionListaEmpleadosSelecionados = (arreglo) => {
         // Convertir el objeto proxy a un array real
         ListaIds.value = Array.from(arreglo);
@@ -153,6 +170,13 @@
             idFormularioActivo.value--
         }
         
+    };
+
+    const avanzarForm = (idEmpleadoCreado) => {
+        ID_Usuario_Creado.value = idEmpleadoCreado;
+        if(idFormularioActivo.value < 4){
+            idFormularioActivo.value++
+        }
     };
 
     //variables a utilizar de forma reactiva

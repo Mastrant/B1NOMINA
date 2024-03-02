@@ -103,7 +103,7 @@ import ListaTemplateLineal from '../listas/Lista-template-lineal.vue';
 import LayoutInputLineal from '../Layouts/LayoutInputLineal.vue';
 import InputRadioButton from '../botones/Input-Radio-button.vue';
 
-import { ref, watch } from 'vue';
+import { ref, watch, defineEmits, defineProps } from 'vue';
 
 //lista de nacionalidades
 const ListaNacionalidad = [
@@ -118,11 +118,26 @@ const ListaNacionalidad = [
 
 ];
 
-const ListaEstadoCivil = []
+const ListaEstadoCivil = [
+    {
+        id: 0,
+        nombre: "soltero"
+    },
+    {
+        id: 1,
+        nombre: "Casado"
+    },
+    {
+        id: 2,
+        nombre: "Viudo"
+    }
+]
 
 const ListaRegion = [];
 
-const ListaLocalidad = []
+const ListaLocalidad = [];
+
+
 
 // inicializacion de variables reactivas
 //datos personales
@@ -145,6 +160,21 @@ const payload = {
 
 const TestValue = (value) => {
     console.log(value)
+};
+defineProps({
+    EmpleadoID:{
+        Number,
+    }
+});
+
+// Define los eventos que el componente puede emitir
+const emit = defineEmits([
+    'nextModal'
+]);
+
+const NextModal = () => {
+    console.log("NextModal")
+    emit('nextModal');
 };
 
 /**

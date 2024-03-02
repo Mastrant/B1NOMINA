@@ -3,31 +3,16 @@
         <h2 class="titulo-form">Datos de Pago</h2>
 
         <div class="row-form">
-            <LayoutInputLineal textLabel="Nacionalidad">
+            <LayoutInputLineal textLabel="Método de pago">
                 <template v-slot>
-                    <ListaTemplateLineal 
-                        required 
-                        v-model="tipoDocumentoSelect" 
-                        :options="ListaTiposDocumentos" 
-                        optionsSelected="Seleccionar"
-                    />
+                   <InputRadioButton v-model="TipoDePago" grupo="Mpago" texto="Transferencia" :valor="0"/>
+                   <InputRadioButton v-model="TipoDePago" grupo="Mpago" texto="Cheque" :valor="1"/>
+                   <InputRadioButton v-model="TipoDePago" grupo="Mpago" texto="Al contado" :valor="2"/>
                 </template>
             </LayoutInputLineal>
-
-            <div>
-                <InputRadioButton name="SendInvitacion" :value="0"/> <span> Si</span>
-                <InputRadioButton name="SendInvitacion" :value="1"/> <span> No</span>
-            </div>
         </div>
-
         <div class="row-form">
-            <InputLinealDescripcion 
-                Tipo="date"
-                Titulo="Fecha de nacimiento"
-                v-model="nombres"
-                @update:modelValue="nombres = $event"
-            />
-            <LayoutInputLineal textLabel="Estado civil">
+            <LayoutInputLineal textLabel="Banco">
                 <template v-slot>
                     <ListaTemplateLineal 
                         required 
@@ -37,10 +22,25 @@
                     />
                 </template>
             </LayoutInputLineal>
+
+            <LayoutInputLineal textLabel="Tipo de cuenta">
+                <template v-slot>
+                   <InputRadioButton v-model="TCuenta" grupo="TCuenta" texto="Corriente" :valor="0"/>
+                   <InputRadioButton v-model="TCuenta" grupo="TCuenta" texto="Ahorro" :valor="1"/>
+                </template>
+            </LayoutInputLineal>
+
+            
         </div>
 
-        
-        
+        <div class="row-form cut">
+            <InputLinealDescripcion 
+                Tipo="text"
+                Titulo="N° Cuenta"
+                v-model="NCuenta"
+                @update:modelValue="NCuenta = $event"
+            />
+        </div>        
     </form>
 </template>
 
@@ -135,6 +135,10 @@ div.row-form {
     width:  100%;
     align-items: center;
     justify-content: space-between;
+}
+
+div.row-form.cut {
+    max-width: 48%;
 }
 
 /* Define el estilo del formulario, utilizando 

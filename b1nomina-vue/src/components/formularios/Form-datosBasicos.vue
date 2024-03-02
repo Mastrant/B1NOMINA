@@ -75,7 +75,7 @@ import LayoutInputLineal from '../Layouts/LayoutInputLineal.vue';
 import InputRadioButton from '../botones/Input-Radio-button.vue';
 
 
-import { ref, watch } from 'vue';
+import { ref, watch, defineEmits, defineProps } from 'vue';
 import axios from 'axios';
 
 //lista de 
@@ -91,14 +91,20 @@ const ListaTiposDocumentos = [
 
 ];
 
+defineProps({
+    EmpleadoID:{
+        Number,
+    }
+});
+
 // Define los eventos que el componente puede emitir
 const emit = defineEmits([
-    'closeModal'
+    'nextModal'
 ]);
 
-const close = () => {
-    console.log("cerrar modal")
-    emit('closeModal');
+const NextModal = (idEpleadoCreado) => {
+    console.log("NextModal")
+    emit('nextModal', idEpleadoCreado);
 };
 
 // inicializacion de variables reactivas
@@ -142,6 +148,8 @@ const addFoto = (value) => {
  * Ejecuta la peticion con axios
  */
 const Enviar = () => {
+    NextModal(4)
+    /*
     axios.post('/user/create_preuser', payload )
         .then(
             res => {
@@ -163,7 +171,7 @@ const Enviar = () => {
 
         //error 522 usuario ya creado o existente
     });
-    close();
+    */
 };
 
 watch(numeroDocumento, addNumeroDocumento);
