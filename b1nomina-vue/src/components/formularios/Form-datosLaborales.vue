@@ -144,7 +144,7 @@ import InputCheckbox from '../inputs/Input-Checkbox.vue';
 import { ref, watch } from 'vue';
 
 //lista de nacionalidades
-const variable = ref('')
+const variable = ref('');
 
 
 // payload de la peticion
