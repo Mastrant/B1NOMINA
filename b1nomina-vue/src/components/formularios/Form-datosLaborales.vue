@@ -125,7 +125,7 @@
             <InputCheckbox Objid="Jueves" @update="DiasLibres" texto="Jueves" />
             <InputCheckbox Objid="Viernes" @update="DiasLibres" texto="Viernes" />
             <InputCheckbox Objid="Sabado" @update="DiasLibres" texto="Sábado" />
-            <InputCheckbox Objid="Domingo" @update="payload.DiasLibres" texto="Domingo" />
+            <InputCheckbox Objid="Domingo" @update="DiasLibres" texto="Domingo" />
         </div>
     </form>
 </template>
@@ -164,7 +164,35 @@ const Departamento = ref('');
 const Cargo = ref('');
 const Grupo = ref('');
 const Modalidad = ref('');
-const DiasLibres = ref([]);
+const ListaDiasLibres = ref([]);
+
+
+/**
+ * Función para manejar la interacción con una lista de empleados seleccionados.
+ * Esta función agrega o remueve un valor de la lista basado en si el valor ya está presente.
+ *
+ * @param {Number} value - El valor a agregar o remover de la lista.
+ */
+const DiasLibres = (value) => {
+    // Verifica si el valor no es null
+    if (value !== null) {
+    // Verifica si el valor ya está en la lista
+    if (ListaDiasLibres.value.includes(value)) {
+        // Si el valor ya está en la lista, lo remueve
+        // Encuentra el índice del valor en la lista
+        const index = ListaDiasLibres.value.indexOf(value);
+        // Verifica si el índice es válido (mayor que -1)
+        if (index > -1) {
+        // Remueve el valor de la lista usando splice
+        ListaDiasLibres.value.splice(index,   1);
+        }
+    } else {
+        // Si el valor no está en la lista, lo agrega
+        // Agrega el valor al final de la lista
+        ListaDiasLibres.value.push(value);
+    }
+    }
+};
 
 
 // payload de la peticion
@@ -181,12 +209,14 @@ const payload = reactive({
     Cargo: '',
     Grupo: '',
     Modalidad: '',
-    DiasLibres : [],
+    DiasLibres : '',
 });
 
 //actualizar datos del payload
 const ActualizarPayload = (propiedad, valor) => {
     payload[propiedad] = valor;
+    console.log(propiedad +" "+ valor)
+    console.log(payload)
 };
 
 // Observar cambios en la variable
@@ -201,6 +231,7 @@ watch(Departamento, (nuevoValor) => ActualizarPayload('Departamento', nuevoValor
 watch(Cargo, (nuevoValor) => ActualizarPayload('Cargo', nuevoValor));
 watch(Grupo, (nuevoValor) => ActualizarPayload('Grupo', nuevoValor));
 watch(Modalidad, (nuevoValor) => ActualizarPayload('Modalidad', nuevoValor));
+watch(ListaDiasLibres.value, (nuevoValor) => ActualizarPayload('DiasLibres', nuevoValor));
 
 const NextModal = () => {
     console.log("NextModal")
@@ -209,10 +240,12 @@ const NextModal = () => {
 
 /**
  * Funcion emitida al enviar el formulario
- * @params payload Contiene los datos que se pasaran
+ * 
+ * @params {payload} Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
  const Enviar = () => {
+    console.log("modal Datos Laborales")
     console.log("Datos User: " + props.EmpleadoID)
     console.log(payload)
     NextModal()

@@ -10,18 +10,21 @@
                         grupo="MedioPago" 
                         texto="Transferencia" 
                         :valor="0"
+                        id-radius="Transferencia"
                     />
                    <InputRadioButton 
                         v-model="MedioPago" 
                         grupo="MedioPago" 
                         texto="Cheque" 
                         :valor="1"
+                        id-radius="Cheque"
                     />
                     <InputRadioButton 
                         v-model="MedioPago" 
                         grupo="MedioPago" 
                         texto="Al contado" 
                         :valor="2"
+                        id-radius="Alcontado"
                     />
                 </template>
             </LayoutInputLineal>
@@ -44,13 +47,15 @@
                         v-model="TCuenta" 
                         grupo="TCuenta" 
                         texto="Corriente" 
-                        :valor="4"
+                        :valor="0"
+                        id-radius="CCorriente"                        
                     />
                    <InputRadioButton 
                         v-model="TCuenta" 
                         grupo="TCuenta"
                         texto="Ahorro"
-                        :valor="5"
+                        :valor="1"
+                        id-radius="CAhorro"  
                     />
                 </template>
             </LayoutInputLineal>            

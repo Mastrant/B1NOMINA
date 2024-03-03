@@ -63,7 +63,8 @@
             <template #default>
             
                 <p class="decripcion-modal">
-                    La información de la persona será utilizada para ayudarte a generar la nómina más rápida que has visto, recuerda que siempre podrás regresar a editar cualquier valor.
+                    La información de la persona será utilizada para ayudarte a generar la nómina más rápida que has visto, 
+                    recuerda que siempre podrás regresar a editar cualquier valor.
                 </p>
                 
                 <NavForm 
@@ -84,25 +85,29 @@
                 
                 <FormDatosLaborales 
                     @nextModal="avanzarForm"
-                    :EmpleadoID="4"
+                    :EmpleadoID="ID_Usuario_Creado"
                     v-show="idFormularioActivo == 3"
                 />
 
                 <FormDatosPago
-                    @nextModal="avanzarForm"
-                    :EmpleadoID="ID_Usuario_Creado" 
+                    @closeModal="showModal"
+                    :EmpleadoID="4"
                     v-show="idFormularioActivo == 4"
                 />
             
             </template>
-            <template #boton v-show="idFormularioActivo > 1">
-                <TemplateButton2 text="Atras" @click="retrocederForm" />        
+            <template #boton>
+                <TemplateButton2 
+                    text="Atras" 
+                    @click="retrocederForm" 
+                    v-show="idFormularioActivo > 1"
+                />        
             </template>
         </TemplateModal>
 
         <!--tabla con los datos-->
         <div class="cuerpo-tabla">
-            <span class="NoEncontrado" v-if="(ListaEmpleados.length == 0)? true : false">
+            <span class="NoEncontrado" v-if="(ListaEmpleados.length < 1)? true : false">
                 No hay datos asociados a los filtros
             </span>
 
@@ -163,6 +168,7 @@
     }
 
     const mostrarModal = ref(false)
+
     /**
      * Controla el despliegue del modal
      * @param mostrarModal

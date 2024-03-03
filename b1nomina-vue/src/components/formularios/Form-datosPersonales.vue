@@ -20,12 +20,14 @@
                         grupo="genero" 
                         texto="Masculino" 
                         :valor="0"
+                        id-radius="Masculino"  
                     />
                    <InputRadioButton 
                         v-model="genero" 
                         grupo="genero" 
                         texto="Femenino" 
                         :valor="1"
+                        id-radius="Femenino"  
                     />
                 </template>
             </LayoutInputLineal>
@@ -228,6 +230,7 @@ const NextModal = () => {
  * Ejecuta la peticion con axios
  */
  const Enviar = () => {
+    console.log("modal Datos Persoanles")
     console.log("Datos User: " + props.EmpleadoID)
     console.log(payload)
     NextModal()

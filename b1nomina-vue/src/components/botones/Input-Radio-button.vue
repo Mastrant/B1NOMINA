@@ -3,32 +3,61 @@
         <input 
             :name="grupo"
             type="radio"
-            :id="'Radio'+valor"
+            :id="idRadius"
             :value="valor"
+            :checked="valor === modelValue"
+            @change="onChange"
         >
-        <label :for="'Radio'+valor">{{ texto }}</label>
+        <label :for="idRadius">{{ texto }}</label>
     </div>
 </template>
 
 <script setup>
-//uso <InputRadioButton v-model="" grupo="" texto="" :valor=""/>
-import { defineProps } from 'vue';
+/*uso 
+    <InputRadioButton 
+        v-model="variable" 
+        grupo="" 
+        texto="" 
+        :valor="0"
+        id-radius="" default: 'Radio'+valor
+    />
+*/
+import { defineProps, defineEmits } from 'vue';
 
+// Definición de propiedades
 const props = defineProps({
     grupo: {
-        String,
+        type: String,
         default: "Radium"
     },
     valor: {
-        Number,
         default: 0
     },
     texto: {
-        String,
+        type: String,
         default: ''
+    },
+    modelValue: {
+        default: null
+    },
+    idRadius: {
+        type:String,
+        default: 'Radio'+valor
     }
 });
+
+// Definición de eventos
+const emit = defineEmits(['update:modelValue']);
+
+// Propiedad computada para v-model
+const modelValue = props.modelValue;
+
+// Método para manejar el cambio de valor
+const onChange = () => {
+    emit('update:modelValue', props.valor);
+};
 </script>
+
 
 <style scoped>
 .conted-radius {

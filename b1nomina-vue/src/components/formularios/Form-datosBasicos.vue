@@ -86,8 +86,7 @@ import TemplateButton2 from '../botones/Template-button2.vue';
 import LayoutInputLineal from '../Layouts/LayoutInputLineal.vue';
 import InputRadioButton from '../botones/Input-Radio-button.vue';
 
-
-import { ref, watch, defineEmits, defineProps } from 'vue';
+import { ref, watch, defineEmits, defineProps, reactive } from 'vue';
 import axios from 'axios';
 
 //lista de 
@@ -103,20 +102,22 @@ const ListaTiposDocumentos = [
 
 ];
 
-defineProps({
+// Define las propiedades que el componente espera recibir. En este caso, se espera una propiedad llamada EmpleadoID de tipo Number.
+const props = defineProps({
     EmpleadoID:{
-        Number,
+        type: Number, // Especifica que el tipo de la propiedad es Number
     }
 });
 
-// Define los eventos que el componente puede emitir
+// Define los eventos que el componente puede emitir. En este caso, se especifica un evento llamado 'nextModal'.
 const emit = defineEmits([
-    'nextModal'
+    'nextModal' // Nombre del evento que puede ser emitido por este componente
 ]);
 
+// Función para manejar el cambio de modal. Recibe un idEpleadoCreado como parámetro y emite el evento 'nextModal' con este id.
 const NextModal = (idEpleadoCreado) => {
-    console.log("NextModal")
-    emit('nextModal', idEpleadoCreado);
+    console.log("NextModal") // Imprime un mensaje en la consola para depuración
+    emit('nextModal', idEpleadoCreado); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
 };
 
 // inicializacion de variables reactivas
@@ -129,28 +130,50 @@ const foto = ref('');
 const invitacion = ref(0);
 
 // payload de la peticion
-const payload = {  
+const payload = reactive({  
   "apellidos": "",
   "correo": "",
   "documento": "",
-  "nombres": ""
-}
+  "nombres": "",
+})
 
-const addNombres = (value) => {
-    payload.nombres = value.toLowerCase();
+/**
+ * Actualiza el valor de una propiedad específica dentro del objeto 'payload'.
+ * 
+ * @param {string} propiedad - El nombre de la propiedad a actualizar en el objeto 'payload'.
+ * @param {any} valor - El nuevo valor que se asignará a la propiedad especificada.
+ * 
+ * @example
+ * // 'payload' es un objeto con una estructura predefinida.
+ * const payload = {
+ *   nombre: '',
+ *   edad: 0
+ * };
+ * 
+ * // Llamando a ActualizarPayload para cambiar el nombre.
+ * ActualizarPayload('nombre', variable);
+ * 
+ * // Ahora, 'payload' se verá así:
+ * // {
+ * //   nombre: 'Pedro',
+ * //   edad: 30
+ * // }
+ */
+ const ActualizarPayload = (propiedad, valor) => {
+    // Asigna el nuevo valor a la propiedad especificada dentro del objeto 'payload'.
+    payload[propiedad] = valor;
 };
-const addApellidos = (value) => {
-    payload.apellidos = value.toLowerCase();
-};
-const addNumeroDocumento = (value) => {
-    payload.documento = value;
-};
-const addCorreo = (value) => {
-    payload.correo = value.toLowerCase();
-};
-const addFoto = (value) => {
-    console.log(value);
-};
+
+watch(numeroDocumento, (nuevoValor) => ActualizarPayload('documento', nuevoValor));
+watch(nombres, (nuevoValor) => ActualizarPayload('nombres', nuevoValor));
+watch(apellidos, (nuevoValor) => ActualizarPayload('apellidos', nuevoValor));
+watch(correo, (nuevoValor) => ActualizarPayload('correo', nuevoValor));
+
+/**
+ * Valores en desarrollo
+ * watch(invitacion, (nuevoValor) => ActualizarPayload('invitacion', nuevoValor)); 
+ * watch(foto, (nuevoValor) => ActualizarPayload('foto', nuevoValor));
+*/
 
 /**
  * Funcion emitida al enviar el formulario
@@ -185,12 +208,6 @@ const Enviar = () => {
     });
     */
 };
-
-watch(numeroDocumento, addNumeroDocumento);
-watch(nombres, addNombres);
-watch(apellidos,addApellidos);
-watch(correo, addCorreo);
-
 
 </script>
 
