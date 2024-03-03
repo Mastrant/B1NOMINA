@@ -31,6 +31,7 @@ const props = defineProps({
         default: "Radium"
     },
     valor: {
+        type: [String,Number],
         default: 0
     },
     texto: {
@@ -42,7 +43,7 @@ const props = defineProps({
     },
     idRadius: {
         type:String,
-        default: 'Radio'+valor
+        default: 'Radio'
     }
 });
 

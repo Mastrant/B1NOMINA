@@ -151,6 +151,11 @@
 
     const ID_Usuario_Creado = ref('')
 
+    const FormDatosBasicosref = ref('Form1');
+    const FormDatosPersonalesref = ref('Form2');
+    const FormDatosLaboralesref = ref('Form3');
+    const FormDatosPagoref = ref('Form4');
+
     const InteraccionListaEmpleadosSelecionados = (arreglo) => {
         // Convertir el objeto proxy a un array real
         ListaIds.value = Array.from(arreglo);
@@ -174,8 +179,12 @@
      * @param mostrarModal
      */
     const showModal = () => {
-        mostrarModal.value = !mostrarModal.value
-        idFormularioActivo.value = 4;
+        FormDatosBasicosref.value.resetForm();
+        FormDatosPersonalesref.value.resetForm();
+        FormDatosLaboralesref.value.resetForm();
+        FormDatosPagoref.value.resetForm();
+        mostrarModal.value = !mostrarModal.value;
+        idFormularioActivo.value = 1;
     }
 
     const retrocederForm = () => {

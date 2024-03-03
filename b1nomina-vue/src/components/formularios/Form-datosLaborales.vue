@@ -1,5 +1,5 @@
 <template>
-    <form class="formulario" id="Form3" @submit.prevent="Enviar">
+    <form class="formulario" ref="Form3" id="Form3" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos Laborales</h2>
 
         <div class="row-form">

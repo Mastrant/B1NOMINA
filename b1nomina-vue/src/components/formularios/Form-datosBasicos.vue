@@ -1,5 +1,5 @@
 <template>
-    <form class="formulario" id="Form1" @submit.prevent="Enviar">
+    <form class="formulario" ref="Form1" id="Form1" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos básicos</h2>
 
         <div class="row-form">
@@ -105,7 +105,8 @@ const ListaTiposDocumentos = [
 // Define las propiedades que el componente espera recibir. En este caso, se espera una propiedad llamada EmpleadoID de tipo Number.
 const props = defineProps({
     EmpleadoID:{
-        type: Number, // Especifica que el tipo de la propiedad es Number
+        type: [Number,String], // Especifica que el tipo de la propiedad es Number
+
     }
 });
 
@@ -207,6 +208,22 @@ const Enviar = () => {
         //error 522 usuario ya creado o existente
     });
     */
+};
+
+// Método para reiniciar el formulario
+const resetForm = () => {
+    // Reinicia los campos a sus valores iniciales
+    numeroDocumento.value = '';
+    nombres.value = '';
+    apellidos.value = '';
+    tipoDocumentoSelect.value = 0;
+    correo.value = '';
+    foto.value = '';
+    invitacion.value = 0;
+    // Reinicia el payload
+    Object.keys(payload).forEach(key => {
+        payload[key] = '';
+    });
 };
 
 </script>
