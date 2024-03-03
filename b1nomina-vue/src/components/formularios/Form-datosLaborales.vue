@@ -5,9 +5,8 @@
         <div class="row-form">
             <LayoutInputLineal textLabel="Tipo de contrato">
                 <template v-slot>
-                    <ListaTemplateLineal 
-                        required 
-                        v-model="variable" 
+                    <ListaTemplateLineal  
+                        v-model="TipoDeContrato" 
                         :options="{}" 
                         optionsSelected="Seleccionar"
                     />
@@ -16,9 +15,8 @@
 
             <LayoutInputLineal textLabel="Término del contrato">
                 <template v-slot>
-                    <ListaTemplateLineal 
-                        required 
-                         v-model="variable"
+                    <ListaTemplateLineal  
+                         v-model="TerminoContrato"
                         :options="{}" 
                         optionsSelected="Seleccionar"
                     />
@@ -30,23 +28,23 @@
             <InputLinealDescripcion 
                 Tipo="date"
                 Titulo="Fecha de Contratacion"
-                v-model="variable"
+                v-model="FechaContratacion"
                 @update:modelValue="variable = $event"
             />
             <InputLinealDescripcion 
                 Tipo="date"
                 Titulo="Fecha de Finalizacion de contrato"
-                v-model="variable"
+                v-model="FechaFinalizacionContrato"
                 @update:modelValue="variable = $event"
+                :Deshabilitar="TerminoContrato == 0"
             />
         </div>
 
         <div class="row-form">
             <LayoutInputLineal textLabel="Salario base">
                 <template v-slot>
-                    <ListaTemplateLineal 
-                        required 
-                        v-model="variable" 
+                    <ListaTemplateLineal  
+                        v-model="SalarioBase" 
                         :options="[{}]" 
                         optionsSelected="Seleccionar"
                     />
@@ -56,7 +54,7 @@
             <InputLinealDescripcion 
                 Placeholder="$..." 
                 Titulo="Valor del salario" 
-                v-model="variable"
+                v-model="MontoSalario"
                 @update:modelValue="variable = $event"
             />
         </div>
@@ -66,9 +64,8 @@
         <div class="row-form">
             <LayoutInputLineal textLabel="Sede de Trabajo">
                 <template v-slot>
-                    <ListaTemplateLineal 
-                        required 
-                        v-model="variable" 
+                    <ListaTemplateLineal  
+                        v-model="SedeDeTrabajo" 
                         :options="[{}]" 
                         optionsSelected="Seleccionar"
                     />
@@ -77,9 +74,8 @@
 
             <LayoutInputLineal textLabel="Departamento">
                 <template v-slot>
-                    <ListaTemplateLineal 
-                        required 
-                        v-model="variable" 
+                    <ListaTemplateLineal  
+                        v-model="Departamento" 
                         :options="{}" 
                         optionsSelected="Seleccionar"
                     />
@@ -90,9 +86,8 @@
         <div class="row-form">
             <LayoutInputLineal textLabel="Cargo">
                 <template v-slot>
-                    <ListaTemplateLineal 
-                        required 
-                        v-model="variable" 
+                    <ListaTemplateLineal  
+                        v-model="Cargo" 
                         :options="{}" 
                         optionsSelected="Seleccionar"
                     />
@@ -101,9 +96,8 @@
 
             <LayoutInputLineal textLabel="Grupo">
                 <template v-slot>
-                    <ListaTemplateLineal 
-                        required 
-                        v-model="variable" 
+                    <ListaTemplateLineal  
+                        v-model="Grupo" 
                         :options="{}" 
                         optionsSelected="Sin Asignar"
                     />
@@ -112,10 +106,11 @@
 
             <LayoutInputLineal textLabel="Modalidad">
                 <template v-slot>
-                    <InterruptorButton 
+                    <InterruptorButton
+                        v-model="Modalidad"
                         Objid="Teletrabajo"
                         Texto="Teletrabajo"
-                        :Estado="(true)? true :false"
+                        :Estado="(false)? true :false"
                     />
                 </template>
             </LayoutInputLineal>
@@ -124,13 +119,13 @@
         <h2 class="titulo-form">Días de descanso</h2>
 
         <div class="row-form">
-            <InputCheckbox Objid="Lunes" @update="false" texto="Lunes" />
-            <InputCheckbox Objid="Martes" @update="false" texto="Martes" />
-            <InputCheckbox Objid="Miercoles" @update="false" texto="Miércoles" />
-            <InputCheckbox Objid="Jueves" @update="false" texto="Jueves" />
-            <InputCheckbox Objid="Viernes" @update="false" texto="Viernes" />
-            <InputCheckbox Objid="Sabado" @update="false" texto="Sábado" />
-            <InputCheckbox Objid="Domingo" @update="false" texto="Domingo" />
+            <InputCheckbox Objid="Lunes" @update="DiasLibres" texto="Lunes" />
+            <InputCheckbox Objid="Martes" @update="DiasLibres" texto="Martes" />
+            <InputCheckbox Objid="Miercoles" @update="DiasLibres" texto="Miércoles" />
+            <InputCheckbox Objid="Jueves" @update="DiasLibres" texto="Jueves" />
+            <InputCheckbox Objid="Viernes" @update="DiasLibres" texto="Viernes" />
+            <InputCheckbox Objid="Sabado" @update="DiasLibres" texto="Sábado" />
+            <InputCheckbox Objid="Domingo" @update="payload.DiasLibres" texto="Domingo" />
         </div>
     </form>
 </template>
@@ -142,19 +137,74 @@ import LayoutInputLineal from '../Layouts/LayoutInputLineal.vue';
 import InterruptorButton from '../inputs/Interruptor-button.vue';
 import InputCheckbox from '../inputs/Input-Checkbox.vue';
 
-import { ref, watch } from 'vue';
+import { ref, watch, reactive, defineProps, defineEmits} from 'vue';
+
+const props = defineProps({
+    EmpleadoID:{
+        type: [Number, String],
+    }
+});
+
+// Define los eventos que el componente puede emitir
+const emit = defineEmits([
+    'nextModal'
+]);
 
 //lista de nacionalidades
 const variable = ref('');
 
+const TipoDeContrato = ref(0);
+const TerminoContrato = ref(0);
+const FechaContratacion = ref('');
+const FechaFinalizacionContrato = ref('');
+const SalarioBase = ref('');
+const MontoSalario = ref(0);
+const SedeDeTrabajo = ref('');
+const Departamento = ref('');
+const Cargo = ref('');
+const Grupo = ref('');
+const Modalidad = ref('');
+const DiasLibres = ref([]);
+
 
 // payload de la peticion
-const payload = {
 
-}
+const payload = reactive({
+    TipoDeContrato: '',
+    TerminoContrato: '',
+    FechaContratacion: '',
+    FechaFinalizacionContrato: '',
+    SalarioBase: '',
+    MontoSalario: '',
+    SedeDeTrabajo: '',
+    Departamento: '',
+    Cargo: '',
+    Grupo: '',
+    Modalidad: '',
+    DiasLibres : [],
+});
 
-const testInput = (value) => {
-    payload.nombres = value;
+//actualizar datos del payload
+const ActualizarPayload = (propiedad, valor) => {
+    payload[propiedad] = valor;
+};
+
+// Observar cambios en la variable
+watch(TipoDeContrato, (nuevoValor) => ActualizarPayload('TipoDeContrato', nuevoValor));
+watch(TerminoContrato, (nuevoValor) => ActualizarPayload('TerminoContrato', nuevoValor));
+watch(FechaContratacion, (nuevoValor) => ActualizarPayload('FechaContratacion', nuevoValor));
+watch(FechaFinalizacionContrato, (nuevoValor) => ActualizarPayload('FechaFinalizacionContrato', nuevoValor));
+watch(SalarioBase, (nuevoValor) => ActualizarPayload('SalarioBase', nuevoValor));
+watch(MontoSalario, (nuevoValor) => ActualizarPayload('MontoSalario', nuevoValor));
+watch(SedeDeTrabajo, (nuevoValor) => ActualizarPayload('SedeDeTrabajo', nuevoValor));
+watch(Departamento, (nuevoValor) => ActualizarPayload('Departamento', nuevoValor));
+watch(Cargo, (nuevoValor) => ActualizarPayload('Cargo', nuevoValor));
+watch(Grupo, (nuevoValor) => ActualizarPayload('Grupo', nuevoValor));
+watch(Modalidad, (nuevoValor) => ActualizarPayload('Modalidad', nuevoValor));
+
+const NextModal = () => {
+    console.log("NextModal")
+    emit('nextModal');
 };
 
 /**
@@ -163,11 +213,10 @@ const testInput = (value) => {
  * Ejecuta la peticion con axios
  */
  const Enviar = () => {
-    console.log("Datos User: " + EmpleadoID + '' + payload)
+    console.log("Datos User: " + props.EmpleadoID)
+    console.log(payload)
     NextModal()
 };
-
-watch(variable, testInput);
 
 </script>
 

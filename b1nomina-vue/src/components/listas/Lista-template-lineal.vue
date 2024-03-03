@@ -1,5 +1,5 @@
 <template>
-    <select class="lista-general" v-model="selected">
+    <select :required="requerido" class="lista-general" v-model="selected">
 
         <option value=''> 
             {{optionsSelected}}
@@ -26,6 +26,10 @@ const props = defineProps({
     optionsSelected: {
         type: String ,
         default: 0,
+    },
+    requerido: {
+        type: Boolean,
+        default: false
     }
 });
 

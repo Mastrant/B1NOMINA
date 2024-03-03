@@ -5,8 +5,7 @@
         <div class="row-form">
             <LayoutInputLineal textLabel="Nacionalidad">
                 <template v-slot>
-                    <ListaTemplateLineal 
-                        required 
+                    <ListaTemplateLineal  
                         v-model="nacionalidad" 
                         :options="ListaNacionalidad" 
                         optionsSelected="Seleccionar"
@@ -16,8 +15,18 @@
 
             <LayoutInputLineal textLabel="Género">
                 <template v-slot>
-                   <InputRadioButton v-model="genero" grupo="genero" texto="Masculino" :valor="0"/>
-                   <InputRadioButton v-model="genero" grupo="genero" texto="Femenino" :valor="1"/>
+                   <InputRadioButton 
+                        v-model="genero" 
+                        grupo="genero" 
+                        texto="Masculino" 
+                        :valor="0"
+                    />
+                   <InputRadioButton 
+                        v-model="genero" 
+                        grupo="genero" 
+                        texto="Femenino" 
+                        :valor="1"
+                    />
                 </template>
             </LayoutInputLineal>
         </div>
@@ -32,8 +41,7 @@
 
             <LayoutInputLineal textLabel="Estado civil">
                 <template v-slot>
-                    <ListaTemplateLineal 
-                        required 
+                    <ListaTemplateLineal  
                         v-model="estadoCivil" 
                         :options="ListaEstadoCivil" 
                         optionsSelected="Seleccionar"
@@ -48,7 +56,6 @@
             <LayoutInputLineal textLabel="Region">
                 <template v-slot>
                     <ListaTemplateLineal 
-                        required 
                         v-model="region" 
                         :options="ListaRegion" 
                         optionsSelected="Seleccionar"
@@ -59,7 +66,6 @@
             <LayoutInputLineal textLabel="Localidad">
                 <template v-slot>
                     <ListaTemplateLineal 
-                        required 
                         v-model="localidad" 
                         :options="ListaLocalidad" 
                         optionsSelected="Seleccionar"
@@ -84,6 +90,8 @@
                 Titulo="Teléfono Celular" 
                 v-model="telefonoCelular"
                 @update:modelValue="telefonoCelular = $event"
+                :minimo-caracteres="8"
+                :maximo-caracteres="12"
             />
 
             <InputLinealDescripcion 
@@ -103,13 +111,18 @@ import ListaTemplateLineal from '../listas/Lista-template-lineal.vue';
 import LayoutInputLineal from '../Layouts/LayoutInputLineal.vue';
 import InputRadioButton from '../botones/Input-Radio-button.vue';
 
-import { ref, watch, defineEmits, defineProps } from 'vue';
+import { ref, watch, defineEmits, defineProps, reactive } from 'vue';
 
 const props = defineProps({
     EmpleadoID:{
         Number,
     }
 });
+
+// Define los eventos que el componente puede emitir
+const emit = defineEmits([
+    'nextModal'
+]);
 
 //lista de nacionalidades
 const ListaNacionalidad = [
@@ -123,7 +136,6 @@ const ListaNacionalidad = [
     },
 
 ];
-
 const ListaEstadoCivil = [
     {
         id: 0,
@@ -138,7 +150,6 @@ const ListaEstadoCivil = [
         nombre: "Viudo"
     }
 ]
-
 const ListaRegion = [
     {
         id: 1,
@@ -149,7 +160,6 @@ const ListaRegion = [
         nombre: "region 2"
     }
 ];
-
 const ListaLocalidad = [
     {
         id: 1,
@@ -176,7 +186,7 @@ const telefonoCelular = ref('');
 const telefonoLocal = ref('');
 
 // payload de la peticion
-const payload = {
+const payload = reactive({
     nacionalidad: '',
     genero: 0,
     fechaNacimiento: '',
@@ -187,66 +197,41 @@ const payload = {
     direccion: '',
     telefonoCelular: '',
     telefonoLocal: '',
-};
+});
 
 //actualizar datos del payload
-const addNacionalidad = (value) => {
-    payload.nacionalidad = value
-};
-const addGenero = (value) => {
-    payload.genero = value
-};
-const addFechaNacimiento = (value) => {
-    payload.fechaNacimiento = value
-};
-const addEstadoCivil = (value) => {
-    payload.estadoCivil = value
-};
-const addRegion = (value) => {
-    payload.region = value
-};
-const addLocalidad = (value) => {
-    payload.localidad = value
-};
-const addDireccion = (value) => {
-    payload.direccion = value
-};
-const addTelefonoCelular = (value) => {
-    payload.telefonoCelular = value
-};
-const addTelefonoLocal = (value) => {
-    payload.telefonoLocal = value
+const ActualizarPayload = (propiedad, valor) => {
+    payload[propiedad] = valor;
 };
 
-// Define los eventos que el componente puede emitir
-const emit = defineEmits([
-    'nextModal'
-]);
+//Escuchar cambio en las entradas
+
+watch(nacionalidad, (nuevoValor) => ActualizarPayload('nacionalidad', nuevoValor));
+watch(genero, (nuevoValor) => ActualizarPayload('genero', nuevoValor));
+watch(fechaNacimiento, (nuevoValor) => ActualizarPayload('fechaNacimiento', nuevoValor));
+watch(estadoCivil, (nuevoValor) => ActualizarPayload('estadoCivil', nuevoValor));
+watch(region, (nuevoValor) => ActualizarPayload('region', nuevoValor));
+watch(localidad, (nuevoValor) => ActualizarPayload('localidad', nuevoValor));
+watch(direccion, (nuevoValor) => ActualizarPayload('direccion', nuevoValor));
+watch(telefonoCelular, (nuevoValor) => ActualizarPayload('telefonoCelular', nuevoValor));
+watch(telefonoLocal, (nuevoValor) => ActualizarPayload('telefonoLocal', nuevoValor));
+
+
 const NextModal = () => {
     console.log("NextModal")
     emit('nextModal');
 };
+
 /**
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
-const Enviar = () => {
-    console.log("Datos User: " + props.EmpleadoID + '' + payload.value)
+ const Enviar = () => {
+    console.log("Datos User: " + props.EmpleadoID)
+    console.log(payload)
     NextModal()
 };
-
-//Escuchar cambio en las entradas
-watch(nacionalidad, addNacionalidad);
-watch(genero, addGenero);
-watch(fechaNacimiento, addFechaNacimiento);
-watch(estadoCivil, addEstadoCivil);
-watch(region, addRegion);
-watch(localidad, addLocalidad);
-watch(direccion, addDireccion);
-watch(telefonoCelular, addTelefonoCelular);
-watch(telefonoLocal, addTelefonoLocal);
-
 </script>
 
 <style scoped>

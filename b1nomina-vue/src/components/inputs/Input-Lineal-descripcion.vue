@@ -2,13 +2,13 @@
     <div class="input-line-contend">
         <label class="input-label">
             {{Titulo}}
-            <span>
+            <span v-show="requerido">
                 *
             </span>
         </label>
         
         <input class="input-template"
-           required
+           :required="requerido"
            :disabled="Deshabilitar"
            :type="Tipo" 
            :placeholder="Placeholder"
@@ -21,18 +21,29 @@
 </template>
 
 <script setup>
+/* uso <InputLinealDescripcion 
+        Tipo="" Tipo de entrada
+        Titulo="" Titulo superior
+        v-model="" captura del valor
+        Placeholder="" Texto interno
+        @update:modelValue="variable = $event" Sincronizacion entre padre/hijo
+        requerido="" Si el campo es requerido o no
+        :minimo-caracteres="" minimo de caracteres del campo
+        :maximo-caracteres="" maximo de caracteres del campo
+        />
+*/
 import { defineProps } from 'vue';
 
 const props = defineProps({
     
     //props de funcionamiento
     modelValue: {
-        type: String,
+        type: [String, Number],
         default: '',
     },
     //props de formato y estilos
     Placeholder : {
-        type: String,
+        type: [String, Number],
         default: 'Datos del campo',
     },
     Titulo: {
@@ -48,12 +59,16 @@ const props = defineProps({
         default:false,
     },
     minimoCaracteres: {
-        type: Number,
+        type: [Number, String],
         default: 3
     },
     maximoCaracteres: {
-        type: Number,
+        type:[Number, String],
         default: 100
+    },
+    requerido: {
+        type: Boolean,
+        default: false
     }
 });
 </script>

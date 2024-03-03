@@ -3,13 +3,14 @@
         <h2 class="titulo-form">Datos básicos</h2>
 
         <div class="row-form">
-            <LayoutInputLineal textLabel="Tipo de Documento">
+            <LayoutInputLineal textLabel="Tipo de Documento" :requerido="true" >
                 <template v-slot>
                     <ListaTemplateLineal 
-                        required 
+                        requirido="true" 
                         v-model="tipoDocumentoSelect" 
                         :options="ListaTiposDocumentos" 
                         optionsSelected="Seleccionar"
+                        :requerido="true"
                     />
                 </template>
             </LayoutInputLineal>
@@ -20,6 +21,7 @@
                 Titulo="Número de documento"
                 v-model="numeroDocumento"
                 @update:modelValue="numeroDocumento = $event"
+                :requerido="true"
             />
         </div>
 
@@ -29,13 +31,14 @@
                 Titulo="Nombres"
                 v-model="nombres"
                 @update:modelValue="nombres = $event"
+                :requerido="true"
             />
             <InputLinealDescripcion 
                 Placeholder="Ejemplo: Peres" 
                 Titulo="Apellidos"
                 v-model="apellidos"
                 @update:modelValue="apellidos = $event"
-                
+                :requerido="true"                
             />
         </div>
 
@@ -46,15 +49,24 @@
                 v-model="correo"
                 @update:modelValue="correo = $event"
                 Tipo="email"
+                :requerido="true"
             />
-            <div>
-                <span>Enviar invitación a B1 Nomina por email</span> 
-                <img src="" alt=" (?)">
-                <div>
-                    <InputRadioButton name="SendInvitacion" :value="0"/> <span> Si</span>
-                    <InputRadioButton name="SendInvitacion" :value="1"/> <span> No</span>
-                </div>
-            </div>
+            <LayoutInputLineal textLabel="Enviar invitación a B1 Nomina por Email">
+                <template v-slot>
+                   <InputRadioButton 
+                        v-model="invitacion" 
+                        grupo="EnviarInvitacion" 
+                        texto="No" 
+                        :valor="0"
+                    />
+                   <InputRadioButton 
+                        v-model="invitacion" 
+                        grupo="EnviarInvitacion"  
+                        texto="Si" 
+                        :valor="1"
+                    />
+                </template>
+            </LayoutInputLineal>
         </div>
 
         <div class="multimedia">

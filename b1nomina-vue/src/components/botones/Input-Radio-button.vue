@@ -1,6 +1,11 @@
 <template>
     <div class="conted-radius">        
-        <input :name="grupo" type="radio" :id="'Radio'+valor" :value="valor">
+        <input 
+            :name="grupo"
+            type="radio"
+            :id="'Radio'+valor"
+            :value="valor"
+        >
         <label :for="'Radio'+valor">{{ texto }}</label>
     </div>
 </template>

@@ -2,7 +2,7 @@
     <div class="contend-select">
         <p>
             {{textLabel}}
-            <span>*</span>
+            <span v-show="requerido">*</span>
         </p>
         <div>
             <slot/>
@@ -25,6 +25,10 @@ const props = defineProps({
     textLabel:{
         type: String,
         default: 'Titulo Layout'
+    },
+    requerido: {
+        type: Boolean,
+        default: false
     }
 });
 

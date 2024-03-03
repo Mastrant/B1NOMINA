@@ -3,34 +3,57 @@
         <h2 class="titulo-form">Datos de Pago</h2>
 
         <div class="row-form">
-            <LayoutInputLineal textLabel="Método de pago">
+            <LayoutInputLineal textLabel="Medio de pago">
                 <template v-slot>
-                   <InputRadioButton v-model="TipoDePago" grupo="Mpago" texto="Transferencia" :valor="0"/>
-                   <InputRadioButton v-model="TipoDePago" grupo="Mpago" texto="Cheque" :valor="1"/>
-                   <InputRadioButton v-model="TipoDePago" grupo="Mpago" texto="Al contado" :valor="2"/>
+                    <InputRadioButton 
+                        v-model="MedioPago" 
+                        grupo="MedioPago" 
+                        texto="Transferencia" 
+                        :valor="0"
+                    />
+                   <InputRadioButton 
+                        v-model="MedioPago" 
+                        grupo="MedioPago" 
+                        texto="Cheque" 
+                        :valor="1"
+                    />
+                    <InputRadioButton 
+                        v-model="MedioPago" 
+                        grupo="MedioPago" 
+                        texto="Al contado" 
+                        :valor="2"
+                    />
                 </template>
             </LayoutInputLineal>
         </div>
         <div class="row-form">
             <LayoutInputLineal textLabel="Banco">
                 <template v-slot>
-                    <ListaTemplateLineal 
-                        required 
-                        v-model="tipoDocumentoSelect" 
-                        :options="ListaTiposDocumentos" 
+                    <ListaTemplateLineal  
+                        v-model="Banco" 
+                        :options="ListaBancos" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
             </LayoutInputLineal>
 
+             <!---->
             <LayoutInputLineal textLabel="Tipo de cuenta">
                 <template v-slot>
-                   <InputRadioButton v-model="TCuenta" grupo="TCuenta" texto="Corriente" :valor="0"/>
-                   <InputRadioButton v-model="TCuenta" grupo="TCuenta" texto="Ahorro" :valor="1"/>
+                   <InputRadioButton 
+                        v-model="TCuenta" 
+                        grupo="TCuenta" 
+                        texto="Corriente" 
+                        :valor="4"
+                    />
+                   <InputRadioButton 
+                        v-model="TCuenta" 
+                        grupo="TCuenta"
+                        texto="Ahorro"
+                        :valor="5"
+                    />
                 </template>
-            </LayoutInputLineal>
-
-            
+            </LayoutInputLineal>            
         </div>
 
         <div class="row-form cut">
@@ -39,6 +62,8 @@
                 Titulo="N° Cuenta"
                 v-model="NCuenta"
                 @update:modelValue="NCuenta = $event"
+                :minimo-caracteres="16"
+                :maximo-caracteres="16"
             />
         </div>        
     </form>
@@ -50,77 +75,72 @@ import ListaTemplateLineal from '../listas/Lista-template-lineal.vue';
 import LayoutInputLineal from '../Layouts/LayoutInputLineal.vue';
 import InputRadioButton from '../botones/Input-Radio-button.vue';
 
-import { ref, watch } from 'vue';
+import { ref, watch, reactive, defineProps, defineEmits} from 'vue';
 
-//lista de 
-const ListaTiposDocumentos = [
+const props = defineProps({
+    EmpleadoID:{
+        type: [Number, String],
+    }
+});
+
+// Define los eventos que el componente puede emitir
+const emit = defineEmits([
+    'closeModal'
+]);
+
+
+// inicializacion de variables reactivas
+const ListaBancos = [
     {
         id: 1,
-        nombre: "Pasaporte"
+        nombre: "Region 1"
     },
     {
         id: 2,
-        nombre: "RUT"
-    },
-
+        nombre: "region 2"
+    }
 ];
 
-// inicializacion de variables reactivas
-const numeroDocumento = ref('');
-const nombres = ref('');
-const apellidos = ref('');
-const tipoDocumentoSelect = ref(0); //Documento selecionado
-const correo = ref('');
-const foto = ref('');
-const invitacion = ref(0);
+const MedioPago = ref('');
+const Banco = ref('');
+const TCuenta = ref('');
+const NCuenta = ref('')
+
 
 // payload de la peticion
-const payload = {
-    nombres: "",
-    apellidos: '',
-    tipoDocumento: "",
-    numeroDocumento: "",
-    correo: '',
-    foto: '',
-    invitacion: 0
-}
+const payload = reactive({
+    MedioPago: '',
+    Banco: '',
+    TipoCuenta: '',
+    NumeroCuenta: '',
+});
 
-const addNombres = (value) => {
-    payload.nombres = value;
+//actualizar datos del payload
+const ActualizarPayload = (propiedad, valor) => {
+    payload[propiedad] = valor;
 };
-const addApellidos = (value) => {
-    payload.apellidos = value;
+
+watch(Banco, (nuevoValor) => ActualizarPayload('Banco', nuevoValor));
+watch(MedioPago, (nuevoValor) => ActualizarPayload('MedioPago', nuevoValor));
+watch(TCuenta, (nuevoValor) => ActualizarPayload('TCuenta', nuevoValor));
+watch(NCuenta, (nuevoValor) => ActualizarPayload('NCuenta', nuevoValor));
+
+
+const CloseModal = () => {
+    console.log("closeModal")
+    emit('closeModal');
 };
-const addTipodocumento = (value) => {
-    payload.tipoDocumento = value;
-};
-const addNumeroDocumento = (value) => {
-    payload.numeroDocumento = value;
-};
-const addCorreo = (value) => {
-    payload.correo = value;
-};
-const addFoto = (value) => {
-    console.log(value);
-};
+
 /**
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
-const Enviar = () => {
-    (tipoDocumentoSelect.value == 0 | tipoDocumentoSelect.value == '')
-    ? console.log("falta seleccionar un tipo de documento")
-    : console.log(payload)
+ const Enviar = () => {
+    console.log("Datos User: " + props.EmpleadoID)
+    console.log(payload)
+    CloseModal()
 };
-
-
-watch(tipoDocumentoSelect, addTipodocumento);
-watch(numeroDocumento, addNumeroDocumento);
-watch(nombres, addNombres);
-watch(apellidos,addApellidos);
-watch(correo, addCorreo);
-
 
 </script>
 

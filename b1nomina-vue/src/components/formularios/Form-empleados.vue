@@ -60,7 +60,6 @@
             textSubmit="Guardar"
             :FormId="'Form'+idFormularioActivo"
         >
-            
             <template #default>
             
                 <p class="decripcion-modal">
@@ -84,11 +83,13 @@
                 />
                 
                 <FormDatosLaborales 
-                    :EmpleadoID="ID_Usuario_Creado"
+                    @nextModal="avanzarForm"
+                    :EmpleadoID="4"
                     v-show="idFormularioActivo == 3"
                 />
 
-                <FormDatosPago 
+                <FormDatosPago
+                    @nextModal="avanzarForm"
                     :EmpleadoID="ID_Usuario_Creado" 
                     v-show="idFormularioActivo == 4"
                 />
