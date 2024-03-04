@@ -100,6 +100,7 @@
                 />
             
             </template>
+            
             <template #boton>
                 <TemplateButton2 
                     text="Atras" 
@@ -307,9 +308,7 @@
                 ListaGrupos.value = [];  //asigna vacio a la data sino hay respuesta
             }
         )
-    };
-
-    
+    };  
     
     /**
     * Solicita a la API los datos de los empleados y los almacena en el componente ListaTemplate como props.
