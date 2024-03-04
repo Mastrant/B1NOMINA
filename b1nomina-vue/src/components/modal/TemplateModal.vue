@@ -136,4 +136,12 @@ div.contend-button-modal {
     display: flex; /* Utiliza Flexbox para organizar los botones */
     justify-content: start; /* Alinea los botones al inicio del contenedor */
 }
+
+.Animacion-Modal-enter-active, .Animacion-Modal-leave-active {
+    transition: opacity  0.3s;
+  }
+.Animacion-Modal-enter, .Animacion-Modal-leave-to {
+    opacity:  0;
+}
+
 </style>
