@@ -1,5 +1,5 @@
 <template>
-    <form class="formulario" ref="Form3" id="Form3" @submit.prevent="Enviar">
+    <form class="formulario" id="Form3" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos Laborales</h2>
 
         <div class="row-form">
@@ -232,6 +232,29 @@ watch(Cargo, (nuevoValor) => ActualizarPayload('Cargo', nuevoValor));
 watch(Grupo, (nuevoValor) => ActualizarPayload('Grupo', nuevoValor));
 watch(Modalidad, (nuevoValor) => ActualizarPayload('Modalidad', nuevoValor));
 watch(ListaDiasLibres.value, (nuevoValor) => ActualizarPayload('DiasLibres', nuevoValor));
+
+const resetForm = () => {
+    const TipoDeContrato = '';
+const TerminoContrato = '';
+const FechaContratacion = '';
+const FechaFinalizacionContrato = '';
+const SalarioBase = '';
+const MontoSalario = '';
+const SedeDeTrabajo = '';
+const Departamento = '';
+const Cargo = '';
+const Grupo = '';
+const Modalidad = '';
+const ListaDiasLibres = '';
+// Reinicia el payload
+Object.keys(payload).forEach(key => {
+        payload[key] = '';
+    });
+}
+
+defineExpose({
+    resetForm
+})
 
 const NextModal = () => {
     console.log("NextModal")

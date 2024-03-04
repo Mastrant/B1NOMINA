@@ -75,24 +75,28 @@
                     @nextModal="avanzarForm" 
                     :EmpleadoID="ID_Usuario_Creado"
                     v-show="idFormularioActivo == 1"
+                    ref="Form1" 
                 />
                 
                 <FormDatosPersonalesVue 
                     @nextModal="avanzarForm"
                     :EmpleadoID="ID_Usuario_Creado"
                     v-show="idFormularioActivo == 2"
+                    ref="Form2"
                 />
                 
                 <FormDatosLaborales 
                     @nextModal="avanzarForm"
                     :EmpleadoID="ID_Usuario_Creado"
                     v-show="idFormularioActivo == 3"
+                    ref="Form3"
                 />
 
                 <FormDatosPago
                     @closeModal="showModal"
                     :EmpleadoID="4"
                     v-show="idFormularioActivo == 4"
+                    ref="Form4"
                 />
             
             </template>
@@ -151,11 +155,6 @@
 
     const ID_Usuario_Creado = ref('')
 
-    const FormDatosBasicosref = ref('Form1');
-    const FormDatosPersonalesref = ref('Form2');
-    const FormDatosLaboralesref = ref('Form3');
-    const FormDatosPagoref = ref('Form4');
-
     const InteraccionListaEmpleadosSelecionados = (arreglo) => {
         // Convertir el objeto proxy a un array real
         ListaIds.value = Array.from(arreglo);
@@ -172,17 +171,27 @@
         mostrarOpciones.value = !mostrarOpciones.value
     }
 
-    const mostrarModal = ref(false)
+    // Crear referencias a los componentes hijos
+    const Form1 = ref(null);
+    const Form2 = ref(null);
+    const Form3 = ref(null);
+    const Form4 = ref(null);
 
+    const limpiarFormularios = () => {
+    // Llamar a las funciones de limpieza de cada componente hijo
+        Form1.value.resetForm();
+        Form2.value.resetForm();
+        Form3.value.resetForm();
+        Form4.value.resetForm();
+    };
+
+    const mostrarModal = ref(false)
     /**
      * Controla el despliegue del modal
      * @param mostrarModal
      */
     const showModal = () => {
-        FormDatosBasicosref.value.resetForm();
-        FormDatosPersonalesref.value.resetForm();
-        FormDatosLaboralesref.value.resetForm();
-        FormDatosPagoref.value.resetForm();
+        limpiarFormularios();
         mostrarModal.value = !mostrarModal.value;
         idFormularioActivo.value = 1;
     }

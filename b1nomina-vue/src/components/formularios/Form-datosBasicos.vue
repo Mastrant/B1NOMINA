@@ -86,7 +86,7 @@ import TemplateButton2 from '../botones/Template-button2.vue';
 import LayoutInputLineal from '../Layouts/LayoutInputLineal.vue';
 import InputRadioButton from '../botones/Input-Radio-button.vue';
 
-import { ref, watch, defineEmits, defineProps, reactive } from 'vue';
+import { ref, watch, defineEmits, defineProps, reactive, defineExpose } from 'vue';
 import axios from 'axios';
 
 //lista de 
@@ -106,7 +106,6 @@ const ListaTiposDocumentos = [
 const props = defineProps({
     EmpleadoID:{
         type: [Number,String], // Especifica que el tipo de la propiedad es Number
-
     }
 });
 
@@ -114,6 +113,27 @@ const props = defineProps({
 const emit = defineEmits([
     'nextModal' // Nombre del evento que puede ser emitido por este componente
 ]);
+
+// Método para reiniciar el formulario
+const resetForm = () => {
+    // Reinicia los campos a sus valores iniciales
+    numeroDocumento.value = '';
+    nombres.value = '';
+    apellidos.value = '';
+    tipoDocumentoSelect.value = 0;
+    correo.value = '';
+    foto.value = '';
+    invitacion.value = 0;
+    // Reinicia el payload
+    Object.keys(payload).forEach(key => {
+        payload[key] = '';
+    });
+};
+
+// Exponer la función de limpieza para que sea accesible desde el componente padre
+defineExpose({
+    resetForm
+});
 
 // Función para manejar el cambio de modal. Recibe un idEpleadoCreado como parámetro y emite el evento 'nextModal' con este id.
 const NextModal = (idEpleadoCreado) => {
@@ -169,7 +189,6 @@ watch(numeroDocumento, (nuevoValor) => ActualizarPayload('documento', nuevoValor
 watch(nombres, (nuevoValor) => ActualizarPayload('nombres', nuevoValor));
 watch(apellidos, (nuevoValor) => ActualizarPayload('apellidos', nuevoValor));
 watch(correo, (nuevoValor) => ActualizarPayload('correo', nuevoValor));
-
 /**
  * Valores en desarrollo
  * watch(invitacion, (nuevoValor) => ActualizarPayload('invitacion', nuevoValor)); 
@@ -210,21 +229,8 @@ const Enviar = () => {
     */
 };
 
-// Método para reiniciar el formulario
-const resetForm = () => {
-    // Reinicia los campos a sus valores iniciales
-    numeroDocumento.value = '';
-    nombres.value = '';
-    apellidos.value = '';
-    tipoDocumentoSelect.value = 0;
-    correo.value = '';
-    foto.value = '';
-    invitacion.value = 0;
-    // Reinicia el payload
-    Object.keys(payload).forEach(key => {
-        payload[key] = '';
-    });
-};
+
+
 
 </script>
 

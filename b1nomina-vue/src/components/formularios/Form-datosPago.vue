@@ -1,5 +1,5 @@
 <template>
-    <form class="formulario" ref="Form4" id="Form4" @submit.prevent="Enviar">
+    <form class="formulario" id="Form4" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos de Pago</h2>
 
         <div class="row-form">
@@ -109,7 +109,7 @@ const ListaBancos = [
 const MedioPago = ref('');
 const Banco = ref('');
 const TCuenta = ref('');
-const NCuenta = ref('')
+const NCuenta = ref('');
 
 
 // payload de la peticion
@@ -130,6 +130,20 @@ watch(MedioPago, (nuevoValor) => ActualizarPayload('MedioPago', nuevoValor));
 watch(TCuenta, (nuevoValor) => ActualizarPayload('TCuenta', nuevoValor));
 watch(NCuenta, (nuevoValor) => ActualizarPayload('NCuenta', nuevoValor));
 
+const resetForm = () => {
+    const MedioPago = 0;
+    const Banco = '';
+    const TCuenta = null;
+    const NCuenta = '';
+    // Reinicia el payload
+    Object.keys(payload).forEach(key => {
+        payload[key] = '';
+    });
+};
+
+defineExpose({
+    resetForm
+});
 
 const CloseModal = () => {
     console.log("closeModal")

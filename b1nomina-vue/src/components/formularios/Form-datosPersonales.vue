@@ -1,5 +1,5 @@
 <template>
-    <form class="formulario" ref="Form2" id="Form2" @submit.prevent="Enviar">
+    <form class="formulario" id="Form2" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos personales</h2>
 
         <div class="row-form">
@@ -113,7 +113,7 @@ import ListaTemplateLineal from '../listas/Lista-template-lineal.vue';
 import LayoutInputLineal from '../Layouts/LayoutInputLineal.vue';
 import InputRadioButton from '../botones/Input-Radio-button.vue';
 
-import { ref, watch, defineEmits, defineProps, reactive } from 'vue';
+import { ref, watch, defineEmits, defineProps, reactive, defineExpose } from 'vue';
 
 const props = defineProps({
     EmpleadoID:{
@@ -218,6 +218,29 @@ watch(direccion, (nuevoValor) => ActualizarPayload('direccion', nuevoValor));
 watch(telefonoCelular, (nuevoValor) => ActualizarPayload('telefonoCelular', nuevoValor));
 watch(telefonoLocal, (nuevoValor) => ActualizarPayload('telefonoLocal', nuevoValor));
 
+const resetForm = () => {
+    //datos personales
+const nacionalidad = '';
+const genero = '';
+const fechaNacimiento = '';
+const estadoCivil = '';
+
+//datos de contacto
+const region = '';
+const localidad = '';
+const direccion = '';
+const telefonoCelular = '';
+const telefonoLocal = '';
+// Reinicia el payload
+Object.keys(payload).forEach(key => {
+        payload[key] = '';
+    });
+}
+
+// Exponer la función de limpieza para que sea accesible desde el componente padre
+defineExpose({
+    resetForm
+});
 
 const NextModal = () => {
     console.log("NextModal")
