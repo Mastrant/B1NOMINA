@@ -309,12 +309,7 @@
         )
     };
 
-    //parametros a pasar con la peticion
-    const parametrosPeticionEmpleados = {
-        "departamento_id": 0,
-        "grupo_id": 0,
-        "sede_id": 0
-    };
+    
     
     /**
     * Solicita a la API los datos de los empleados y los almacena en el componente ListaTemplate como props.
@@ -344,6 +339,13 @@
         )
     };
 
+    //parametros a pasar con la peticion
+    const parametrosPeticionEmpleados = {
+        "departamento_id": 0,
+        "grupo_id": 0,
+        "sede_id": 0
+    };
+
     /**
     * Solicita a la API los datos de los empleados según el filtro proporcionado y los almacena en ListaEmpleados.
     *
@@ -353,7 +355,7 @@
     * @throws {Error} - Si ocurre un error durante la solicitud HTTP, se lanzará un error.
     *
     * @example
-    * // Llamar a la función para obtener empleados con ciertos parámetros
+    * // Llamar a la función para obtener empleados con ciertos parámetros desde la api
     * pedirEmpleado2();
     */
     const pedirEmplead2 = async () => {
@@ -463,10 +465,12 @@
            return;
         }
 
-        //convierte la entrada de texto a minusculas y elimina los espacion del inicio
+         //convierte la entrada de texto a minusculas y elimina los espacios del inicio
         const normalizarText = text.toLowerCase().trim();
         const filtrado = ListaEmpleados.value.filter(
-            (empleado) => empleado.nombres.toLowerCase().includes(normalizarText)
+            (empleado) => empleado.nombres?.toLowerCase().includes(normalizarText) || //filtrar por Nombres
+                          empleado.apellidos?.toLowerCase().includes(normalizarText) || // filtrar por apellidos
+                          empleado.rut?.includes(normalizarText)
         );
 
         //asigna el valor del arreglo con el filtro a la variable.
@@ -493,54 +497,75 @@
         
     });
 </script>
-
 <style scoped>
-/* Estilos para el contenedor principal del formulario de empleados, asegurando que ocupe todo el espacio disponible y organiza sus elementos en una columna */
+/* 
+ Contenedor principal del formulario de empleados, configurado para ocupar todo el espacio disponible
+ y organizar sus elementos en una columna. El uso de 'display: flex' y 'flex-direction: column' permite
+ una disposición flexible y ordenada de los elementos del formulario.
+*/
 div.formulario-empleados {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
-    gap:24px; /* Espaciado entre los elementos del formulario */
+    gap:24px; /* Espaciado entre los elementos del formulario para mejorar la legibilidad */
 }
 
-/* Estilos para la sección de acciones del formulario, distribuyendo los elementos en una fila y justificando el espacio entre ellos */
+/* 
+ Sección de acciones del formulario, distribuye los elementos en una fila y justifica el espacio entre ellos
+ para una distribución equilibrada.
+*/
 div.acciones-form {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
-/* Estilos para la sección de filtros, organizando los elementos en una fila con un espaciado específico entre ellos */
+/* 
+ Sección de filtros, organiza los elementos en una fila con un espaciado específico entre ellos para
+ una fácil navegación y selección de filtros.
+*/
 div.filtros {
     display: flex;
     flex-direction: row;
-    gap: 12px; /* Espaciado entre los elementos de filtro */
+    gap: 12px; /* Espaciado entre los elementos de filtro para mantener la interfaz limpia y ordenada */
 }
 
-/* Estilos para las acciones masivas, asegurando que los elementos estén alineados verticalmente en el centro y tengan un espaciado específico entre ellos */
+/* 
+ Acciones masivas, asegurando que los elementos estén alineados verticalmente en el centro y tengan
+ un espaciado específico entre ellos para una presentación clara y organizada.
+*/
 div.acciones-masivas{
     display: flex;
-    gap: 24px; /* Espaciado entre los elementos de acción masiva */
-    align-items: center; /* Alineación vertical de los elementos */
+    gap: 24px; /* Espaciado entre los elementos de acción masiva para una distribución equilibrada */
+    align-items: center; /* Alineación vertical de los elementos para una mejor estética y usabilidad */
 }
 
-/* Estilos para el mensaje de "No encontrado", ajustando el tamaño de fuente y el color */
+/* 
+ Mensaje de "No encontrado", ajustando el tamaño de fuente y el color para proporcionar un feedback
+ visual adecuado al usuario.
+*/
 span.NoEncontrado {
     font-size: 24px;
-    color: rgb(56, 56, 56); /* Color gris oscuro */
+    color: rgb(56, 56, 56); /* Color gris oscuro para mantener un tono coherente con el diseño */
 }
 
-/* Estilos específicos para el botón de agregar usuario, asegurando que su contenido tenga una posición superior en el eje Z */
+/* 
+ Botón de agregar usuario, asegurando que su contenido tenga una posición superior en el eje Z para
+ garantizar que se muestre correctamente sobre otros elementos.
+*/
 div.Add-user-button > div {
-    z-index: 50; /* Posicionamiento en el eje Z */
+    z-index: 50; /* Posicionamiento en el eje Z para asegurar la visibilidad del botón */
 }
 
-/* Estilos para el párrafo dentro del modal, ajustando el margen, alineación del texto y estilos de fuente */
+/* 
+ Párrafo dentro del modal, ajustando el margen, alineación del texto y estilos de fuente para una
+ mejor legibilidad y presentación del contenido.
+*/
 p.decripcion-modal{
-    margin: 0; /* Elimina el margen por defecto */
-    text-align: justify; /* Justifica el texto */
-    font-size: 16px; /* Tamaño de fuente */
-    font-weight: 400; /* Peso de la fuente */
+    margin: 0; /* Elimina el margen por defecto para mantener un diseño limpio */
+    text-align: justify; /* Justifica el texto para una lectura más fluida */
+    font-size: 16px; /* Tamaño de fuente adecuado para facilitar la lectura */
+    font-weight: 400; /* Peso de la fuente para mantener un equilibrio visual */
 }
 </style>

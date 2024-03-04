@@ -29,7 +29,7 @@
                 </template>
             </LayoutInputLineal>
         </div>
-        <div class="row-form">
+        <div class="row-form" v-show="MedioPago == 0">
             <LayoutInputLineal textLabel="Banco">
                 <template v-slot>
                     <ListaTemplateLineal  
@@ -61,7 +61,7 @@
             </LayoutInputLineal>            
         </div>
 
-        <div class="row-form cut">
+        <div class="row-form cut" v-show="MedioPago == 0">
             <InputLinealDescripcion 
                 Tipo="text"
                 Titulo="N° Cuenta"

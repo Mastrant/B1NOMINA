@@ -29,35 +29,40 @@
             <!--Final encabezado-->
 
             <!--Cuerpo de la tabla-->
-            <tr class="rowTabla cuerpo" v-for="(item) in DatosPaginados" :key="item.id">
-                <td class="filaCheckbox">
+            <EmpleadosRow  v-for="(item) in DatosPaginados" :key="item.id">
+                <!--ChecBox-->
+                <template v-slot:checkbox>
                     <InputCheckbox :Objid="item.id" @update="InteraccionListaEmpleadosSelecionados" />
-                </td>
-                <td class="rowNombre">
+                </template>
+                <!--Nombre y apelidos-->
+                <template v-slot:NombresApellidos>
                     {{item.nombres}} 
                     {{ item.apellido_paterno }}
                     {{ item.apellido_materno }}
-                </td>
-                <td class="">
+                </template>
+                <!--Rut-->
+                <template v-slot:rut>
                     {{item.rut}}
-                </td>
-                <td class="">
+                </template>
+                 <!--Cargo-->
+                <template v-slot:cargo>
                     {{ item.cargo }}
-                </td>
-                <td class="">
+                </template>
+                <!--Saladio / sueldo-->
+                <template v-slot:sueldo>
                     {{ item.sueldo }}
-                </td>
-                <td class="Estado">
+                </template>
+                <!--Estado-->
+                <template v-slot:activateComponente>
                     <InterruptorButton @click=" () => console.log('estado cambiado' + item.id)" :Objid="item.id" :Estado="(item.activo == true)? true :false" />
                     <span v-if="item.activo == true">Activo</span>
                     <span v-else>Inactivo</span>
-                </td>
-                
-                <td class="acciones">
+                </template>
+                <template v-slot:accionButton>
                     <OjitoIcon @click="console.log('ir a info' + item.id)" class="icon" />
                     <DescargaIcon @click="console.log('descargar info' + item.id)" class="icon" />
-                </td>
-            </tr>
+                </template>
+            </EmpleadosRow>
             <!--Final cuerpo-->
         </table>
 
@@ -94,6 +99,7 @@ import DescargaIcon from '@/components/icons/Descarga-icon.vue';
 import PaginateButton from '@/components/botones/Paginate-button.vue';
 import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
 import InputCheckbox from '@/components/inputs/Input-Checkbox.vue';
+import EmpleadosRow from './Empleados-Row.vue';
 
 import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
 
@@ -214,19 +220,26 @@ onMounted(()=> {
 </script>
 
 <style scoped>
+/* Estilos generales para la tabla de empleados */
 .TablaEmpleados {
-    width: 100%;
+    width: 100%; /* Asegura que la tabla ocupe el ancho completo del contenedor */
 }
 
-/**Contenedor general */
+/**
+ * Contenedor general de la tabla
+ * Utiliza Flexbox para organizar elementos en una columna y alinearlos al final
+ */
 .conted {
     display: flex;
     flex-direction: column;
     justify-content: end;
-    gap: 24px;
+    gap: 24px; /* Espacio entre elementos */
 }
 
-/**Paginacion */
+/**
+ * Estilos para la paginación dentro del contenedor
+ * Alinea los botones de paginación al final del contenedor
+ */
 div.contend-pagination {
     width: 100%;
     display: flex;
@@ -235,40 +248,45 @@ div.contend-pagination {
 .pagination {
     display: flex;
     width: 100%;
-    gap: 4px;
+    gap: 4px; /* Espacio entre botones de paginación */
     justify-content: end;
 }
 .pagination button {
     box-sizing: border-box;
-    padding: 4px 12px;
+    padding: 4px 12px; /* Espacio interno de los botones de paginación */
 }
 
-/**Estilos del encabezado de la tabla */
+/**
+ * Estilos para el encabezado de la tabla
+ * Define el fondo, borde, y estilos de fuente para el encabezado
+ */
 tr.encabezado {
     width: 100%;
     height: 24px;
     box-sizing: border-box;
     background: #FCFCFD;
     border-bottom: 0.96px #EAECF0 solid;
-
-    /*Estilos de fuente*/
-
     color: #667085;
     font-size: 16px;
     font-family: Poppins;
     font-weight: 400;
     line-height: 26px;
-    word-wrap: break-word;
+    word-wrap: break-word; /* Asegura que el texto no exceda el ancho de la celda */
 }
 
-/**evitar que el texto sobre salga de la celda */
+/**
+ * Evita que el texto sobrepase el límite de la celda
+ * Aplica estilos para asegurar que el texto se ajuste dentro de las celdas
+ */
 td,th {
-  word-break: break-word;
-  white-space: nowrap;
+ word-break: break-word;
+ white-space: nowrap;
 }
 
-/**Estilo del cuerpo de la tabla */
-
+/**
+ * Estilos para el cuerpo de la tabla
+ * Define la altura de las filas y utiliza Flexbox para organizar el contenido
+ */
 tr.cuerpo {
     width: 100%;
     height: 48px;
@@ -278,7 +296,10 @@ tr.cuerpo {
     align-self: end;
 }
 
-/**Estilo de la fila */
+/**
+ * Estilo general para las filas de la tabla
+ * Define la altura y el ancho de las filas
+ */
 tr.rowTabla {
     width: 100%;
     box-sizing: content-box;
@@ -286,60 +307,77 @@ tr.rowTabla {
     display: table-row;
 }
 
-/*Estilos de cada espacio */
+/* Estilos para cada celda de la tabla */
 tr.cuerpo > td {
-    width: auto;
+    width: auto; /* Ancho automático basado en el contenido */
     height: 48px;
-    background: none;
-    box-sizing: border-box;
-    padding: 12px;
-    border:#FCFCFD;
+    background: none; /* Sin fondo para una apariencia limpia */
+    box-sizing: border-box; /* Para incluir padding y borde en el ancho total */
+    padding: 12px; /* Espacio interno para mejorar la legibilidad */
+    border:#FCFCFD; /* Borde superior para separar las filas */
     border-bottom: 0.96px #EAECF0 solid;
-    align-self: center;
-    align-items: center;
-    text-align: center;
-    margin: auto;
+    align-self: center; /* Centrado verticalmente */
+    align-items: center; /* Centrado horizontalmente */
+    text-align: center; /* Alineación del texto al centro */
+    margin: auto; /* Margen automático para centrar el contenido */
 }
-/**Columna acciones encabezado */
+
+/**
+ * Estilos para la columna de acciones (generalmente botones o iconos)
+ * Organiza los elementos de acción en un contenedor flex
+ */
 th.acciones {
     display: flex;
-    gap: 12px;
-    justify-content: center;
+    gap: 12px; /* Espacio entre acciones */
+    justify-content: center; /* Centrado de acciones */
     box-sizing: border-box;
 }
-/* Primera columna */
+
+/* Estilos para la primera columna, que puede contener checkboxes */
 .filaCheckbox {
-    max-width: 80px !important;
+    max-width: 80px !important; /* Ancho máximo para mantener la consistencia */
     box-sizing: border-box;
-    margin: auto;
+    margin: auto; /* Margen automático para centrar */
 }
-/**Estilos Columna Empleados */
+
+/**
+ * Estilos para la columna de nombres de empleados
+ * Alinea el texto al inicio y limita el ancho máximo para evitar desbordamientos
+ */
 th.rowNombre,
-td.rowNombre {
-    text-align: start !important;
+td.rowNombre > div {
+    text-align: start;
     max-width: 290px;
 }
-/**Estilo columna estados */
-td.Estado {
+
+/**
+ * Estilos para la columna de estados
+ * Utiliza Flexbox para organizar los elementos de estado y centrarlos
+ */
+td.Estado > div {
     display: flex;
-    gap: 10px;
+    gap: 10px; /* Espacio entre elementos de estado */
     justify-content: center;
     box-sizing: border-box;
-    height: 52.2px !important;
-    margin: 0px;
-
+    margin: 0px; /* Sin margen para una alineación precisa */
+    align-self: center; /* Centrado verticalmente */
+    align-items: center; /* Centrado horizontalmente */
 }
 
-/*columna que contiene los iconos*/
-
-.acciones { 
-    gap: 24px;
-    justify-content: center;
-    white-space: nowrap;
+/* Estilos para la columna de acciones (iconos) */
+.acciones > div {
+    display: flex;
+    gap: 12px; /* Espacio entre iconos */
+    justify-content: center; /* Centrado de iconos */
+    white-space: nowrap; /* Evita el salto de línea para iconos */
 }
-/**Clase de los iconos */
+
+/**
+ * Estilo para los iconos dentro de las acciones
+ * Indica que los iconos son interactivos (clickeables)
+ */
 .icon { 
-    cursor: pointer;
+    cursor: pointer; /* Cambia el cursor al pasar sobre el icono */
 }
 
 </style>

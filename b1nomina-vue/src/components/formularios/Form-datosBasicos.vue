@@ -22,6 +22,7 @@
         v-model="numeroDocumento"
         @update:modelValue="numeroDocumento = $event"
         :requerido="true"
+        name="numeroDocumento"
       />
     </div>
 
@@ -32,6 +33,7 @@
         v-model="nombres"
         @update:modelValue="nombres = $event"
         :requerido="true"
+        name="Nombres"
       />
       <InputLinealDescripcion
         Placeholder="Ejemplo: Peres"
@@ -39,6 +41,7 @@
         v-model="apellidos"
         @update:modelValue="apellidos = $event"
         :requerido="true"
+        name="Apellidos"
       />
     </div>
 
@@ -50,7 +53,9 @@
         @update:modelValue="correo = $event"
         Tipo="email"
         :requerido="true"
+        name="CorreoElectronico"
       />
+
       <LayoutInputLineal textLabel="Enviar invitación a B1 Nomina por Email">
         <template v-slot>
           <InputRadioButton
