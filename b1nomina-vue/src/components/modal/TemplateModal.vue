@@ -76,6 +76,10 @@ const emit = defineEmits([
 
 const close = () => {
     emit('closeModal');
+    dataNotification.value = {
+        DataNotification: '',
+        valor: null
+    }
 };
 
 const dataNotification = ref(props.DataNotification);
@@ -98,7 +102,7 @@ import TemplateAlertModal from '@/components/modal/TemplateAlertModal.vue';
         
     };
 
-    watch(() => props.DataNotification, (newValue, oldValue) => {
+    watch(() => props.DataNotification, (newValue) => {
         // Verifica si 'valor' es verdadero
         if (newValue.valor) {
             showNotificacion();

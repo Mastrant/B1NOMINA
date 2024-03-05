@@ -256,7 +256,7 @@
     */
     const pedirSedes = async () => {
      //   await axios.get(`list_sede_sociedad?idSociedad=${sociedadId}&page=1&records=20`)
-        await axios.get(`/sociedad/${idSociedad}/list_sede?page=${1}&records=20`, {"id": idSociedad})
+        await axios.get(`/sociedad/${idSociedad}/list_sede?page=${1}&records=20`)
         .then(
             (res) => {
                 ListaSedes.value = res.data; //asigna el valor de la consulta a la variable
@@ -306,7 +306,7 @@
     * @throws {Error} Si la solicitud falla, se lanza un error y ListaGrupos se establece en un array vacío.
     */
     const pedirGrupos = async () => {
-        await axios.get(`/sociedad/${idSociedad}/list_grupos_empleados`, {"id": idSociedad})
+        await axios.get(`/sociedad/${idSociedad}/list_grupos_empleados`)
         .then(
             (res) => {
                 ListaGrupos.value = res.data;  //asigna el valor de la consulta a la variable
@@ -335,7 +335,7 @@
     * @throws {Error} Si ocurre un error durante la solicitud, se asigna un array vacío a ListaEmpleados.
     */
     const pedirEmpleados = async () => {
-        await axios.get(`/sociedad/${idSociedad}/list_empleados`, {"id": idSociedad,})
+        await axios.get(`/sociedad/${idSociedad}/list_empleados`)
         .then(
             (res) => {
                 ListaEmpleados.value = res.data; //almacena los datos devueltos por la api
@@ -382,6 +382,83 @@
             }
         )
     };
+
+    const parametrosDP = ref({
+        nacionalidad: [],
+        estadocivil: [],
+        regiones: [],
+        localidad: [],
+    });
+
+    const parametrosDL = ref({
+        tipocontrato: [],//
+        terminocontrato: [],//
+        tiposalario: [], //
+        sede: [],//
+        departamento: [],//
+        cargos: [],//
+        grupos: [],//
+    });
+    
+    const parametrosDPa = ref({
+        bancos: [],        
+    });
+    
+    const pedirParametros = async () => {
+        axios.get(`/sociedad/${idSociedad}/parametros_crear_usuario`)
+        .then(
+            (respuesta) => {
+                console.log(respuesta.data.parametros)                
+                // Asegúrate de que las propiedades existan dentro de 'respuesta.data.parametros'
+
+                //Parametros personales
+                if (respuesta.data.parametros.nacionalidad) {
+                    parametrosDP.value.nacionalidad.push(...respuesta.data.parametros.nacionalidad);
+                }
+                if (respuesta.data.parametros.estadocivil) {
+                    parametrosDP.value.estadocivil.push(...respuesta.data.parametros.estadocivil);
+                }
+                if (respuesta.data.parametros.regiones) {
+                    parametrosDP.value.regiones.push(...respuesta.data.parametros.regiones);
+                }
+                if (respuesta.data.parametros.localidad) {
+                    parametrosDP.value.localidad.push(...respuesta.data.parametros.localidad);
+                }
+                //Parametros pago
+                if (respuesta.data.parametros.bancos) {
+                    parametrosDPa.value.bancos.push(...respuesta.data.parametros.bancos);
+                }
+                //Parametros Laborales
+                if (respuesta.data.parametros.tiposalario) {
+                    parametrosDL.value.tiposalario.push(...respuesta.data.parametros.tiposalario);
+                }
+                if (respuesta.data.parametros.terminocontrato) {
+                    parametrosDL.value.terminocontrato.push(...respuesta.data.parametros.terminocontrato);
+                }
+                if (respuesta.data.parametros.cargos) {
+                    parametrosDL.value.cargos.push(...respuesta.data.parametros.cargos);
+                }
+                if (respuesta.data.parametros.grupos) {
+                    parametrosDL.value.grupos.push(...respuesta.data.parametros.grupos);
+                }
+                if (respuesta.data.parametros.sede) {
+                    parametrosDL.value.sede.push(...respuesta.data.parametros.sede);
+                }
+                if (respuesta.data.parametros.departamento) {
+                    parametrosDL.value.departamento.push(...respuesta.data.parametros.departamento);
+                }
+                if (respuesta.data.parametros.tipocontrato) {
+                    parametrosDL.value.tipocontrato.push(...respuesta.data.parametros.tipocontrato);
+                }
+
+                console.log("dL")
+                console.log(parametrosDL.value)     
+            }
+        )
+        .catch ((err) => {
+
+        })
+    }
 
     //filtros
 
@@ -503,6 +580,7 @@
         await pedirSedes(); //solicita las sedes disponibles
         await pedirDepartamentos(); //solicita los departamentos
         await pedirGrupos(); //solicita los grupos
+        await pedirParametros(); //solicita los parametros para crear usuarios
         
     });
 </script>

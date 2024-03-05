@@ -111,6 +111,9 @@ const props = defineProps({
   EmpleadoID: {
     type: [Number, String], // Especifica que el tipo de la propiedad es Number
   },
+  parametros:{
+
+  }
 });
 
 // Define los eventos que el componente puede emitir. En este caso, se especifica un evento llamado 'nextModal'.
