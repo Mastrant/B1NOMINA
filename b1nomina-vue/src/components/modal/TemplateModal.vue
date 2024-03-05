@@ -25,6 +25,12 @@
                         </div>
                     </div>
                 </transition>
+                <TemplateAlertModal 
+                    @closeNotificacion="showNotificacion()" 
+                    :activarNotifiacion="mostrarNotificacion" 
+                    :Mensaje="DataNotification.texto" 
+                    :Status="DataNotification.valor"
+                />
             </div>
         </transition>
     </teleport>
@@ -33,7 +39,7 @@
 <script setup>
 // uso del componente: <TemplateModal @closeModal="" :activarModal="" NombreAccion="">
 
-import {defineProps, defineEmits} from 'vue';
+import {defineProps, defineEmits, ref, watch} from 'vue';
 import CloseIconVue from '../icons/Close-icon.vue';
 import TemplateButton2 from '../botones/Template-button2.vue'
 import TemplateButton from '../botones/Template-button.vue'
@@ -53,7 +59,14 @@ const props = defineProps({
     },
     FormId:{
         String
-    }
+    },
+    DataNotification: {
+        type: Object, // Cambia el tipo a Object
+        default: () => ({
+            DataNotification: '',
+            valor: null
+        }), // Proporciona un objeto vacío como valor predeterminado
+    },
 });
 
 // Define los eventos que el componente puede emitir
@@ -65,6 +78,32 @@ const close = () => {
     emit('closeModal');
 };
 
+const dataNotification = ref(props.DataNotification);
+
+
+import TemplateAlertModal from '@/components/modal/TemplateAlertModal.vue';
+
+    const mostrarNotificacion = ref(false)
+    /**
+     * Controla el despliegue de la notificacion
+     * @param mostrarNotificacion
+     */
+    const showNotificacion = (force) => {
+        if (force) {
+            mostrarNotificacion.value = force
+        }else {
+            mostrarNotificacion.value = !mostrarNotificacion.value;
+        }
+        console.log(mostrarNotificacion.value)
+        
+    };
+
+    watch(() => props.DataNotification, (newValue, oldValue) => {
+        // Verifica si 'valor' es verdadero
+        if (newValue.valor) {
+            showNotificacion();
+        }
+    }, { deep: true }); // Asegúrate de observar los cambios en las propiedades anidadas
 
 </script>
 

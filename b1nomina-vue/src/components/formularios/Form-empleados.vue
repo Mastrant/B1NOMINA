@@ -55,10 +55,12 @@
 
         <TemplateModal 
             @closeModal="showModal" 
-            :activarModal="mostrarModal" 
+            :activarModal="mostrarModal"
+            :FormId="'Form'+idFormularioActivo"
+            :DataNotification="dataNotificacion"
             NombreAccion="Nuevo Registro" 
             textSubmit="Guardar"
-            :FormId="'Form'+idFormularioActivo"
+           
         >
             <template #default>
             
@@ -72,7 +74,8 @@
                 />
                 
                 <FormDatosBasicos 
-                    @nextModal="avanzarForm" 
+                    @nextModal="avanzarForm"
+                    @respuesta="sendData" 
                     :EmpleadoID="ID_Usuario_Creado"
                     v-show="idFormularioActivo == 1"
                     ref="Form1" 
@@ -153,6 +156,12 @@
 
     //variable con el valor del formulario a mostrar
     const idFormularioActivo = ref(1);
+    //arreglo con la data
+    const dataNotificacion = ref({})
+    
+    const sendData = (DATA) => {
+        dataNotificacion.value = DATA //asigna el valor
+    }
 
     const ID_Usuario_Creado = ref('')
 
@@ -187,6 +196,7 @@
     };
 
     const mostrarModal = ref(false)
+
     /**
      * Controla el despliegue del modal
      * @param mostrarModal
@@ -496,6 +506,7 @@
         
     });
 </script>
+
 <style scoped>
 /* 
  Contenedor principal del formulario de empleados, configurado para ocupar todo el espacio disponible

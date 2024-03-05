@@ -116,6 +116,7 @@ const props = defineProps({
 // Define los eventos que el componente puede emitir. En este caso, se especifica un evento llamado 'nextModal'.
 const emit = defineEmits([
   "nextModal", // Nombre del evento que puede ser emitido por este componente
+  "respuesta"
 ]);
 
 // Método para reiniciar el formulario
@@ -141,8 +142,11 @@ defineExpose({
 
 // Función para manejar el cambio de modal. Recibe un idEpleadoCreado como parámetro y emite el evento 'nextModal' con este id.
 const NextModal = (idEpleadoCreado) => {
-  console.log("NextModal"); // Imprime un mensaje en la consola para depuración
   emit("nextModal", idEpleadoCreado); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
+};
+
+const sendRespuesta = (Data) => {
+  emit("respuesta", Data); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
 };
 
 // inicializacion de variables reactivas
@@ -205,9 +209,10 @@ watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor));
  * Ejecuta la peticion con axios
  */
 const Enviar = () => {
-  console.log("modal Datos Basicos");
-  console.log(payload);
+  //console.log("modal Datos Basicos");
+  //console.log(payload);
   NextModal(4);
+  sendRespuesta({texto:"prueba 2", valor:true})
   /*
     axios.post('/user/create_preuser', payload )
         .then(
@@ -232,6 +237,7 @@ const Enviar = () => {
     });
     */
 };
+
 </script>
 
 <style scoped>

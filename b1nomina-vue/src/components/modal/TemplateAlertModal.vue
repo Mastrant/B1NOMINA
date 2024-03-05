@@ -1,26 +1,24 @@
 <template>
-    <Teleport :disabled="activarNotifiacion" to="#modal-container">
-        <transition name="Notificacion">
-            <div v-if="activarNotifiacion" class="Notificacion-fondo">
-                <transition name="Animacion-Modal-inner">
-                    <div v-if="activarNotifiacion" class="Notificacion-inner" :class=" Status ? 'correct' : 'error '">
-                        <span 
-                            class="NombreAccion"
-                            :class=" Status ? 'correct' : 'error '"
-                        >
-                            {{Mensaje}}
-                        </span>
+    <transition name="Notificacion">
+        <div v-if="activarNotifiacion" class="Notificacion-fondo">
+            <transition name="Animacion-Modal-inner">
+                <div v-if="activarNotifiacion" class="Notificacion-inner" :class=" Status ? 'correct' : 'error '">
+                    <span 
+                        class="NombreAccion"
+                        :class=" Status ? 'correct' : 'error '"
+                    >
+                        {{Mensaje}}
+                    </span>
 
-                        <ExitColorIcon 
-                            class="icon" 
-                            @click="close" 
-                            :class=" Status ? 'correct' : 'error '"
-                        />
-                    </div>
-                </transition>
-            </div>
-        </transition>
-    </teleport>
+                    <ExitColorIcon 
+                        class="icon" 
+                        @click="close" 
+                        :class=" Status ? 'correct' : 'error '"
+                    />
+                </div>
+            </transition>
+        </div>
+    </transition>
 </template>
 
 <script setup>
@@ -79,7 +77,7 @@ div.Notificacion-fondo {
     top:0; /* Alinea el modal con el borde superior de la ventana del navegador */
     left:  0; /* Alinea el modal con el borde izquierdo de la ventana del navegador */
     background-color:  none; /* Fondo negro con  50% de transparencia */
-    z-index:  0; /* Asegura que el modal se muestre por encima de otros elementos */
+    z-index:  -1; /* Asegura que el modal se muestre por encima de otros elementos */
     box-sizing: border-box;
 }
 
