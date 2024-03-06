@@ -1,7 +1,6 @@
 <template>
     <form class="formulario" id="Form2" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos personales</h2>
-
         <div class="row-form">
             <LayoutInputLineal textLabel="Nacionalidad">
                 <template v-slot>
@@ -45,7 +44,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="estadoCivil" 
-                        :options="ListaEstadoCivil" 
+                        :options="parametros.estadocivil" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -59,7 +58,7 @@
                 <template v-slot>
                     <ListaTemplateLineal 
                         v-model="region" 
-                        :options="ListaRegion" 
+                        :options="parametros.regiones" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -115,16 +114,54 @@ import InputRadioButton from '../botones/Input-Radio-button.vue';
 
 import { ref, watch, defineEmits, defineProps, reactive, defineExpose } from 'vue';
 
+// Define los eventos que el componente puede emitir
+const emit = defineEmits([
+  "nextModal", // Nombre del evento que puede ser emitido por este componente
+  "respuesta"
+]);
+
 const props = defineProps({
     EmpleadoID:{
         Number,
+    },
+    parametros: {
+        type: Object,
+        default: {}
     }
 });
 
-// Define los eventos que el componente puede emitir
-const emit = defineEmits([
-    'nextModal'
-]);
+// Método para reiniciar el formulario
+const resetForm = () => {
+    //datos personales
+    const nacionalidad = '';
+    const genero = '';
+    const fechaNacimiento = '';
+    const estadoCivil = '';
+
+    //datos de contacto
+    const region = '';
+    const localidad = '';
+    const direccion = '';
+    const telefonoCelular = '';
+    const telefonoLocal = '';
+    // Reinicia el payload
+    Object.keys(payload).forEach(key => {
+        payload[key] = '';
+    });
+}
+// Exponer la función de limpieza para que sea accesible desde el componente padre
+defineExpose({
+    resetForm
+});
+
+const NextModal = () => {
+    console.log("NextModal")
+    emit('nextModal');
+};
+
+const sendRespuesta = (Data) => {
+  emit("respuesta", Data); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
+};
 
 //lista de nacionalidades
 const ListaNacionalidad = [
@@ -138,40 +175,7 @@ const ListaNacionalidad = [
     },
 
 ];
-const ListaEstadoCivil = [
-    {
-        id: 0,
-        nombre: "soltero"
-    },
-    {
-        id: 1,
-        nombre: "Casado"
-    },
-    {
-        id: 2,
-        nombre: "Viudo"
-    }
-]
-const ListaRegion = [
-    {
-        id: 1,
-        nombre: "Region 1"
-    },
-    {
-        id: 2,
-        nombre: "region 2"
-    }
-];
-const ListaLocalidad = [
-    {
-        id: 1,
-        nombre: "Localidad 1"
-    },
-    {
-        id: 2,
-        nombre: "Localidad 2"
-    }
-];
+const ListaLocalidad = ref(''); //Los datos se asignan segun el idRegion
 
 // inicializacion de variables reactivas
 //datos personales
@@ -187,13 +191,16 @@ const direccion = ref('');
 const telefonoCelular = ref('');
 const telefonoLocal = ref('');
 
-// payload de la peticion
+// payload del formulario datos personales
 const payload = reactive({
     nacionalidad: '',
     genero: 0,
     fechaNacimiento: '',
     estadoCivil: '',
+});
 
+// payload del formulario datos de contacto
+const payload2 = reactive({
     region: '',
     localidad: '',
     direccion: '',
@@ -201,51 +208,38 @@ const payload = reactive({
     telefonoLocal: '',
 });
 
-//actualizar datos del payload
-const ActualizarPayload = (propiedad, valor) => {
+//filtra la lista de regiones segun el id
+const filtroRegion = (id) => {
+    ListaLocalidad.value = props.parametros.localidad.filter(item => item.idregion == id)
+};
+
+//actualizar datos del payload a enviar
+const ActualizarPayload1 = (propiedad, valor) => {
     payload[propiedad] = valor;
+};
+//actualizar datos del payload a enviar
+const ActualizarPayload2 = (propiedad, valor) => {
+    payload2[propiedad] = valor;
 };
 
 //Escuchar cambio en las entradas
 
-watch(nacionalidad, (nuevoValor) => ActualizarPayload('nacionalidad', nuevoValor));
-watch(genero, (nuevoValor) => ActualizarPayload('genero', nuevoValor));
-watch(fechaNacimiento, (nuevoValor) => ActualizarPayload('fechaNacimiento', nuevoValor));
-watch(estadoCivil, (nuevoValor) => ActualizarPayload('estadoCivil', nuevoValor));
-watch(region, (nuevoValor) => ActualizarPayload('region', nuevoValor));
-watch(localidad, (nuevoValor) => ActualizarPayload('localidad', nuevoValor));
-watch(direccion, (nuevoValor) => ActualizarPayload('direccion', nuevoValor));
-watch(telefonoCelular, (nuevoValor) => ActualizarPayload('telefonoCelular', nuevoValor));
-watch(telefonoLocal, (nuevoValor) => ActualizarPayload('telefonoLocal', nuevoValor));
+watch(nacionalidad, (nuevoValor) => ActualizarPayload1('nacionalidad', nuevoValor));
+watch(genero, (nuevoValor) => ActualizarPayload1('genero', nuevoValor));
+watch(fechaNacimiento, (nuevoValor) => ActualizarPayload1('fechaNacimiento', nuevoValor));
+watch(estadoCivil, (nuevoValor) => ActualizarPayload1('estadoCivil', nuevoValor));
 
-const resetForm = () => {
-    //datos personales
-const nacionalidad = '';
-const genero = '';
-const fechaNacimiento = '';
-const estadoCivil = '';
-
-//datos de contacto
-const region = '';
-const localidad = '';
-const direccion = '';
-const telefonoCelular = '';
-const telefonoLocal = '';
-// Reinicia el payload
-Object.keys(payload).forEach(key => {
-        payload[key] = '';
-    });
-}
-
-// Exponer la función de limpieza para que sea accesible desde el componente padre
-defineExpose({
-    resetForm
+watch(region, (nuevoValor) => {
+    filtroRegion(nuevoValor);
+    ActualizarPayload2('region', nuevoValor)
+    
 });
 
-const NextModal = () => {
-    console.log("NextModal")
-    emit('nextModal');
-};
+watch(localidad, (nuevoValor) => ActualizarPayload2('localidad', nuevoValor));
+watch(direccion, (nuevoValor) => ActualizarPayload2('direccion', nuevoValor));
+watch(telefonoCelular, (nuevoValor) => ActualizarPayload2('telefonoCelular', nuevoValor));
+watch(telefonoLocal, (nuevoValor) => ActualizarPayload2('telefonoLocal', nuevoValor));
+
 
 /**
  * Funcion emitida al enviar el formulario
@@ -256,7 +250,10 @@ const NextModal = () => {
     console.log("modal Datos Persoanles")
     console.log("Datos User: " + props.EmpleadoID)
     console.log(payload)
+    console.log(payload2)
+    sendRespuesta({texto:"prueba 2", valor:true})
     NextModal()
+
 };
 </script>
 

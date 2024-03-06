@@ -10,7 +10,7 @@
             v-model="tipoDocumentoSelect"
             :options="ListaTiposDocumentos"
             optionsSelected="Seleccionar"
-            :requerido="true"
+            :requerido="false"
           />
         </template>
       </LayoutInputLineal>
@@ -21,7 +21,7 @@
         Titulo="Número de documento"
         v-model="numeroDocumento"
         @update:modelValue="numeroDocumento = $event"
-        :requerido="true"
+        :requerido="false"
         name="numeroDocumento"
       />
     </div>
@@ -32,7 +32,7 @@
         Titulo="Nombres"
         v-model="nombres"
         @update:modelValue="nombres = $event"
-        :requerido="true"
+        :requerido="false"
         name="Nombres"
       />
       <InputLinealDescripcion
@@ -40,7 +40,7 @@
         Titulo="Apellidos"
         v-model="apellidos"
         @update:modelValue="apellidos = $event"
-        :requerido="true"
+        :requerido="false"
         name="Apellidos"
       />
     </div>
@@ -52,7 +52,7 @@
         v-model="correo"
         @update:modelValue="correo = $event"
         Tipo="email"
-        :requerido="true"
+        :requerido="false"
         name="CorreoElectronico"
       />
 
@@ -111,9 +111,10 @@ const props = defineProps({
   EmpleadoID: {
     type: [Number, String], // Especifica que el tipo de la propiedad es Number
   },
-  parametros:{
-
-  }
+  parametros: {
+        type: Object,
+        default: {}
+    }
 });
 
 // Define los eventos que el componente puede emitir. En este caso, se especifica un evento llamado 'nextModal'.

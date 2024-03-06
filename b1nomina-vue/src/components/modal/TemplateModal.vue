@@ -104,7 +104,7 @@ import TemplateAlertModal from '@/components/modal/TemplateAlertModal.vue';
 
     watch(() => props.DataNotification, (newValue) => {
         // Verifica si 'valor' es verdadero
-        if (newValue.valor) {
+        if (newValue) {
             showNotificacion();
         }
     }, { deep: true }); // Asegúrate de observar los cambios en las propiedades anidadas

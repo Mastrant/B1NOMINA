@@ -1,7 +1,6 @@
 <template>
     <form class="formulario" id="Form4" @submit.prevent="Enviar">
-        <h2 class="titulo-form">Datos de Pago</h2>
-
+        <h2 class="titulo-form">Datos de Pago</h2> 
         <div class="row-form">
             <LayoutInputLineal textLabel="Medio de pago">
                 <template v-slot>
@@ -34,7 +33,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Banco" 
-                        :options="ListaBancos" 
+                        :options="parametros.bancos" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -85,30 +84,25 @@ import { ref, watch, reactive, defineProps, defineEmits} from 'vue';
 const props = defineProps({
     EmpleadoID:{
         type: [Number, String],
+    },
+    parametros: {
+        type: Object,
+        default: {}
     }
 });
 
 // Define los eventos que el componente puede emitir
 const emit = defineEmits([
-    'closeModal'
+    'closeModal',
+    'finalizado',
+    'respuesta',
 ]);
 
 
 // inicializacion de variables reactivas
-const ListaBancos = [
-    {
-        id: 1,
-        nombre: "Region 1"
-    },
-    {
-        id: 2,
-        nombre: "region 2"
-    }
-];
-
-const MedioPago = ref('');
+const MedioPago = ref(0);
 const Banco = ref('');
-const TCuenta = ref('');
+const TCuenta = ref(null);
 const NCuenta = ref('');
 
 
@@ -150,6 +144,13 @@ const CloseModal = () => {
     emit('closeModal');
 };
 
+const sendRespuesta = (Data) => {
+  emit("respuesta", Data); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
+  if(Data.valor){
+    emit("finalizado", true)
+  };
+};
+
 /**
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
@@ -158,7 +159,10 @@ const CloseModal = () => {
  const Enviar = () => {
     console.log("Datos User: " + props.EmpleadoID)
     console.log(payload)
-    CloseModal()
+    sendRespuesta({texto:"prueba 2", valor:true})
+    if(false){
+        CloseModal()
+    }
 };
 
 </script>

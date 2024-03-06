@@ -1,13 +1,12 @@
 <template>
     <form class="formulario" id="Form3" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos Laborales</h2>
-
         <div class="row-form">
             <LayoutInputLineal textLabel="Tipo de contrato">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="TipoDeContrato" 
-                        :options="{}" 
+                        :options="parametros.tipocontrato" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -17,8 +16,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                          v-model="TerminoContrato"
-                        :options="{}" 
-                        optionsSelected="Seleccionar"
+                        :options="parametros.terminocontrato" 
                     />
                 </template>
             </LayoutInputLineal>
@@ -29,13 +27,13 @@
                 Tipo="date"
                 Titulo="Fecha de Contratacion"
                 v-model="FechaContratacion"
-                @update:modelValue="variable = $event"
+                @update:modelValue="FechaContratacion = $event"
             />
             <InputLinealDescripcion 
                 Tipo="date"
                 Titulo="Fecha de Finalizacion de contrato"
                 v-model="FechaFinalizacionContrato"
-                @update:modelValue="variable = $event"
+                @update:modelValue="FechaFinalizacionContrato = $event"
                 :Deshabilitar="TerminoContrato == 0"
             />
         </div>
@@ -45,7 +43,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="SalarioBase" 
-                        :options="[{}]" 
+                        :options="parametros.tiposalario" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -55,7 +53,7 @@
                 Placeholder="$..." 
                 Titulo="Valor del salario" 
                 v-model="MontoSalario"
-                @update:modelValue="variable = $event"
+                @update:modelValue="MontoSalario = $event"
             />
         </div>
 
@@ -66,7 +64,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="SedeDeTrabajo" 
-                        :options="[{}]" 
+                        :options="parametros.sede" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -76,7 +74,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Departamento" 
-                        :options="{}" 
+                        :options="parametros.departamento" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -88,7 +86,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Cargo" 
-                        :options="{}" 
+                        :options="parametros.cargos" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -98,7 +96,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Grupo" 
-                        :options="{}" 
+                        :options="parametros.grupos" 
                         optionsSelected="Sin Asignar"
                     />
                 </template>
@@ -119,13 +117,13 @@
         <h2 class="titulo-form">Días de descanso</h2>
 
         <div class="row-form">
-            <InputCheckbox Objid="Lunes" @update="DiasLibres" texto="Lunes" />
-            <InputCheckbox Objid="Martes" @update="DiasLibres" texto="Martes" />
-            <InputCheckbox Objid="Miercoles" @update="DiasLibres" texto="Miércoles" />
-            <InputCheckbox Objid="Jueves" @update="DiasLibres" texto="Jueves" />
-            <InputCheckbox Objid="Viernes" @update="DiasLibres" texto="Viernes" />
-            <InputCheckbox Objid="Sabado" @update="DiasLibres" texto="Sábado" />
-            <InputCheckbox Objid="Domingo" @update="DiasLibres" texto="Domingo" />
+            <InputCheckbox Objid="1" @update="DiasLibres" texto="Lunes" />
+            <InputCheckbox Objid="2" @update="DiasLibres" texto="Martes" />
+            <InputCheckbox Objid="3" @update="DiasLibres" texto="Miércoles" />
+            <InputCheckbox Objid="4" @update="DiasLibres" texto="Jueves" />
+            <InputCheckbox Objid="5" @update="DiasLibres" texto="Viernes" />
+            <InputCheckbox Objid="6" @update="DiasLibres" texto="Sábado" />
+            <InputCheckbox Objid="7" @update="DiasLibres" texto="Domingo" />
         </div>
     </form>
 </template>
@@ -139,21 +137,24 @@ import InputCheckbox from '../inputs/Input-Checkbox.vue';
 
 import { ref, watch, reactive, defineProps, defineEmits} from 'vue';
 
+// Define las propiedades que el componente espera recibir. En este caso, se espera una propiedad llamada EmpleadoID de tipo Number.
 const props = defineProps({
-    EmpleadoID:{
-        type: [Number, String],
+  EmpleadoID: {
+    type: [Number, String], // Especifica que el tipo de la propiedad es Number
+  },
+  parametros: {
+        type: Object,
+        default: {}
     }
 });
 
-// Define los eventos que el componente puede emitir
+// Define los eventos que el componente puede emitir. En este caso, se especifica un evento llamado 'nextModal'.
 const emit = defineEmits([
-    'nextModal'
+  "nextModal", // Nombre del evento que puede ser emitido por este componente
+  "respuesta",
 ]);
 
-//lista de nacionalidades
-const variable = ref('');
-
-const TipoDeContrato = ref(0);
+const TipoDeContrato = ref(props.parametros.tipocontrato);
 const TerminoContrato = ref(0);
 const FechaContratacion = ref('');
 const FechaFinalizacionContrato = ref('');
@@ -166,7 +167,6 @@ const Grupo = ref('');
 const Modalidad = ref('');
 const ListaDiasLibres = ref([]);
 
-
 /**
  * Función para manejar la interacción con una lista de empleados seleccionados.
  * Esta función agrega o remueve un valor de la lista basado en si el valor ya está presente.
@@ -176,27 +176,25 @@ const ListaDiasLibres = ref([]);
 const DiasLibres = (value) => {
     // Verifica si el valor no es null
     if (value !== null) {
-    // Verifica si el valor ya está en la lista
-    if (ListaDiasLibres.value.includes(value)) {
-        // Si el valor ya está en la lista, lo remueve
-        // Encuentra el índice del valor en la lista
-        const index = ListaDiasLibres.value.indexOf(value);
-        // Verifica si el índice es válido (mayor que -1)
-        if (index > -1) {
-        // Remueve el valor de la lista usando splice
-        ListaDiasLibres.value.splice(index,   1);
+        // Verifica si el valor ya está en la lista
+        if (ListaDiasLibres.value.includes(value)) {
+            // Si el valor ya está en la lista, lo remueve
+            // Encuentra el índice del valor en la lista
+            const index = ListaDiasLibres.value.indexOf(value);
+            // Verifica si el índice es válido (mayor que -1)
+            if (index > -1) {
+            // Remueve el valor de la lista usando splice
+            ListaDiasLibres.value.splice(index, 1);
+            }
+        } else {
+            // Si el valor no está en la lista, lo agrega
+            // Agrega el valor al final de la lista
+            ListaDiasLibres.value.push(value);
         }
-    } else {
-        // Si el valor no está en la lista, lo agrega
-        // Agrega el valor al final de la lista
-        ListaDiasLibres.value.push(value);
-    }
     }
 };
 
-
-// payload de la peticion
-
+// payload de las peticion
 const payload = reactive({
     TipoDeContrato: '',
     TerminoContrato: '',
@@ -211,12 +209,29 @@ const payload = reactive({
     Modalidad: '',
     DiasLibres : '',
 });
+const payload2 = reactive({
+    SedeDeTrabajo: '',
+    Departamento: '',
+    Cargo: '',
+    Grupo: '',
+    Modalidad: '',
+});
+const payload3 = reactive([]);
 
 //actualizar datos del payload
 const ActualizarPayload = (propiedad, valor) => {
     payload[propiedad] = valor;
-    console.log(propiedad +" "+ valor)
     console.log(payload)
+};
+//actualizar datos del payload2
+const ActualizarPayload2 = (propiedad, valor) => {
+    payload2[propiedad] = valor;
+    console.log(payload2)
+};
+//actualizar datos del payload
+const ActualizarDiasLaborales = (propiedad, valor) => {
+    payload3[propiedad] = valor;
+    console.log(payload3)
 };
 
 // Observar cambios en la variable
@@ -226,28 +241,31 @@ watch(FechaContratacion, (nuevoValor) => ActualizarPayload('FechaContratacion', 
 watch(FechaFinalizacionContrato, (nuevoValor) => ActualizarPayload('FechaFinalizacionContrato', nuevoValor));
 watch(SalarioBase, (nuevoValor) => ActualizarPayload('SalarioBase', nuevoValor));
 watch(MontoSalario, (nuevoValor) => ActualizarPayload('MontoSalario', nuevoValor));
-watch(SedeDeTrabajo, (nuevoValor) => ActualizarPayload('SedeDeTrabajo', nuevoValor));
-watch(Departamento, (nuevoValor) => ActualizarPayload('Departamento', nuevoValor));
-watch(Cargo, (nuevoValor) => ActualizarPayload('Cargo', nuevoValor));
-watch(Grupo, (nuevoValor) => ActualizarPayload('Grupo', nuevoValor));
-watch(Modalidad, (nuevoValor) => ActualizarPayload('Modalidad', nuevoValor));
-watch(ListaDiasLibres.value, (nuevoValor) => ActualizarPayload('DiasLibres', nuevoValor));
+watch(SedeDeTrabajo, (nuevoValor) => ActualizarPayload2('SedeDeTrabajo', nuevoValor));
+watch(Departamento, (nuevoValor) => ActualizarPayload2('Departamento', nuevoValor));
+watch(Cargo, (nuevoValor) => ActualizarPayload2('Cargo', nuevoValor));
+watch(Grupo, (nuevoValor) => ActualizarPayload2('Grupo', nuevoValor));
+watch(Modalidad, (nuevoValor) => ActualizarPayload2('Modalidad', nuevoValor));
+watch(ListaDiasLibres.value, (nuevoValor) => ActualizarDiasLaborales(nuevoValor));
 
 const resetForm = () => {
-    const TipoDeContrato = '';
-const TerminoContrato = '';
-const FechaContratacion = '';
-const FechaFinalizacionContrato = '';
-const SalarioBase = '';
-const MontoSalario = '';
-const SedeDeTrabajo = '';
-const Departamento = '';
-const Cargo = '';
-const Grupo = '';
-const Modalidad = '';
-const ListaDiasLibres = '';
-// Reinicia el payload
-Object.keys(payload).forEach(key => {
+    TipoDeContrato.value = '';
+    TerminoContrato.value = '';
+    FechaContratacion.value = '';
+    FechaFinalizacionContrato.value = '';
+    SalarioBase.value = '';
+    MontoSalario.value = null;
+    SedeDeTrabajo.value = '';
+    Departamento.value = '';
+    Cargo.value = '';
+    Grupo.value = '';
+    Modalidad.value = '';
+    console.log(ListaDiasLibres.value)
+    // Reinicia el payload
+    Object.keys(payload).forEach(key => {
+        payload[key] = '';
+    });
+    Object.keys(payload2).forEach(key => {
         payload[key] = '';
     });
 }
@@ -255,10 +273,11 @@ Object.keys(payload).forEach(key => {
 defineExpose({
     resetForm
 })
-
 const NextModal = () => {
-    console.log("NextModal")
     emit('nextModal');
+};
+const sendRespuesta = (Data) => {
+  emit("respuesta", Data); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
 };
 
 /**
@@ -271,6 +290,9 @@ const NextModal = () => {
     console.log("modal Datos Laborales")
     console.log("Datos User: " + props.EmpleadoID)
     console.log(payload)
+    console.log(payload2)
+    console.log(payload3)
+    sendRespuesta({texto:"prueba 2", valor:true})
     NextModal()
 };
 

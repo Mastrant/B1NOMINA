@@ -86,6 +86,7 @@
                     :EmpleadoID="ID_Usuario_Creado"
                     v-show="idFormularioActivo == 2"
                     ref="Form2"
+                    :parametros="parametrosDP"
                 />
                 
                 <FormDatosLaborales 
@@ -93,6 +94,7 @@
                     :EmpleadoID="ID_Usuario_Creado"
                     v-show="idFormularioActivo == 3"
                     ref="Form3"
+                    :parametros="parametrosDL"
                 />
 
                 <FormDatosPago
@@ -100,6 +102,7 @@
                     :EmpleadoID="4"
                     v-show="idFormularioActivo == 4"
                     ref="Form4"
+                    :parametros="parametrosDPa"
                 />
             
             </template>
@@ -389,7 +392,6 @@
         regiones: [],
         localidad: [],
     });
-
     const parametrosDL = ref({
         tipocontrato: [],//
         terminocontrato: [],//
@@ -398,17 +400,17 @@
         departamento: [],//
         cargos: [],//
         grupos: [],//
-    });
-    
+    });    
     const parametrosDPa = ref({
         bancos: [],        
     });
     
+    // Realiza una solicitud GET a la API para obtener parámetros
     const pedirParametros = async () => {
         axios.get(`/sociedad/${idSociedad}/parametros_crear_usuario`)
         .then(
-            (respuesta) => {
-                console.log(respuesta.data.parametros)                
+            (respuesta) => {              
+                // Verifica y procesa los parámetros recibidos para cada categoría
                 // Asegúrate de que las propiedades existan dentro de 'respuesta.data.parametros'
 
                 //Parametros personales
@@ -429,39 +431,38 @@
                     parametrosDPa.value.bancos.push(...respuesta.data.parametros.bancos);
                 }
                 //Parametros Laborales
-                if (respuesta.data.parametros.tiposalario) {
-                    parametrosDL.value.tiposalario.push(...respuesta.data.parametros.tiposalario);
+                if (respuesta.data.parametros.tipocontrato) {
+                    parametrosDL.value.tipocontrato.push(...respuesta.data.parametros.tipocontrato);
                 }
                 if (respuesta.data.parametros.terminocontrato) {
                     parametrosDL.value.terminocontrato.push(...respuesta.data.parametros.terminocontrato);
                 }
+                if (respuesta.data.parametros.tiposalario) {
+                    parametrosDL.value.tiposalario.push(...respuesta.data.parametros.tiposalario);
+                }
+                if (respuesta.data.parametros.sede) {
+                    parametrosDL.value.sede.push(...respuesta.data.parametros.sede);
+                }
+                if (respuesta.data.parametros.departamentos) {
+                    parametrosDL.value.departamento.push(...respuesta.data.parametros.departamentos);
+                }             
                 if (respuesta.data.parametros.cargos) {
                     parametrosDL.value.cargos.push(...respuesta.data.parametros.cargos);
                 }
                 if (respuesta.data.parametros.grupos) {
                     parametrosDL.value.grupos.push(...respuesta.data.parametros.grupos);
-                }
-                if (respuesta.data.parametros.sede) {
-                    parametrosDL.value.sede.push(...respuesta.data.parametros.sede);
-                }
-                if (respuesta.data.parametros.departamento) {
-                    parametrosDL.value.departamento.push(...respuesta.data.parametros.departamento);
-                }
-                if (respuesta.data.parametros.tipocontrato) {
-                    parametrosDL.value.tipocontrato.push(...respuesta.data.parametros.tipocontrato);
-                }
-
-                console.log("dL")
-                console.log(parametrosDL.value)     
+                }    
             }
         )
-        .catch ((err) => {
-
-        })
+        .catch(
+            err => {
+                // Maneja errores de la solicitud
+                console.log(err)
+            }
+        )
     }
 
     //filtros
-
     /**
     * Asigna el valor de "departamento" al arreglo de parámetros de la petición de empleados.
     * Si el valor es vacío o nulo, asigna  0 a 'departamento_id'. Si el valor es un número,
@@ -569,7 +570,6 @@
     watch(filtroDepartamento, addDepartamento);
     //escucha el cambio de la variable y ejecuta la funcion
     watch(filtroGrupo, addGrupo);
-
     //escucha los cambios en la variable y ejecuta la funcion filtrar
     watch(shearch, filtrar);
 
