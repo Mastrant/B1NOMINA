@@ -1,5 +1,5 @@
 <template>
-    <button class="big-Options-Contend">
+    <button type="button" class="big-Options-Contend">
         <div class="big-Optios-up">
             <h3 class="big-Options-TextAction">{{Accion}}</h3>
             <img src="../icons/svg/OneRigth-black-icon.svg" alt=">">    

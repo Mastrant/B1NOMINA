@@ -2,17 +2,19 @@
     <form class="formulario" id="Form2" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos personales</h2>
         <div class="row-form">
-            <LayoutInputLineal textLabel="Nacionalidad">
+            <LayoutInputLineal textLabel="Nacionalidad" :requerido="formulario1Requerido">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="nacionalidad" 
                         :options="ListaNacionalidad" 
+                        :requerido="formulario1Requerido"
                         optionsSelected="Seleccionar"
+                        
                     />
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Género">
+            <LayoutInputLineal textLabel="Género" :requerido="formulario1Requerido">
                 <template v-slot>
                    <InputRadioButton 
                         v-model="genero" 
@@ -38,6 +40,7 @@
                 Titulo="Fecha de nacimiento"
                 v-model="fechaNacimiento"
                 @update:modelValue="fechaNacimiento = $event"
+                :requerido="formulario1Requerido"
             />
 
             <LayoutInputLineal textLabel="Estado civil">
@@ -46,6 +49,7 @@
                         v-model="estadoCivil" 
                         :options="parametros.estadocivil" 
                         optionsSelected="Seleccionar"
+                        :requerido="formulario1Requerido"
                     />
                 </template>
             </LayoutInputLineal>
@@ -54,22 +58,24 @@
         <h2 class="titulo-form">Datos de contacto</h2>
 
         <div class="row-form">
-            <LayoutInputLineal textLabel="Region">
+            <LayoutInputLineal textLabel="Region" :requerido="formulario2Requerido">
                 <template v-slot>
                     <ListaTemplateLineal 
                         v-model="region" 
                         :options="parametros.regiones" 
                         optionsSelected="Seleccionar"
+                        :requerido="formulario2Requerido"
                     />
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Localidad">
+            <LayoutInputLineal textLabel="Localidad" :requerido="formulario2Requerido">
                 <template v-slot>
                     <ListaTemplateLineal 
                         v-model="localidad" 
                         :options="ListaLocalidad" 
                         optionsSelected="Seleccionar"
+                        :requerido="formulario2Requerido"
                     />
                 </template>
             </LayoutInputLineal>
@@ -81,6 +87,7 @@
                 Titulo="Direccion" 
                 v-model="direccion"
                 @update:modelValue="direccion = $event"
+                :requerido="formulario2Requerido"
             />
         </div>
 
@@ -93,6 +100,7 @@
                 @update:modelValue="telefonoCelular = $event"
                 :minimo-caracteres="8"
                 :maximo-caracteres="12"
+                :requerido="formulario2Requerido"
             />
 
             <InputLinealDescripcion 
@@ -123,6 +131,7 @@ const emit = defineEmits([
 const props = defineProps({
     EmpleadoID:{
         Number,
+        default: -1
     },
     parametros: {
         type: Object,
@@ -133,21 +142,24 @@ const props = defineProps({
 // Método para reiniciar el formulario
 const resetForm = () => {
     //datos personales
-    const nacionalidad = '';
-    const genero = '';
-    const fechaNacimiento = '';
-    const estadoCivil = '';
+    nacionalidad.value = '';
+    genero.value = '';
+    fechaNacimiento.value = '';
+    estadoCivil.value = '';
 
     //datos de contacto
-    const region = '';
-    const localidad = '';
-    const direccion = '';
-    const telefonoCelular = '';
-    const telefonoLocal = '';
+    region.value = '';
+    localidad.value = '';
+    direccion.value = '';
+    telefonoLocal.value = '';
+    telefonoCelular.value = '';
     // Reinicia el payload
     Object.keys(payload).forEach(key => {
         payload[key] = '';
     });
+
+    formulario1Requerido.value = false;
+    formulario2Requerido.value = false;
 }
 // Exponer la función de limpieza para que sea accesible desde el componente padre
 defineExpose({
@@ -155,12 +167,7 @@ defineExpose({
 });
 
 const NextModal = () => {
-    console.log("NextModal")
     emit('nextModal');
-};
-
-const sendRespuesta = (Data) => {
-  emit("respuesta", Data); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
 };
 
 //lista de nacionalidades
@@ -178,6 +185,9 @@ const ListaNacionalidad = [
 const ListaLocalidad = ref(''); //Los datos se asignan segun el idRegion
 
 // inicializacion de variables reactivas
+
+const formulario1Requerido = ref(false)
+const formulario2Requerido = ref(false)
 //datos personales
 const nacionalidad = ref('');
 const genero = ref('');
@@ -194,7 +204,7 @@ const telefonoLocal = ref('');
 // payload del formulario datos personales
 const payload = reactive({
     nacionalidad: '',
-    genero: 0,
+    genero: '',
     fechaNacimiento: '',
     estadoCivil: '',
 });
@@ -216,10 +226,12 @@ const filtroRegion = (id) => {
 //actualizar datos del payload a enviar
 const ActualizarPayload1 = (propiedad, valor) => {
     payload[propiedad] = valor;
+    formulario1Requerido.value = Object.values(payload).some(value => value !== "")
 };
 //actualizar datos del payload a enviar
 const ActualizarPayload2 = (propiedad, valor) => {
     payload2[propiedad] = valor;
+    formulario2Requerido.value = Object.values(payload2).some(value => value !== "")    
 };
 
 //Escuchar cambio en las entradas
@@ -228,13 +240,11 @@ watch(nacionalidad, (nuevoValor) => ActualizarPayload1('nacionalidad', nuevoValo
 watch(genero, (nuevoValor) => ActualizarPayload1('genero', nuevoValor));
 watch(fechaNacimiento, (nuevoValor) => ActualizarPayload1('fechaNacimiento', nuevoValor));
 watch(estadoCivil, (nuevoValor) => ActualizarPayload1('estadoCivil', nuevoValor));
-
 watch(region, (nuevoValor) => {
-    filtroRegion(nuevoValor);
-    ActualizarPayload2('region', nuevoValor)
-    
-});
-
+        filtroRegion(nuevoValor);
+        ActualizarPayload2('region', nuevoValor);
+    }
+);
 watch(localidad, (nuevoValor) => ActualizarPayload2('localidad', nuevoValor));
 watch(direccion, (nuevoValor) => ActualizarPayload2('direccion', nuevoValor));
 watch(telefonoCelular, (nuevoValor) => ActualizarPayload2('telefonoCelular', nuevoValor));
@@ -249,10 +259,24 @@ watch(telefonoLocal, (nuevoValor) => ActualizarPayload2('telefonoLocal', nuevoVa
  const Enviar = () => {
     console.log("modal Datos Persoanles")
     console.log("Datos User: " + props.EmpleadoID)
-    console.log(payload)
-    console.log(payload2)
-    sendRespuesta({texto:"prueba 2", valor:true})
-    NextModal()
+
+    let statuspay = Object.values(payload).some(value => value !== "")
+    let statuspay2 = Object.values(payload2).some(value => value !== "")
+    console.log(Object.values(payload).some(value => value !== ""));
+    console.log(Object.values(payload2).some(value => value !== ""));
+    if(statuspay){
+        console.log(payload)
+    }
+    if(statuspay2){
+        console.log(payload2)
+    }
+
+    if(statuspay2 || statuspay){
+        console.log("enviar datos")
+        console.log({texto:"prueba 4", valor:true})
+    }
+    
+    NextModal(props.EmpleadoID)
 
 };
 </script>

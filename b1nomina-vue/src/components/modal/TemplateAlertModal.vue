@@ -37,13 +37,14 @@
 
 */
 
-import {defineProps, defineEmits} from 'vue';
+import {defineProps, defineEmits, onMounted} from 'vue';
 import ExitColorIcon from '../icons/Exit-color-icon.vue';
 
 // Define las props correctamente
-const props = defineProps({
+defineProps({
     activarNotifiacion: {
         type: Boolean,
+        default: false
     },
     Mensaje: {
         type: String,
@@ -61,6 +62,12 @@ const emit = defineEmits([
 const close = () => {
     emit('closeNotificacion');
 };
+
+onMounted(() => {
+ setTimeout(() => {
+    close();
+ }, 5000);
+});
 
 </script>
 

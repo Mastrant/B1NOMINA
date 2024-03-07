@@ -125,10 +125,10 @@ watch(TCuenta, (nuevoValor) => ActualizarPayload('TCuenta', nuevoValor));
 watch(NCuenta, (nuevoValor) => ActualizarPayload('NCuenta', nuevoValor));
 
 const resetForm = () => {
-    const MedioPago = 0;
-    const Banco = '';
-    const TCuenta = null;
-    const NCuenta = '';
+    MedioPago.value = 0;
+    Banco.value = '';
+    TCuenta.value = '';
+    NCuenta.value = '';
     // Reinicia el payload
     Object.keys(payload).forEach(key => {
         payload[key] = '';
@@ -144,12 +144,6 @@ const CloseModal = () => {
     emit('closeModal');
 };
 
-const sendRespuesta = (Data) => {
-  emit("respuesta", Data); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
-  if(Data.valor){
-    emit("finalizado", true)
-  };
-};
 
 /**
  * Funcion emitida al enviar el formulario
@@ -158,8 +152,14 @@ const sendRespuesta = (Data) => {
  */
  const Enviar = () => {
     console.log("Datos User: " + props.EmpleadoID)
-    console.log(payload)
-    sendRespuesta({texto:"prueba 2", valor:true})
+    let statuspay = Object.values(payload).some(value => value !== '');
+
+    if(statuspay){
+        console.log(payload)
+    }else {
+        CloseModal()
+    }
+
     if(false){
         CloseModal()
     }

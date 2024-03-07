@@ -24,7 +24,7 @@
                         <BigOptionButton 
                             Accion="Crear empleado"
                             Texto="Agrega un nuevo empleado y accede directamente a su perfil para completar sus datos."
-                            @click="showModal"
+                            @click="showModal()"
                         />
                     </template>
 
@@ -60,7 +60,6 @@
             :DataNotification="dataNotificacion"
             NombreAccion="Nuevo Registro" 
             textSubmit="Guardar"
-           
         >
             <template #default>
             
@@ -84,25 +83,28 @@
                 <FormDatosPersonalesVue 
                     @nextModal="avanzarForm"
                     :EmpleadoID="ID_Usuario_Creado"
+                    :parametros="parametrosDP"
                     v-show="idFormularioActivo == 2"
                     ref="Form2"
-                    :parametros="parametrosDP"
+                    
                 />
                 
                 <FormDatosLaborales 
                     @nextModal="avanzarForm"
                     :EmpleadoID="ID_Usuario_Creado"
+                    :parametros="parametrosDL"
                     v-show="idFormularioActivo == 3"
                     ref="Form3"
-                    :parametros="parametrosDL"
+                    
                 />
 
                 <FormDatosPago
                     @closeModal="showModal"
                     :EmpleadoID="4"
+                    :parametros="parametrosDPa"
                     v-show="idFormularioActivo == 4"
                     ref="Form4"
-                    :parametros="parametrosDPa"
+                    
                 />
             
             </template>
@@ -171,7 +173,7 @@
     const InteraccionListaEmpleadosSelecionados = (arreglo) => {
         // Convertir el objeto proxy a un array real
         ListaIds.value = Array.from(arreglo);
-        console.log(ListaIds.value); // Ahora debería mostrar un array real
+        //console.log(ListaIds.value); // Ahora debería mostrar un array real
     }
 
     //controla la visualizacion de las opciones

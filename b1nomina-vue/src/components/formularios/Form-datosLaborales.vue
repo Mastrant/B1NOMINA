@@ -2,11 +2,12 @@
     <form class="formulario" id="Form3" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos Laborales</h2>
         <div class="row-form">
-            <LayoutInputLineal textLabel="Tipo de contrato">
+            <LayoutInputLineal textLabel="Tipo de contrato" :requerido="formulario1Requerido">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="TipoDeContrato" 
                         :options="parametros.tipocontrato" 
+                        :requerido="formulario1Requerido"
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -17,6 +18,7 @@
                     <ListaTemplateLineal  
                          v-model="TerminoContrato"
                         :options="parametros.terminocontrato" 
+                        :requerido="formulario1Requerido"
                     />
                 </template>
             </LayoutInputLineal>
@@ -28,6 +30,7 @@
                 Titulo="Fecha de Contratacion"
                 v-model="FechaContratacion"
                 @update:modelValue="FechaContratacion = $event"
+                :requerido="formulario1Requerido"
             />
             <InputLinealDescripcion 
                 Tipo="date"
@@ -35,15 +38,17 @@
                 v-model="FechaFinalizacionContrato"
                 @update:modelValue="FechaFinalizacionContrato = $event"
                 :Deshabilitar="TerminoContrato == 0"
+                :requerido="formulario1Requerido"
             />
         </div>
 
         <div class="row-form">
-            <LayoutInputLineal textLabel="Salario base">
+            <LayoutInputLineal textLabel="Salario base" :requerido="formulario1Requerido">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="SalarioBase" 
                         :options="parametros.tiposalario" 
+                        :requerido="formulario1Requerido"
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -54,27 +59,30 @@
                 Titulo="Valor del salario" 
                 v-model="MontoSalario"
                 @update:modelValue="MontoSalario = $event"
+                :requerido="formulario1Requerido"
             />
         </div>
 
         <h2 class="titulo-form">Puesto de trabajo</h2>
 
         <div class="row-form">
-            <LayoutInputLineal textLabel="Sede de Trabajo">
+            <LayoutInputLineal textLabel="Sede de Trabajo" :requerido="formulario2Requerido">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="SedeDeTrabajo" 
                         :options="parametros.sede" 
+                        :requerido="formulario2Requerido"
                         optionsSelected="Seleccionar"
                     />
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Departamento">
+            <LayoutInputLineal textLabel="Departamento" :requerido="formulario2Requerido">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Departamento" 
                         :options="parametros.departamento" 
+                        :requerido="formulario2Requerido"
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -82,33 +90,36 @@
         </div>
 
         <div class="row-form">
-            <LayoutInputLineal textLabel="Cargo">
+            <LayoutInputLineal textLabel="Cargo" :requerido="formulario2Requerido">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Cargo" 
                         :options="parametros.cargos" 
+                        :requerido="formulario2Requerido"
                         optionsSelected="Seleccionar"
                     />
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Grupo">
+            <LayoutInputLineal textLabel="Grupo" :requerido="formulario2Requerido">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Grupo" 
                         :options="parametros.grupos" 
+                        :requerido="formulario2Requerido"
                         optionsSelected="Sin Asignar"
                     />
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Modalidad">
+            <LayoutInputLineal textLabel="Modalidad" :requerido="formulario2Requerido">
                 <template v-slot>
                     <InterruptorButton
                         v-model="Modalidad"
                         Objid="Teletrabajo"
                         Texto="Teletrabajo"
                         :Estado="(false)? true :false"
+                        :requerido="formulario2Requerido"
                     />
                 </template>
             </LayoutInputLineal>
@@ -151,15 +162,20 @@ const props = defineProps({
 // Define los eventos que el componente puede emitir. En este caso, se especifica un evento llamado 'nextModal'.
 const emit = defineEmits([
   "nextModal", // Nombre del evento que puede ser emitido por este componente
-  "respuesta",
 ]);
 
-const TipoDeContrato = ref(props.parametros.tipocontrato);
+//inicialiacion de las varables
+const formulario1Requerido = ref(false)
+const formulario2Requerido = ref(false)
+
+//variables del formaulario 1
+const TipoDeContrato = ref('');
 const TerminoContrato = ref(0);
 const FechaContratacion = ref('');
 const FechaFinalizacionContrato = ref('');
 const SalarioBase = ref('');
-const MontoSalario = ref(0);
+const MontoSalario = ref('');
+//variables del formularo 2
 const SedeDeTrabajo = ref('');
 const Departamento = ref('');
 const Cargo = ref('');
@@ -194,7 +210,7 @@ const DiasLibres = (value) => {
     }
 };
 
-// payload de las peticion
+// payload de las peticiones
 const payload = reactive({
     TipoDeContrato: '',
     TerminoContrato: '',
@@ -209,6 +225,7 @@ const payload = reactive({
     Modalidad: '',
     DiasLibres : '',
 });
+
 const payload2 = reactive({
     SedeDeTrabajo: '',
     Departamento: '',
@@ -216,22 +233,17 @@ const payload2 = reactive({
     Grupo: '',
     Modalidad: '',
 });
-const payload3 = reactive([]);
 
 //actualizar datos del payload
 const ActualizarPayload = (propiedad, valor) => {
     payload[propiedad] = valor;
-    console.log(payload)
+    formulario1Requerido.value = Object.values(payload).some(value => value !== "")
 };
 //actualizar datos del payload2
 const ActualizarPayload2 = (propiedad, valor) => {
     payload2[propiedad] = valor;
     console.log(payload2)
-};
-//actualizar datos del payload
-const ActualizarDiasLaborales = (propiedad, valor) => {
-    payload3[propiedad] = valor;
-    console.log(payload3)
+    formulario2Requerido.value = Object.values(payload2).some(value => value !== "")
 };
 
 // Observar cambios en la variable
@@ -246,7 +258,6 @@ watch(Departamento, (nuevoValor) => ActualizarPayload2('Departamento', nuevoValo
 watch(Cargo, (nuevoValor) => ActualizarPayload2('Cargo', nuevoValor));
 watch(Grupo, (nuevoValor) => ActualizarPayload2('Grupo', nuevoValor));
 watch(Modalidad, (nuevoValor) => ActualizarPayload2('Modalidad', nuevoValor));
-watch(ListaDiasLibres.value, (nuevoValor) => ActualizarDiasLaborales(nuevoValor));
 
 const resetForm = () => {
     TipoDeContrato.value = '';
@@ -260,7 +271,7 @@ const resetForm = () => {
     Cargo.value = '';
     Grupo.value = '';
     Modalidad.value = '';
-    console.log(ListaDiasLibres.value)
+    ListaDiasLibres.value = []
     // Reinicia el payload
     Object.keys(payload).forEach(key => {
         payload[key] = '';
@@ -276,9 +287,6 @@ defineExpose({
 const NextModal = () => {
     emit('nextModal');
 };
-const sendRespuesta = (Data) => {
-  emit("respuesta", Data); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
-};
 
 /**
  * Funcion emitida al enviar el formulario
@@ -287,13 +295,33 @@ const sendRespuesta = (Data) => {
  * Ejecuta la peticion con axios
  */
  const Enviar = () => {
-    console.log("modal Datos Laborales")
+    console.log("modal Datos Persoanles")
     console.log("Datos User: " + props.EmpleadoID)
-    console.log(payload)
-    console.log(payload2)
-    console.log(payload3)
-    sendRespuesta({texto:"prueba 2", valor:true})
-    NextModal()
+
+    let statuspay = Object.values(payload).some(value => value !== "");
+    let statuspay2 = Object.values(payload2).some(value => value !== "");
+    let valoresDiasLibres = Object.values(ListaDiasLibres.value);
+    let statuspay3 = (valoresDiasLibres.length > 0) ? true : false;
+    console.log(Object.values(payload).some(value => value !== ""));
+    console.log(Object.values(payload2).some(value => value !== ""));
+    console.log((valoresDiasLibres.length > 0) ? true : false );
+    if(statuspay){
+        console.log(payload)
+    }
+    if(statuspay2){
+        console.log(payload2)
+    }
+    if(statuspay3){
+        console.log(valoresDiasLibres)
+    }
+
+    if(statuspay3 ||statuspay2 || statuspay){
+        console.log("enviar datos")
+        console.log({texto:"prueba 4", valor:true})
+    }
+    
+    NextModal(props.EmpleadoID)
+
 };
 
 </script>

@@ -10,7 +10,7 @@
             v-model="tipoDocumentoSelect"
             :options="ListaTiposDocumentos"
             optionsSelected="Seleccionar"
-            :requerido="false"
+            :requerido="true"
           />
         </template>
       </LayoutInputLineal>
@@ -21,7 +21,7 @@
         Titulo="Número de documento"
         v-model="numeroDocumento"
         @update:modelValue="numeroDocumento = $event"
-        :requerido="false"
+        :requerido="true"
         name="numeroDocumento"
       />
     </div>
@@ -32,7 +32,7 @@
         Titulo="Nombres"
         v-model="nombres"
         @update:modelValue="nombres = $event"
-        :requerido="false"
+        :requerido="true"
         name="Nombres"
       />
       <InputLinealDescripcion
@@ -40,7 +40,7 @@
         Titulo="Apellidos"
         v-model="apellidos"
         @update:modelValue="apellidos = $event"
-        :requerido="false"
+        :requerido="true"
         name="Apellidos"
       />
     </div>
@@ -52,7 +52,7 @@
         v-model="correo"
         @update:modelValue="correo = $event"
         Tipo="email"
-        :requerido="false"
+        :requerido="true"
         name="CorreoElectronico"
       />
 
@@ -91,7 +91,7 @@ import TemplateButton2 from "../botones/Template-button2.vue";
 import LayoutInputLineal from "../Layouts/LayoutInputLineal.vue";
 import InputRadioButton from "../botones/Input-Radio-button.vue";
 
-import { ref, watch, defineEmits, defineProps, reactive, defineExpose } from "vue";
+import { ref, watch, defineEmits, defineProps, reactive, defineExpose, onMounted } from "vue";
 import axios from "axios";
 
 //lista de
@@ -149,9 +149,6 @@ const NextModal = (idEpleadoCreado) => {
   emit("nextModal", idEpleadoCreado); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
 };
 
-const sendRespuesta = (Data) => {
-  emit("respuesta", Data); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
-};
 
 // inicializacion de variables reactivas
 const numeroDocumento = ref("");
@@ -215,39 +212,55 @@ watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor));
 const Enviar = () => {
   //console.log("modal Datos Basicos");
   //console.log(payload);
-  NextModal(4);
-  sendRespuesta({texto:"prueba 2", valor:true})
-  /*
-    axios.post('/user/create_preuser', payload )
-        .then(
-            res => {
-            if (res.response){
-                payload = {
-                    "apellidos": "",
-                    "correo": "",
-                    "documento": "",
-                    "nombres": ""
-                }
-                numeroDocumento, nombres, apellidos, correo.value = '';
-                
-            }            
-        })
-        .catch(err => {
-            if (err.response) { 
-                console.log(err.message)
-            }
 
-        //error 522 usuario ya creado o existente
-    });
-    */
+  if (props.EmpleadoID){
+    try {
+      axios.post('/user/create_preuser', payload )
+         .then(
+            res => {
+              console.log(res)
+              if (res.status == 201){
+                console.log({'texto': res.data.message, 'valor':true});
+                NextModal(res.data.newUserId);
+              }            
+            }
+          )
+         .catch(
+            err => {
+              if (err.response) { 
+                if (err.response.status == 422){
+                  console.log({'texto': "no se puede procesar la solcitud", 'valor':false});
+                } else {
+                  console.log(err);
+                }
+              }
+            }
+          );
+    } catch {
+      console.log("error");
+    }
+  } else {
+    console.log("actualizar datos del usuario")
+    
+  }
 };
+
+onMounted(
+  () => {
+    if(props.EmpleadoID){
+      console.log("pedir datos del empleado")
+    }
+  }
+);
 
 </script>
 
 <style scoped>
-/* Establece el diseño de la fila del formulario, 
-usando flexbox para alinear elementos en filas y 
-espaciarlos uniformemente */
+  /* Establece el diseño de la fila del formulario, 
+    usando flexbox para alinear elementos en filas y 
+    espaciarlos uniformemente 
+  */
+
 div.row-form {
   display: flex;
   flex-direction: row;
@@ -268,6 +281,7 @@ form.formulario {
 
 /* Contenedor para elementos multimedia, organizados 
 en columnas con un espacio de  12px entre ellos */
+
 div.multimedia {
   display: flex;
   flex-direction: column;

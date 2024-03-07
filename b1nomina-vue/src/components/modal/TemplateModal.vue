@@ -25,12 +25,7 @@
                         </div>
                     </div>
                 </transition>
-                <TemplateAlertModal 
-                    @closeNotificacion="showNotificacion()" 
-                    :activarNotifiacion="mostrarNotificacion" 
-                    :Mensaje="DataNotification.texto" 
-                    :Status="DataNotification.valor"
-                />
+                
             </div>
         </transition>
     </teleport>
@@ -39,11 +34,11 @@
 <script setup>
 // uso del componente: <TemplateModal @closeModal="" :activarModal="" NombreAccion="">
 
-import {defineProps, defineEmits, ref, watch} from 'vue';
+import {defineProps, defineEmits, ref, watch, onMounted} from 'vue';
+
 import CloseIconVue from '../icons/Close-icon.vue';
 import TemplateButton2 from '../botones/Template-button2.vue'
 import TemplateButton from '../botones/Template-button.vue'
-
 
 // Define las props correctamente
 const props = defineProps({
@@ -76,39 +71,12 @@ const emit = defineEmits([
 
 const close = () => {
     emit('closeModal');
-    dataNotification.value = {
-        DataNotification: '',
-        valor: null
-    }
-};
+}; // Asegúrate de observar los cambios en las propiedades anidadas
 
-const dataNotification = ref(props.DataNotification);
-
-
-import TemplateAlertModal from '@/components/modal/TemplateAlertModal.vue';
-
-    const mostrarNotificacion = ref(false)
-    /**
-     * Controla el despliegue de la notificacion
-     * @param mostrarNotificacion
-     */
-    const showNotificacion = (force) => {
-        if (force) {
-            mostrarNotificacion.value = force
-        }else {
-            mostrarNotificacion.value = !mostrarNotificacion.value;
-        }
-        console.log(mostrarNotificacion.value)
-        
-    };
-
-    watch(() => props.DataNotification, (newValue) => {
-        // Verifica si 'valor' es verdadero
-        if (newValue) {
-            showNotificacion();
-        }
-    }, { deep: true }); // Asegúrate de observar los cambios en las propiedades anidadas
-
+onMounted(() => {
+    
+  }
+);
 </script>
 
 <style scoped>
