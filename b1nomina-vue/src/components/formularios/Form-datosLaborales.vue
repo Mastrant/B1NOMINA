@@ -342,21 +342,6 @@ const NextModal = (idEpleadoCreado) => {
 
 };
 
-onMounted(async () => {
-    if(props.EmpleadoID){
-        axios.get(`/user/${props.EmpleadoID}/datos_laborales`)
-        .then(
-            respuesta => {
-                console.log(respuesta)
-            }
-        )
-        .catch(
-            error => {
-                console.log(error)
-            }
-        )
-    }
-});
 
 </script>
 

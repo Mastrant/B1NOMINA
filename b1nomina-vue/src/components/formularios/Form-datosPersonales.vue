@@ -7,7 +7,7 @@
                     <ListaTemplateLineal  
                         v-model="nacionalidad" 
                         :options="ListaNacionalidad" 
-                        :requerido="formulario1Requerido"
+                        :requerido="formulario1Requerido"                        
                     />
                 </template>
             </LayoutInputLineal>
@@ -131,7 +131,7 @@ import InputRadioButton from '../botones/Input-Radio-button.vue';
 
 import axios from "axios";
 
-import { ref, watch, defineEmits, defineProps, reactive, defineExpose, onMounted} from 'vue';
+import { ref, watch, defineEmits, defineProps, reactive, defineExpose, onBeforeMount, onMounted} from 'vue';
 
 // Define los eventos que el componente puede emitir
 const emit = defineEmits([
@@ -141,7 +141,7 @@ const emit = defineEmits([
 const props = defineProps({
     EmpleadoID: {
        type: [Number, String], // Especifica que el tipo de la propiedad es Number
-       default: -1
+       default: null
     },
     parametros: {
         type: Object,
@@ -149,8 +149,8 @@ const props = defineProps({
     },
     selecionado: {
        type: [String, Number, Boolean],
-       required: false,
-       default: null, // O cualquier valor por defecto que desees
+       required: true,
+       default: false, // O cualquier valor por defecto que desees
     },
 });
 
@@ -295,19 +295,13 @@ watch(telefonoLocal, (nuevoValor) => ActualizarPayload2('telefonoLocal', nuevoVa
 
 };
 
-watch(() => props.selecionado, (value) => {
-    if(props.EmpleadoID != null){
+watch(() => props.selecionado, (newValue) => {
+    if(newValue != null & newValue != false){
         //solicita los datos personales
         axios.get(`/user/${props.EmpleadoID}`, {'id': Number(props.EmpleadoID)})
         .then(
             respuesta => {
-                console.log(respuesta.data[0])
-                
-                //datos personales
-                nacionalidad.value = respuesta.data[0].nacionalidad_id;
-                genero.value = respuesta.data[0].sexo_id;
-                //fechaNacimiento.value = '';
-                //estadoCivil.value = '';
+                console.log(respuesta.data)
             }
         )
         .catch(
@@ -320,28 +314,7 @@ watch(() => props.selecionado, (value) => {
         .then(
             respuesta => {
                 console.log(respuesta.data)
-                
-                //datos de contacto
-                telefonoLocal.value = respuesta.data.fijo;
-                telefonoCelular.value = respuesta.data.movil;
-            }
-        )
-        .catch(
-            error => {
-                console.log(error)
-            }
-        )
 
-        //solicita los datos de localizacion
-        axios.get(`/user_ubication/${props.EmpleadoID}`, {'id': Number(props.EmpleadoID)})
-        .then(
-            respuesta => {
-                console.log(respuesta.data)
-                
-                //datos de contacto
-                region.value = '';
-                localidad.value = '';
-                direccion.value = '';
             }
         )
         .catch(
@@ -350,7 +323,7 @@ watch(() => props.selecionado, (value) => {
             }
         )
     }
-});
+})
 </script>
 
 <style scoped>

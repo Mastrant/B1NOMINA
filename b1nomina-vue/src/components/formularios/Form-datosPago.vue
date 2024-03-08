@@ -119,6 +119,7 @@ const emit = defineEmits([
     'respuesta',
 ]);
 
+const DatosIdUser_existe = ref(false);
 
 // inicializacion de variables reactivas
 const MedioPago = ref(0);
@@ -186,21 +187,30 @@ const CloseModal = () => {
     }
 };
 
-onMounted(async () => {
-    if(props.EmpleadoID){
-        axios.get(`datos_pago/${props.EmpleadoID}`)
-        .then(
-            respuesta => {
-                console.log(respuesta)
+watch(() => props.selecionado, (newValue) => {
+    if(newValue != null & newValue != false){
+      //solicita los datos personales
+      axios.get(`/user/${props.EmpleadoID}`, {'id': Number(props.EmpleadoID)})
+      .then(
+          respuesta => {
+              if(respuesta.data){
+                
+              }
+          }
+      )
+      .catch(
+        error => {
+            if(error.status == 422){
+              console.log(error)
+            } else if(error.status == 404 ){
+              DatosIdUser_existe.value = false
             }
-        )
-        .catch(
-            error => {
-                console.log(error)
-            }
-        )
+            
+        }
+      )
     }
-});
+  }
+)
 
 </script>
 

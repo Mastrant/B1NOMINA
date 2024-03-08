@@ -117,9 +117,10 @@ const props = defineProps({
     default: {}
   },
   selecionado: {
-    Boolean,
-    default: false,
-  }
+       type: [String, Number, Boolean],
+       required: true,
+       default: false, // O cualquier valor por defecto que desees
+    },
 });
 
 // Define los eventos que el componente puede emitir. En este caso, se especifica un evento llamado 'nextModal'.
@@ -163,6 +164,8 @@ const tipoDocumentoSelect = ref(0); //Documento selecionado
 const correo = ref("");
 const foto = ref("");
 const invitacion = ref(0);
+
+const DatosIdUser_existe = ref(false);
 
 // payload de la peticion
 const payload = reactive({
@@ -218,61 +221,92 @@ const Enviar = () => {
   //console.log("modal Datos Basicos");
   //console.log(payload);
 
-  if (props.EmpleadoID == null){
+  if (props.EmpleadoID == null & !DatosIdUser_existe){
     try {
       axios.post('/user/create_preuser', payload )
-         .then(
-            res => {
-              console.log(res)
-              if (res.status == 201){
-                console.log({'texto': res.data.message, 'valor':true});
-                NextModal(res.data.newUserId);
-              }            
-            }
-          )
-         .catch(
-            err => {
-              if (err.response) { 
-                if (err.response.status == 422){
-                  console.log({'texto': "no se puede procesar la solcitud", 'valor':false});
-                } else {
-                  console.log(err);
-                }
+        .then(
+          res => {
+            console.log(res)
+            if (res.status == 201){
+              console.log({'texto': res.data.message, 'valor':true});
+              NextModal(res.data.newUserId);
+            }            
+          }
+        )
+        .catch(
+          err => {
+            if (err.response) { 
+              if (err.response.status == 422){
+                console.log({'texto': "no se puede procesar la solcitud", 'valor':false});
+              } else {
+                console.log(err);
               }
             }
-          );
+          }
+        );
     } catch {
       console.log("error");
     }
-  } else {
+  } else if (props.EmpleadoID != null & DatosIdUser_existe) {
     console.log("actualizar datos del usuario")
     console.log(props.EmpleadoID)
-    NextModal(props.EmpleadoID);
+
+    try {
+      axios.post(`/user/${id}/update`, payload )
+        .then(
+          res => {
+            console.log(res)
+            if (res.status == 201){
+              console.log({'texto': res.data.message, 'valor':true});
+              NextModal(props.EmpleadoID);
+            }            
+          }
+        )
+        .catch(
+          err => {
+            if (err.response) { 
+              if (err.response.status == 422){
+                console.log({'texto': "no se puede procesar la solcitud", 'valor':false});
+              } else {
+                console.log(err);
+              }
+            }
+          }
+        );
+    } catch {
+      console.log("error");
+    }
+    
     
   }
 };
 
-onMounted(async () => {
-    if(props.EmpleadoID != null){
-        axios.get(`/user/${props.EmpleadoID}`, {'id': Number(props.EmpleadoID)})
-        .then(
-            respuesta => {
-                console.log(respuesta.data)
-                numeroDocumento.value = respuesta.data.rut;
-                nombres.value = respuesta.data.nombres;
-                apellidos.value = `${respuesta.data.apellido_paterno}  ${respuesta.data.apellido_paterno}`;
-                tipoDocumentoSelect.value = 1; //Documento selecionado
-                correo.value = '';
-
+watch(() => props.selecionado, (newValue) => {
+    if(newValue != null & newValue != false){
+      //solicita los datos personales
+      axios.get(`/user/${props.EmpleadoID}`, {'id': Number(props.EmpleadoID)})
+      .then(
+          respuesta => {
+              if(respuesta.data){
+                
+              }
+          }
+      )
+      .catch(
+        error => {
+            if(error.status == 422){
+              console.log(error)
+            } else if(error.status == 404 ){
+              DatosIdUser_existe.value = false
             }
-        )
-        .catch(
-            error => {
-                console.log(error)
-            }
-        )
+            
+        }
+      )
     }
-});
+  }
+)
+
+
 </script>
 
 <style scoped>
