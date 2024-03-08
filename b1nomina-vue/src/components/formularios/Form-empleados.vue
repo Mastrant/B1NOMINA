@@ -75,8 +75,7 @@
                 <FormDatosBasicos 
                     @nextModal="avanzarForm"
                     @respuesta="sendData" 
-                    :EmpleadoID="ID_Usuario_Creado"
-                    :selecionado="idFormularioActivo == 1"
+                    :EmpleadoID="ID_Usuario_Creado"                    
                     v-show="idFormularioActivo == 1"
                     ref="Form1" 
                 />
@@ -85,7 +84,6 @@
                     @nextModal="avanzarForm"
                     :EmpleadoID="ID_Usuario_Creado"
                     :parametros="parametrosDP"
-                    :selecionado="idFormularioActivo == 2"
                     v-show="idFormularioActivo == 2"
                     ref="Form2"
                     

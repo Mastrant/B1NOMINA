@@ -116,11 +116,6 @@ const props = defineProps({
     type: Object,
     default: {}
   },
-  selecionado: {
-       type: [String, Number, Boolean],
-       required: true,
-       default: false, // O cualquier valor por defecto que desees
-    },
 });
 
 // Define los eventos que el componente puede emitir. En este caso, se especifica un evento llamado 'nextModal'.
@@ -219,10 +214,10 @@ watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor));
  */
 const Enviar = () => {
   //console.log("modal Datos Basicos");
-  //console.log(payload);
-
-  if (props.EmpleadoID == null & !DatosIdUser_existe){
-    try {
+  console.log(props.EmpleadoID);
+  console.log(DatosIdUser_existe);
+  // si el ID es nulo crea un usuario
+  if (props.EmpleadoID == null){
       axios.post('/user/create_preuser', payload )
         .then(
           res => {
@@ -244,67 +239,52 @@ const Enviar = () => {
             }
           }
         );
-    } catch {
-      console.log("error");
-    }
-  } else if (props.EmpleadoID != null & DatosIdUser_existe) {
+
+  }
+
+  // si el ID no es nulo y existen datos
+  if (props.EmpleadoID != null & props.EmpleadoID >= 0)  {
     console.log("actualizar datos del usuario")
     console.log(props.EmpleadoID)
-
-    try {
-      axios.post(`/user/${id}/update`, payload )
-        .then(
-          res => {
-            console.log(res)
-            if (res.status == 201){
-              console.log({'texto': res.data.message, 'valor':true});
-              NextModal(props.EmpleadoID);
-            }            
-          }
-        )
-        .catch(
-          err => {
-            if (err.response) { 
-              if (err.response.status == 422){
-                console.log({'texto': "no se puede procesar la solcitud", 'valor':false});
-              } else {
-                console.log(err);
-              }
-            }
-          }
-        );
-    } catch {
-      console.log("error");
+    console.log(payload)
+    console.log(getData(props.EmpleadoID));
+    if (getData(props.EmpleadoID)) {
+      console.log("usar put")
+      NextModal(props.EmpleadoID);
     }
-    
+    if (!getData(props.EmpleadoID)){
+        console.log("usar post")
+        NextModal(props.EmpleadoID);
+    }
     
   }
 };
 
-watch(() => props.selecionado, (newValue) => {
-    if(newValue != null & newValue != false){
+const getData = async (ID_empleado) => {
+    if(ID_empleado != null & ID_empleado >= 0){
       //solicita los datos personales
-      axios.get(`/user/${props.EmpleadoID}`, {'id': Number(props.EmpleadoID)})
+      axios.get(`/user/${ID_empleado}`, {'id': Number(ID_empleado)})
       .then(
-          respuesta => {
-              if(respuesta.data){
-                
-              }
+        respuesta => {
+          if(respuesta.data){
+            console.log("Hay datos")
+            return true;
           }
+        }
       )
       .catch(
         error => {
-            if(error.status == 422){
-              console.log(error)
-            } else if(error.status == 404 ){
-              DatosIdUser_existe.value = false
-            }
-            
+          if(error.status == 422){
+            console.log(error)
+          } else if(error.status == 404 ){
+            console.log("no hay datos")
+            console.log(error)
+            return false;
+          }            
         }
       )
     }
   }
-)
 
 
 </script>

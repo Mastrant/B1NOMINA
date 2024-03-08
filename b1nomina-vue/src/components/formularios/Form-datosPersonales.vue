@@ -147,11 +147,6 @@ const props = defineProps({
         type: Object,
         default: {}
     },
-    selecionado: {
-       type: [String, Number, Boolean],
-       required: true,
-       default: false, // O cualquier valor por defecto que desees
-    },
 });
 
 // Método para reiniciar el formulario
@@ -295,35 +290,6 @@ watch(telefonoLocal, (nuevoValor) => ActualizarPayload2('telefonoLocal', nuevoVa
 
 };
 
-watch(() => props.selecionado, (newValue) => {
-    if(newValue != null & newValue != false){
-        //solicita los datos personales
-        axios.get(`/user/${props.EmpleadoID}`, {'id': Number(props.EmpleadoID)})
-        .then(
-            respuesta => {
-                console.log(respuesta.data)
-            }
-        )
-        .catch(
-            error => {
-                console.log(error)
-            }
-        )
-        //solicita los datos de contacto
-        axios.get(`/user_contact/${props.EmpleadoID}`, {'id': Number(props.EmpleadoID)})
-        .then(
-            respuesta => {
-                console.log(respuesta.data)
-
-            }
-        )
-        .catch(
-            error => {
-                console.log(error)
-            }
-        )
-    }
-})
 </script>
 
 <style scoped>

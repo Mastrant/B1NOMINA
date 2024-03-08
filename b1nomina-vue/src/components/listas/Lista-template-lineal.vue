@@ -44,12 +44,9 @@ select.lista-general {
     cursor: pointer;
     box-sizing: border-box;
     margin: 0;
-    
     background: #ffffff;
-    
     border-color: white;
     border-bottom: solid 3px #1A245B;
-    
     outline: none;
     
 

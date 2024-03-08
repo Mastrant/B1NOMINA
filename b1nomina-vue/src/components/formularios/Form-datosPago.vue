@@ -194,7 +194,7 @@ watch(() => props.selecionado, (newValue) => {
       .then(
           respuesta => {
               if(respuesta.data){
-                
+                DatosIdUser_existe.value = true
               }
           }
       )
