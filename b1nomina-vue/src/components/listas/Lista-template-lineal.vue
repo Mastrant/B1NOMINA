@@ -15,7 +15,10 @@ import { ref, defineProps, watchEffect } from 'vue';
 
 const props = defineProps({
     options: { default: () => [{}] },
-    optionsSelected: { type: String, default: 'Seleccionar' },
+    optionsSelected: { 
+        type: String, 
+        default: '' 
+    },
     requerido: { type: Boolean, default: false }
 });
 
@@ -23,13 +26,11 @@ const selected = ref('');
 
 // Utiliza watchEffect para establecer el valor inicial de selected
 watchEffect(() => {
-    if (props.options.length > 0) {
+    if (props.optionsSelected == '' & props.options.length > 0) {
         selected.value = props.options[0].id; // Establece el valor inicial al primer id del arreglo
     }
 });
 </script>
-   
-   
 
 <style scoped>
 select.lista-general {
@@ -51,7 +52,6 @@ select.lista-general {
     
     outline: none;
     
-
 
     /*Estilos de fuente*/
     color: #1A245B;

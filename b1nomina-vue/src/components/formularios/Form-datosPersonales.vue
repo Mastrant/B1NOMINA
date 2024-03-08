@@ -8,7 +8,6 @@
                         v-model="nacionalidad" 
                         :options="ListaNacionalidad" 
                         :requerido="formulario1Requerido"
-                        optionsSelected=""
                     />
                 </template>
             </LayoutInputLineal>
@@ -147,7 +146,12 @@ const props = defineProps({
     parametros: {
         type: Object,
         default: {}
-    }
+    },
+    selecionado: {
+       type: [String, Number, Boolean],
+       required: false,
+       default: null, // O cualquier valor por defecto que desees
+    },
 });
 
 // Método para reiniciar el formulario
@@ -291,8 +295,9 @@ watch(telefonoLocal, (nuevoValor) => ActualizarPayload2('telefonoLocal', nuevoVa
 
 };
 
-onMounted(async () => {
+watch(() => props.selecionado, (value) => {
     if(props.EmpleadoID != null){
+        //solicita los datos personales
         axios.get(`/user/${props.EmpleadoID}`, {'id': Number(props.EmpleadoID)})
         .then(
             respuesta => {
@@ -301,15 +306,42 @@ onMounted(async () => {
                 //datos personales
                 nacionalidad.value = respuesta.data[0].nacionalidad_id;
                 genero.value = respuesta.data[0].sexo_id;
-                fechaNacimiento.value = '';
-                estadoCivil.value = '';
+                //fechaNacimiento.value = '';
+                //estadoCivil.value = '';
+            }
+        )
+        .catch(
+            error => {
+                console.log(error)
+            }
+        )
+        //solicita los datos de contacto
+        axios.get(`/user_contact/${props.EmpleadoID}`, {'id': Number(props.EmpleadoID)})
+        .then(
+            respuesta => {
+                console.log(respuesta.data)
+                
+                //datos de contacto
+                telefonoLocal.value = respuesta.data.fijo;
+                telefonoCelular.value = respuesta.data.movil;
+            }
+        )
+        .catch(
+            error => {
+                console.log(error)
+            }
+        )
+
+        //solicita los datos de localizacion
+        axios.get(`/user_ubication/${props.EmpleadoID}`, {'id': Number(props.EmpleadoID)})
+        .then(
+            respuesta => {
+                console.log(respuesta.data)
                 
                 //datos de contacto
                 region.value = '';
                 localidad.value = '';
                 direccion.value = '';
-                telefonoLocal.value = '';
-                telefonoCelular.value = '';
             }
         )
         .catch(

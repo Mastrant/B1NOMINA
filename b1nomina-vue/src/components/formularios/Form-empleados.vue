@@ -76,6 +76,7 @@
                     @nextModal="avanzarForm"
                     @respuesta="sendData" 
                     :EmpleadoID="ID_Usuario_Creado"
+                    :selecionado="idFormularioActivo == 1"
                     v-show="idFormularioActivo == 1"
                     ref="Form1" 
                 />
@@ -84,7 +85,8 @@
                     @nextModal="avanzarForm"
                     :EmpleadoID="ID_Usuario_Creado"
                     :parametros="parametrosDP"
-                    v-if="idFormularioActivo == 2"
+                    :selecionado="idFormularioActivo == 2"
+                    v-show="idFormularioActivo == 2"
                     ref="Form2"
                     
                 />
@@ -93,7 +95,8 @@
                     @nextModal="avanzarForm"
                     :EmpleadoID="ID_Usuario_Creado"
                     :parametros="parametrosDL"
-                    v-if="idFormularioActivo == 3"
+                    :selecionado="idFormularioActivo == 3"
+                    v-show="idFormularioActivo == 3"
                     ref="Form3"
                     
                 />
@@ -102,7 +105,8 @@
                     @closeModal="showModal"
                     :EmpleadoID="ID_Usuario_Creado"
                     :parametros="parametrosDPa"
-                    v-if="idFormularioActivo == 4"
+                    :selecionado="idFormularioActivo == 4"
+                    v-show="idFormularioActivo == 4"
                     ref="Form4"
                     
                 />

@@ -105,6 +105,10 @@ const props = defineProps({
     parametros: {
         type: Object,
         default: {}
+    },
+    selecionado: {
+       Boolean,
+       default: false,
     }
 });
 

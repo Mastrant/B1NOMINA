@@ -170,7 +170,11 @@ const props = defineProps({
   parametros: {
         type: Object,
         default: {}
-    }
+  },
+  selecionado: {
+    Boolean,
+    default: false,
+  }
 });
 
 // Define los eventos que el componente puede emitir. En este caso, se especifica un evento llamado 'nextModal'.

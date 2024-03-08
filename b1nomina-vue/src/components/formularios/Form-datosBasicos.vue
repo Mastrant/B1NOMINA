@@ -113,9 +113,13 @@ const props = defineProps({
     type: [Number, String], // Especifica que el tipo de la propiedad es Number
   },
   parametros: {
-        type: Object,
-        default: {}
-    }
+    type: Object,
+    default: {}
+  },
+  selecionado: {
+    Boolean,
+    default: false,
+  }
 });
 
 // Define los eventos que el componente puede emitir. En este caso, se especifica un evento llamado 'nextModal'.
