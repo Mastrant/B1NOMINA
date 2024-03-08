@@ -1,7 +1,7 @@
 <template>
   <form class="formulario" ref="Form1" id="Form1" @submit.prevent="Enviar">
     <h2 class="titulo-form">Datos básicos</h2>
-
+    <!---->
     <div class="row-form">
       <LayoutInputLineal textLabel="Tipo de Documento" :requerido="true">
         <template v-slot>
@@ -23,6 +23,7 @@
         @update:modelValue="numeroDocumento = $event"
         :requerido="true"
         name="numeroDocumento"
+        :minimo-caracteres="8"
       />
     </div>
 
@@ -213,7 +214,7 @@ const Enviar = () => {
   //console.log("modal Datos Basicos");
   //console.log(payload);
 
-  if (props.EmpleadoID){
+  if (props.EmpleadoID == null){
     try {
       axios.post('/user/create_preuser', payload )
          .then(
@@ -241,18 +242,33 @@ const Enviar = () => {
     }
   } else {
     console.log("actualizar datos del usuario")
+    console.log(props.EmpleadoID)
+    NextModal(props.EmpleadoID);
     
   }
 };
 
-onMounted(
-  () => {
-    if(props.EmpleadoID){
-      console.log("pedir datos del empleado")
-    }
-  }
-);
+onMounted(async () => {
+    if(props.EmpleadoID != null){
+        axios.get(`/user/${props.EmpleadoID}`, {'id': Number(props.EmpleadoID)})
+        .then(
+            respuesta => {
+                console.log(respuesta.data)
+                numeroDocumento.value = respuesta.data.rut;
+                nombres.value = respuesta.data.nombres;
+                apellidos.value = `${respuesta.data.apellido_paterno}  ${respuesta.data.apellido_paterno}`;
+                tipoDocumentoSelect.value = 1; //Documento selecionado
+                correo.value = '';
 
+            }
+        )
+        .catch(
+            error => {
+                console.log(error)
+            }
+        )
+    }
+});
 </script>
 
 <style scoped>

@@ -54,6 +54,17 @@
                 </template>
             </LayoutInputLineal>
 
+            <LayoutInputLineal textLabel="Unidad Sueldo Base" :requerido="formulario1Requerido">
+                <template v-slot>
+                    <ListaTemplateLineal  
+                        v-model="SalarioBase" 
+                        :options="{}" 
+                        :requerido="formulario1Requerido"
+                        optionsSelected="Seleccionar"
+                    />
+                </template>
+            </LayoutInputLineal>
+
             <InputLinealDescripcion 
                 Placeholder="$..." 
                 Titulo="Valor del salario" 
@@ -146,12 +157,15 @@ import LayoutInputLineal from '../Layouts/LayoutInputLineal.vue';
 import InterruptorButton from '../inputs/Interruptor-button.vue';
 import InputCheckbox from '../inputs/Input-Checkbox.vue';
 
-import { ref, watch, reactive, defineProps, defineEmits} from 'vue';
+import axios from "axios";
+
+import { ref, watch, reactive, defineProps, defineEmits, onMounted} from 'vue';
 
 // Define las propiedades que el componente espera recibir. En este caso, se espera una propiedad llamada EmpleadoID de tipo Number.
 const props = defineProps({
   EmpleadoID: {
     type: [Number, String], // Especifica que el tipo de la propiedad es Number
+    default: -1
   },
   parametros: {
         type: Object,
@@ -284,8 +298,8 @@ const resetForm = () => {
 defineExpose({
     resetForm
 })
-const NextModal = () => {
-    emit('nextModal');
+const NextModal = (idEpleadoCreado) => {
+  emit("nextModal", idEpleadoCreado); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
 };
 
 /**
@@ -323,6 +337,22 @@ const NextModal = () => {
     NextModal(props.EmpleadoID)
 
 };
+
+onMounted(async () => {
+    if(props.EmpleadoID){
+        axios.get(`/user/${props.EmpleadoID}/datos_laborales`)
+        .then(
+            respuesta => {
+                console.log(respuesta)
+            }
+        )
+        .catch(
+            error => {
+                console.log(error)
+            }
+        )
+    }
+});
 
 </script>
 

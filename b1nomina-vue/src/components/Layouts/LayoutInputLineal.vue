@@ -47,6 +47,7 @@ div.contend-select {
 div.contend-select > div {
     display: flex;
     gap: 16px;
+    min-height: 35px;
 }
 
 p {

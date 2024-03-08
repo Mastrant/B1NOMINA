@@ -69,7 +69,21 @@
                 :minimo-caracteres="16"
                 :maximo-caracteres="16"
             />
-        </div>        
+        </div>  
+        
+        <h2 class="titulo-form">Información Adicional</h2> 
+        <div class="row-form">
+            <LayoutInputLineal textLabel="Salario base">
+                <template v-slot>
+                    
+                </template>
+            </LayoutInputLineal>
+            <LayoutInputLineal textLabel="Salario base">
+                <template v-slot>
+                    
+                </template>
+            </LayoutInputLineal>
+        </div>
     </form>
 </template>
 
@@ -79,11 +93,14 @@ import ListaTemplateLineal from '../listas/Lista-template-lineal.vue';
 import LayoutInputLineal from '../Layouts/LayoutInputLineal.vue';
 import InputRadioButton from '../botones/Input-Radio-button.vue';
 
-import { ref, watch, reactive, defineProps, defineEmits} from 'vue';
+import axios from "axios";
+
+import { ref, watch, reactive, defineProps, defineEmits, onMounted} from 'vue';
 
 const props = defineProps({
     EmpleadoID:{
         type: [Number, String],
+        default: -1
     },
     parametros: {
         type: Object,
@@ -164,6 +181,22 @@ const CloseModal = () => {
         CloseModal()
     }
 };
+
+onMounted(async () => {
+    if(props.EmpleadoID){
+        axios.get(`datos_pago/${props.EmpleadoID}`)
+        .then(
+            respuesta => {
+                console.log(respuesta)
+            }
+        )
+        .catch(
+            error => {
+                console.log(error)
+            }
+        )
+    }
+});
 
 </script>
 

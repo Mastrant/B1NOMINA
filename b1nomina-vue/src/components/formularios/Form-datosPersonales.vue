@@ -8,8 +8,7 @@
                         v-model="nacionalidad" 
                         :options="ListaNacionalidad" 
                         :requerido="formulario1Requerido"
-                        optionsSelected="Seleccionar"
-                        
+                        optionsSelected=""
                     />
                 </template>
             </LayoutInputLineal>
@@ -43,13 +42,24 @@
                 :requerido="formulario1Requerido"
             />
 
-            <LayoutInputLineal textLabel="Estado civil">
+            <LayoutInputLineal textLabel="Estado civil" :requerido="formulario1Requerido">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="estadoCivil" 
                         :options="parametros.estadocivil" 
                         optionsSelected="Seleccionar"
                         :requerido="formulario1Requerido"
+                    />
+                </template>
+            </LayoutInputLineal>
+
+            <LayoutInputLineal textLabel="Nivel de Estudio" :requerido="formulario1Requerido">
+                <template v-slot>
+                    <ListaTemplateLineal  
+                        v-model="nacionalidad" 
+                        :options="{}" 
+                        :requerido="false"
+                        optionsSelected="Seleccionar"  
                     />
                 </template>
             </LayoutInputLineal>
@@ -120,18 +130,19 @@ import ListaTemplateLineal from '../listas/Lista-template-lineal.vue';
 import LayoutInputLineal from '../Layouts/LayoutInputLineal.vue';
 import InputRadioButton from '../botones/Input-Radio-button.vue';
 
-import { ref, watch, defineEmits, defineProps, reactive, defineExpose } from 'vue';
+import axios from "axios";
+
+import { ref, watch, defineEmits, defineProps, reactive, defineExpose, onMounted} from 'vue';
 
 // Define los eventos que el componente puede emitir
 const emit = defineEmits([
   "nextModal", // Nombre del evento que puede ser emitido por este componente
-  "respuesta"
 ]);
 
 const props = defineProps({
-    EmpleadoID:{
-        Number,
-        default: -1
+    EmpleadoID: {
+       type: [Number, String], // Especifica que el tipo de la propiedad es Number
+       default: -1
     },
     parametros: {
         type: Object,
@@ -166,8 +177,8 @@ defineExpose({
     resetForm
 });
 
-const NextModal = () => {
-    emit('nextModal');
+const NextModal = (idEpleadoCreado) => {
+  emit("nextModal", idEpleadoCreado); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
 };
 
 //lista de nacionalidades
@@ -190,7 +201,7 @@ const formulario1Requerido = ref(false)
 const formulario2Requerido = ref(false)
 //datos personales
 const nacionalidad = ref('');
-const genero = ref('');
+const genero = ref(0);
 const fechaNacimiento = ref('');
 const estadoCivil = ref(''); 
 
@@ -279,6 +290,35 @@ watch(telefonoLocal, (nuevoValor) => ActualizarPayload2('telefonoLocal', nuevoVa
     NextModal(props.EmpleadoID)
 
 };
+
+onMounted(async () => {
+    if(props.EmpleadoID != null){
+        axios.get(`/user/${props.EmpleadoID}`, {'id': Number(props.EmpleadoID)})
+        .then(
+            respuesta => {
+                console.log(respuesta.data[0])
+                
+                //datos personales
+                nacionalidad.value = respuesta.data[0].nacionalidad_id;
+                genero.value = respuesta.data[0].sexo_id;
+                fechaNacimiento.value = '';
+                estadoCivil.value = '';
+                
+                //datos de contacto
+                region.value = '';
+                localidad.value = '';
+                direccion.value = '';
+                telefonoLocal.value = '';
+                telefonoCelular.value = '';
+            }
+        )
+        .catch(
+            error => {
+                console.log(error)
+            }
+        )
+    }
+});
 </script>
 
 <style scoped>
@@ -303,16 +343,21 @@ form.formulario {
     gap:  16px
 }
 
-/* Contenedor para elementos multimedia, organizados 
-en columnas con un espacio de  12px entre ellos */
+/*
+* Contenedor para elementos multimedia, organizados 
+* en columnas con un espacio de  12px entre ellos 
+*/
 div.multimedia {
     display: flex;
     flex-direction: column;
     gap:  12px;
 }
 
-/* Estilo para el botón de añadir una foto, con bordes 
-y un padding específico para un mejor aspecto visual */
+/**
+* Estilo para el botón de añadir una foto, con bordes 
+* y un padding específico para un mejor aspecto visual 
+*/
+
 div.multimedia div.add-photo{
     border-radius:  6px;
     border:  0.5px #363855 dashed;
@@ -338,8 +383,10 @@ h2.titulo-form {
     word-wrap: break-word;
 }
 
-/* Estilo para el texto dentro del botón de añadir una foto, 
-asegurando que el texto sea legible y coherente con el diseño */
+/*
+* Estilo para el texto dentro del botón de añadir una foto, 
+* asegurando que el texto sea legible y coherente con el diseño 
+*/
 .add-photo > span {
     color: #C2C2C2;
     font-size:  18px;

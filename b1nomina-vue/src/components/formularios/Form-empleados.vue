@@ -1,5 +1,5 @@
 <template>
-    <div class="formulario-empleados" id="formulario-empleados">
+    <div class="formulario-empleados" id="formulaEmpleadoIDrio-empleados">
         <div class="acciones-form">
             <div class="filtros">
                 <InputShearch v-model="shearch" @update:modelValue="shearch = $event" />
@@ -84,7 +84,7 @@
                     @nextModal="avanzarForm"
                     :EmpleadoID="ID_Usuario_Creado"
                     :parametros="parametrosDP"
-                    v-show="idFormularioActivo == 2"
+                    v-if="idFormularioActivo == 2"
                     ref="Form2"
                     
                 />
@@ -93,16 +93,16 @@
                     @nextModal="avanzarForm"
                     :EmpleadoID="ID_Usuario_Creado"
                     :parametros="parametrosDL"
-                    v-show="idFormularioActivo == 3"
+                    v-if="idFormularioActivo == 3"
                     ref="Form3"
                     
                 />
 
                 <FormDatosPago
                     @closeModal="showModal"
-                    :EmpleadoID="4"
+                    :EmpleadoID="ID_Usuario_Creado"
                     :parametros="parametrosDPa"
-                    v-show="idFormularioActivo == 4"
+                    v-if="idFormularioActivo == 4"
                     ref="Form4"
                     
                 />
@@ -168,7 +168,7 @@
         dataNotificacion.value = DATA //asigna el valor
     }
 
-    const ID_Usuario_Creado = ref('')
+    const ID_Usuario_Creado = ref(null)
 
     const InteraccionListaEmpleadosSelecionados = (arreglo) => {
         // Convertir el objeto proxy a un array real
@@ -194,10 +194,11 @@
 
     const limpiarFormularios = () => {
     // Llamar a las funciones de limpieza de cada componente hijo
-        Form1.value.resetForm();
-        Form2.value.resetForm();
-        Form3.value.resetForm();
-        Form4.value.resetForm();
+        Form1.value?.resetForm();
+        Form2.value?.resetForm();
+        Form3.value?.resetForm();
+        Form4.value?.resetForm();
+        ID_Usuario_Creado.value = null
     };
 
     const mostrarModal = ref(false)
