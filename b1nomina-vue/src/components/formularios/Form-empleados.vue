@@ -93,7 +93,6 @@
                     @nextModal="avanzarForm"
                     :EmpleadoID="ID_Usuario_Creado"
                     :parametros="parametrosDL"
-                    :selecionado="idFormularioActivo == 3"
                     v-show="idFormularioActivo == 3"
                     ref="Form3"
                     
@@ -103,7 +102,6 @@
                     @closeModal="showModal"
                     :EmpleadoID="ID_Usuario_Creado"
                     :parametros="parametrosDPa"
-                    :selecionado="idFormularioActivo == 4"
                     v-show="idFormularioActivo == 4"
                     ref="Form4"
                     

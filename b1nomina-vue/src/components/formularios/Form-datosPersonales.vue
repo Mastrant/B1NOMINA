@@ -51,17 +51,6 @@
                     />
                 </template>
             </LayoutInputLineal>
-
-            <LayoutInputLineal textLabel="Nivel de Estudio" :requerido="formulario1Requerido">
-                <template v-slot>
-                    <ListaTemplateLineal  
-                        v-model="nacionalidad" 
-                        :options="{}" 
-                        :requerido="false"
-                        optionsSelected="Seleccionar"  
-                    />
-                </template>
-            </LayoutInputLineal>
         </div>
 
         <h2 class="titulo-form">Datos de contacto</h2>
@@ -260,34 +249,78 @@ watch(direccion, (nuevoValor) => ActualizarPayload2('direccion', nuevoValor));
 watch(telefonoCelular, (nuevoValor) => ActualizarPayload2('telefonoCelular', nuevoValor));
 watch(telefonoLocal, (nuevoValor) => ActualizarPayload2('telefonoLocal', nuevoValor));
 
+const getData = async (ID_empleado) => {
+    if(ID_empleado != null & ID_empleado >= 0){
+      //solicita los datos personales
+       await axios.get(`/user/${ID_empleado}/precarga`, {'id': Number(ID_empleado)})
+      .then(
+        respuesta => {
+          if(respuesta.data){
+            console.log("Hay datos")
+            return true;
+          }
+        }
+      )
+      .catch(
+        error => {
+          if(error.status == 422){
+            return null;
+          } else if(error.status == 404 ){
+            console.log("no hay datos")
+            console.log(error)
+            return false;
+          }            
+        }
+      )
+    }
+}
+
 
 /**
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
- const Enviar = () => {
-    console.log("modal Datos Persoanles")
-    console.log("Datos User: " + props.EmpleadoID)
+const Enviar = async () => {
 
-    let statuspay = Object.values(payload).some(value => value !== "")
-    let statuspay2 = Object.values(payload2).some(value => value !== "")
-    console.log(Object.values(payload).some(value => value !== ""));
-    console.log(Object.values(payload2).some(value => value !== ""));
-    if(statuspay){
-        console.log(payload)
-    }
-    if(statuspay2){
-        console.log(payload2)
+  // si el ID es nulo crea un usuario
+    if (props.EmpleadoID == null){
+      console.log("enviar al formulario 1")
     }
 
-    if(statuspay2 || statuspay){
-        console.log("enviar datos")
-        console.log({texto:"prueba 4", valor:true})
-    }
+    // si el ID no es nulo y existen datos
+    if (props.EmpleadoID != null & props.EmpleadoID >= 0)  {
+        let usuarioestacreado = getData(props.EmpleadoID)
+
+        //si existen datos del usuario
+        if (usuarioestacreado) {
+            console.log("usar put")
+            console.log("Datos Personales: " + props.EmpleadoID)
+
+            //verifica si el payload 1 está vacio
+            let statuspay = Object.values(payload).some(value => value !== "")
+            //verifica si el payload 2 está vacio
+            let statuspay2 = Object.values(payload2).some(value => value !== "")
+            console.log(Object.values(payload).some(value => value !== ""));
+            console.log(Object.values(payload2).some(value => value !== ""));
+            if(statuspay){
+                console.log(payload)
+            }
+            if(statuspay2){
+                console.log(payload2)
+            }
+
+            if(statuspay2 || statuspay){
+                console.log("enviar datos")
+                console.log({texto:"prueba 4", valor:true})
+            }
     
-    NextModal(props.EmpleadoID)
-
+            NextModal(props.EmpleadoID)
+        }
+        if (!usuarioestacreado){
+            console.log("enviar al formulario 1")
+        }
+    }
 };
 
 </script>
@@ -295,7 +328,8 @@ watch(telefonoLocal, (nuevoValor) => ActualizarPayload2('telefonoLocal', nuevoVa
 <style scoped>
 /* Establece el diseño de la fila del formulario, 
 usando flexbox para alinear elementos en filas y 
-espaciarlos uniformemente */
+espaciarlos uniformemente 
+*/
 div.row-form {
     display: flex;
     flex-direction: row;

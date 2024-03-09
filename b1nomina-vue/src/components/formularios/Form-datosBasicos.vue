@@ -38,7 +38,7 @@
       />
       <InputLinealDescripcion
         Placeholder="Ejemplo: Peres"
-        Titulo="Apellidos"
+        Titulo="Apellido Paterno"
         v-model="apellidos"
         @update:modelValue="apellidos = $event"
         :requerido="true"
@@ -160,8 +160,6 @@ const correo = ref("");
 const foto = ref("");
 const invitacion = ref(0);
 
-const DatosIdUser_existe = ref(false);
-
 // payload de la peticion
 const payload = reactive({
   apellidos: "",
@@ -207,18 +205,41 @@ watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor));
  * watch(foto, (nuevoValor) => ActualizarPayload('foto', nuevoValor));
  */
 
+ const getData = async (ID_empleado) => {
+    if(ID_empleado != null & ID_empleado >= 0){
+      //solicita los datos personales
+      axios.get(`/user/${ID_empleado}/precarga`, {'id': Number(ID_empleado)})
+      .then(
+        respuesta => {
+          if(respuesta.data){
+            console.log("Hay datos")
+            return true;
+          }
+        }
+      )
+      .catch(
+        error => {
+          if(error.status == 422){
+            return null;
+          } else if(error.status == 404 ){
+            console.log("no hay datos")
+            console.log(error)
+            return false;
+          }            
+        }
+      )
+    }
+  }
+
 /**
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
-const Enviar = () => {
-  //console.log("modal Datos Basicos");
-  console.log(props.EmpleadoID);
-  console.log(DatosIdUser_existe);
-  // si el ID es nulo crea un usuario
+const Enviar = async () => {
+  //si ID es nulo crea un usuario
   if (props.EmpleadoID == null){
-      axios.post('/user/create_preuser', payload )
+      await axios.post('/user/create_preuser', payload )
         .then(
           res => {
             console.log(res)
@@ -239,52 +260,48 @@ const Enviar = () => {
             }
           }
         );
-
   }
 
-  // si el ID no es nulo y existen datos
+  // si el ID no es nulo y mayor o igual a 0
   if (props.EmpleadoID != null & props.EmpleadoID >= 0)  {
     console.log("actualizar datos del usuario")
-    console.log(props.EmpleadoID)
-    console.log(payload)
-    console.log(getData(props.EmpleadoID));
-    if (getData(props.EmpleadoID)) {
-      console.log("usar put")
+    //verifica si hay datos
+    let haydatosdelusuario = getData(props.EmpleadoID)
+    console.log(haydatosdelusuario.value);
+    //si existen datos usa el metodo para actualizar
+    if (haydatosdelusuario) {
+      console.log("usar put y actualizar datos")
       NextModal(props.EmpleadoID);
     }
-    if (!getData(props.EmpleadoID)){
-        console.log("usar post")
-        NextModal(props.EmpleadoID);
+    //si no existen datos del id ingresado crea un nuevo usuario con el id
+    if (!haydatosdelusuario){
+      await axios.post('/user/create_preuser', payload )
+        .then(
+          res => {
+            console.log(res)
+            if (res.status == 201){
+              console.log({'texto': res.data.message, 'valor':true});
+              NextModal(res.data.newUserId);
+            }            
+          }
+        )
+        .catch(
+          err => {
+            if (err.response) { 
+              if (err.response.status == 422){
+                console.log({'texto': "no se puede procesar la solcitud", 'valor':false});
+              } else {
+                console.log(err);
+              }
+            }
+          }
+        );
     }
     
   }
 };
 
-const getData = async (ID_empleado) => {
-    if(ID_empleado != null & ID_empleado >= 0){
-      //solicita los datos personales
-      axios.get(`/user/${ID_empleado}`, {'id': Number(ID_empleado)})
-      .then(
-        respuesta => {
-          if(respuesta.data){
-            console.log("Hay datos")
-            return true;
-          }
-        }
-      )
-      .catch(
-        error => {
-          if(error.status == 422){
-            console.log(error)
-          } else if(error.status == 404 ){
-            console.log("no hay datos")
-            console.log(error)
-            return false;
-          }            
-        }
-      )
-    }
-  }
+
 
 
 </script>

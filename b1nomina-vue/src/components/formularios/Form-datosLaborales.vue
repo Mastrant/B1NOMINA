@@ -13,6 +13,17 @@
                 </template>
             </LayoutInputLineal>
 
+            <LayoutInputLineal textLabel="Nivel de Estudio" :requerido="formulario1Requerido">
+                <template v-slot>
+                    <ListaTemplateLineal  
+                        v-model="TipoDeContrato" 
+                        :options="parametros?.nivelestudio" 
+                        :requerido="false"
+                        optionsSelected="Seleccionar"  
+                    />
+                </template>
+            </LayoutInputLineal>
+
             <LayoutInputLineal textLabel="Término del contrato">
                 <template v-slot>
                     <ListaTemplateLineal  
@@ -306,6 +317,32 @@ const NextModal = (idEpleadoCreado) => {
   emit("nextModal", idEpleadoCreado); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
 };
 
+const getData = async (ID_empleado) => {
+    if(ID_empleado != null & ID_empleado >= 0){
+      //solicita los datos personales
+      axios.get(`/user/${ID_empleado}/precarga`, {'id': Number(ID_empleado)})
+      .then(
+        respuesta => {
+          if(respuesta.data){
+            console.log("Hay datos")
+            return true;
+          }
+        }
+      )
+      .catch(
+        error => {
+          if(error.status == 422){
+            console.log(error)
+          } else if(error.status == 404 ){
+            console.log("no hay datos")
+            console.log(error)
+            return false;
+          }            
+        }
+      )
+    }
+}
+
 /**
  * Funcion emitida al enviar el formulario
  * 
@@ -313,33 +350,44 @@ const NextModal = (idEpleadoCreado) => {
  * Ejecuta la peticion con axios
  */
  const Enviar = () => {
-    console.log("modal Datos Persoanles")
-    console.log("Datos User: " + props.EmpleadoID)
 
-    let statuspay = Object.values(payload).some(value => value !== "");
-    let statuspay2 = Object.values(payload2).some(value => value !== "");
-    let valoresDiasLibres = Object.values(ListaDiasLibres.value);
-    let statuspay3 = (valoresDiasLibres.length > 0) ? true : false;
-    console.log(Object.values(payload).some(value => value !== ""));
-    console.log(Object.values(payload2).some(value => value !== ""));
-    console.log((valoresDiasLibres.length > 0) ? true : false );
-    if(statuspay){
-        console.log(payload)
-    }
-    if(statuspay2){
-        console.log(payload2)
-    }
-    if(statuspay3){
-        console.log(valoresDiasLibres)
-    }
+// si el ID es nulo crea un usuario
+  if (props.EmpleadoID == null){
+    console.log("enviar al formulario 1")
+  }
 
-    if(statuspay3 ||statuspay2 || statuspay){
-        console.log("enviar datos")
-        console.log({texto:"prueba 4", valor:true})
-    }
-    
-    NextModal(props.EmpleadoID)
+  // si el ID no es nulo y existen datos
+  if (props.EmpleadoID != null & props.EmpleadoID >= 0)  {
+     let haydatosdelusuario = getData(props.EmpleadoID)
 
+      //si existen datos del usuario
+      if (haydatosdelusuario) {
+         console.log("usar put")
+         console.log("Datos Personales: " + props.EmpleadoID)
+
+          let statuspay = Object.values(payload).some(value => value !== "")
+          let statuspay2 = Object.values(payload2).some(value => value !== "")
+          console.log(Object.values(payload).some(value => value !== ""));
+          console.log(Object.values(payload2).some(value => value !== ""));
+          if(statuspay){
+              console.log(payload)
+          }
+          if(statuspay2){
+              console.log(payload2)
+          }
+
+          if(statuspay2 || statuspay){
+              console.log("enviar datos")
+              console.log({texto:"prueba 4", valor:true})
+          }
+  
+          NextModal(props.EmpleadoID)
+      }
+      if (!haydatosdelusuario){
+          console.log("usar post")
+          NextModal(props.EmpleadoID);
+      }
+  }
 };
 
 
