@@ -21,7 +21,8 @@
 </template>
 
 <script setup>
-/* uso <InputLinealDescripcion 
+/* uso 
+    <InputLinealDescripcion 
         Tipo="" Tipo de entrada
         Titulo="" Titulo superior
         v-model="" captura del valor
@@ -30,7 +31,7 @@
         requerido="" Si el campo es requerido o no
         :minimo-caracteres="" minimo de caracteres del campo
         :maximo-caracteres="" maximo de caracteres del campo
-        />
+    />
 */
 import { defineProps } from 'vue';
 

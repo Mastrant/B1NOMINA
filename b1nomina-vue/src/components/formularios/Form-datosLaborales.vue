@@ -24,7 +24,7 @@
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Término del contrato">
+            <LayoutInputLineal textLabel="Término del contrato" :requerido="formulario1Requerido">
                 <template v-slot>
                     <ListaTemplateLineal  
                          v-model="TerminoContrato"
@@ -70,7 +70,7 @@
                     <ListaTemplateLineal  
                         v-model="SalarioBase" 
                         :options="{}" 
-                        :requerido="formulario1Requerido"
+                        :requerido="false"
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -182,10 +182,6 @@ const props = defineProps({
         type: Object,
         default: {}
   },
-  selecionado: {
-    Boolean,
-    default: false,
-  }
 });
 
 // Define los eventos que el componente puede emitir. En este caso, se especifica un evento llamado 'nextModal'.
@@ -317,77 +313,117 @@ const NextModal = (idEpleadoCreado) => {
   emit("nextModal", idEpleadoCreado); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
 };
 
-const getData = async (ID_empleado) => {
-    if(ID_empleado != null & ID_empleado >= 0){
-      //solicita los datos personales
-      axios.get(`/user/${ID_empleado}/precarga`, {'id': Number(ID_empleado)})
-      .then(
+
+
+const crearDatoslaborales = async (Data) => {
+    await axios.post(`create_datos_laborales`,Data)
+    .then(
         respuesta => {
-          if(respuesta.data){
-            console.log("Hay datos")
-            return true;
-          }
+            NextModal(props.EmpleadoID)
         }
-      )
-      .catch(
-        error => {
-          if(error.status == 422){
-            console.log(error)
-          } else if(error.status == 404 ){
-            console.log("no hay datos")
-            console.log(error)
-            return false;
-          }            
+    )
+    .catch(
+        err => {
+            console.log("error al crear los datos")
         }
-      )
-    }
+    )
 }
 
+const actualizadDatosLaborales = async (Data) =>{
+    if(data){
+        await axios.put(`datos_laborales/${props.EmpleadoID}/update`,Data)
+        .then(
+        respuesta => {
+            NextModal(props.EmpleadoID)
+        }
+    )
+    .catch(
+        err => {
+            console.log("error al crear los datos")
+        }
+    )
+    }
+
+}
+
+const getData = (ID_empleado) => {
+ return new Promise((resolve, reject) => {
+    if (ID_empleado != null && ID_empleado >= 0) {
+      axios.get(`/datos_laborales/${ID_empleado}`, {'id': Number(ID_empleado)})
+        .then(respuesta => {
+          if (respuesta.data) {
+            console.log("Hay datos");
+            resolve(true); // Resuelve la promesa con true si hay datos
+          } else {
+            resolve(false); // Resuelve la promesa con false si no hay datos
+          }
+        })
+        .catch(error => {
+          console.log(error);
+          reject(false); // Rechaza la promesa si hay un error
+        });
+    } else {
+      resolve(false); // Resuelve la promesa con false si el ID es nulo o negativo
+    }
+ });
+};
+
+ 
 /**
  * Funcion emitida al enviar el formulario
  * 
  * @params {payload} Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
- const Enviar = () => {
+ const Enviar = async () => {
+    if (props.EmpleadoID == null) {
+        console.log("enviar al formulario 1");
+    }
 
-// si el ID es nulo crea un usuario
-  if (props.EmpleadoID == null){
-    console.log("enviar al formulario 1")
-  }
+    //verifica si los payloads tienen datos
+    let statuspay = Object.values(payload).some(value => value !== "");
+    let statuspay2 = Object.values(payload2).some(value => value !== "");
 
-  // si el ID no es nulo y existen datos
-  if (props.EmpleadoID != null & props.EmpleadoID >= 0)  {
-     let haydatosdelusuario = getData(props.EmpleadoID)
+    //si uno de los payload tiene cambios
+    if (statuspay  == true || statuspay2 == true){
+        //verifica que el id pasado sea diferente de nullo y mayor que 0
+        if (props.EmpleadoID != null && props.EmpleadoID > 0) {
+            //Almacena si hay datos Laboras o no del usuario en el sistema
+            let haydatosdelusuario = await getData(props.EmpleadoID);
 
-      //si existen datos del usuario
-      if (haydatosdelusuario) {
-         console.log("usar put")
-         console.log("Datos Personales: " + props.EmpleadoID)
+            //verifica que no ocurran errores al solicitar los datos
+            if(haydatosdelusuario != null){
 
-          let statuspay = Object.values(payload).some(value => value !== "")
-          let statuspay2 = Object.values(payload2).some(value => value !== "")
-          console.log(Object.values(payload).some(value => value !== ""));
-          console.log(Object.values(payload2).some(value => value !== ""));
-          if(statuspay){
-              console.log(payload)
-          }
-          if(statuspay2){
-              console.log(payload2)
-          }
-
-          if(statuspay2 || statuspay){
-              console.log("enviar datos")
-              console.log({texto:"prueba 4", valor:true})
-          }
-  
-          NextModal(props.EmpleadoID)
-      }
-      if (!haydatosdelusuario){
-          console.log("usar post")
-          NextModal(props.EmpleadoID);
-      }
-  }
+                //verifica si los datos existe
+                if(haydatosdelusuario == true) {
+                    console.log("Modificar datos laborales");
+                } else {
+                    console.log("Crear datos laborales");
+                    //si ambos payloads tienen modificaciones
+                    if (statuspay2 == statuspay ) {
+                        console.log("enviar datos justos");
+                        let payload12 = payload + payload2;
+                        crearDatoslaborales(payload12);
+                    }
+                    if (statuspay2 == true || statuspay == true) {
+                        console.log("enviar payload lleno");
+                        if (statuspay == true) {
+                            console.log(payload);
+                            crearDatoslaborales(payload);
+                        }
+                        if (statuspay2 == true) {
+                            console.log(payload2);
+                            crearDatoslaborales(payload2);
+                        }     
+                    }   
+                }        
+            } else { // si la respues es nula
+                console.log("error al pedir los datos laborales")
+            }
+        }
+    } else {//no hay modificaciones en los payloads
+        NextModal(props.EmpleadoID)
+    }
 };
 
 

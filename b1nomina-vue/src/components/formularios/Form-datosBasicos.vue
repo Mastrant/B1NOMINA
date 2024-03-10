@@ -15,16 +15,17 @@
         </template>
       </LayoutInputLineal>
 
-      <InputLinealDescripcion
-        :Deshabilitar="tipoDocumentoSelect == 0"
-        Placeholder="Ejemplo:  1234567-8"
-        Titulo="Número de documento"
-        v-model="numeroDocumento"
-        @update:modelValue="numeroDocumento = $event"
-        :requerido="true"
-        name="numeroDocumento"
-        :minimo-caracteres="8"
-      />
+      <LayoutInputLineal textLabel="Número de documento" :requerido="true">
+        <template v-slot>
+          <inputRut 
+            v-model="numeroDocumento"
+            :requerido="true"
+            :Deshabilitar="tipoDocumentoSelect != 2"
+            Placeholder="Ejemplo: 1234567-8"
+            @update:modelValue="handleModelValueUpdate"
+          />
+        </template>
+      </LayoutInputLineal>      
     </div>
 
     <div class="row-form">
@@ -91,6 +92,7 @@ import ListaTemplateLineal from "../listas/Lista-template-lineal.vue";
 import TemplateButton2 from "../botones/Template-button2.vue";
 import LayoutInputLineal from "../Layouts/LayoutInputLineal.vue";
 import InputRadioButton from "../botones/Input-Radio-button.vue";
+import inputRut from "../inputs/input-Rut.vue";
 
 import { ref, watch, defineEmits, defineProps, reactive, defineExpose, onMounted } from "vue";
 import axios from "axios";
@@ -140,6 +142,7 @@ const resetForm = () => {
   });
 };
 
+
 // Exponer la función de limpieza para que sea accesible desde el componente padre
 defineExpose({
   resetForm,
@@ -149,6 +152,8 @@ defineExpose({
 const NextModal = (idEpleadoCreado) => {
   emit("nextModal", idEpleadoCreado); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
 };
+
+
 
 
 // inicializacion de variables reactivas
@@ -167,6 +172,11 @@ const payload = reactive({
   documento: "",
   nombres: "",
 });
+
+//se maneja el valor recivido del input del ru
+const handleModelValueUpdate = (newValue) => {
+ numeroDocumento.value = newValue;
+};
 
 /**
  * Actualiza el valor de una propiedad específica dentro del objeto 'payload'.
@@ -205,10 +215,37 @@ watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor));
  * watch(foto, (nuevoValor) => ActualizarPayload('foto', nuevoValor));
  */
 
+const CrearUsuario = async (Datos) => {
+  await axios.post('/user/create_preuser', Datos )
+        .then(
+          res => {
+            console.log(res)
+            if (res.status == 201){
+              console.log({'texto': res.data.message, 'valor':true});
+              NextModal(res.data.newUserId);
+            }            
+          }
+        )
+        .catch(
+          err => {
+            if (err.response) { 
+              if (err.response.status == 422){
+                console.log({'texto': "no se puede procesar la solcitud", 'valor':false});
+              } else {
+                console.log(err);
+              }
+            }
+          }
+        );
+}
+
  const getData = async (ID_empleado) => {
+    if(ID_empleado == null){
+        return null;
+    }
     if(ID_empleado != null & ID_empleado >= 0){
       //solicita los datos personales
-      axios.get(`/user/${ID_empleado}/precarga`, {'id': Number(ID_empleado)})
+      await axios.get(`/user/${ID_empleado}/precarga`)
       .then(
         respuesta => {
           if(respuesta.data){
@@ -229,7 +266,7 @@ watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor));
         }
       )
     }
-  }
+}
 
 /**
  * Funcion emitida al enviar el formulario
@@ -237,72 +274,19 @@ watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor));
  * Ejecuta la peticion con axios
  */
 const Enviar = async () => {
+  console.log(props.EmpleadoID)
+  console.log(payload)
   //si ID es nulo crea un usuario
-  if (props.EmpleadoID == null){
-      await axios.post('/user/create_preuser', payload )
-        .then(
-          res => {
-            console.log(res)
-            if (res.status == 201){
-              console.log({'texto': res.data.message, 'valor':true});
-              NextModal(res.data.newUserId);
-            }            
-          }
-        )
-        .catch(
-          err => {
-            if (err.response) { 
-              if (err.response.status == 422){
-                console.log({'texto': "no se puede procesar la solcitud", 'valor':false});
-              } else {
-                console.log(err);
-              }
-            }
-          }
-        );
+  let statuspay = Object.values(payload).some(value => value !== "");
+
+  if (props.EmpleadoID == null && statuspay == true){
+      CrearUsuario(payload)
   }
 
-  // si el ID no es nulo y mayor o igual a 0
-  if (props.EmpleadoID != null & props.EmpleadoID >= 0)  {
-    console.log("actualizar datos del usuario")
-    //verifica si hay datos
-    let haydatosdelusuario = getData(props.EmpleadoID)
-    console.log(haydatosdelusuario.value);
-    //si existen datos usa el metodo para actualizar
-    if (haydatosdelusuario) {
-      console.log("usar put y actualizar datos")
-      NextModal(props.EmpleadoID);
-    }
-    //si no existen datos del id ingresado crea un nuevo usuario con el id
-    if (!haydatosdelusuario){
-      await axios.post('/user/create_preuser', payload )
-        .then(
-          res => {
-            console.log(res)
-            if (res.status == 201){
-              console.log({'texto': res.data.message, 'valor':true});
-              NextModal(res.data.newUserId);
-            }            
-          }
-        )
-        .catch(
-          err => {
-            if (err.response) { 
-              if (err.response.status == 422){
-                console.log({'texto': "no se puede procesar la solcitud", 'valor':false});
-              } else {
-                console.log(err);
-              }
-            }
-          }
-        );
-    }
-    
-  }
+  if(props.EmpleadoID != null && props.EmpleadoID > 0 ){
+    NextModal(props.EmpleadoID)
+  }  
 };
-
-
-
 
 </script>
 

@@ -168,7 +168,7 @@
         dataNotificacion.value = DATA //asigna el valor
     }
 
-    const ID_Usuario_Creado = ref(null)
+    const ID_Usuario_Creado = ref(333)
 
     const InteraccionListaEmpleadosSelecionados = (arreglo) => {
         // Convertir el objeto proxy a un array real
@@ -198,7 +198,7 @@
         Form2.value?.resetForm();
         Form3.value?.resetForm();
         Form4.value?.resetForm();
-        ID_Usuario_Creado.value = null
+        ID_Usuario_Creado.value = 333
     };
 
     const mostrarModal = ref(false)

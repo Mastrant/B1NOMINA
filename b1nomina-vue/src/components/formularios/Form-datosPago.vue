@@ -106,10 +106,6 @@ const props = defineProps({
         type: Object,
         default: {}
     },
-    selecionado: {
-       Boolean,
-       default: false,
-    }
 });
 
 // Define los eventos que el componente puede emitir
@@ -166,6 +162,36 @@ const CloseModal = () => {
     emit('closeModal');
 };
 
+const getData = async (IDUser) => {
+    if(IDUser == null){
+        return null;
+    }
+
+    if(ID_empleado != null & ID_empleado >= 0){
+      //solicita los datos personales
+      await axios.get(`/get_datos_pago_user`, IDUser)
+      .then(
+        respuesta => {
+          if(respuesta.data){
+            console.log("Hay datos")
+            return true;
+          }
+        }
+      )
+      .catch(
+        error => {
+          if(error.status == 422){
+            return null;
+          } else if(error.status == 404 ){
+            console.log("no hay datos")
+            console.log(error)
+            return false;
+          }            
+        }
+      )
+    }
+
+}
 
 /**
  * Funcion emitida al enviar el formulario
@@ -174,43 +200,31 @@ const CloseModal = () => {
  */
  const Enviar = () => {
     console.log("Datos User: " + props.EmpleadoID)
-    let statuspay = Object.values(payload).some(value => value !== '');
 
-    if(statuspay){
-        console.log(payload)
-    }else {
-        CloseModal()
+    if (props.EmpleadoID == null) {
+        console.log("enviar al formulario 1");
     }
 
-    if(false){
+    //verifica si los payloads tienen datos
+    let statuspay = Object.values(payload).some(value => value !== "");
+
+    if (statuspay  == true){
+        //Verifica que el ID sea diferente de null y mayor que 0
+        if(props.EmpleadoID != null & props.EmpleadoID > 0){
+            //almacena si hay datos de pago
+            let haydatosdelusuario = getData(props.EmpleadoID);
+        }
+        
+
+
+
+    } else {
+        //no hay modificaciones en los payloads
         CloseModal()
     }
 };
 
-watch(() => props.selecionado, (newValue) => {
-    if(newValue != null & newValue != false){
-      //solicita los datos personales
-      axios.get(`/user/${props.EmpleadoID}`, {'id': Number(props.EmpleadoID)})
-      .then(
-          respuesta => {
-              if(respuesta.data){
-                DatosIdUser_existe.value = true
-              }
-          }
-      )
-      .catch(
-        error => {
-            if(error.status == 422){
-              console.log(error)
-            } else if(error.status == 404 ){
-              DatosIdUser_existe.value = false
-            }
-            
-        }
-      )
-    }
-  }
-)
+
 
 </script>
 

@@ -249,10 +249,28 @@ watch(direccion, (nuevoValor) => ActualizarPayload2('direccion', nuevoValor));
 watch(telefonoCelular, (nuevoValor) => ActualizarPayload2('telefonoCelular', nuevoValor));
 watch(telefonoLocal, (nuevoValor) => ActualizarPayload2('telefonoLocal', nuevoValor));
 
-const getData = async (ID_empleado) => {
+const enviarDatosPersonales = async (Data) => {
+    await axios(`user/${props.EmpleadoID}/update_pre_user`, Data)
+    .then(
+        respuesta => {
+            console.log("datos creados")
+            console.log(respuesta)
+            NextModal(props.EmpleadoID)
+        }
+    )
+    .catch(
+        error => {
+            console.log("error al guardar los datos")
+            console.log(error)
+        }
+    )
+}
+
+const getData = (ID_empleado) => {
+    return new Promise((resolve, reject) => {
     if(ID_empleado != null & ID_empleado >= 0){
       //solicita los datos personales
-       await axios.get(`/user/${ID_empleado}/precarga`, {'id': Number(ID_empleado)})
+       axios.get(`/user/${ID_empleado}/precarga`, {'id': Number(ID_empleado)})
       .then(
         respuesta => {
           if(respuesta.data){
@@ -263,16 +281,18 @@ const getData = async (ID_empleado) => {
       )
       .catch(
         error => {
-          if(error.status == 422){
-            return null;
-          } else if(error.status == 404 ){
+          if(error.response.status == 404){             
             console.log("no hay datos")
-            console.log(error)
             return false;
-          }            
+          } else {
+            console.log(error)
+          }
+          
+                      
         }
       )
     }
+  })
 }
 
 
@@ -281,45 +301,70 @@ const getData = async (ID_empleado) => {
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
-const Enviar = async () => {
-
-  // si el ID es nulo crea un usuario
-    if (props.EmpleadoID == null){
-      console.log("enviar al formulario 1")
+ const Enviar = () => {
+    if (props.EmpleadoID == null) {
+        console.log("enviar al formulario 1");
     }
 
-    // si el ID no es nulo y existen datos
-    if (props.EmpleadoID != null & props.EmpleadoID >= 0)  {
-        let usuarioestacreado = getData(props.EmpleadoID)
+    //verifica si los payloads tienen datos
+    let statuspay = Object.values(payload).some(value => value !== "");
+    let statuspay2 = Object.values(payload2).some(value => value !== "");
 
-        //si existen datos del usuario
-        if (usuarioestacreado) {
-            console.log("usar put")
-            console.log("Datos Personales: " + props.EmpleadoID)
+    //si uno de los payload tiene cambios
+    if (statuspay  == true || statuspay2 == true){
+        //verifica que el id pasado sea diferente de nullo y mayor que 0
+        if (props.EmpleadoID != null && props.EmpleadoID > 0) {
+            //Almacena si hay datos Laboras o no del usuario en el sistema
+            let haydatosdelusuario = getData(props.EmpleadoID);
 
-            //verifica si el payload 1 está vacio
-            let statuspay = Object.values(payload).some(value => value !== "")
-            //verifica si el payload 2 está vacio
-            let statuspay2 = Object.values(payload2).some(value => value !== "")
-            console.log(Object.values(payload).some(value => value !== ""));
-            console.log(Object.values(payload2).some(value => value !== ""));
-            if(statuspay){
-                console.log(payload)
-            }
-            if(statuspay2){
-                console.log(payload2)
-            }
+            //verifica que no ocurran errores al solicitar los datos
+            if(haydatosdelusuario != null || haydatosdelusuario != undefined){
 
-            if(statuspay2 || statuspay){
-                console.log("enviar datos")
-                console.log({texto:"prueba 4", valor:true})
+                //verifica si los datos existe
+                if(haydatosdelusuario == true) {
+                    console.log("Modificar datos laborales");
+                    if (statuspay2 == statuspay ) {
+                        console.log("enviar datos justos");
+                        let payload12 = payload + payload2;
+                        enviarDatosPersonales(payload12);
+                    }
+                    if (statuspay2 == true || statuspay == true) {
+                        console.log("enviar payload lleno");
+                        if (statuspay == true) {
+                            console.log(payload);
+                            enviarDatosPersonales(payload);
+                        }
+                        if (statuspay2 == true) {
+                            console.log(payload2);
+                            enviarDatosPersonales(payload2);
+                        }     
+                    }
+                } else { // si los datos no existe
+                    console.log("Crear datos laborales");
+                    //si ambos payloads tienen modificaciones
+                    if (statuspay2 == statuspay ) {
+                        console.log("enviar datos justos");
+                        let payload12 = payload + payload2;
+                        enviarDatosPersonales(payload12);
+                    }
+                    if (statuspay2 == true || statuspay == true) {
+                        console.log("enviar payload lleno");
+                        if (statuspay == true) {
+                            console.log(payload);
+                            enviarDatosPersonales(payload);
+                        }
+                        if (statuspay2 == true) {
+                            console.log(payload2);
+                            enviarDatosPersonales(payload2);
+                        }     
+                    }   
+                }        
+            } else { // si la respues es nula
+                console.log("error al pedir los datos personales")
             }
-    
-            NextModal(props.EmpleadoID)
         }
-        if (!usuarioestacreado){
-            console.log("enviar al formulario 1")
-        }
+    } else {//no hay modificaciones en los payloads
+        NextModal(props.EmpleadoID)
     }
 };
 
