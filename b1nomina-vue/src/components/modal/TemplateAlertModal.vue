@@ -82,6 +82,7 @@ div.Notificacion-inner {
     align-items: flex-start; 
     gap: 24px; 
     display: inline-flex;
+    z-index: 100;
 }
 
 div.correct {

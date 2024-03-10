@@ -350,12 +350,14 @@ const getData = (ID_empleado) => {
                         enviarDatosPersonales(payload12);
                     }
                     if (statuspay2 == true || statuspay == true) {
-                        console.log("enviar payload lleno");
+                       
                         if (statuspay == true) {
+                            console.log("enviar payload 1");
                             console.log(payload);
                             enviarDatosPersonales(payload);
                         }
                         if (statuspay2 == true) {
+                            console.log("enviar payload 2");
                             console.log(payload2);
                             enviarDatosPersonales(payload2);
                         }     

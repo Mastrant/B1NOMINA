@@ -216,28 +216,53 @@ watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor));
  */
 
 const CrearUsuario = async (Datos) => {
-  await axios.post('/user/save_preuser', Datos )
-        .then(
-          res => {
-            console.log(res)
-            if (res.status == 201){
-              emit("respuesta", {'texto':res.data.message, 'valor':true})
-              NextModal(res.data.newUserId);
-            }            
-          }
-        )
-        .catch(
-          err => {
-            if (err.response) { 
-              if (err.response.status == 422){
-                console.log({'texto': "no se puede procesar la solcitud", 'valor':false});
-              } else {
-                console.log(err);
-                emit("respuesta", {'texto':err.message, 'valor':false})
-              }
-            }
-          }
-        );
+  await axios.post('/user/create_preuser', Datos )
+  .then(
+    res => {
+      console.log(res)
+      if (res.status == 201){
+        emit("respuesta", {'texto':res.data.message, 'valor':true})
+        NextModal(res.data.newUserId);
+      }            
+    }
+  )
+  .catch(
+    err => {
+      if (err.response) { 
+        if (err.response.status == 422){
+          console.log({'texto': "no se puede procesar la solcitud", 'valor':false});
+        } 
+          console.log(err);
+          emit("respuesta", {'texto':err.response.message, 'valor':false})
+      
+      }
+    }
+  );
+}
+
+const ActualizarDatosBasicos = async (Datos) => {
+  await axios.put('/user/save_preuser', Datos )
+  .then(
+    res => {
+      console.log(res)
+      if (res.status == 201){
+        emit("respuesta", {'texto':res.data.message, 'valor':true})
+        NextModal(props.EmpleadoID);
+      }            
+    }
+  )
+  .catch(
+    err => {
+      if (err.response) { 
+        if (err.response.status == 422){
+          console.log({'texto': "no se puede procesar la solcitud", 'valor':false});
+        } 
+          console.log(err);
+          emit("respuesta", {'texto':err.response, 'valor':false})
+      
+      }
+    }
+  );
 }
 
  const getData = async (ID_empleado) => {
@@ -285,8 +310,12 @@ const Enviar = () => {
   }
 
   if(props.EmpleadoID != null && props.EmpleadoID > 0 ){
-    //getData(props.EmpleadoID)    
-    NextModal(props.EmpleadoID)
+    //getData(props.EmpleadoID)
+    if(statuspay == true){
+      ActualizarDatosBasicos(payload) 
+    }else {
+      NextModal(props.EmpleadoID)
+    }   
   }  
 };
 

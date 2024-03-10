@@ -198,7 +198,7 @@
         Form2.value?.resetForm();
         Form3.value?.resetForm();
         Form4.value?.resetForm();
-        ID_Usuario_Creado.value = 222
+        ID_Usuario_Creado.value = null
     };
 
     const mostrarModal = ref(false)
