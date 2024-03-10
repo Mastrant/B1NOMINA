@@ -125,6 +125,7 @@ import { ref, watch, defineEmits, defineProps, reactive, defineExpose, onBeforeM
 // Define los eventos que el componente puede emitir
 const emit = defineEmits([
   "nextModal", // Nombre del evento que puede ser emitido por este componente
+  "respuesta"
 ]);
 
 const props = defineProps({
@@ -254,18 +255,16 @@ const enviarDatosPersonales = (Data) => {
     axios(`user/${props.EmpleadoID}/save_preuser`, Data)
     .then(
         respuesta => {
-            console.log("datos creados")
-            console.log(respuesta)
+            emit("respuesta", {'texto':respuesta.data.message, 'valor':true})
             NextModal(props.EmpleadoID)
         }
     )
     .catch(
         error => {
-            console.log("error al guardar los datos")
+            emit("respuesta", {'texto':"error al guardar los datos", 'valor':true})
             console.log(error)
         }
     )
-    
 }
 
 const getData = (ID_empleado) => {

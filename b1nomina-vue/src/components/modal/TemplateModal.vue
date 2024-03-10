@@ -25,7 +25,12 @@
                         </div>
                     </div>
                 </transition>
-                
+                <TemplateAlertModal 
+                    :activarNotifiacion="mostrarNotificacion"
+                    :Mensaje="mensajeNotificacion"
+                    :Status="tipoNotificacion"
+                    @closeNotificacion="cerrarNotificacion"
+                />
             </div>
         </transition>
     </teleport>
@@ -39,6 +44,7 @@ import {defineProps, defineEmits, ref, watch, onMounted} from 'vue';
 import CloseIconVue from '../icons/Close-icon.vue';
 import TemplateButton2 from '../botones/Template-button2.vue'
 import TemplateButton from '../botones/Template-button.vue'
+import TemplateAlertModal from './TemplateAlertModal.vue';
 
 // Define las props correctamente
 const props = defineProps({
@@ -71,12 +77,25 @@ const emit = defineEmits([
 
 const close = () => {
     emit('closeModal');
-}; // Asegúrate de observar los cambios en las propiedades anidadas
+}; 
 
-onMounted(() => {
-    
-  }
-);
+//Inicializa las variables
+const mostrarNotificacion = ref(false);
+const mensajeNotificacion = ref('');
+const tipoNotificacion = ref(false); // true para correcto, false para error
+
+const cerrarNotificacion = () => {
+    mostrarNotificacion.value = false;
+};
+
+// Función para mostrar la notificación
+const mostrarNotificacionPersonalizada = (mensaje, tipo) => {
+    mensajeNotificacion.value = mensaje;
+    tipoNotificacion.value = tipo;
+    mostrarNotificacion.value = true;
+};
+
+watch(() => props.DataNotification, (ValorNuevo) => mostrarNotificacionPersonalizada(ValorNuevo.texto,ValorNuevo.valor))
 </script>
 
 <style scoped>

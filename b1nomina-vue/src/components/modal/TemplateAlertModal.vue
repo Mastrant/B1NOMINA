@@ -2,19 +2,11 @@
     <transition name="Notificacion">
         <div v-if="activarNotifiacion" class="Notificacion-fondo">
             <transition name="Animacion-Modal-inner">
-                <div v-if="activarNotifiacion" class="Notificacion-inner" :class=" Status ? 'correct' : 'error '">
-                    <span 
-                        class="NombreAccion"
-                        :class=" Status ? 'correct' : 'error '"
-                    >
+                <div v-if="activarNotifiacion" class="Notificacion-inner" :class="Status ? 'correct' : 'error'">
+                    <span class="NombreAccion" :class="Status ? 'correct' : 'error'">
                         {{Mensaje}}
                     </span>
-
-                    <ExitColorIcon 
-                        class="icon" 
-                        @click="close" 
-                        :class=" Status ? 'correct' : 'error '"
-                    />
+                    <ExitColorIcon class="icon" @click="close" :class="Status ? 'correct' : 'error'"/>
                 </div>
             </transition>
         </div>
@@ -22,26 +14,19 @@
 </template>
 
 <script setup>
-/* uso del componente: 
-    <TemplateAlertModal 
-        @closeNotificacion="funcion()" 
-        :activarNotifiacion="variable" 
-        Mensaje="Texto a mostrar" 
-        :Status="true||false"
+/**
+ * uso
+ * <TemplateAlertModal 
+        :activarNotifiacion="mostrarNotificacion"
+        :Mensaje="mensajeNotificacion"
+        :Status="tipoNotificacion"
+        @closeNotificacion="cerrarNotificacion"
     />
-
-    const variable = ref(false)
-     const funcion = () => {
-        variable.value = !variable.value;
-    };
-
-*/
-
-import {defineProps, defineEmits, onMounted} from 'vue';
+ */
+import { ref, defineProps, defineEmits, onMounted, watch } from 'vue';
 import ExitColorIcon from '../icons/Exit-color-icon.vue';
 
-// Define las props correctamente
-defineProps({
+const props = defineProps({
     activarNotifiacion: {
         type: Boolean,
         default: false
@@ -50,25 +35,23 @@ defineProps({
         type: String,
     },
     Status: {
-        Boolean,
+        type: Boolean,
     }
 });
-
-// Define los eventos que el componente puede emitir
-const emit = defineEmits([
-    'closeNotificacion'
-]);
+const emit = defineEmits(['closeNotificacion']);
 
 const close = () => {
     emit('closeNotificacion');
 };
 
-onMounted(() => {
- setTimeout(() => {
-    close();
- }, 5000);
+// Asegúrate de que estás pasando una referencia reactiva o una función que devuelva un valor reactivo a `watch`
+watch(() => props.activarNotifiacion, (newVal) => {
+    if (newVal) {
+        setTimeout(() => {
+            close();
+        }, 4000); // Espera 8 segundos antes de cerrar automáticamente
+    }
 });
-
 </script>
 
 <style scoped>

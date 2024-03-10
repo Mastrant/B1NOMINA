@@ -221,7 +221,7 @@ const CrearUsuario = async (Datos) => {
           res => {
             console.log(res)
             if (res.status == 201){
-              console.log({'texto': res.data.message, 'valor':true});
+              emit("respuesta", {'texto':res.data.message, 'valor':true})
               NextModal(res.data.newUserId);
             }            
           }
@@ -233,6 +233,7 @@ const CrearUsuario = async (Datos) => {
                 console.log({'texto': "no se puede procesar la solcitud", 'valor':false});
               } else {
                 console.log(err);
+                emit("respuesta", {'texto':err.message, 'valor':false})
               }
             }
           }
@@ -284,6 +285,7 @@ const Enviar = () => {
   }
 
   if(props.EmpleadoID != null && props.EmpleadoID > 0 ){
+    //getData(props.EmpleadoID)    
     NextModal(props.EmpleadoID)
   }  
 };
