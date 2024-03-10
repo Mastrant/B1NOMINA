@@ -250,8 +250,8 @@ watch(telefonoCelular, (nuevoValor) => ActualizarPayload2('telefonoCelular', nue
 watch(telefonoLocal, (nuevoValor) => ActualizarPayload2('telefonoLocal', nuevoValor));
 
 const enviarDatosPersonales = (Data) => {
-    return new Promise((resolve, reject) => {
-     axios(`user/${props.EmpleadoID}/update_pre_user`, Data)
+    
+    axios(`user/${props.EmpleadoID}/save_preuser`, Data)
     .then(
         respuesta => {
             console.log("datos creados")
@@ -265,7 +265,7 @@ const enviarDatosPersonales = (Data) => {
             console.log(error)
         }
     )
-    })
+    
 }
 
 const getData = (ID_empleado) => {
