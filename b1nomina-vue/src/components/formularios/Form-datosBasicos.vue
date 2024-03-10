@@ -216,7 +216,7 @@ watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor));
  */
 
 const CrearUsuario = async (Datos) => {
-  await axios.post('/user/create_preuser', Datos )
+  await axios.post('/user/save_preuser', Datos )
         .then(
           res => {
             console.log(res)
@@ -273,7 +273,7 @@ const CrearUsuario = async (Datos) => {
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
-const Enviar = async () => {
+const Enviar = () => {
   console.log(props.EmpleadoID)
   console.log(payload)
   //si ID es nulo crea un usuario

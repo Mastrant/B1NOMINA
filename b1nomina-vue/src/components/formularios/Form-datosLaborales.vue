@@ -195,7 +195,7 @@ const formulario2Requerido = ref(false)
 
 //variables del formaulario 1
 const TipoDeContrato = ref('');
-const TerminoContrato = ref(0);
+const TerminoContrato = ref('');
 const FechaContratacion = ref('');
 const FechaFinalizacionContrato = ref('');
 const SalarioBase = ref('');

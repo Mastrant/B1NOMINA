@@ -189,7 +189,7 @@ const formulario1Requerido = ref(false)
 const formulario2Requerido = ref(false)
 //datos personales
 const nacionalidad = ref('');
-const genero = ref(0);
+const genero = ref('');
 const fechaNacimiento = ref('');
 const estadoCivil = ref(''); 
 
@@ -249,8 +249,9 @@ watch(direccion, (nuevoValor) => ActualizarPayload2('direccion', nuevoValor));
 watch(telefonoCelular, (nuevoValor) => ActualizarPayload2('telefonoCelular', nuevoValor));
 watch(telefonoLocal, (nuevoValor) => ActualizarPayload2('telefonoLocal', nuevoValor));
 
-const enviarDatosPersonales = async (Data) => {
-    await axios(`user/${props.EmpleadoID}/update_pre_user`, Data)
+const enviarDatosPersonales = (Data) => {
+    return new Promise((resolve, reject) => {
+     axios(`user/${props.EmpleadoID}/update_pre_user`, Data)
     .then(
         respuesta => {
             console.log("datos creados")
@@ -264,36 +265,38 @@ const enviarDatosPersonales = async (Data) => {
             console.log(error)
         }
     )
+    })
 }
 
 const getData = (ID_empleado) => {
     return new Promise((resolve, reject) => {
-    if(ID_empleado != null & ID_empleado >= 0){
-      //solicita los datos personales
-       axios.get(`/user/${ID_empleado}/precarga`, {'id': Number(ID_empleado)})
-      .then(
-        respuesta => {
-          if(respuesta.data){
-            console.log("Hay datos")
-            return true;
-          }
+        if (ID_empleado != null && ID_empleado >= 0) {
+            // Solicita los datos personales
+            axios.get(`/user/${ID_empleado}/precarga`)
+                .then(respuesta => {
+                    if (respuesta.data) {
+                        console.log("Hay datos");
+                        resolve(true); // Resuelve la promesa con true si hay datos
+                    } else {
+                        console.log("No hay datos");
+                        resolve(false); // Resuelve la promesa con false si no hay datos
+                    }
+                })
+                .catch(error => {
+                    if (error.response && error.response.status == 404) {
+                        console.log("No hay datos");
+                        resolve(false); // Resuelve la promesa con false si no hay datos
+                    } else {
+                        console.log(error);
+                        reject(error); // Rechaza la promesa si hay un error distinto de 404
+                    }
+                });
+        } else {
+            reject(new Error('ID de empleado inválido')); // Rechaza la promesa si el ID es inválido
         }
-      )
-      .catch(
-        error => {
-          if(error.response.status == 404){             
-            console.log("no hay datos")
-            return false;
-          } else {
-            console.log(error)
-          }
-          
-                      
-        }
-      )
-    }
-  })
+    });
 }
+
 
 
 /**
