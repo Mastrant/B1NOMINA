@@ -231,7 +231,7 @@ const CrearUsuario = async (Datos) => {
       if (err.response) { 
         // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
         if (err.response.status == 422){
-          console.log({'texto': "no se puede procesar la solcitud", 'valor':false});
+          emit({'texto': "no se puede procesar la solcitud", 'valor':false});
         } 
         // Imprime el error completo.
         console.log(err);
@@ -269,13 +269,12 @@ const ActualizarDatosBasicos = async (idCreator, Datos) => {
       if (err.response) { 
         // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
         if (err.response.status == 422){
-          console.log({'texto': "no se puede procesar la solcitud", 'valor':false});
+          emit.log({'texto': "no se puede procesar la solcitud", 'valor':false});
         } 
         // Imprime el error completo.
         console.log(err);
         // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
-        emit("respuesta", {'texto':err.response, 'valor':false})
-      
+        emit("respuesta", {'texto':err.response, 'valor':false})      
       }
     }
  );
