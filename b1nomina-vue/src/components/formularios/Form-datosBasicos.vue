@@ -14,18 +14,18 @@
           />
         </template>
       </LayoutInputLineal>
-
-      <LayoutInputLineal textLabel="Número de documento" :requerido="true">
-        <template v-slot>
-          <inputRut 
-            v-model="numeroDocumento"
-            :requerido="true"
-            :Deshabilitar="tipoDocumentoSelect != 2"
-            Placeholder="Ejemplo: 1234567-8"
-            @update:modelValue="handleModelValueUpdate"
-          />
-        </template>
-      </LayoutInputLineal>      
+      
+      <InputLinealDescripcion
+        Placeholder="Ejemplo: 1234567-8"
+        Titulo="Número de documento"
+        name="Documento"
+        v-model="numeroDocumento"
+        @update:modelValue="numeroDocumento = $event"
+        :requerido="true"        
+        :Deshabilitar="tipoDocumentoSelect != 2"
+        :minimo-caracteres="3"
+        :maximo-caracteres="100"
+      />     
     </div>
 
     <div class="row-form">
@@ -142,7 +142,6 @@ const resetForm = () => {
   });
 };
 
-
 // Exponer la función de limpieza para que sea accesible desde el componente padre
 defineExpose({
   resetForm,
@@ -153,14 +152,11 @@ const NextModal = (idEpleadoCreado) => {
   emit("nextModal", idEpleadoCreado); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
 };
 
-
-
-
 // inicializacion de variables reactivas
 const numeroDocumento = ref("");
 const nombres = ref("");
 const apellidos = ref("");
-const tipoDocumentoSelect = ref(0); //Documento selecionado
+const tipoDocumentoSelect = ref(''); //Documento selecionado
 const correo = ref("");
 const foto = ref("");
 const invitacion = ref(0);
@@ -172,12 +168,6 @@ const payload = reactive({
   documento: "",
   nombres: "",
 });
-
-//se maneja el valor recivido del input del ru
-const handleModelValueUpdate = (newValue) => {
- numeroDocumento.value = newValue;
-};
-
 /**
  * Actualiza el valor de una propiedad específica dentro del objeto 'payload'.
  *
@@ -200,7 +190,7 @@ const handleModelValueUpdate = (newValue) => {
  * //   edad: 30
  * // }
  */
-const ActualizarPayload = (propiedad, valor) => {
+ const ActualizarPayload = (propiedad, valor) => {
   // Asigna el nuevo valor a la propiedad especificada dentro del objeto 'payload'.
   payload[propiedad] = valor;
 };
@@ -215,54 +205,80 @@ watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor));
  * watch(foto, (nuevoValor) => ActualizarPayload('foto', nuevoValor));
  */
 
+// Función para crear un usuario preliminar (preuser) en el sistema.
+// Utiliza axios para realizar una solicitud POST al endpoint '/user/create_preuser'.
+// Los datos del usuario a crear se pasan como argumento 'Datos'.
 const CrearUsuario = async (Datos) => {
-  await axios.post('/user/create_preuser', Datos )
-  .then(
+ // Realiza la solicitud POST y espera la respuesta.
+ await axios.post('/user/create_preuser', Datos )
+ .then(
+    // Maneja la respuesta exitosa.
     res => {
-      console.log(res)
+      console.log(res) // Imprime la respuesta completa.
+      // Verifica si la respuesta tiene un estado HTTP 201 (Creado).
       if (res.status == 201){
-        emit("respuesta", {'texto':res.data.message, 'valor':true})
+        // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
+        emit("respuesta", {'texto':res?.data?.message, 'valor':true})
+        // Llama a la función NextModal pasando el ID del nuevo usuario.
         NextModal(res.data.newUserId);
       }            
     }
-  )
-  .catch(
+ )
+ .catch(
+    // Maneja los errores de la solicitud.
     err => {
+      // Verifica si la respuesta del error contiene un objeto de respuesta.
       if (err.response) { 
+        // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
         if (err.response.status == 422){
           console.log({'texto': "no se puede procesar la solcitud", 'valor':false});
         } 
-          console.log(err);
-          emit("respuesta", {'texto':err.response.message, 'valor':false})
+        // Imprime el error completo.
+        console.log(err);
+        // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
+        emit("respuesta", {'texto':err?.response.data?.message, 'valor':false})
       
       }
     }
-  );
+ );
 }
 
-const ActualizarDatosBasicos = async (Datos) => {
-  await axios.put('/user/save_preuser', Datos )
-  .then(
+// Función para actualizar los datos básicos de un usuario preliminar (preuser) en el sistema.
+// Utiliza axios para realizar una solicitud PUT al endpoint '/user/{EmpleadoID}/update_preuser'.
+// Los datos a actualizar se pasan como argumento 'Datos', y 'idCreator' es el ID del usuario que realiza la actualización.
+const ActualizarDatosBasicos = async (idCreator, Datos) => {
+ // Realiza la solicitud PUT y espera la respuesta.
+ await axios.put(`/user/${props.EmpleadoID}/update_preuser?user_updater=${idCreator}`, Datos )
+ .then(
+    // Maneja la respuesta exitosa.
     res => {
-      console.log(res)
-      if (res.status == 201){
-        emit("respuesta", {'texto':res.data.message, 'valor':true})
-        NextModal(props.EmpleadoID);
-      }            
+      console.log(res) // Imprime la respuesta completa.
+      // Verifica si la respuesta tiene un estado HTTP 200 (OK).
+      if (res.status == 200){
+        // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
+        emit("respuesta", {'texto':res.data?.message, 'valor':true})        
+      }
+      // Llama a la función NextModal pasando el ID del empleado.
+      NextModal(props.EmpleadoID);            
     }
-  )
-  .catch(
+ )
+ .catch(
+    // Maneja los errores de la solicitud.
     err => {
+      // Verifica si la respuesta del error contiene un objeto de respuesta.
       if (err.response) { 
+        // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
         if (err.response.status == 422){
           console.log({'texto': "no se puede procesar la solcitud", 'valor':false});
         } 
-          console.log(err);
-          emit("respuesta", {'texto':err.response, 'valor':false})
+        // Imprime el error completo.
+        console.log(err);
+        // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
+        emit("respuesta", {'texto':err.response, 'valor':false})
       
       }
     }
-  );
+ );
 }
 
  const getData = async (ID_empleado) => {
@@ -312,7 +328,8 @@ const Enviar = () => {
   if(props.EmpleadoID != null && props.EmpleadoID > 0 ){
     //getData(props.EmpleadoID)
     if(statuspay == true){
-      ActualizarDatosBasicos(payload) 
+      let ID_USERMASTER = JSON.parse(localStorage.getItem('userId'));
+      ActualizarDatosBasicos(ID_USERMASTER, payload) 
     }else {
       NextModal(props.EmpleadoID)
     }   

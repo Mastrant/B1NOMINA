@@ -290,7 +290,7 @@ const resetForm = () => {
     FechaContratacion.value = '';
     FechaFinalizacionContrato.value = '';
     SalarioBase.value = '';
-    MontoSalario.value = null;
+    MontoSalario.value = '';
     SedeDeTrabajo.value = '';
     Departamento.value = '';
     Cargo.value = '';

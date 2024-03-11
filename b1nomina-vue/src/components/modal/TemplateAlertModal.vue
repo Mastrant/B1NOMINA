@@ -49,7 +49,7 @@ watch(() => props.activarNotifiacion, (newVal) => {
     if (newVal) {
         setTimeout(() => {
             close();
-        }, 4000); // Espera 8 segundos antes de cerrar automáticamente
+        }, 10000); // Espera 8 segundos antes de cerrar automáticamente
     }
 });
 </script>

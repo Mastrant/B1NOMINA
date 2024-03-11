@@ -250,28 +250,55 @@ watch(direccion, (nuevoValor) => ActualizarPayload2('direccion', nuevoValor));
 watch(telefonoCelular, (nuevoValor) => ActualizarPayload2('telefonoCelular', nuevoValor));
 watch(telefonoLocal, (nuevoValor) => ActualizarPayload2('telefonoLocal', nuevoValor));
 
-const enviarDatosPersonales = (Data) => {
-    
-    axios(`user/${props.EmpleadoID}/save_preuser`, Data)
-    .then(
-        respuesta => {
-            emit("respuesta", {'texto':respuesta.data.message, 'valor':true})
-            NextModal(props.EmpleadoID)
-        }
-    )
-    .catch(
-        error => {
-            emit("respuesta", {'texto':"error al guardar los datos", 'valor':true})
-            console.log(error)
-        }
-    )
+const enviarDatosPersonales = async (Datos) => {
+  await axios.post('/user/create_preuser2', Datos )
+  .then(
+    res => {
+      console.log(res)
+      if (res.status == 201){
+        emit("respuesta", {'texto':res?.data?.message, 'valor':true})
+        NextModal(res.data.newUserId);
+      }            
+    }
+  )
+  .catch(
+    err => {
+      if (err.response) { 
+        if (err.response.status == 422){
+          console.log({'texto': "no se puede procesar la solcitud", 'valor':false});
+        } 
+          console.log(err);
+          emit("respuesta", {'texto':err?.response.data?.message, 'valor':false})
+      
+      }
+    }
+  );
 }
 
-const getData = (ID_empleado) => {
-    return new Promise((resolve, reject) => {
+const actualizarDatosPersonales = async (Datos) => {
+  await axios.put('/user/save_preuser', Datos )
+  .then(
+    res => {
+      console.log(res)
+      if (res.status == 201){
+        emit("respuesta", {'texto':res?.data?.message, 'valor':true})
+        NextModal(props.EmpleadoID);
+      }            
+    }
+  )
+  .catch(
+    err => {
+      console.log(err)
+    }
+  );
+}
+
+const getData =  (ID_empleado) => {
+    return new Promise( async (resolve, reject) => {
+        console.log(ID_empleado)
         if (ID_empleado != null && ID_empleado >= 0) {
             // Solicita los datos personales
-            axios.get(`/user/${ID_empleado}/precarga`)
+            await axios.get(`/user/${ID_empleado}/precarga`)
                 .then(respuesta => {
                     if (respuesta.data) {
                         console.log("Hay datos");
@@ -296,8 +323,6 @@ const getData = (ID_empleado) => {
     });
 }
 
-
-
 /**
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
@@ -318,51 +343,35 @@ const getData = (ID_empleado) => {
         if (props.EmpleadoID != null && props.EmpleadoID > 0) {
             //Almacena si hay datos Laboras o no del usuario en el sistema
             let haydatosdelusuario = getData(props.EmpleadoID);
+            console.log(haydatosdelusuario)
 
             //verifica que no ocurran errores al solicitar los datos
-            if(haydatosdelusuario != null || haydatosdelusuario != undefined){
+            if(haydatosdelusuario.value != null && haydatosdelusuario.value != undefined){
 
                 //verifica si los datos existe
                 if(haydatosdelusuario == true) {
                     console.log("Modificar datos laborales");
+                    // Recuperar el objeto como una cadena de texto y convertirlo de nuevo a un objeto
+                    let ID_USUARIO = JSON.parse(localStorage.getItem('userId'));
+                    console.log(ID_USUARIO.value)
+
                     if (statuspay2 == statuspay ) {
                         console.log("enviar datos justos");
                         let payload12 = payload + payload2;
-                        enviarDatosPersonales(payload12);
+                        actualizarDatosPersonales(ID_USUARIO, payload12);
                     }
                     if (statuspay2 == true || statuspay == true) {
                         console.log("enviar payload lleno");
                         if (statuspay == true) {
                             console.log(payload);
-                            enviarDatosPersonales(payload);
+                            actualizarDatosPersonales(ID_USUARIO, payload);
                         }
                         if (statuspay2 == true) {
                             console.log(payload2);
-                            enviarDatosPersonales(payload2);
+                            actualizarDatosPersonales(ID_USUARIO, payload2);
                         }     
                     }
-                } else { // si los datos no existe
-                    console.log("Crear datos laborales");
-                    //si ambos payloads tienen modificaciones
-                    if (statuspay2 == statuspay ) {
-                        console.log("enviar datos justos");
-                        let payload12 = payload + payload2;
-                        enviarDatosPersonales(payload12);
-                    }
-                    if (statuspay2 == true || statuspay == true) {
-                       
-                        if (statuspay == true) {
-                            console.log("enviar payload 1");
-                            console.log(payload);
-                            enviarDatosPersonales(payload);
-                        }
-                        if (statuspay2 == true) {
-                            console.log("enviar payload 2");
-                            console.log(payload2);
-                            enviarDatosPersonales(payload2);
-                        }     
-                    }   
-                }        
+                }      
             } else { // si la respues es nula
                 console.log("error al pedir los datos personales")
             }

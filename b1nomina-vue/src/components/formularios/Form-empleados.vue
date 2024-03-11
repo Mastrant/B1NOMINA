@@ -403,6 +403,9 @@
         departamento: [],//
         cargos: [],//
         grupos: [],//
+        nivelEstudio: [],//
+        unidadSueldo: [],
+
     });    
     const parametrosDPa = ref({
         bancos: [],        
@@ -416,45 +419,40 @@
                 // Verifica y procesa los parámetros recibidos para cada categoría
                 // Asegúrate de que las propiedades existan dentro de 'respuesta.data.parametros'
 
-                //Parametros personales
-                if (respuesta.data.parametros.nacionalidad) {
-                    parametrosDP.value.nacionalidad.push(...respuesta.data.parametros.nacionalidad);
+                // Mapeo de claves de respuesta.data.parametros a propiedades de destino
+                const mapeoParametros = {
+                    nacionalidad: 'nacionalidad',
+                    estadocivil: 'estadocivil',
+                    regiones: 'regiones',
+                    localidad: 'localidad',
+                    bancos: 'bancos',
+                    tipocontrato: 'tipocontrato',
+                    terminocontrato: 'terminocontrato',
+                    tiposalario: 'tiposalario',
+                    sede: 'sede',
+                    departamentos: 'departamento',
+                    cargos: 'cargos',
+                    grupos: 'grupos',
+                    unidadSueldo: 'unidadSueldo',
+                    nivelEstudio: 'nivelEstudio'
+                };
+
+                // Función para asignar valores a los objetos de destino
+                function asignarValores(parametros, objetoDestino) {
+                    for (const clave in parametros) {
+                        if (parametros.hasOwnProperty(clave) && mapeoParametros[clave]) {
+                            const propiedadDestino = mapeoParametros[clave];
+                            if (objetoDestino[propiedadDestino]) {
+                                objetoDestino[propiedadDestino].push(...parametros[clave]);
+                            }
+                        }
+                    }
                 }
-                if (respuesta.data.parametros.estadocivil) {
-                    parametrosDP.value.estadocivil.push(...respuesta.data.parametros.estadocivil);
-                }
-                if (respuesta.data.parametros.regiones) {
-                    parametrosDP.value.regiones.push(...respuesta.data.parametros.regiones);
-                }
-                if (respuesta.data.parametros.localidad) {
-                    parametrosDP.value.localidad.push(...respuesta.data.parametros.localidad);
-                }
-                //Parametros pago
-                if (respuesta.data.parametros.bancos) {
-                    parametrosDPa.value.bancos.push(...respuesta.data.parametros.bancos);
-                }
-                //Parametros Laborales
-                if (respuesta.data.parametros.tipocontrato) {
-                    parametrosDL.value.tipocontrato.push(...respuesta.data.parametros.tipocontrato);
-                }
-                if (respuesta.data.parametros.terminocontrato) {
-                    parametrosDL.value.terminocontrato.push(...respuesta.data.parametros.terminocontrato);
-                }
-                if (respuesta.data.parametros.tiposalario) {
-                    parametrosDL.value.tiposalario.push(...respuesta.data.parametros.tiposalario);
-                }
-                if (respuesta.data.parametros.sede) {
-                    parametrosDL.value.sede.push(...respuesta.data.parametros.sede);
-                }
-                if (respuesta.data.parametros.departamentos) {
-                    parametrosDL.value.departamento.push(...respuesta.data.parametros.departamentos);
-                }             
-                if (respuesta.data.parametros.cargos) {
-                    parametrosDL.value.cargos.push(...respuesta.data.parametros.cargos);
-                }
-                if (respuesta.data.parametros.grupos) {
-                    parametrosDL.value.grupos.push(...respuesta.data.parametros.grupos);
-                }    
+
+                // Asignación de valores
+                asignarValores(respuesta.data.parametros, parametrosDP.value);
+                asignarValores(respuesta.data.parametros, parametrosDPa.value);
+                asignarValores(respuesta.data.parametros, parametrosDL.value);
             }
         )
         .catch(

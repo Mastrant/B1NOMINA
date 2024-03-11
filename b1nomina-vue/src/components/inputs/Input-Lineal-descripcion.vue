@@ -35,84 +35,88 @@
 */
 import { defineProps } from 'vue';
 
-const props = defineProps({
-    
-    //props de funcionamiento
-    modelValue: {
-        type: [String, Number],
-        default: '',
-    },
-    //props de formato y estilos
-    Placeholder : {
-        type: [String, Number],
-        default: 'Datos del campo',
-    },
-    Titulo: {
-        type: String, // Corrección aquí
-        default: "Titulo"
-    },
-    Tipo: {
-        type: String, // Corrección aquí
-        default: 'text'
-    },
-    Deshabilitar: {
-        type: Boolean,
-        default:false,
-    },
-    minimoCaracteres: {
-        type: [Number, String],
-        default: 3
-    },
-    maximoCaracteres: {
-        type:[Number, String],
-        default: 100
-    },
-    requerido: {
-        type: Boolean,
-        default: false
+const props = defineProps(
+    {
+        // Props de funcionamiento
+        modelValue: {
+            type: [String, Number], // Define el tipo de dato que puede recibir, String o Number.
+            default: '', // Valor por defecto en caso de que no se proporcione un valor.
+        },
+        // Props de formato y estilos
+        Placeholder : {
+            type: [String, Number], // Define el tipo de dato que puede recibir, String o Number.
+            default: 'Datos del campo', // Valor por defecto para el placeholder.
+        },
+        Titulo: {
+            type: String, // Define el tipo de dato que puede recibir, String.
+            default: "Titulo" // Valor por defecto para el título.
+        },
+        Tipo: {
+            type: String, // Define el tipo de dato que puede recibir, String.
+            default: 'text' // Valor por defecto para el tipo de input, en este caso, texto.
+        },
+        Deshabilitar: {
+            type: Boolean, // Define el tipo de dato que puede recibir, Boolean.
+            default:false, // Valor por defecto, el input no estará deshabilitado.
+        },
+        minimoCaracteres: {
+            type: [Number, String], // Define el tipo de dato que puede recibir, Number o String.
+            default: 3 // Valor por defecto para el mínimo de caracteres permitidos.
+        },
+        maximoCaracteres: {
+            type:[Number, String], // Define el tipo de dato que puede recibir, Number o String.
+            default: 100 // Valor por defecto para el máximo de caracteres permitidos.
+        },
+        requerido: {
+            type: Boolean, // Define el tipo de dato que puede recibir, Boolean.
+            default: false // Valor por defecto, el input no será requerido.
+        }
     }
-});
+);
 </script>
 
 
 <style scoped>
+/* Establece el estilo para un contenedor de entrada de línea, utilizando flexbox para organizar sus elementos hijos en una columna. */
 div.input-line-contend {
-    border-bottom: 2.5px solid #000741 ;
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    width: 100%;
-    max-height: 66px;
-    align-self: center;
+    border-bottom: 2.5px solid #000741; /* Define un borde inferior de 2.5px de ancho y color azul oscuro. */
+    display: flex; /* Utiliza flexbox para el diseño. */
+    flex-direction: column; /* Organiza los elementos hijos en una columna vertical. */
+    box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el ancho y la altura del elemento. */
+    width: 100%; /* Ocupa el ancho completo del contenedor padre. */
+    max-height: 66px; /* Establece una altura máxima de 66px para el contenedor. */
+    align-self: center; /* Centra el contenedor dentro de su contenedor padre. */
 }
 
+/* Establece el estilo para las etiquetas de entrada dentro del contenedor de entrada de línea. */
 label.input-label {
-    font-size: 13px;
-    font-family: Poppins;
-    font-weight: 500;
-    word-wrap: break-word;
-    color: #888888
-    
+    font-size: 13px; /* Establece el tamaño de fuente a 13px. */
+    font-family: Poppins; /* Utiliza la fuente Poppins. */
+    font-weight: 500; /* Establece el peso de la fuente a 500 (medio). */
+    word-wrap: break-word; /* Permite que las palabras largas se rompan y pasen a la siguiente línea. */
+    color: #888888; /* Establece el color del texto a un gris claro. */
 }
+
+/* Establece el estilo para los spans dentro de las etiquetas de entrada. */
 label.input-label span{
-    color: #E32A40;
-    font-size: 13px;
-    font-family: Poppins;
-    font-weight: 500;
-    word-wrap: break-word;
+    color: #E32A40; /* Establece el color del texto a un rojo vibrante. */
+    font-size: 13px; /* Establece el tamaño de fuente a 13px. */
+    font-family: Poppins; /* Utiliza la fuente Poppins. */
+    font-weight: 500; /* Establece el peso de la fuente a 500 (medio). */
+    word-wrap: break-word; /* Permite que las palabras largas se rompan y pasen a la siguiente línea. */
 }
 
+/* Establece el estilo para los campos de entrada dentro del contenedor de entrada de línea. */
 input.input-template {
-    margin-top: 8px;
-    color: #1A245B; 
-    font-size: 18px;
-    border: none;
-    height: 50px;
+    margin-top: 8px; /* Establece un margen superior de 8px. */
+    color: #1A245B; /* Establece el color del texto a un azul oscuro. */
+    font-size: 18px; /* Establece el tamaño de fuente a 18px. */
+    border: none; /* Elimina el borde del campo de entrada. */
+    height: 50px; /* Establece una altura de 50px para el campo de entrada. */
 }
 
+/* Establece el estilo para el estado de foco del campo de entrada. */
 input.input-template:focus {
-    outline: none;
+    outline: none; /* Elimina el contorno que aparece cuando el campo de entrada está enfocado. */
 }
-
-
 </style>

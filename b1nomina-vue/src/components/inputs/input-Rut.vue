@@ -67,7 +67,6 @@ const checkRutFormato = () => {
     const valor = rut.value.replace('.', '').replace('-', '');
     const cuerpo = valor.slice(0, -1);
     let dv = valor.slice(-1).toUpperCase();
-    rut.value = cuerpo + '-' + dv;
 
     // Validaciones del RUT
     if (valor.length > 9 || cuerpo.length < 7) {
@@ -79,7 +78,7 @@ const checkRutFormato = () => {
     let suma = 0;
     let multiplo = 2;
     for (let i = 1; i <= cuerpo.length; i++) {
-        const index = multiplo * valor.charAt(cuerpo.length - i);
+        const index = multiplo * cuerpo.charAt(cuerpo.length - i);
         suma += index;
         multiplo = (multiplo < 7) ? multiplo + 1 : 2;
     }
@@ -90,20 +89,23 @@ const checkRutFormato = () => {
 
     if (dvEsperado !== dv) {
         isError.value = true; // Marcar el input como error
-        console.log('Emitiendo valor actualizado:', numeroDocumento.value); // Agrega esta línea
-        emit('update:modelValue', numeroDocumento.value);
         return;
     }
 
     // Si todo está bien, no se muestra ningún mensaje de error
     isError.value = false; // Restablecer el estado de error
 
-     // Emitir el valor actualizado al componente padre
-    console.log('Emitiendo valor actualizado:', numeroDocumento.value); // Agrega esta línea
-    emit('update:modelValue', numeroDocumento.value);
+    // Formatear el RUT correctamente antes de emitirlo
+    const rutFormateado = cuerpo + '-' + dv;
+    rut.value = rutFormateado; // Actualizar el valor del input con el formato correcto
+
+    // Emitir el valor actualizado al componente padre
+    console.log('Emitiendo valor actualizado:', rutFormateado); // Agrega esta línea
+    emit('update:modelValue', rutFormateado);
 
     return true;
 };
+
 
 </script>
 

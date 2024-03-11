@@ -73,12 +73,12 @@
         
         <h2 class="titulo-form">Información Adicional</h2> 
         <div class="row-form">
-            <LayoutInputLineal textLabel="Salario base">
+            <LayoutInputLineal textLabel="Modificar Campo">
                 <template v-slot>
                     
                 </template>
             </LayoutInputLineal>
-            <LayoutInputLineal textLabel="Salario base">
+            <LayoutInputLineal textLabel="Modificar Campo">
                 <template v-slot>
                     
                 </template>
