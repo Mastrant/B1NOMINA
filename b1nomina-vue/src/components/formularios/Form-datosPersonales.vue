@@ -250,21 +250,30 @@ watch(direccion, (nuevoValor) => ActualizarPayload2('direccion', nuevoValor));
 watch(telefonoCelular, (nuevoValor) => ActualizarPayload2('telefonoCelular', nuevoValor));
 watch(telefonoLocal, (nuevoValor) => ActualizarPayload2('telefonoLocal', nuevoValor));
 
-const enviarDatosPersonales = (Data) => {
+const enviarDatosPersonales = async (Data) => {
     
-    axios(`user/${props.EmpleadoID}/save_preuser`, Data)
+    await axios.post('/user/create_preuser', Datos )
     .then(
-        respuesta => {
-            emit("respuesta", {'texto':respuesta.data.message, 'valor':true})
-            NextModal(props.EmpleadoID)
-        }
-    )
-    .catch(
-        error => {
-            emit("respuesta", {'texto':"error al guardar los datos", 'valor':true})
-            console.log(error)
-        }
-    )
+    res => {
+      console.log(res)
+      if (res.status == 201){
+        emit("respuesta", {'texto':res.data.message, 'valor':true})
+        NextModal(res.data.newUserId);
+      }            
+    }
+  )
+  .catch(
+    err => {
+      if (err.response) { 
+        if (err.response.status == 422){
+          console.log({'texto': "no se puede procesar la solcitud", 'valor':false});
+        } 
+          console.log(err);
+          emit("respuesta", {'texto':err.response.message, 'valor':false})
+      
+      }
+    }
+  );
 }
 
 const getData = (ID_empleado) => {
