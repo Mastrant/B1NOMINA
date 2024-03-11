@@ -28,7 +28,7 @@ axios.interceptors.response.use(
     response => response,
     error => {
       // Verifica si el error es un error  422 internal server
-      if (error.response && error.response.status ===  4220 ) {
+      if (error.response && error.response.status ===  422 ) {
         // Elimina el token del almacenamiento local
         localStorage.clear();
   
