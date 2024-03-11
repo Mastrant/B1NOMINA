@@ -3,7 +3,7 @@
         <div v-for="(item) in sociedadesRef" :key="item.id">
             <Suspense>
                 <template #default>
-                   <CardSociedad  :name="item.nombre" :id="item.id" :icon="`${item.icon}`"/>
+                   <CardSociedad  :name="item.nombre" :id="item.id"/>
                 </template> 
                 <template  #fallback>
                     <cargarSociedad />

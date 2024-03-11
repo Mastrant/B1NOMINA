@@ -1,8 +1,10 @@
 <template>
     <div class="cardsociedad">
         <div class="cardsociedad-body">
-            <h3 class="cardsociedad-titulo">{{ name }}</h3>
-            <img class="cardAvatar" :href="icon" alt="ICON sociedad">
+            <h3 class="cardsociedad-titulo titulo">
+                {{ name }}
+            </h3>
+            <img class="cardAvatar" src="../components/icons/svg/Avatar-svg-icon.svg" alt="ICON sociedad">
             <router-link class="cardsociedad-button" :to="`/sociedad/${id}/`">
                     Selecionar
             </router-link>
@@ -25,7 +27,7 @@ export default {
         //icono de la sociedad
         icon : {
             String,
-            default: '@/avatars/Avatar1.vue'
+            default: '@/icons/svg/Avatar-svg-icon.svg'
         }
     },
 }
@@ -42,7 +44,6 @@ div.cardsociedad {
     flex-direction: column;
     justify-content: center;
     align-items: flex;
-    gap: 12px;
     display: inline-flex;
     width: 220px;
     height: 200px;
@@ -56,15 +57,15 @@ div.cardsociedad {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 12px;
 }
 
-.cardsociedad h3.card-titulo {
+.cardsociedad > h3.cardsociedad-titulo {
     color: black;
     font-size: 24px;
     font-weight: 500;
     line-height: 34px;
     word-wrap: break-word;
-    margin-bottom: 12px;
     margin: 0;
     height: 34px;
     align-items: center;
@@ -97,6 +98,10 @@ div.cardsociedad {
 img.cardAvatar {
     width: 96px;
     height: 96px;
+}
+
+.titulo {
+    margin: 0;
 }
 
 </style>

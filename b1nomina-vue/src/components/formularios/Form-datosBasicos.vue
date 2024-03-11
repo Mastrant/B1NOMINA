@@ -280,6 +280,7 @@ const ActualizarDatosBasicos = async (idCreator, Datos) => {
  );
 }
 
+//OPTIENE LA DATA DEL USUARIO indicado retorna verdadero o falso si se encuentra o no
  const getData = async (ID_empleado) => {
     if(ID_empleado == null){
         return null;

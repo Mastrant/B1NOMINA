@@ -7,7 +7,8 @@
                     <ListaTemplateLineal  
                         v-model="nacionalidad" 
                         :options="ListaNacionalidad" 
-                        :requerido="formulario1Requerido"                        
+                        :requerido="formulario1Requerido"    
+                        optionsSelected="Seleccionar"                    
                     />
                 </template>
             </LayoutInputLineal>
@@ -275,20 +276,31 @@ const enviarDatosPersonales = async (Datos) => {
   );
 }
 
-const actualizarDatosPersonales = async (Datos) => {
-  await axios.put('/user/save_preuser', Datos )
+const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
+  await axios.put(`/user/${props.EmpleadoID}/save_preuser?userUpdater=${ID_USERMASTER}`, Datos )
   .then(
     res => {
       console.log(res)
-      if (res.status == 201){
+      if (res?.status == 201 || res?.status == 200 ){
         emit("respuesta", {'texto':res?.data?.message, 'valor':true})
         NextModal(props.EmpleadoID);
       }            
     }
   )
   .catch(
+    // Maneja los errores de la solicitud.
     err => {
-      console.log(err)
+      // Verifica si la respuesta del error contiene un objeto de respuesta.
+      if (err?.response) { 
+        // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
+        if (err.response.status == 422){
+          emit({'texto': "no se puede procesar la solcitud", 'valor':false});
+        } 
+        // Imprime el error completo.
+        console.log(err);
+        // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
+        emit("respuesta", {'texto':err.response, 'valor':false})      
+      }
     }
   );
 }
@@ -328,7 +340,7 @@ const getData =  (ID_empleado) => {
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
- const Enviar = () => {
+ const Enviar =  async () => {
     if (props.EmpleadoID == null) {
         console.log("enviar al formulario 1");
     }
@@ -340,13 +352,13 @@ const getData =  (ID_empleado) => {
     //si uno de los payload tiene cambios
     if (statuspay  == true || statuspay2 == true){
         //verifica que el id pasado sea diferente de nullo y mayor que 0
-        if (props.EmpleadoID != null && props.EmpleadoID > 0) {
+        if (props.EmpleadoID != null && props.EmpleadoID >= 0) {
             //Almacena si hay datos Laboras o no del usuario en el sistema
-            let haydatosdelusuario = getData(props.EmpleadoID);
+            let haydatosdelusuario = await getData(props.EmpleadoID);
             console.log(haydatosdelusuario)
 
             //verifica que no ocurran errores al solicitar los datos
-            if(haydatosdelusuario.value != null && haydatosdelusuario.value != undefined){
+            if(haydatosdelusuario != null && haydatosdelusuario != undefined){
 
                 //verifica si los datos existe
                 if(haydatosdelusuario == true) {
