@@ -56,24 +56,24 @@
         <h2 class="titulo-form">Datos de contacto</h2>
 
         <div class="row-form">
-            <LayoutInputLineal textLabel="Region" :requerido="formulario2Requerido">
+            <LayoutInputLineal textLabel="Region" :requerido="formulario1Requerido">
                 <template v-slot>
                     <ListaTemplateLineal 
                         v-model="region" 
                         :options="parametros.regiones" 
                         optionsSelected="Seleccionar"
-                        :requerido="formulario2Requerido"
+                        :requerido="formulario1Requerido"
                     />
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Localidad" :requerido="formulario2Requerido">
+            <LayoutInputLineal textLabel="Localidad" :requerido="formulario1Requerido">
                 <template v-slot>
                     <ListaTemplateLineal 
                         v-model="localidad" 
                         :options="ListaLocalidad" 
                         optionsSelected="Seleccionar"
-                        :requerido="formulario2Requerido"
+                        :requerido="formulario1Requerido"
                     />
                 </template>
             </LayoutInputLineal>
@@ -85,7 +85,7 @@
                 Titulo="Direccion" 
                 v-model="direccion"
                 @update:modelValue="direccion = $event"
-                :requerido="formulario2Requerido"
+                :requerido="formulario1Requerido"
             />
         </div>
 
@@ -98,7 +98,7 @@
                 @update:modelValue="telefonoCelular = $event"
                 :minimo-caracteres="8"
                 :maximo-caracteres="12"
-                :requerido="formulario2Requerido"
+                :requerido="formulario1Requerido"
             />
 
             <InputLinealDescripcion 
@@ -106,6 +106,7 @@
                 Titulo="Teléfono Local" 
                 v-model="telefonoLocal"
                 @update:modelValue="telefonoLocal = $event"
+                :requerido="formulario1Requerido"
             />
         </div>
         
