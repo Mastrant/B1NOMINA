@@ -286,7 +286,6 @@ const payload2 = reactive({
 const ActualizarPayload = (propiedad, valor) => {
     payload[propiedad] = valor;
     formulario1Requerido.value = Object.values(payload).some(value => value !== "")
-    console.log(valor)
 };
 //actualizar datos del payload2
 
@@ -311,13 +310,13 @@ watch(TerminoContrato,
 );
 watch(FechaContratacion, (nuevoValor) => ActualizarPayload('fecha_inicio', nuevoValor));
 watch(FechaFinalizacionContrato, (nuevoValor) => ActualizarPayload('fecha_fin', nuevoValor));
-watch(SalarioBase, (nuevoValor) => ActualizarPayload('periodo_salario', nuevoValor));
-watch(UnidadSueldo, (nuevoValor) => ActualizarPayload('unidad_sueldo', nuevoValor));
+watch(SalarioBase, (nuevoValor) => ActualizarPayload('periodo_salario', Number(nuevoValor)));
+watch(UnidadSueldo, (nuevoValor) => ActualizarPayload('unidad_sueldo', Number(nuevoValor)));
 watch(MontoSalario, (nuevoValor) => ActualizarPayload('salario_base', nuevoValor));
-watch(SedeDeTrabajo, (nuevoValor) => ActualizarPayload('sede_id', nuevoValor));
-watch(Departamento, (nuevoValor) => ActualizarPayload('departamento_id', nuevoValor));
-watch(Cargo, (nuevoValor) => ActualizarPayload('cargo_id', nuevoValor));
-watch(Grupo, (nuevoValor) => ActualizarPayload('grupo_id', nuevoValor));
+watch(SedeDeTrabajo, (nuevoValor) => ActualizarPayload('sede_id', Number(nuevoValor)));
+watch(Departamento, (nuevoValor) => ActualizarPayload('departamento_id', Number(nuevoValor)));
+watch(Cargo, (nuevoValor) => ActualizarPayload('cargo_id', Number(nuevoValor)));
+watch(Grupo, (nuevoValor) => ActualizarPayload('grupo_id', Number(nuevoValor)));
 watch(Modalidad, (nuevoValor) => ActualizarPayload('modalidad', Number(nuevoValor)));
 
 const resetForm = () => {
@@ -331,7 +330,7 @@ const resetForm = () => {
     Departamento.value = '';
     Cargo.value = '';
     Grupo.value = '';
-    Modalidad.value = 0;
+    Modalidad.value = '';
     ListaDiasLibres.value = []
     // Reinicia el payload
     Object.keys(payload).forEach(key => {
@@ -398,7 +397,7 @@ const actualizadDatosLaborales = async (Data) =>{
     }
 }
 
-const getData = (ID_empleado) => {
+const getData = async (ID_empleado) => {
     return new Promise(async (resolve, reject) => {
         if (ID_empleado != null && ID_empleado >= 0) {
             try {
@@ -464,14 +463,22 @@ const getData = (ID_empleado) => {
                     console.log("creardata")
                     if(ID_USUARIO > 0){
                         payload.user_id = props.EmpleadoID                        
-                        payload.sociedad_id = idSociedad
-                        if(ListaDiasLibres.value.length >= 1){
+                        payload.sociedad_id = Number(idSociedad)
+                        
+                        if (ListaDiasLibres.value.length >= 1) {
                             payload.dias_descanso = ListaDiasLibres.value.join(",")
                         } else {
-                            payload.dias_descanso = '6,7'
+                            payload.dias_descanso = '6,7';
                         }
+
+                        if (payload.modalidad == ''){
+                            payload.modalidad = 0
+                        }
+
+                        
+                        crearDatoslaborales(ID_USUARIO, payload)
+
                         console.log(payload)
-                        crearDatoslaborales(ID_USUARIO,payload)
                     } else {
                         console.log("usuario no autorizado")
                     }                    

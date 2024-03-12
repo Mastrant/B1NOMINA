@@ -67,7 +67,6 @@
                 v-model="NCuenta"
                 @update:modelValue="NCuenta = $event"
                 :minimo-caracteres="16"
-                :maximo-caracteres="16"
             />
         </div>  
         
@@ -115,8 +114,6 @@ const emit = defineEmits([
     'respuesta',
 ]);
 
-const DatosIdUser_existe = ref(false);
-
 // inicializacion de variables reactivas
 const MedioPago = ref(0);
 const Banco = ref('');
@@ -139,8 +136,8 @@ const ActualizarPayload = (propiedad, valor) => {
 };
 
 watch(Banco, (nuevoValor) => ActualizarPayload('banco_id', nuevoValor));
-watch(MedioPago, (nuevoValor) => ActualizarPayload('medio', nuevoValor));
-watch(TCuenta, (nuevoValor) => ActualizarPayload('tipo_cuenta', nuevoValor));
+watch(MedioPago, (nuevoValor) => ActualizarPayload('medio', Number(nuevoValor)));
+watch(TCuenta, (nuevoValor) => ActualizarPayload('tipo_cuenta', Number( nuevoValor)));
 watch(NCuenta, (nuevoValor) => ActualizarPayload('NumeroCuenta', nuevoValor));
 
 const resetForm = () => {
@@ -160,7 +157,7 @@ defineExpose({
 
 const CloseModal = () => {
     console.log("closeModal")
-    emit('closeModal');
+    //emit('closeModal');
 };
 
 const crearDatosPago = async (ID_USERMASTER,Data) => {
@@ -196,35 +193,34 @@ const crearDatosPago = async (ID_USERMASTER,Data) => {
     );
 }
 
-const getData = async (IDUser) => {
-    if(IDUser == null){
-        return null;
-    }
-
-    if(ID_empleado != null & ID_empleado >= 0){
-      //solicita los datos personales
-      await axios.get(`/get_datos_pago_user`, IDUser)
-      .then(
-        respuesta => {
-          if(respuesta.data){
-            console.log("Hay datos")
-            return true;
-          }
+const getData = async (ID_empleado) => {
+    return new Promise(async (resolve, reject) => {
+        if (ID_empleado != null && ID_empleado >= 0) {
+            try {
+                // Solicita los datos personales
+                const respuesta =  await axios.get(`/datos_pago/${ID_empleado}`)
+                console.log(respuesta);
+                if (respuesta?.data) {
+                    // Resuelve la promesa con true si hay datos
+                    resolve({ success: true, data: respuesta.data });
+                } else {
+                    // Resuelve la promesa con false si no hay datos
+                    resolve({ success: false, data: {} });
+                }
+            } catch (error) {
+                if (error.response && error.response.status == 404) {
+                    // Resuelve la promesa con false si no hay datos
+                    resolve({ success: false, data: {} });
+                } else {
+                    // Rechaza la promesa si hay un error distinto de 404
+                    reject(error);
+                }
+            }
+        } else {
+            // Rechaza la promesa si el ID es inválido
+            reject(new Error('ID de empleado inválido'));
         }
-      )
-      .catch(
-        error => {
-          if(error.status == 422){
-            return null;
-          } else if(error.status == 404 ){
-            console.log("no hay datos")
-            console.log(error)
-            return false;
-          }            
-        }
-      )
-    }
-
+    });
 }
 
 /**
@@ -232,13 +228,14 @@ const getData = async (IDUser) => {
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
- const Enviar = () => {
+ const Enviar = async () => {
     if (props.EmpleadoID == null) {
         console.log("enviar al formulario 1");
     }
 
+    let statuspay = Object.values(payload).some(value => value !== "");
    //si uno de los payload tiene cambios
-   if (statuspay  == true){
+    if (statuspay  == true){
         //verifica que el id pasado sea diferente de nullo y mayor que 0
         if (props.EmpleadoID != null && props.EmpleadoID > 0) {
             //Almacena si hay datos Laboras o no del usuario en el sistema
@@ -256,21 +253,23 @@ const getData = async (IDUser) => {
                 } else {
                     console.log("creardata")
                     if(ID_USUARIO > 0){
-                        payload.user_id = props.EmpleadoID                        
-                        payload.sociedad_id = idSociedad
-                        if(ListaDiasLibres.value.length >= 1){
-                            payload.dias_descanso = ListaDiasLibres.value.join(",")
-                        } else {
-                            payload.dias_descanso = '6,7'
+                        payload.user_id = props.EmpleadoID       
+                        
+                        //Si el medio es diferente de cheque, se borran los otros campos al enviar
+                        if(payload.medio == 0){
+                            payload.NumeroCuenta = 0;
+                            payload.banco_id = 0;
+                            payload.tipo_cuenta = 0; 
                         }
                         console.log(payload)
-                        crearDatoslaborales(ID_USUARIO,payload)
+                        //ejecuta la peticion
+                        crearDatosPago(ID_USUARIO, payload)
                     } else {
-                        console.log("usuario no autorizado")
+                        emit("respuesta", {"texto":"Usuario no autorizado", "valor": false})
                     }                    
                 }
             } else {
-                emit("nextModal", {"texto":"error al verificar los datos del empleado", "valor": false})
+                emit("respuesta", {"texto":"error al verificar los datos del empleado", "valor": false})
             }
 
             
