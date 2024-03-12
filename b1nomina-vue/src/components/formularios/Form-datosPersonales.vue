@@ -121,7 +121,7 @@ import InputRadioButton from '../botones/Input-Radio-button.vue';
 
 import axios from "axios";
 
-import { ref, watch, defineEmits, defineProps, reactive, defineExpose, onBeforeMount, onMounted} from 'vue';
+import { ref, watch, defineEmits, defineProps, reactive, defineExpose} from 'vue';
 
 // Define los eventos que el componente puede emitir
 const emit = defineEmits([
@@ -143,20 +143,20 @@ const props = defineProps({
 // Método para reiniciar el formulario
 const resetForm = () => {
     //datos personales
-    nacionalidad.value = '';
-    genero.value = '';
-    fechaNacimiento.value = '';
-    estadoCivil.value = '';
+    nacionalidad.value = "";
+    genero.value = "";
+    fechaNacimiento.value = "";
+    estadoCivil.value = "";
 
     //datos de contacto
-    region.value = '';
-    localidad.value = '';
-    direccion.value = '';
-    telefonoLocal.value = '';
-    telefonoCelular.value = '';
+    region.value = "";
+    localidad.value = "";
+    direccion.value = "";
+    telefonoLocal.value = null;
+    telefonoCelular.value = "";
     // Reinicia el payload
     Object.keys(payload).forEach(key => {
-        payload[key] = '';
+        payload[key] = "";
     });
 
     formulario1Requerido.value = false;
@@ -204,19 +204,19 @@ const telefonoLocal = ref('');
 
 // payload del formulario datos personales
 const payload = reactive({
-    nacionalidad: '',
-    genero: '',
-    fechaNacimiento: '',
-    estadoCivil: '',
+    "nacionalidad": "",
+    "genero": "",
+    "fechaNacimiento": "",
+    "estadoCivil": "",
 });
 
 // payload del formulario datos de contacto
 const payload2 = reactive({
-    region: '',
-    localidad: '',
-    direccion: '',
-    telefonoCelular: '',
-    telefonoLocal: '',
+    "region": "",
+    "localidad": "",
+    "direccion": "",
+    "telefonoCelular": "",
+    "telefonoLocal": '',
 });
 
 //filtra la lista de regiones segun el id
@@ -277,10 +277,10 @@ const enviarDatosPersonales = async (Datos) => {
 }
 
 const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
+    console.log(Datos)
   await axios.put(`/user/${props.EmpleadoID}/save_preuser?userUpdater=${ID_USERMASTER}`, Datos )
   .then(
     res => {
-      console.log(res)
       if (res?.status == 201 || res?.status == 200 ){
         emit("respuesta", {'texto':res?.data?.message, 'valor':true})
         NextModal(props.EmpleadoID);
@@ -292,10 +292,6 @@ const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
     err => {
       // Verifica si la respuesta del error contiene un objeto de respuesta.
       if (err?.response) { 
-        // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
-        if (err.response.status == 422){
-          emit({'texto': "no se puede procesar la solcitud", 'valor':false});
-        } 
         // Imprime el error completo.
         console.log(err);
         // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
@@ -341,6 +337,7 @@ const getData =  (ID_empleado) => {
  * Ejecuta la peticion con axios
  */
  const Enviar =  async () => {
+    console.log(props.EmpleadoID)
     if (props.EmpleadoID == null) {
         console.log("enviar al formulario 1");
     }

@@ -32,7 +32,10 @@
             <EmpleadosRow  v-for="(item) in DatosPaginados" :key="item.id">
                 <!--ChecBox-->
                 <template v-slot:checkbox>
-                    <InputCheckbox :Objid="item.id" @update="InteraccionListaEmpleadosSelecionados" />
+                    <InputCheckbox 
+                        :Objid="item.id" 
+                        @update="InteraccionListaEmpleadosSelecionados"
+                    />
                 </template>
                 <!--Nombre y apelidos-->
                 <template v-slot:NombresApellidos>
@@ -54,7 +57,11 @@
                 </template>
                 <!--Estado-->
                 <template v-slot:activateComponente>
-                    <InterruptorButton @click=" () => console.log('estado cambiado' + item.id)" :Objid="item.id" :Estado="(item.activo == true)? true :false" />
+                    <InterruptorButton 
+                        @click=" () => console.log('estado cambiado' + item.id)" 
+                        :Objid="item.id" 
+                        :Estado="(item.activo == true)? true :false" 
+                    />
                     <span v-if="item.activo == true">Activo</span>
                     <span v-else>Inactivo</span>
                 </template>

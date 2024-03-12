@@ -214,7 +214,6 @@ const CrearUsuario = async (Datos) => {
  .then(
     // Maneja la respuesta exitosa.
     res => {
-      console.log(res) // Imprime la respuesta completa.
       // Verifica si la respuesta tiene un estado HTTP 201 (Creado).
       if (res.status == 201){
         // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
@@ -228,15 +227,15 @@ const CrearUsuario = async (Datos) => {
     // Maneja los errores de la solicitud.
     err => {
       // Verifica si la respuesta del error contiene un objeto de respuesta.
-      if (err.response) { 
+      if (err?.response) { 
         // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
-        if (err.response.status == 422){
+        if (err.response?.status == 422){
           emit({'texto': "no se puede procesar la solcitud", 'valor':false});
         } 
         // Imprime el error completo.
         console.log(err);
         // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
-        emit("respuesta", {'texto':err?.response.data?.message, 'valor':false})
+        emit("respuesta", {'texto':err?.response?.data?.message, 'valor':false})
       
       }
     }
@@ -252,7 +251,6 @@ const ActualizarDatosBasicos = async (idCreator, Datos) => {
  .then(
     // Maneja la respuesta exitosa.
     res => {
-      console.log(res) // Imprime la respuesta completa.
       // Verifica si la respuesta tiene un estado HTTP 200 (OK).
       if (res.status == 200){
         // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
@@ -271,10 +269,8 @@ const ActualizarDatosBasicos = async (idCreator, Datos) => {
         if (err.response.status == 422){
           emit.log({'texto': "no se puede procesar la solcitud", 'valor':false});
         } 
-        // Imprime el error completo.
-        console.log(err);
         // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
-        emit("respuesta", {'texto':err.response, 'valor':false})      
+        emit("respuesta", {'texto':err.response.data.message, 'valor':false})      
       }
     }
  );
@@ -291,7 +287,7 @@ const ActualizarDatosBasicos = async (idCreator, Datos) => {
       .then(
         respuesta => {
           if(respuesta.data){
-            console.log("Hay datos")
+            //si hay datos del usuario
             return true;
           }
         }
@@ -299,10 +295,10 @@ const ActualizarDatosBasicos = async (idCreator, Datos) => {
       .catch(
         error => {
           if(error.status == 422){
+            //problema al pedir los datos
             return null;
           } else if(error.status == 404 ){
-            console.log("no hay datos")
-            console.log(error)
+            //si no hay datos
             return false;
           }            
         }
@@ -317,7 +313,6 @@ const ActualizarDatosBasicos = async (idCreator, Datos) => {
  */
 const Enviar = () => {
   console.log(props.EmpleadoID)
-  console.log(payload)
   //si ID es nulo crea un usuario
   let statuspay = Object.values(payload).some(value => value !== "");
 

@@ -69,7 +69,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="SalarioBase" 
-                        :options="{}" 
+                        :options="[{}]" 
                         :requerido="false"
                         optionsSelected="Seleccionar"
                     />
@@ -136,11 +136,12 @@
 
             <LayoutInputLineal textLabel="Modalidad" :requerido="formulario2Requerido">
                 <template v-slot>
-                    <InterruptorButton
-                        v-model="Modalidad"
+                    <InterruptorButton 
+                        @ValorEstado="verEstado"
                         Objid="Teletrabajo"
                         Texto="Teletrabajo"
-                        :Estado="(false)? true :false"
+                        Tipo="individual"
+                        :Estado="(EstatusModalidad)? true :false"
                         :requerido="formulario2Requerido"
                     />
                 </template>
@@ -188,6 +189,14 @@ const props = defineProps({
 const emit = defineEmits([
   "nextModal", // Nombre del evento que puede ser emitido por este componente
 ]);
+
+const EstatusModalidad = ref(false);
+
+const verEstado = (valor) => {
+    (valor == true)
+        ? Modalidad.value = 1
+        : Modalidad.value = 0
+}
 
 //inicialiacion de las varables
 const formulario1Requerido = ref(false)
@@ -243,12 +252,6 @@ const payload = reactive({
     FechaFinalizacionContrato: '',
     SalarioBase: '',
     MontoSalario: '',
-    SedeDeTrabajo: '',
-    Departamento: '',
-    Cargo: '',
-    Grupo: '',
-    Modalidad: '',
-    DiasLibres : '',
 });
 
 const payload2 = reactive({
@@ -295,7 +298,7 @@ const resetForm = () => {
     Departamento.value = '';
     Cargo.value = '';
     Grupo.value = '';
-    Modalidad.value = '';
+    Modalidad.value = 0;
     ListaDiasLibres.value = []
     // Reinicia el payload
     Object.keys(payload).forEach(key => {
@@ -312,8 +315,6 @@ defineExpose({
 const NextModal = (idEpleadoCreado) => {
   emit("nextModal", idEpleadoCreado); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
 };
-
-
 
 const crearDatoslaborales = async (Data) => {
     await axios.post(`create_datos_laborales`,Data)
@@ -340,16 +341,14 @@ const actualizadDatosLaborales = async (Data) =>{
     .catch(
         err => {
             console.log("error al crear los datos")
-        }
-    )
+        })
     }
-
 }
 
 const getData = (ID_empleado) => {
- return new Promise((resolve, reject) => {
+ return new Promise(async (resolve, reject) => {
     if (ID_empleado != null && ID_empleado >= 0) {
-      axios.get(`/datos_laborales/${ID_empleado}`, {'id': Number(ID_empleado)})
+        await axios.get(`/datos_laborales/${ID_empleado}`, {'id': Number(ID_empleado)})
         .then(respuesta => {
           if (respuesta.data) {
             console.log("Hay datos");
@@ -359,7 +358,7 @@ const getData = (ID_empleado) => {
           }
         })
         .catch(error => {
-          console.log(error);
+            emit("respuesta", {'texto':error.response?.message, 'valor':false})   
           reject(false); // Rechaza la promesa si hay un error
         });
     } else {
@@ -390,10 +389,10 @@ const getData = (ID_empleado) => {
         if (props.EmpleadoID != null && props.EmpleadoID > 0) {
             //Almacena si hay datos Laboras o no del usuario en el sistema
             let haydatosdelusuario = await getData(props.EmpleadoID);
+            console.log(haydatosdelusuario)
 
             //verifica que no ocurran errores al solicitar los datos
             if(haydatosdelusuario != null){
-
                 //verifica si los datos existe
                 if(haydatosdelusuario == true) {
                     console.log("Modificar datos laborales");
@@ -403,17 +402,15 @@ const getData = (ID_empleado) => {
                     if (statuspay2 == statuspay ) {
                         console.log("enviar datos justos");
                         let payload12 = payload + payload2;
-                        crearDatoslaborales(payload12);
+                        console.log(payload12)
                     }
                     if (statuspay2 == true || statuspay == true) {
                         console.log("enviar payload lleno");
                         if (statuspay == true) {
                             console.log(payload);
-                            crearDatoslaborales(payload);
                         }
                         if (statuspay2 == true) {
                             console.log(payload2);
-                            crearDatoslaborales(payload2);
                         }     
                     }   
                 }        

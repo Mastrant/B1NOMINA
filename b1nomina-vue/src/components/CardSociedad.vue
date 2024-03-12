@@ -1,5 +1,5 @@
 <template>
-    <div class="cardsociedad">
+    <div class="cardsociedad" :id="`card${id}`">
         <div class="cardsociedad-body">
             <h3 class="cardsociedad-titulo titulo">
                 {{ name }}
