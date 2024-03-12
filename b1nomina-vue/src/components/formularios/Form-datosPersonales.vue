@@ -7,7 +7,8 @@
                     <ListaTemplateLineal  
                         v-model="nacionalidad" 
                         :options="ListaNacionalidad" 
-                        :requerido="formulario1Requerido"                        
+                        :requerido="formulario1Requerido"    
+                        optionsSelected="Seleccionar"                    
                     />
                 </template>
             </LayoutInputLineal>
@@ -121,7 +122,7 @@ import InputRadioButton from '../botones/Input-Radio-button.vue';
 
 import axios from "axios";
 
-import { ref, watch, defineEmits, defineProps, reactive, defineExpose, onBeforeMount, onMounted} from 'vue';
+import { ref, watch, defineEmits, defineProps, reactive, defineExpose} from 'vue';
 
 // Define los eventos que el componente puede emitir
 const emit = defineEmits([
@@ -143,20 +144,20 @@ const props = defineProps({
 // Método para reiniciar el formulario
 const resetForm = () => {
     //datos personales
-    nacionalidad.value = '';
-    genero.value = '';
-    fechaNacimiento.value = '';
-    estadoCivil.value = '';
+    nacionalidad.value = "";
+    genero.value = "";
+    fechaNacimiento.value = "";
+    estadoCivil.value = "";
 
     //datos de contacto
-    region.value = '';
-    localidad.value = '';
-    direccion.value = '';
-    telefonoLocal.value = '';
-    telefonoCelular.value = '';
+    region.value = "";
+    localidad.value = "";
+    direccion.value = "";
+    telefonoLocal.value = null;
+    telefonoCelular.value = "";
     // Reinicia el payload
     Object.keys(payload).forEach(key => {
-        payload[key] = '';
+        payload[key] = "";
     });
 
     formulario1Requerido.value = false;
@@ -204,19 +205,19 @@ const telefonoLocal = ref('');
 
 // payload del formulario datos personales
 const payload = reactive({
-    nacionalidad: '',
-    genero: '',
-    fechaNacimiento: '',
-    estadoCivil: '',
+    "nacionalidad": "",
+    "genero": "",
+    "fechaNacimiento": "",
+    "estadoCivil": "",
 });
 
 // payload del formulario datos de contacto
 const payload2 = reactive({
-    region: '',
-    localidad: '',
-    direccion: '',
-    telefonoCelular: '',
-    telefonoLocal: '',
+    "region": "",
+    "localidad": "",
+    "direccion": "",
+    "telefonoCelular": "",
+    "telefonoLocal": '',
 });
 
 //filtra la lista de regiones segun el id
@@ -276,20 +277,27 @@ const enviarDatosPersonales = async (Datos) => {
   );
 }
 
-const actualizarDatosPersonales = async (Datos) => {
-  await axios.put('/user/save_preuser', Datos )
+const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
+    console.log(Datos)
+  await axios.put(`/user/${props.EmpleadoID}/save_preuser?userUpdater=${ID_USERMASTER}`, Datos )
   .then(
     res => {
-      console.log(res)
-      if (res.status == 201){
+      if (res?.status == 201 || res?.status == 200 ){
         emit("respuesta", {'texto':res?.data?.message, 'valor':true})
         NextModal(props.EmpleadoID);
       }            
     }
   )
   .catch(
+    // Maneja los errores de la solicitud.
     err => {
-      console.log(err)
+      // Verifica si la respuesta del error contiene un objeto de respuesta.
+      if (err?.response) { 
+        // Imprime el error completo.
+        console.log(err);
+        // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
+        emit("respuesta", {'texto':err.response, 'valor':false})      
+      }
     }
   );
 }
@@ -329,7 +337,8 @@ const getData =  (ID_empleado) => {
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
- const Enviar = () => {
+ const Enviar =  async () => {
+    console.log(props.EmpleadoID)
     if (props.EmpleadoID == null) {
         console.log("enviar al formulario 1");
     }
@@ -341,13 +350,13 @@ const getData =  (ID_empleado) => {
     //si uno de los payload tiene cambios
     if (statuspay  == true || statuspay2 == true){
         //verifica que el id pasado sea diferente de nullo y mayor que 0
-        if (props.EmpleadoID != null && props.EmpleadoID > 0) {
+        if (props.EmpleadoID != null && props.EmpleadoID >= 0) {
             //Almacena si hay datos Laboras o no del usuario en el sistema
-            let haydatosdelusuario = getData(props.EmpleadoID);
+            let haydatosdelusuario = await getData(props.EmpleadoID);
             console.log(haydatosdelusuario)
 
             //verifica que no ocurran errores al solicitar los datos
-            if(haydatosdelusuario.value != null && haydatosdelusuario.value != undefined){
+            if(haydatosdelusuario != null && haydatosdelusuario != undefined){
 
                 //verifica si los datos existe
                 if(haydatosdelusuario == true) {

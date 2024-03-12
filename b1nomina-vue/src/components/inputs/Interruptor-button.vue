@@ -1,36 +1,52 @@
 <template>
     <!--Contenedor General-->
     <div class="switch">
-        <input type="checkbox" :id="Objid" :checked="estado">
+        <input 
+            type="checkbox" 
+            :id="Objid" 
+            :checked="Estado"
+            :value="Estado"
+            @change="updateValue"
+        >
         <label :for="Objid"></label>
         <span>{{ Texto }}</span>
     </div>       
 </template>
 
 <script setup>
-import { defineProps, ref, watchEffect } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
     Estado: {
-        Boolean,
+        type: Boolean,
         default: false,
     },
     Objid: {
-        String,
+        type: String,
     },
     Texto: {
         type: String,
         default: ""
+    },
+    Tipo: {
+        String,
+        default: "multiple"
     }
 });
 
-const estado = ref(props.Estado);
+const emit = defineEmits(["ValorEstado"]);
 
-watchEffect(() => {
-    const estado = props.Estado
-});
+const updateValue = (event) => {
+    if(props.Tipo == 'individual'){
+        emit('ValorEstado', event.target.checked ? true : false);
+    } else {
+        emit('ValorEstado', event.target.checked ? props.Objid : props.Objid);
+    }
+    
+};
 
 </script>
+
 
 <style scoped>
 /*elimina la apariencia regular */

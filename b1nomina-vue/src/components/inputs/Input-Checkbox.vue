@@ -9,7 +9,7 @@
 <script setup>
 
 //uso <InputCheckbox :Objid="" @update="" texto="" />
-import { defineProps, defineEmits, withDefaults } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
     texto: {
