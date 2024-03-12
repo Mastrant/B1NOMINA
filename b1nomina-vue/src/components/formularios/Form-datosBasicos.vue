@@ -132,7 +132,7 @@ const resetForm = () => {
   numeroDocumento.value = "";
   nombres.value = "";
   apellidos.value = "";
-  tipoDocumentoSelect.value = 0;
+  tipoDocumentoSelect.value = '';
   correo.value = "";
   foto.value = "";
   invitacion.value = 0;

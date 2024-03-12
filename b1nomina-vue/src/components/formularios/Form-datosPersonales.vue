@@ -144,15 +144,15 @@ const props = defineProps({
 // Método para reiniciar el formulario
 const resetForm = () => {
     //datos personales
-    nacionalidad.value = "";
+    nacionalidad.value = '';
     genero.value = "";
     fechaNacimiento.value = "";
     estadoCivil.value = "";
 
     //datos de contacto
-    region.value = "";
-    localidad.value = "";
-    direccion.value = "";
+    region.value = '';
+    localidad.value = '';
+    direccion.value = '';
     telefonoLocal.value = null;
     telefonoCelular.value = "";
     // Reinicia el payload
