@@ -62,7 +62,7 @@
 
         <div class="row-form cut" v-show="MedioPago == 0">
             <InputLinealDescripcion 
-                Tipo="text"
+                Tipo="Number"
                 Titulo="N° Cuenta"
                 v-model="NCuenta"
                 @update:modelValue="NCuenta = $event"
@@ -71,6 +71,7 @@
         </div>  
         
         <h2 class="titulo-form">Información Adicional</h2> 
+
         <div class="row-form">
             <LayoutInputLineal textLabel="Modificar Campo">
                 <template v-slot>
@@ -138,7 +139,7 @@ const ActualizarPayload = (propiedad, valor) => {
 watch(Banco, (nuevoValor) => ActualizarPayload('banco_id', nuevoValor));
 watch(MedioPago, (nuevoValor) => ActualizarPayload('medio', Number(nuevoValor)));
 watch(TCuenta, (nuevoValor) => ActualizarPayload('tipo_cuenta', Number( nuevoValor)));
-watch(NCuenta, (nuevoValor) => ActualizarPayload('NumeroCuenta', nuevoValor));
+watch(NCuenta, (nuevoValor) => ActualizarPayload('NumeroCuenta', Math.abs(nuevoValor)));
 
 const resetForm = () => {
     MedioPago.value = 0;

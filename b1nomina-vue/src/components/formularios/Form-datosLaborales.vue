@@ -84,6 +84,7 @@
                 v-model="MontoSalario"
                 @update:modelValue="MontoSalario = $event"
                 :requerido="formulario1Requerido"
+                Tipo="Number"
             />
         </div>
 
@@ -259,7 +260,7 @@ const payload = reactive({
     fecha_inicio: "",
     fecha_fin: "",
     periodo_salario: '',
-    unidad_sueldo: "",
+    "unidad_sueldo": "",
     salario_base: '',
 
     sede_id: '',
@@ -311,8 +312,10 @@ watch(TerminoContrato,
 watch(FechaContratacion, (nuevoValor) => ActualizarPayload('fecha_inicio', nuevoValor));
 watch(FechaFinalizacionContrato, (nuevoValor) => ActualizarPayload('fecha_fin', nuevoValor));
 watch(SalarioBase, (nuevoValor) => ActualizarPayload('periodo_salario', Number(nuevoValor)));
-watch(UnidadSueldo, (nuevoValor) => ActualizarPayload('unidad_sueldo', Number(nuevoValor)));
-watch(MontoSalario, (nuevoValor) => ActualizarPayload('salario_base', nuevoValor));
+watch(UnidadSueldo, (nuevoValor) => ActualizarPayload('unidad_sueldo', String(nuevoValor)));
+watch(MontoSalario, (nuevoValor) => {
+    ActualizarPayload('salario_base', Math.abs(nuevoValor))
+});
 watch(SedeDeTrabajo, (nuevoValor) => ActualizarPayload('sede_id', Number(nuevoValor)));
 watch(Departamento, (nuevoValor) => ActualizarPayload('departamento_id', Number(nuevoValor)));
 watch(Cargo, (nuevoValor) => ActualizarPayload('cargo_id', Number(nuevoValor)));
@@ -359,7 +362,7 @@ const crearDatoslaborales = async (ID_USERMASTER,Data) => {
             // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
             emit("respuesta", {'texto':res?.data?.message, 'valor':true})
             // Llama a la función NextModal pasando el ID del nuevo usuario.
-            NextModal(res.data.newUserId);
+            NextModal(props.EmpleadoID);
         }            
         }
     )
@@ -445,8 +448,9 @@ const getData = async (ID_empleado) => {
 
     //si uno de los payload tiene cambios
     if (statuspay  == true){
+        console.log(props.EmpleadoID)
         //verifica que el id pasado sea diferente de nullo y mayor que 0
-        if (props.EmpleadoID != null && props.EmpleadoID > 0) {
+        if (props.EmpleadoID != null && props.EmpleadoID >= 0) {
             //Almacena si hay datos Laboras o no del usuario en el sistema
             let respuestaGetData = await getData(props.EmpleadoID);
 
@@ -475,10 +479,10 @@ const getData = async (ID_empleado) => {
                             payload.modalidad = 0
                         }
 
-                        
+                        console.log(payload)
                         crearDatoslaborales(ID_USUARIO, payload)
 
-                        console.log(payload)
+                        
                     } else {
                         console.log("usuario no autorizado")
                     }                    

@@ -153,7 +153,7 @@ const resetForm = () => {
     region.value = '';
     localidad.value = '';
     direccion.value = '';
-    telefonoLocal.value = null;
+    telefonoLocal.value = '';
     telefonoCelular.value = "";
     // Reinicia el payload
     Object.keys(payload).forEach(key => {
@@ -309,6 +309,9 @@ const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
             } else if (err.response.status == 422) {
                 // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
                 emit("respuesta", {'texto':err.response.message, 'valor':false})  
+            } else {
+                console.log(err.response.data)
+                emit("respuesta", {'texto':err.response.data.message, 'valor':false})
             }
         }
     );

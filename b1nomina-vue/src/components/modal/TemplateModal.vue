@@ -2,6 +2,14 @@
     <Teleport :disabled="activarModal" to="#modal-container">
         <transition name="Animacion-Modal">
             <div v-show="activarModal" class="modal">
+                <TemplateAlertModal 
+                    class="Notificacion"
+                    :activarNotifiacion="mostrarNotificacion"
+                    :Mensaje="mensajeNotificacion"
+                    :Status="tipoNotificacion"
+                    @closeNotificacion="cerrarNotificacion"
+                    :style="{ zIndex: 1000 }"
+                />
                 <transition name="Animacion-Modal-inner">
                     <div v-show="activarModal" class="modal-inner">
                         <!--contenedor cabecera-->
@@ -24,13 +32,7 @@
                             <TemplateButton2 text="Cancelar" @click="close" />
                         </div>
                     </div>
-                </transition>
-                <TemplateAlertModal 
-                    :activarNotifiacion="mostrarNotificacion"
-                    :Mensaje="mensajeNotificacion"
-                    :Status="tipoNotificacion"
-                    @closeNotificacion="cerrarNotificacion"
-                />
+                </transition>                
             </div>
         </transition>
     </teleport>
@@ -95,7 +97,7 @@ const mostrarNotificacionPersonalizada = (mensaje, tipo) => {
     mostrarNotificacion.value = true;
 };
 
-watch(() => props.DataNotification, (ValorNuevo) => mostrarNotificacionPersonalizada(ValorNuevo.texto,ValorNuevo.valor))
+watch(() => props.DataNotification, (ValorNuevo) => mostrarNotificacionPersonalizada(ValorNuevo.texto,ValorNuevo.valor));
 </script>
 
 <style scoped>
@@ -103,6 +105,7 @@ watch(() => props.DataNotification, (ValorNuevo) => mostrarNotificacionPersonali
 /* Estilos para el contenedor del modal, se centra en el viewport y cubre toda la pantalla con un fondo semi-transparente */
 div.modal {
     display: flex; /* Utiliza Flexbox para centrar el contenido */
+    flex-direction: column;
     justify-content:center; /* Centra horizontalmente el contenido */
     align-items: center; /* Centra verticalmente el contenido */
     height:  100%; /* Ajusta la altura al  100% de la altura de la ventana del navegador */
@@ -129,6 +132,7 @@ div.modal-inner {
     gap:  24px; /* Espacio entre los elementos hijos de Flexbox */
 
     border-radius:  8px; /* Bordes redondeados */
+    z-index: 5 !important;
 }
 
 /* Estilos para los elementos div dentro del modal-inner, utilizando Flexbox para organizarlos */
@@ -174,4 +178,7 @@ div.contend-button-modal {
     opacity:  0;
 }
 
+.Notificacion {
+    z-index: 1000;
+}
 </style>

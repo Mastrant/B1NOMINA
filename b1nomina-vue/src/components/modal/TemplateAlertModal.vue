@@ -57,18 +57,18 @@ watch(() => props.activarNotifiacion, (newVal) => {
 <style scoped>
 
 /* Estilos para el contenedor del modal, se centra en el viewport y cubre toda la pantalla con un fondo semi-transparente */
+
 div.Notificacion-fondo {
-    display: flex; /* Utiliza Flexbox para centrar el contenido */
-    justify-content: end; /* Centra horizontalmente el contenido */
-    align-items: start; /* Centra verticalmente el contenido */
-    height:  100vh; /* Ajusta la altura al  100% de la altura de la ventana del navegador */
-    width:  100vw; /* Ajusta la anchura al  100% del ancho de la ventana del navegador */
-    position:absolute; /* Posiciona el modal absolutamente en relación al primer ancestro posicionado (o el viewport si no hay ninguno) */
-    top:0; /* Alinea el modal con el borde superior de la ventana del navegador */
-    left:  0; /* Alinea el modal con el borde izquierdo de la ventana del navegador */
-    background-color:  none; /* Fondo negro con  50% de transparencia */
-    z-index:  -1; /* Asegura que el modal se muestre por encima de otros elementos */
-    box-sizing: border-box;
+        display: flex; /* Utiliza Flexbox para centrar el contenido */
+        justify-content: end; /* Centra horizontalmente el contenido */
+        align-items: start; /* Centra verticalmente el contenido */
+        height:  fit-content; /* Ajusta la altura al  100% de la altura de la ventana del navegador */
+        width:  100%; /* Ajusta la anchura al  100% del ancho de la ventana del navegador */
+        top:0; /* Alinea el modal con el borde superior de la ventana del navegador */
+        left:  0; /* Alinea el modal con el borde izquierdo de la ventana del navegador */
+        background-color:  none; /* Fondo negro con  50% de transparencia */
+        z-index:  -1; /* Asegura que el modal se muestre por encima de otros elementos */
+        box-sizing: border-box; /** */
 }
 
 /* Estilos para el contenido interno del modal, con un diseño flexible y limitaciones de tamaño */
@@ -83,6 +83,7 @@ div.Notificacion-inner {
     gap: 24px; 
     display: inline-flex;
     z-index: 100;
+    position:absolute; /* Posiciona el modal absolutamente en relación al primer ancestro posicionado (o el viewport si no hay ninguno) */
 }
 
 div.correct {
