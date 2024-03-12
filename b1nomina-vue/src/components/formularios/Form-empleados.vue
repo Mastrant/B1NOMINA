@@ -82,6 +82,7 @@
                 
                 <FormDatosPersonalesVue 
                     @nextModal="avanzarForm"
+                    @respuesta="sendData"
                     :EmpleadoID="ID_Usuario_Creado"
                     :parametros="parametrosDP"
                     v-show="idFormularioActivo == 2"
@@ -91,6 +92,7 @@
                 
                 <FormDatosLaborales 
                     @nextModal="avanzarForm"
+                    @respuesta="sendData"
                     :EmpleadoID="ID_Usuario_Creado"
                     :parametros="parametrosDL"
                     v-show="idFormularioActivo == 3"
@@ -403,8 +405,8 @@
         departamento: [],//
         cargos: [],//
         grupos: [],//
-        nivelEstudio: [],//
-        unidadSueldo: [],
+        nivelestudio: [],//
+        unidadessueldo: [],
 
     });    
     const parametrosDPa = ref({
@@ -433,8 +435,8 @@
                     departamentos: 'departamento',
                     cargos: 'cargos',
                     grupos: 'grupos',
-                    unidadSueldo: 'unidadSueldo',
-                    nivelEstudio: 'nivelEstudio'
+                    unidadessueldo: 'unidadessueldo',
+                    nivelestudio: 'nivelestudio'
                 };
 
                 // Función para asignar valores a los objetos de destino

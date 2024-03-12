@@ -1,6 +1,7 @@
 <template>
     <form class="formulario" id="Form3" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos Laborales</h2>
+
         <div class="row-form">
             <LayoutInputLineal textLabel="Tipo de contrato" :requerido="formulario1Requerido">
                 <template v-slot>
@@ -16,9 +17,9 @@
             <LayoutInputLineal textLabel="Nivel de Estudio" :requerido="formulario1Requerido">
                 <template v-slot>
                     <ListaTemplateLineal  
-                        v-model="TipoDeContrato" 
+                        v-model="NivelEstudio" 
                         :options="parametros?.nivelestudio" 
-                        :requerido="false"
+                        :requerido="formulario1Requerido"
                         optionsSelected="Seleccionar"  
                     />
                 </template>
@@ -27,9 +28,10 @@
             <LayoutInputLineal textLabel="Término del contrato" :requerido="formulario1Requerido">
                 <template v-slot>
                     <ListaTemplateLineal  
-                         v-model="TerminoContrato"
+                        v-model="TerminoContrato"
                         :options="parametros.terminocontrato" 
                         :requerido="formulario1Requerido"
+                        optionsSelected="Seleccionar"
                     />
                 </template>
             </LayoutInputLineal>
@@ -49,7 +51,7 @@
                 v-model="FechaFinalizacionContrato"
                 @update:modelValue="FechaFinalizacionContrato = $event"
                 :Deshabilitar="TerminoContrato == 0"
-                :requerido="formulario1Requerido"
+                :requerido="TerminoContrato != 0"
             />
         </div>
 
@@ -68,8 +70,8 @@
             <LayoutInputLineal textLabel="Unidad Sueldo Base" :requerido="formulario1Requerido">
                 <template v-slot>
                     <ListaTemplateLineal  
-                        v-model="SalarioBase" 
-                        :options="[{}]" 
+                        v-model="UnidadSueldo" 
+                        :options="parametros.unidadessueldo" 
                         :requerido="false"
                         optionsSelected="Seleccionar"
                     />
@@ -88,23 +90,23 @@
         <h2 class="titulo-form">Puesto de trabajo</h2>
 
         <div class="row-form">
-            <LayoutInputLineal textLabel="Sede de Trabajo" :requerido="formulario2Requerido">
+            <LayoutInputLineal textLabel="Sede de Trabajo" :requerido="formulario1Requerido">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="SedeDeTrabajo" 
                         :options="parametros.sede" 
-                        :requerido="formulario2Requerido"
+                        :requerido="formulario1Requerido"
                         optionsSelected="Seleccionar"
                     />
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Departamento" :requerido="formulario2Requerido">
+            <LayoutInputLineal textLabel="Departamento" :requerido="formulario1Requerido">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Departamento" 
                         :options="parametros.departamento" 
-                        :requerido="formulario2Requerido"
+                        :requerido="formulario1Requerido"
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -112,29 +114,29 @@
         </div>
 
         <div class="row-form">
-            <LayoutInputLineal textLabel="Cargo" :requerido="formulario2Requerido">
+            <LayoutInputLineal textLabel="Cargo" :requerido="formulario1Requerido">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Cargo" 
                         :options="parametros.cargos" 
-                        :requerido="formulario2Requerido"
+                        :requerido="formulario1Requerido"
                         optionsSelected="Seleccionar"
                     />
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Grupo" :requerido="formulario2Requerido">
+            <LayoutInputLineal textLabel="Grupo" :requerido="formulario1Requerido">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Grupo" 
                         :options="parametros.grupos" 
-                        :requerido="formulario2Requerido"
+                        :requerido="formulario1Requerido"
                         optionsSelected="Sin Asignar"
                     />
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Modalidad" :requerido="formulario2Requerido">
+            <LayoutInputLineal textLabel="Modalidad" :requerido="formulario1Requerido">
                 <template v-slot>
                     <InterruptorButton 
                         @ValorEstado="verEstado"
@@ -142,7 +144,7 @@
                         Texto="Teletrabajo"
                         Tipo="individual"
                         :Estado="(EstatusModalidad)? true :false"
-                        :requerido="formulario2Requerido"
+                        :requerido="formulario1Requerido"
                     />
                 </template>
             </LayoutInputLineal>
@@ -170,8 +172,7 @@ import InterruptorButton from '../inputs/Interruptor-button.vue';
 import InputCheckbox from '../inputs/Input-Checkbox.vue';
 
 import axios from "axios";
-
-import { ref, watch, reactive, defineProps, defineEmits, onMounted} from 'vue';
+import { ref, watch, reactive, defineProps, defineEmits, onMounted, inject} from 'vue';
 
 // Define las propiedades que el componente espera recibir. En este caso, se espera una propiedad llamada EmpleadoID de tipo Number.
 const props = defineProps({
@@ -188,9 +189,12 @@ const props = defineProps({
 // Define los eventos que el componente puede emitir. En este caso, se especifica un evento llamado 'nextModal'.
 const emit = defineEmits([
   "nextModal", // Nombre del evento que puede ser emitido por este componente
+  "respuesta"
 ]);
 
 const EstatusModalidad = ref(false);
+
+const idSociedad = inject('IDsociedad');
 
 const verEstado = (valor) => {
     (valor == true)
@@ -204,10 +208,12 @@ const formulario2Requerido = ref(false)
 
 //variables del formaulario 1
 const TipoDeContrato = ref('');
+const NivelEstudio = ref('')
 const TerminoContrato = ref('');
 const FechaContratacion = ref('');
 const FechaFinalizacionContrato = ref('');
 const SalarioBase = ref('');
+const UnidadSueldo =ref('')
 const MontoSalario = ref('');
 //variables del formularo 2
 const SedeDeTrabajo = ref('');
@@ -246,14 +252,27 @@ const DiasLibres = (value) => {
 
 // payload de las peticiones
 const payload = reactive({
-    TipoDeContrato: '',
-    TerminoContrato: '',
-    FechaContratacion: '',
-    FechaFinalizacionContrato: '',
-    SalarioBase: '',
-    MontoSalario: '',
-});
 
+    tipo_contrato: '',
+    nivel_estudio_id: '',
+    termino_contrato: '',
+    fecha_inicio: "",
+    fecha_fin: "",
+    periodo_salario: '',
+    unidad_sueldo: "",
+    salario_base: '',
+
+    sede_id: '',
+    departamento_id: '',
+    cargo_id: '',    
+    grupo_id: '',
+    modalidad: '',
+
+    user_id: '',
+    sociedad_id: '',
+    dias_descanso: '',
+});
+/*
 const payload2 = reactive({
     SedeDeTrabajo: '',
     Departamento: '',
@@ -261,31 +280,45 @@ const payload2 = reactive({
     Grupo: '',
     Modalidad: '',
 });
+*/
 
 //actualizar datos del payload
 const ActualizarPayload = (propiedad, valor) => {
     payload[propiedad] = valor;
     formulario1Requerido.value = Object.values(payload).some(value => value !== "")
+    console.log(valor)
 };
 //actualizar datos del payload2
+
+/*
 const ActualizarPayload2 = (propiedad, valor) => {
     payload2[propiedad] = valor;
-    console.log(payload2)
     formulario2Requerido.value = Object.values(payload2).some(value => value !== "")
 };
+*/
 
 // Observar cambios en la variable
-watch(TipoDeContrato, (nuevoValor) => ActualizarPayload('TipoDeContrato', nuevoValor));
-watch(TerminoContrato, (nuevoValor) => ActualizarPayload('TerminoContrato', nuevoValor));
-watch(FechaContratacion, (nuevoValor) => ActualizarPayload('FechaContratacion', nuevoValor));
-watch(FechaFinalizacionContrato, (nuevoValor) => ActualizarPayload('FechaFinalizacionContrato', nuevoValor));
-watch(SalarioBase, (nuevoValor) => ActualizarPayload('SalarioBase', nuevoValor));
-watch(MontoSalario, (nuevoValor) => ActualizarPayload('MontoSalario', nuevoValor));
-watch(SedeDeTrabajo, (nuevoValor) => ActualizarPayload2('SedeDeTrabajo', nuevoValor));
-watch(Departamento, (nuevoValor) => ActualizarPayload2('Departamento', nuevoValor));
-watch(Cargo, (nuevoValor) => ActualizarPayload2('Cargo', nuevoValor));
-watch(Grupo, (nuevoValor) => ActualizarPayload2('Grupo', nuevoValor));
-watch(Modalidad, (nuevoValor) => ActualizarPayload2('Modalidad', nuevoValor));
+watch(TipoDeContrato, (nuevoValor) => ActualizarPayload('tipo_contrato', Number(nuevoValor)));
+watch(NivelEstudio, (nuevoValor) => ActualizarPayload('nivel_estudio_id', nuevoValor));
+watch(TerminoContrato, 
+    (nuevoValor) => {
+        ActualizarPayload('termino_contrato', Number(nuevoValor));
+        if(nuevoValor == 0) {
+            ActualizarPayload('fecha_fin', '1990-01-01')
+        
+        }
+    }
+);
+watch(FechaContratacion, (nuevoValor) => ActualizarPayload('fecha_inicio', nuevoValor));
+watch(FechaFinalizacionContrato, (nuevoValor) => ActualizarPayload('fecha_fin', nuevoValor));
+watch(SalarioBase, (nuevoValor) => ActualizarPayload('periodo_salario', nuevoValor));
+watch(UnidadSueldo, (nuevoValor) => ActualizarPayload('unidad_sueldo', nuevoValor));
+watch(MontoSalario, (nuevoValor) => ActualizarPayload('salario_base', nuevoValor));
+watch(SedeDeTrabajo, (nuevoValor) => ActualizarPayload('sede_id', nuevoValor));
+watch(Departamento, (nuevoValor) => ActualizarPayload('departamento_id', nuevoValor));
+watch(Cargo, (nuevoValor) => ActualizarPayload('cargo_id', nuevoValor));
+watch(Grupo, (nuevoValor) => ActualizarPayload('grupo_id', nuevoValor));
+watch(Modalidad, (nuevoValor) => ActualizarPayload('modalidad', Number(nuevoValor)));
 
 const resetForm = () => {
     TipoDeContrato.value = '';
@@ -304,9 +337,10 @@ const resetForm = () => {
     Object.keys(payload).forEach(key => {
         payload[key] = '';
     });
+    /*
     Object.keys(payload2).forEach(key => {
         payload[key] = '';
-    });
+    });*/
 }
 
 defineExpose({
@@ -316,18 +350,37 @@ const NextModal = (idEpleadoCreado) => {
   emit("nextModal", idEpleadoCreado); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
 };
 
-const crearDatoslaborales = async (Data) => {
-    await axios.post(`create_datos_laborales`,Data)
+const crearDatoslaborales = async (ID_USERMASTER,Data) => {
+    await axios.post(`create_datos_laborales?userCreatorId=${ID_USERMASTER}`,Data)
     .then(
-        respuesta => {
-            NextModal(props.EmpleadoID)
+        // Maneja la respuesta exitosa.
+        res => {
+        // Verifica si la respuesta tiene un estado HTTP 201 (Creado).
+        if (res.status == 201){
+            // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
+            emit("respuesta", {'texto':res?.data?.message, 'valor':true})
+            // Llama a la función NextModal pasando el ID del nuevo usuario.
+            NextModal(res.data.newUserId);
+        }            
         }
     )
     .catch(
+        // Maneja los errores de la solicitud.
         err => {
-            console.log("error al crear los datos")
+            // Verifica si la respuesta del error contiene un objeto de respuesta.
+            if (err.response) { 
+                // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
+                if (err.status == 422){
+                emit({'texto': "no se puede procesar la solcitud", 'valor':false});
+                } 
+                    // Imprime el error completo.
+                    console.log(err);
+                    // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
+                    emit("respuesta", {'texto':err?.response?.data?.message, 'valor':false})
+                                   
+            }
         }
-    )
+    );
 }
 
 const actualizadDatosLaborales = async (Data) =>{
@@ -346,26 +399,34 @@ const actualizadDatosLaborales = async (Data) =>{
 }
 
 const getData = (ID_empleado) => {
- return new Promise(async (resolve, reject) => {
-    if (ID_empleado != null && ID_empleado >= 0) {
-        await axios.get(`/datos_laborales/${ID_empleado}`, {'id': Number(ID_empleado)})
-        .then(respuesta => {
-          if (respuesta.data) {
-            console.log("Hay datos");
-            resolve(true); // Resuelve la promesa con true si hay datos
-          } else {
-            resolve(false); // Resuelve la promesa con false si no hay datos
-          }
-        })
-        .catch(error => {
-            emit("respuesta", {'texto':error.response?.message, 'valor':false})   
-          reject(false); // Rechaza la promesa si hay un error
-        });
-    } else {
-      resolve(false); // Resuelve la promesa con false si el ID es nulo o negativo
-    }
- });
-};
+    return new Promise(async (resolve, reject) => {
+        if (ID_empleado != null && ID_empleado >= 0) {
+            try {
+                // Solicita los datos personales
+                const respuesta =  await axios.get(`/user/${ID_empleado}/datos_labores`)
+                console.log(respuesta);
+                if (respuesta?.data) {
+                    // Resuelve la promesa con true si hay datos
+                    resolve({ success: true, data: respuesta.data });
+                } else {
+                    // Resuelve la promesa con false si no hay datos
+                    resolve({ success: false, data: {} });
+                }
+            } catch (error) {
+                if (error.response && error.response.status == 404) {
+                    // Resuelve la promesa con false si no hay datos
+                    resolve({ success: false, data: {} });
+                } else {
+                    // Rechaza la promesa si hay un error distinto de 404
+                    reject(error);
+                }
+            }
+        } else {
+            // Rechaza la promesa si el ID es inválido
+            reject(new Error('ID de empleado inválido'));
+        }
+    });
+}
 
  
 /**
@@ -381,49 +442,52 @@ const getData = (ID_empleado) => {
 
     //verifica si los payloads tienen datos
     let statuspay = Object.values(payload).some(value => value !== "");
-    let statuspay2 = Object.values(payload2).some(value => value !== "");
+    //let statuspay2 = Object.values(payload2).some(value => value !== "");
 
     //si uno de los payload tiene cambios
-    if (statuspay  == true || statuspay2 == true){
+    if (statuspay  == true){
         //verifica que el id pasado sea diferente de nullo y mayor que 0
         if (props.EmpleadoID != null && props.EmpleadoID > 0) {
             //Almacena si hay datos Laboras o no del usuario en el sistema
-            let haydatosdelusuario = await getData(props.EmpleadoID);
-            console.log(haydatosdelusuario)
+            let respuestaGetData = await getData(props.EmpleadoID);
 
-            //verifica que no ocurran errores al solicitar los datos
-            if(haydatosdelusuario != null){
-                //verifica si los datos existe
-                if(haydatosdelusuario == true) {
-                    console.log("Modificar datos laborales");
+            // Recuperar el objeto como una cadena de texto y convertirlo de nuevo a un objeto
+            let ID_USUARIO = JSON.parse(localStorage.getItem('userId'));
+
+
+            if(respuestaGetData.success != null){
+
+                if(respuestaGetData.success == true){
+                    let DataLaborales = respuestaGetData.data
+                    //actualizar datos laborales
                 } else {
-                    console.log("Crear datos laborales");
-                    //si ambos payloads tienen modificaciones
-                    if (statuspay2 == statuspay ) {
-                        console.log("enviar datos justos");
-                        let payload12 = payload + payload2;
-                        console.log(payload12)
-                    }
-                    if (statuspay2 == true || statuspay == true) {
-                        console.log("enviar payload lleno");
-                        if (statuspay == true) {
-                            console.log(payload);
+                    console.log("creardata")
+                    if(ID_USUARIO > 0){
+                        payload.user_id = props.EmpleadoID                        
+                        payload.sociedad_id = idSociedad
+                        if(ListaDiasLibres.value.length >= 1){
+                            payload.dias_descanso = ListaDiasLibres.value.join(",")
+                        } else {
+                            payload.dias_descanso = '6,7'
                         }
-                        if (statuspay2 == true) {
-                            console.log(payload2);
-                        }     
-                    }   
-                }        
-            } else { // si la respues es nula
-                console.log("error al pedir los datos laborales")
+                        console.log(payload)
+                        crearDatoslaborales(ID_USUARIO,payload)
+                    } else {
+                        console.log("usuario no autorizado")
+                    }                    
+                }
+            } else {
+                emit("nextModal", {"texto":"error al verificar los datos del empleado", "valor": false})
             }
+
+            
+        } else {
+            emit("respuesta", {'texto':"Error al validar el ID del usuario", 'valor':false})  
         }
     } else {//no hay modificaciones en los payloads
         NextModal(props.EmpleadoID)
     }
 };
-
-
 </script>
 
 <style scoped>

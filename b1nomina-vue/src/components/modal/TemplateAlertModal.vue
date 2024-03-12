@@ -112,7 +112,7 @@ div > svg.error {
 }
 
 span {
-    font-size: 13.46px;
+    font-size: 16px;
     font-family: Inter;
     font-weight: 500;
     line-height: 19.23px;

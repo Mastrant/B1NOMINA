@@ -196,9 +196,9 @@ const payload = reactive({
 };
 
 watch(numeroDocumento, (nuevoValor) => ActualizarPayload("documento", nuevoValor));
-watch(nombres, (nuevoValor) => ActualizarPayload("nombres", nuevoValor));
-watch(apellidos, (nuevoValor) => ActualizarPayload("apellidos", nuevoValor));
-watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor));
+watch(nombres, (nuevoValor) => ActualizarPayload("nombres", nuevoValor.toLowerCase()));
+watch(apellidos, (nuevoValor) => ActualizarPayload("apellidos", nuevoValor.toLowerCase()));
+watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor?.toLowerCase()));
 /**
  * Valores en desarrollo
  * watch(invitacion, (nuevoValor) => ActualizarPayload('invitacion', nuevoValor));
@@ -229,14 +229,12 @@ const CrearUsuario = async (Datos) => {
       // Verifica si la respuesta del error contiene un objeto de respuesta.
       if (err?.response) { 
         // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
-        if (err.response?.status == 422){
+        if (err.status == 422){
           emit({'texto': "no se puede procesar la solcitud", 'valor':false});
-        } 
-        // Imprime el error completo.
-        console.log(err);
-        // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
-        emit("respuesta", {'texto':err?.response?.data?.message, 'valor':false})
-      
+        } else {
+          // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
+          emit("respuesta", {'texto':err?.response?.data?.message, 'valor':false})
+        }        
       }
     }
  );
@@ -312,7 +310,6 @@ const ActualizarDatosBasicos = async (idCreator, Datos) => {
  * Ejecuta la peticion con axios
  */
 const Enviar = () => {
-  console.log(props.EmpleadoID)
   //si ID es nulo crea un usuario
   let statuspay = Object.values(payload).some(value => value !== "");
 

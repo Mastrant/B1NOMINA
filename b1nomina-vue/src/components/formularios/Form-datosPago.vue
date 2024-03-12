@@ -126,10 +126,11 @@ const NCuenta = ref('');
 
 // payload de la peticion
 const payload = reactive({
-    MedioPago: '',
-    Banco: '',
-    TipoCuenta: '',
-    NumeroCuenta: '',
+    "banco_id": '',
+    "medio": '',
+    "tipo_cuenta": '',
+    "NumeroCuenta": '',
+    "user_id": '',
 });
 
 //actualizar datos del payload
@@ -137,10 +138,10 @@ const ActualizarPayload = (propiedad, valor) => {
     payload[propiedad] = valor;
 };
 
-watch(Banco, (nuevoValor) => ActualizarPayload('Banco', nuevoValor));
-watch(MedioPago, (nuevoValor) => ActualizarPayload('MedioPago', nuevoValor));
-watch(TCuenta, (nuevoValor) => ActualizarPayload('TCuenta', nuevoValor));
-watch(NCuenta, (nuevoValor) => ActualizarPayload('NCuenta', nuevoValor));
+watch(Banco, (nuevoValor) => ActualizarPayload('banco_id', nuevoValor));
+watch(MedioPago, (nuevoValor) => ActualizarPayload('medio', nuevoValor));
+watch(TCuenta, (nuevoValor) => ActualizarPayload('tipo_cuenta', nuevoValor));
+watch(NCuenta, (nuevoValor) => ActualizarPayload('NumeroCuenta', nuevoValor));
 
 const resetForm = () => {
     MedioPago.value = 0;
@@ -161,6 +162,39 @@ const CloseModal = () => {
     console.log("closeModal")
     emit('closeModal');
 };
+
+const crearDatosPago = async (ID_USERMASTER,Data) => {
+    await axios.post(`create_datos_pago?userCreatorId=${ID_USERMASTER}`,Data)
+    .then(
+        // Maneja la respuesta exitosa.
+        res => {
+        // Verifica si la respuesta tiene un estado HTTP 201 (Creado).
+        if (res.status == 201){
+            // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
+            emit("respuesta", {'texto':res?.data?.message, 'valor':true})
+            // Llama a la función CloseModal Que cambia el valor de visualizacion del modal
+            CloseModal();
+        }            
+        }
+    )
+    .catch(
+        // Maneja los errores de la solicitud.
+        err => {
+            // Verifica si la respuesta del error contiene un objeto de respuesta.
+            if (err.response) { 
+                // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
+                if (err.status == 422){
+                emit({'texto': "no se puede procesar la solcitud", 'valor':false});
+                } 
+                    // Imprime el error completo.
+                    console.log(err);
+                    // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
+                    emit("respuesta", {'texto':err?.response?.data?.message, 'valor':false})
+                                   
+            }
+        }
+    );
+}
 
 const getData = async (IDUser) => {
     if(IDUser == null){
@@ -199,27 +233,51 @@ const getData = async (IDUser) => {
  * Ejecuta la peticion con axios
  */
  const Enviar = () => {
-    console.log("Datos User: " + props.EmpleadoID)
-
     if (props.EmpleadoID == null) {
         console.log("enviar al formulario 1");
     }
 
-    //verifica si los payloads tienen datos
-    let statuspay = Object.values(payload).some(value => value !== "");
+   //si uno de los payload tiene cambios
+   if (statuspay  == true){
+        //verifica que el id pasado sea diferente de nullo y mayor que 0
+        if (props.EmpleadoID != null && props.EmpleadoID > 0) {
+            //Almacena si hay datos Laboras o no del usuario en el sistema
+            let respuestaGetData = await getData(props.EmpleadoID);
 
-    if (statuspay  == true){
-        //Verifica que el ID sea diferente de null y mayor que 0
-        if(props.EmpleadoID != null & props.EmpleadoID > 0){
-            //almacena si hay datos de pago
-            let haydatosdelusuario = getData(props.EmpleadoID);
+            // Recuperar el objeto como una cadena de texto y convertirlo de nuevo a un objeto
+            let ID_USUARIO = JSON.parse(localStorage.getItem('userId'));
+
+
+            if(respuestaGetData.success != null){
+
+                if(respuestaGetData.success == true){
+                    let DataLaborales = respuestaGetData.data
+                    //actualizar datos laborales
+                } else {
+                    console.log("creardata")
+                    if(ID_USUARIO > 0){
+                        payload.user_id = props.EmpleadoID                        
+                        payload.sociedad_id = idSociedad
+                        if(ListaDiasLibres.value.length >= 1){
+                            payload.dias_descanso = ListaDiasLibres.value.join(",")
+                        } else {
+                            payload.dias_descanso = '6,7'
+                        }
+                        console.log(payload)
+                        crearDatoslaborales(ID_USUARIO,payload)
+                    } else {
+                        console.log("usuario no autorizado")
+                    }                    
+                }
+            } else {
+                emit("nextModal", {"texto":"error al verificar los datos del empleado", "valor": false})
+            }
+
+            
+        } else {
+            emit("respuesta", {'texto':"Error al validar el ID del usuario", 'valor':false})  
         }
-        
-
-
-
-    } else {
-        //no hay modificaciones en los payloads
+    } else {//no hay modificaciones en los payloads
         CloseModal()
     }
 };

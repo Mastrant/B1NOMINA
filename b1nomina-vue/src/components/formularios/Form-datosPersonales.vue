@@ -19,14 +19,14 @@
                         v-model="genero" 
                         grupo="genero" 
                         texto="Masculino" 
-                        :valor="0"
+                        :valor="1"
                         id-radius="Masculino"  
                     />
                    <InputRadioButton 
                         v-model="genero" 
                         grupo="genero" 
                         texto="Femenino" 
-                        :valor="1"
+                        :valor="2"
                         id-radius="Femenino"  
                     />
                 </template>
@@ -209,9 +209,15 @@ const payload = reactive({
     "genero": "",
     "fechaNacimiento": "",
     "estadoCivil": "",
+    "region": "",
+    "localidad": "",
+    "direccion": "",
+    "telefonoCelular": "",
+    "telefonoLocal": '',
 });
 
 // payload del formulario datos de contacto
+/*
 const payload2 = reactive({
     "region": "",
     "localidad": "",
@@ -219,6 +225,7 @@ const payload2 = reactive({
     "telefonoCelular": "",
     "telefonoLocal": '',
 });
+*/
 
 //filtra la lista de regiones segun el id
 const filtroRegion = (id) => {
@@ -231,10 +238,12 @@ const ActualizarPayload1 = (propiedad, valor) => {
     formulario1Requerido.value = Object.values(payload).some(value => value !== "")
 };
 //actualizar datos del payload a enviar
+/*
 const ActualizarPayload2 = (propiedad, valor) => {
     payload2[propiedad] = valor;
     formulario2Requerido.value = Object.values(payload2).some(value => value !== "")    
 };
+*/
 
 //Escuchar cambio en las entradas
 
@@ -244,14 +253,15 @@ watch(fechaNacimiento, (nuevoValor) => ActualizarPayload1('fechaNacimiento', nue
 watch(estadoCivil, (nuevoValor) => ActualizarPayload1('estadoCivil', nuevoValor));
 watch(region, (nuevoValor) => {
         filtroRegion(nuevoValor);
-        ActualizarPayload2('region', nuevoValor);
+        ActualizarPayload1('region', nuevoValor);
     }
 );
-watch(localidad, (nuevoValor) => ActualizarPayload2('localidad', nuevoValor));
-watch(direccion, (nuevoValor) => ActualizarPayload2('direccion', nuevoValor));
-watch(telefonoCelular, (nuevoValor) => ActualizarPayload2('telefonoCelular', nuevoValor));
-watch(telefonoLocal, (nuevoValor) => ActualizarPayload2('telefonoLocal', nuevoValor));
+watch(localidad, (nuevoValor) => ActualizarPayload1('localidad', nuevoValor));
+watch(direccion, (nuevoValor) => ActualizarPayload1('direccion', nuevoValor));
+watch(telefonoCelular, (nuevoValor) => ActualizarPayload1('telefonoCelular', nuevoValor));
+watch(telefonoLocal, (nuevoValor) => ActualizarPayload1('telefonoLocal', nuevoValor));
 
+/*
 const enviarDatosPersonales = async (Datos) => {
   await axios.post('/user/create_preuser2', Datos )
   .then(
@@ -276,61 +286,64 @@ const enviarDatosPersonales = async (Datos) => {
     }
   );
 }
+*/
 
 const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
-    console.log(Datos)
-  await axios.put(`/user/${props.EmpleadoID}/save_preuser?userUpdater=${ID_USERMASTER}`, Datos )
+  await axios.put(`/user/${props.EmpleadoID}/save_preuser?userUpdater=${ID_USERMASTER}`, Datos)
   .then(
     res => {
       if (res?.status == 201 || res?.status == 200 ){
-        emit("respuesta", {'texto':res?.data?.message, 'valor':true})
+        emit("respuesta", {'texto':res?.data.message, 'valor':true})
         NextModal(props.EmpleadoID);
       }            
     }
   )
   .catch(
     // Maneja los errores de la solicitud.
-    err => {
-      // Verifica si la respuesta del error contiene un objeto de respuesta.
-      if (err?.response) { 
-        // Imprime el error completo.
-        console.log(err);
-        // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
-        emit("respuesta", {'texto':err.response, 'valor':false})      
-      }
-    }
-  );
+        err => {
+            // Verifica si la respuesta del error contiene un objeto de respuesta.
+            if (err.response.status == 500) { 
+                // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
+                //console.log(err)
+                emit("respuesta", {'texto':err.response.message, 'valor':false})      
+            } else if (err.response.status == 422) {
+                // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
+                emit("respuesta", {'texto':err.response.message, 'valor':false})  
+            }
+        }
+    );
 }
 
-const getData =  (ID_empleado) => {
-    return new Promise( async (resolve, reject) => {
-        console.log(ID_empleado)
+
+const getData = (ID_empleado) => {
+    return new Promise(async (resolve, reject) => {
         if (ID_empleado != null && ID_empleado >= 0) {
-            // Solicita los datos personales
-            await axios.get(`/user/${ID_empleado}/precarga`)
-                .then(respuesta => {
-                    if (respuesta.data) {
-                        console.log("Hay datos");
-                        resolve(true); // Resuelve la promesa con true si hay datos
-                    } else {
-                        console.log("No hay datos");
-                        resolve(false); // Resuelve la promesa con false si no hay datos
-                    }
-                })
-                .catch(error => {
-                    if (error.response && error.response.status == 404) {
-                        console.log("No hay datos");
-                        resolve(false); // Resuelve la promesa con false si no hay datos
-                    } else {
-                        console.log(error);
-                        reject(error); // Rechaza la promesa si hay un error distinto de 404
-                    }
-                });
+            try {
+                // Solicita los datos personales
+                const respuesta = await axios.get(`/user/${ID_empleado}/precarga`);
+                if (respuesta?.data) {
+                    // Resuelve la promesa con true si hay datos
+                    resolve({ success: true, data: respuesta.data });
+                } else {
+                    // Resuelve la promesa con false si no hay datos
+                    resolve({ success: false, data: {} });
+                }
+            } catch (error) {
+                if (error.response && error.response.status == 404) {
+                    // Resuelve la promesa con false si no hay datos
+                    resolve({ success: false, data: {} });
+                } else {
+                    // Rechaza la promesa si hay un error distinto de 404
+                    reject(error);
+                }
+            }
         } else {
-            reject(new Error('ID de empleado inválido')); // Rechaza la promesa si el ID es inválido
+            // Rechaza la promesa si el ID es inválido
+            reject(new Error('ID de empleado inválido'));
         }
     });
 }
+
 
 /**
  * Funcion emitida al enviar el formulario
@@ -338,33 +351,41 @@ const getData =  (ID_empleado) => {
  * Ejecuta la peticion con axios
  */
  const Enviar =  async () => {
-    console.log(props.EmpleadoID)
     if (props.EmpleadoID == null) {
         console.log("enviar al formulario 1");
     }
 
     //verifica si los payloads tienen datos
     let statuspay = Object.values(payload).some(value => value !== "");
-    let statuspay2 = Object.values(payload2).some(value => value !== "");
+    //let statuspay2 = Object.values(payload2).some(value => value !== "");
 
     //si uno de los payload tiene cambios
-    if (statuspay  == true || statuspay2 == true){
+    if (statuspay  == true ){
         //verifica que el id pasado sea diferente de nullo y mayor que 0
         if (props.EmpleadoID != null && props.EmpleadoID >= 0) {
             //Almacena si hay datos Laboras o no del usuario en el sistema
-            let haydatosdelusuario = await getData(props.EmpleadoID);
-            console.log(haydatosdelusuario)
+            let respuestaGetData = await getData(props.EmpleadoID);
 
             //verifica que no ocurran errores al solicitar los datos
-            if(haydatosdelusuario != null && haydatosdelusuario != undefined){
+            if(respuestaGetData.success != null || respuestaGetData.success != undefined){
 
                 //verifica si los datos existe
-                if(haydatosdelusuario == true) {
-                    console.log("Modificar datos laborales");
+                if(respuestaGetData.data != {}) {
+                    let DataUser = respuestaGetData.data
+                    
+                    //Si la data es diferente de vacio, le añade al 
+                    payload.nombres = DataUser.nombres
+                    payload.apellidos = DataUser.apellidos
+                    payload.documento = DataUser.documento;
+                    payload.correo = DataUser.correo;
+                    (payload.telefonoLocal == '')? 0 : payload.telefonoLocal;
+
                     // Recuperar el objeto como una cadena de texto y convertirlo de nuevo a un objeto
                     let ID_USUARIO = JSON.parse(localStorage.getItem('userId'));
-                    console.log(ID_USUARIO.value)
 
+                    actualizarDatosPersonales(ID_USUARIO, payload);
+
+                    /*
                     if (statuspay2 == statuspay ) {
                         console.log("enviar datos justos");
                         let payload12 = payload + payload2;
@@ -381,9 +402,12 @@ const getData =  (ID_empleado) => {
                             actualizarDatosPersonales(ID_USUARIO, payload2);
                         }     
                     }
-                }      
+                    */
+                } else {
+                    emit("respuesta",{'texto':"error al pedir los datos personales", "valor":false})
+                }   
             } else { // si la respues es nula
-                console.log("error al pedir los datos personales")
+               emit("respuesta",{'texto':"error al pedir los datos personales", "valor":false})
             }
         }
     } else {//no hay modificaciones en los payloads

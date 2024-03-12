@@ -22,7 +22,7 @@ const props = defineProps({
         default: false,
     },
     Objid: {
-        type: String,
+        type: [String, Number] 
     },
     Texto: {
         type: String,
