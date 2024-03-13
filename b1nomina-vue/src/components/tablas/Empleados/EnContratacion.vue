@@ -35,8 +35,10 @@
                     <DescartarButton />
                 </template>
                 <template v-slot:Contrato>
+                    <WaitButton />
                 </template>
                 <template v-slot:Completado>
+                    <EBarraProgresoVue class="icon" porcentaje="15" @click="() => console.log('selecionado')" />
                 </template>
                 <template v-slot:accionButton>
                     <CiculoCorrectIcon class="icon" style="stroke: #1A245B"/>
@@ -51,8 +53,9 @@
     import EnContratacionRow from '@/components/tablas/Empleados/EnContratacion-Row.vue';
     import DescartarButton from '@/components/botones/Descartar-button.vue';
     import CiculoCorrectIcon from '@/components/icons/Circulo-correct-icon.vue';
-    import RelojIcon from '@/components/icons/Reloj-icon.vue';
     import ExitColorIcon from '@/components/icons/Exit-color-icon.vue';
+    import WaitButton from '@/components/botones/Wait-button.vue';
+    import EBarraProgresoVue from '../../elementos/E-BarraProgreso.vue';
 </script>
 
 
