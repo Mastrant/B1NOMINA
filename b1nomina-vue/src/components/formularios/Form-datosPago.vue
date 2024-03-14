@@ -29,25 +29,27 @@
             </LayoutInputLineal>
         </div>
         <div class="row-form" v-show="MedioPago == 0">
-            <LayoutInputLineal textLabel="Banco">
+            <LayoutInputLineal textLabel="Banco" :requerido="MedioPago == 0">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Banco" 
                         :options="parametros.bancos" 
                         optionsSelected="Seleccionar"
+                        :requerido="MedioPago == 0"
                     />
                 </template>
             </LayoutInputLineal>
 
              <!---->
-            <LayoutInputLineal textLabel="Tipo de cuenta">
+            <LayoutInputLineal textLabel="Tipo de cuenta" :requerido="MedioPago == 0">
                 <template v-slot>
                    <InputRadioButton 
                         v-model="TCuenta" 
                         grupo="TCuenta" 
                         texto="Corriente" 
                         :valor="0"
-                        id-radius="CCorriente"                        
+                        id-radius="CCorriente"  
+                        :requerido="MedioPago == 0"                      
                     />
                    <InputRadioButton 
                         v-model="TCuenta" 
@@ -60,13 +62,13 @@
             </LayoutInputLineal>            
         </div>
 
-        <div class="row-form cut" v-show="MedioPago == 0">
+        <div class="row-form cut" v-show="MedioPago == 0" :requerido="MedioPago == 0">
             <InputLinealDescripcion 
-                Tipo="Number"
                 Titulo="N° Cuenta"
                 v-model="NCuenta"
                 @update:modelValue="NCuenta = $event"
                 :minimo-caracteres="16"
+                :requerido="MedioPago == 0"
             />
         </div>  
         
@@ -118,16 +120,16 @@ const emit = defineEmits([
 // inicializacion de variables reactivas
 const MedioPago = ref(0);
 const Banco = ref('');
-const TCuenta = ref(null);
+const TCuenta = ref('');
 const NCuenta = ref('');
 
 
 // payload de la peticion
 const payload = reactive({
     "banco_id": '',
-    "medio": '',
+    "medio": '0',
     "tipo_cuenta": '',
-    "NumeroCuenta": '',
+    "numero_cuenta": '',
     "user_id": '',
 });
 
@@ -137,9 +139,9 @@ const ActualizarPayload = (propiedad, valor) => {
 };
 
 watch(Banco, (nuevoValor) => ActualizarPayload('banco_id', nuevoValor));
-watch(MedioPago, (nuevoValor) => ActualizarPayload('medio', Number(nuevoValor)));
+watch(MedioPago, (nuevoValor) => ActualizarPayload('medio', String(nuevoValor)));
 watch(TCuenta, (nuevoValor) => ActualizarPayload('tipo_cuenta', Number( nuevoValor)));
-watch(NCuenta, (nuevoValor) => ActualizarPayload('NumeroCuenta', Math.abs(nuevoValor)));
+watch(NCuenta, (nuevoValor) => ActualizarPayload('numero_cuenta', nuevoValor));
 
 const resetForm = () => {
     MedioPago.value = 0;
@@ -157,8 +159,7 @@ defineExpose({
 });
 
 const CloseModal = () => {
-    console.log("closeModal")
-    //emit('closeModal');
+    emit('closeModal');
 };
 
 const crearDatosPago = async (ID_USERMASTER,Data) => {
@@ -185,9 +186,40 @@ const crearDatosPago = async (ID_USERMASTER,Data) => {
                 emit({'texto': "no se puede procesar la solcitud", 'valor':false});
                 } 
                     // Imprime el error completo.
-                    console.log(err);
+                    //console.log(err);
                     // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
-                    emit("respuesta", {'texto':err?.response?.data?.message, 'valor':false})
+                    emit("respuesta", {'texto':err.response.data.message, 'valor':false})
+                                   
+            }
+        }
+    );
+}
+
+const editarDatosPago = async (ID_USERMASTER, Data) => {
+    await axios.put(`create_datos_pago?userCreatorId=${ID_USERMASTER}`,Data)
+    .then(
+        // Maneja la respuesta exitosa.
+        res => {
+        // Verifica si la respuesta tiene un estado HTTP 201 (Creado).
+        if (res.status == 200 || res.status == 201){
+            // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
+            emit("respuesta", {'texto':res.data.message, 'valor':true})
+            // Llama a la función CloseModal Que cambia el valor de visualizacion del modal
+            CloseModal();
+        }            
+        }
+    )
+    .catch(
+        // Maneja los errores de la solicitud.
+        err => {
+            // Verifica si la respuesta del error contiene un objeto de respuesta.
+            if (err.response) { 
+                // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
+                if (err.status == 422){
+                emit({'texto': "no se puede procesar la solcitud", 'valor':false});
+                } 
+                    // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
+                    emit("respuesta", {'texto':err.response.data?.message, 'valor':false})
                                    
             }
         }
@@ -199,10 +231,9 @@ const getData = async (ID_empleado) => {
         if (ID_empleado != null && ID_empleado >= 0) {
             try {
                 // Solicita los datos personales
-                const respuesta =  await axios.get(`/datos_pago/${ID_empleado}`)
-                console.log(respuesta);
-                if (respuesta?.data) {
-                    // Resuelve la promesa con true si hay datos
+                const respuesta =  await axios.get(`user/${ID_empleado}/datos_pago`);
+                if (respuesta.status == 200 || respuesta.status == 201) {
+                    // Resuelve la promesa con true si hay datos y envia los datos
                     resolve({ success: true, data: respuesta.data });
                 } else {
                     // Resuelve la promesa con false si no hay datos
@@ -224,6 +255,14 @@ const getData = async (ID_empleado) => {
     });
 }
 
+const verificarMediodePago = (medio) => {
+    if(medio != 0){
+        payload.NumeroCuenta = '';
+        payload.banco_id = 0;
+        payload.tipo_cuenta = 0; 
+    }
+}
+
 /**
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
@@ -231,11 +270,11 @@ const getData = async (ID_empleado) => {
  */
  const Enviar = async () => {
     if (props.EmpleadoID == null) {
-        console.log("enviar al formulario 1");
+        //console.log("enviar al formulario 1");
     }
 
     let statuspay = Object.values(payload).some(value => value !== "");
-   //si uno de los payload tiene cambios
+    //si uno de los payload tiene cambios
     if (statuspay  == true){
         //verifica que el id pasado sea diferente de nullo y mayor que 0
         if (props.EmpleadoID != null && props.EmpleadoID > 0) {
@@ -245,24 +284,26 @@ const getData = async (ID_empleado) => {
             // Recuperar el objeto como una cadena de texto y convertirlo de nuevo a un objeto
             let ID_USUARIO = JSON.parse(localStorage.getItem('userId'));
 
-
             if(respuestaGetData.success != null){
 
                 if(respuestaGetData.success == true){
-                    let DataLaborales = respuestaGetData.data
-                    //actualizar datos laborales
+
+                    if(ID_USUARIO > 0){
+                        payload.user_id = props.EmpleadoID                      
+                        //Si el medio es diferente de transferencia, se borran los otros campos al enviar
+                        verificarMediodePago(payload.medio);
+                        //ejecuta la peticion
+                        editarDatosPago(ID_USUARIO, payload)
+                    } else {
+                        emit("respuesta", {"texto":"Usuario no autorizado", "valor": false})
+                    } 
                 } else {
-                    console.log("creardata")
+                    //console.log("creardata")
                     if(ID_USUARIO > 0){
                         payload.user_id = props.EmpleadoID       
                         
-                        //Si el medio es diferente de cheque, se borran los otros campos al enviar
-                        if(payload.medio == 0){
-                            payload.NumeroCuenta = 0;
-                            payload.banco_id = 0;
-                            payload.tipo_cuenta = 0; 
-                        }
-                        console.log(payload)
+                        //Si el medio es diferente de transferencia, se borran los otros campos al enviar
+                        verificarMediodePago;
                         //ejecuta la peticion
                         crearDatosPago(ID_USUARIO, payload)
                     } else {
@@ -271,9 +312,7 @@ const getData = async (ID_empleado) => {
                 }
             } else {
                 emit("respuesta", {"texto":"error al verificar los datos del empleado", "valor": false})
-            }
-
-            
+            }            
         } else {
             emit("respuesta", {'texto':"Error al validar el ID del usuario", 'valor':false})  
         }
