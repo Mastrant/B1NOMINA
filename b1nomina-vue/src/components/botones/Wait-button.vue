@@ -1,22 +1,22 @@
 <template>
     <button type="button">
-        <relojIcon />
+        <RelojIconVue />
         <span>
-            {{ texto }}
+            {{ Texto }}
         </span>
-    </button>        
+    </button>    
 </template>
 
 <script setup>
 import { defineProps } from 'vue';
-import relojIcon from '@/components/icons/reloj-icon.vue';
+import RelojIconVue from '../icons/Reloj-icon.vue';
 
 const props = defineProps({
-    texto: {
+    Texto: {
         type: String,
         default: "Sin Iniciar"
-    } 
-})
+    },
+});
 </script>
 
 <style scoped>
@@ -31,7 +31,7 @@ button {
     gap: 6px;
     border: #FAB400 solid 1px; 
     cursor: pointer;
-    background-color: #EEC800;
+    background-color: rgba(237.56, 199.55, 0, 0.30);
     align-items: center;
 }
 

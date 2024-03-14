@@ -19,10 +19,10 @@
             </div>
         </td>
         <!--Contrato-->
-        <td class="">
-            <span>
+        <td class="contrato">
+            <div>
                 <slot name="Contrato"></slot>
-            </span>
+            </div>
         </td>
         <!--Estado-->
         <td class="Estado">
@@ -50,6 +50,7 @@ td {
  * Estilos para el cuerpo de la tabla
  * Define la altura de las filas y utiliza Flexbox para organizar el contenido
  */
+
  tr.cuerpo {
     width: 100%;
     height: 48px;
@@ -63,6 +64,7 @@ td {
  * Estilo general para las filas de la tabla
  * Define la altura y el ancho de las filas
  */
+
 tr.rowTabla {
     width: 100%;
     box-sizing: content-box;
@@ -71,6 +73,7 @@ tr.rowTabla {
 }
 
 /* Estilos para cada celda de la tabla */
+
 tr.cuerpo > td {
     width: auto; /* Ancho automático basado en el contenido */
     height: 48px;
@@ -85,36 +88,15 @@ tr.cuerpo > td {
     margin: auto; /* Margen automático para centrar el contenido */
 }
 
-
-/* Estilos para la primera columna, que puede contener checkboxes */
-.filaCheckbox {
-    max-width: 80px !important; /* Ancho máximo para mantener la consistencia */
-    box-sizing: border-box;
-    margin: auto; /* Margen automático para centrar */
-}
-
 /**
- * Estilos para la columna de nombres de empleados
- * Alinea el texto al inicio y limita el ancho máximo para evitar desbordamientos
+ * Estilos para las cajas dentro de los td
+ * Alinea el texto al centro el ancho máximo para evitar desbordamientos
  */
-th.rowNombre,
-td.rowNombre > div {
-    text-align: start;
-    max-width: 290px;
-}
-
-/**
- * Estilos para la columna de estados
- * Utiliza Flexbox para organizar los elementos de estado y centrarlos
- */
-td.Estado > div {
+td > div {
+    text-align: center;
     display: flex;
-    gap: 10px; /* Espacio entre elementos de estado */
     justify-content: center;
-    box-sizing: border-box;
-    margin: 0px; /* Sin margen para una alineación precisa */
-    align-self: center; /* Centrado verticalmente */
-    align-items: center; /* Centrado horizontalmente */
+    max-width: 100%;
 }
 
 /* Estilos para la columna de acciones (iconos) */
