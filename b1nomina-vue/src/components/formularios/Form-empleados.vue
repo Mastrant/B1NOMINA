@@ -102,6 +102,7 @@
 
                 <FormDatosPago
                     @closeModal="showModal"
+                    @respuesta="sendData"
                     :EmpleadoID="ID_Usuario_Creado"
                     :parametros="parametrosDPa"
                     v-show="idFormularioActivo == 4"
