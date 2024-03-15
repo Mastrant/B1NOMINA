@@ -75,26 +75,25 @@
         </template>
       </LayoutInputLineal>
     </div>
-
-    <div class="multimedia">
-      <span>Cargar foto de perfil</span>
-      <div class="add-photo">
-        <span>Arrastrar imagen aqui</span>
-        <TemplateButton2 text="Seleccionar Archivo" />
-      </div>
+    
+    <div class="row-form">
+      <inputPicForm
+        ref="inputFoto"
+        @actualizarDataImagen="(e) => console.log(e)"
+      />
     </div>
+    
   </form>
 </template>
 
 <script setup>
 import InputLinealDescripcion from "../inputs/Input-Lineal-descripcion.vue";
 import ListaTemplateLineal from "../listas/Lista-template-lineal.vue";
-import TemplateButton2 from "../botones/Template-button2.vue";
 import LayoutInputLineal from "../Layouts/LayoutInputLineal.vue";
 import InputRadioButton from "../botones/Input-Radio-button.vue";
-import inputRut from "../inputs/input-Rut.vue";
+import inputPicForm from '@/components/inputs/Input-Pic-form.vue';
 
-import { ref, watch, defineEmits, defineProps, reactive, defineExpose, onMounted } from "vue";
+import { ref, watch, defineEmits, defineProps, reactive, defineExpose} from "vue";
 import axios from "axios";
 
 //lista de
@@ -126,6 +125,8 @@ const emit = defineEmits([
   "respuesta"
 ]);
 
+const inputFoto = ref(null)
+
 // Método para reiniciar el formulario
 const resetForm = () => {
   // Reinicia los campos a sus valores iniciales
@@ -140,6 +141,7 @@ const resetForm = () => {
   Object.keys(payload).forEach((key) => {
     payload[key] = "";
   });
+  inputFoto.value.reset()
 };
 
 // Exponer la función de limpieza para que sea accesible desde el componente padre
@@ -354,38 +356,7 @@ form.formulario {
   gap: 16px;
 }
 
-/* Contenedor para elementos multimedia, organizados 
-en columnas con un espacio de  12px entre ellos */
 
-div.multimedia {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-div.multimedia > span {
-  color: #999999;
-  font-size: 13px;
-  font-family: Poppins;
-  font-weight: 500;
-  word-wrap: break-word;
-}
-
-/* Estilo para el botón de añadir una foto, con bordes 
-y un padding específico para un mejor aspecto visual */
-div.multimedia div.add-photo {
-  border-radius: 6px;
-  border: 0.5px #363855 dashed;
-  border-width: 2px;
-  box-sizing: border-box;
-  padding: 12px 48px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: fit-content;
-}
 
 /* Estilo para el título del formulario, asegurando que el texto sea legible y estéticamente agradable */
 h2.titulo-form {
