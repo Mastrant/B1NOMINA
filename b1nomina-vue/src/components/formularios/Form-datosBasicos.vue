@@ -79,7 +79,7 @@
     <div class="row-form">
       <inputPicForm
         ref="inputFoto"
-        @actualizarDataImagen="(e) => console.log(e)"
+        @actualizarDataImagen="actualizarDataImagen"
       />
     </div>
     
@@ -162,6 +162,7 @@ const tipoDocumentoSelect = ref(''); //Documento selecionado
 const correo = ref("");
 const foto = ref("");
 const invitacion = ref(0);
+const dataImagen = ref('')
 
 // payload de la peticion
 const payload = reactive({
@@ -170,6 +171,9 @@ const payload = reactive({
   documento: "",
   nombres: "",
 });
+const actualizarDataImagen = (evento) => {
+  dataImagen.value = evento
+}
 /**
  * Actualiza el valor de una propiedad específica dentro del objeto 'payload'.
  *
@@ -198,13 +202,12 @@ const payload = reactive({
 };
 
 watch(numeroDocumento, (nuevoValor) => ActualizarPayload("documento", nuevoValor));
-watch(nombres, (nuevoValor) => ActualizarPayload("nombres", nuevoValor.toLowerCase()));
-watch(apellidos, (nuevoValor) => ActualizarPayload("apellidos", nuevoValor.toLowerCase()));
+watch(nombres, (nuevoValor) => ActualizarPayload("nombres", nuevoValor?.toUpperCase()));
+watch(apellidos, (nuevoValor) => ActualizarPayload("apellidos", nuevoValor?.toUpperCase()));
 watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor?.toLowerCase()));
 /**
  * Valores en desarrollo
  * watch(invitacion, (nuevoValor) => ActualizarPayload('invitacion', nuevoValor));
- * watch(foto, (nuevoValor) => ActualizarPayload('foto', nuevoValor));
  */
 
 // Función para crear un usuario preliminar (preuser) en el sistema.
@@ -246,9 +249,14 @@ const CrearUsuario = async (Datos) => {
 // Utiliza axios para realizar una solicitud PUT al endpoint '/user/{EmpleadoID}/update_preuser'.
 // Los datos a actualizar se pasan como argumento 'Datos', y 'idCreator' es el ID del usuario que realiza la actualización.
 const ActualizarDatosBasicos = async (idCreator, Datos) => {
- // Realiza la solicitud PUT y espera la respuesta.
- await axios.put(`/user/${props.EmpleadoID}/update_preuser?user_updater=${idCreator}`, Datos )
- .then(
+  let data = await getData(props.EmpleadoID)
+  console.log(data)
+  console.log(Datos)
+
+  console.log(sonIguales(data, Datos))
+  // Realiza la solicitud PUT y espera la respuesta.
+  await axios.put(`/user/${props.EmpleadoID}/update_preuser?user_updater=${idCreator}`, Datos )
+  .then(
     // Maneja la respuesta exitosa.
     res => {
       // Verifica si la respuesta tiene un estado HTTP 200 (OK).
@@ -259,8 +267,8 @@ const ActualizarDatosBasicos = async (idCreator, Datos) => {
       // Llama a la función NextModal pasando el ID del empleado.
       NextModal(props.EmpleadoID);            
     }
- )
- .catch(
+  )
+  .catch(
     // Maneja los errores de la solicitud.
     err => {
       // Verifica si la respuesta del error contiene un objeto de respuesta.
@@ -273,38 +281,42 @@ const ActualizarDatosBasicos = async (idCreator, Datos) => {
         emit("respuesta", {'texto':err.response.data.message, 'valor':false})      
       }
     }
- );
+  );
+}
+
+const sonIguales = (obj1, obj2) => {
+    const clavesObj1 = Object.keys(obj1);
+    return clavesObj1.every(clave => obj1[clave] == obj2[clave]);
 }
 
 //OPTIENE LA DATA DEL USUARIO indicado retorna verdadero o falso si se encuentra o no
- const getData = async (ID_empleado) => {
-    if(ID_empleado == null){
-        return null;
-    }
-    if(ID_empleado != null & ID_empleado >= 0){
-      //solicita los datos personales
-      await axios.get(`/user/${ID_empleado}/precarga`)
-      .then(
-        respuesta => {
-          if(respuesta.data){
-            //si hay datos del usuario
-            return true;
-          }
+const getData = (ID_empleado) => {
+    return new Promise((resolve, reject) => {
+        if (ID_empleado == null) {
+            resolve(null);
+        } else if (ID_empleado >= 0) {
+            axios.get(`/user/${ID_empleado}/precarga`)
+                .then(respuesta => {
+                    if (respuesta.data) {
+                        resolve(respuesta.data);
+                    } else {
+                        resolve({}); // Si no hay datos, resuelve con un objeto vacío
+                    }
+                })
+                .catch(error => {
+                    if (error.status == 422) {
+                        resolve(null); // Problema al pedir los datos, resuelve con null
+                    } else if (error.status == 404) {
+                        resolve({}); // Si no hay datos, resuelve con un objeto vacío
+                    } else {
+                        reject(error); // Rechaza la promesa con el error
+                    }
+                });
+        } else {
+            resolve(null); // Si ID_empleado es negativo, resuelve con null
         }
-      )
-      .catch(
-        error => {
-          if(error.status == 422){
-            //problema al pedir los datos
-            return null;
-          } else if(error.status == 404 ){
-            //si no hay datos
-            return false;
-          }            
-        }
-      )
-    }
-}
+    });
+};
 
 /**
  * Funcion emitida al enviar el formulario
@@ -320,7 +332,6 @@ const Enviar = () => {
   }
 
   if(props.EmpleadoID != null && props.EmpleadoID > 0 ){
-    //getData(props.EmpleadoID)
     if(statuspay == true){
       let ID_USERMASTER = JSON.parse(localStorage.getItem('userId'));
       ActualizarDatosBasicos(ID_USERMASTER, payload) 
