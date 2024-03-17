@@ -35,6 +35,7 @@ button {
     display: flex;
     justify-content: space-between;
     cursor: pointer;
+    width: fit-content;
 
 }
 

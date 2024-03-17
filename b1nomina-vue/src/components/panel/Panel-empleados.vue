@@ -24,7 +24,7 @@
                         <BigOptionButton 
                             Accion="Crear empleado"
                             Texto="Agrega un nuevo empleado y accede directamente a su perfil para completar sus datos."
-                            @click="showModal()"
+                            @click="showModal(1)"
                         />
                     </template>
 
@@ -33,6 +33,7 @@
                         <BigOptionButton  
                             Accion="Importación Masiva"
                             Texto="Importa de forma masiva los campos personalizados de tus empleados desde un único archivo, para crear múltiples empleados a la vez."
+                            @click="showModal(2)"
                         />
                     </template>
                     
@@ -41,6 +42,7 @@
                         <BigOptionButton 
                             Accion="Actualización Masiva"
                             Texto="Actualiza de forma masiva los campos personalizados para todos los empleados desde un único archivo."
+                            @click="showModal(3)"
                         />
                     </template>
                 </ListaOpciones>
@@ -60,6 +62,7 @@
             :DataNotification="dataNotificacion"
             NombreAccion="Nuevo Registro" 
             textSubmit="Guardar"
+            :ModalActivo="1"
         >
             <template #default>
             
@@ -102,7 +105,6 @@
                 <FormDatosPago
                     @closeModal="showModal"
                     @respuesta="sendData"
-                    @finalizado="showN({'Titulo': 'Empleado Creado', 'Descripcion': 'El empleado se ha creado y guardado en el sistema con exito'})"
                     :EmpleadoID="ID_Usuario_Creado"
                     :parametros="parametrosDPa"
                     v-show="idFormularioActivo == 4"
@@ -118,6 +120,21 @@
                     v-show="idFormularioActivo > 1"
                 />        
             </template>
+        </TemplateModal>
+
+        <TemplateModal 
+            @closeModal="showModal" 
+            :activarModal="mostrarModal2"
+            :FormId="'Form'+idFormularioActivo"
+            :DataNotification="dataNotificacion"
+            NombreAccion="Importación Masiva" 
+            textSubmit="Enviar"
+            :ModalActivo="2"
+        >
+            <template #default>
+                <FormImportacionMasiva />
+            </template>
+            
         </TemplateModal>
 
         <!--tabla con los datos-->
@@ -150,6 +167,7 @@
     import FormDatosLaborales from '@/components/formularios/Form-datosLaborales.vue';
     import FormDatosPago from '@/components/formularios/Form-datosPago.vue';
     import AlertShort from '@/components/alertas/Alert-short-template.vue';
+    import FormImportacionMasiva from '@/components/formularios/Form-ImportacionMasiva.vue'
 
     //iconos
     import PersonPlussIcon from '../icons/Person-Pluss-icon.vue';
@@ -214,23 +232,36 @@
     };
 
     const mostrarModal = ref(false)
+    const mostrarModal2 = ref(false)
+    const mostrarModal3 = ref(false)
 
     /**
      * Controla el despliegue del modal
      * @param mostrarModal
      */
-    const showModal = () => {
-        limpiarFormularios();
-        if(idFormularioActivo.value != 1 && mostrarModal.value == true){
-            showN(
-                {
-                 'Titulo': "Empleado Creado con exito", 
-                 'Descripcion': "El proceso de creacion del usuario se ha realizazo con éxito"
-                })
+    const showModal = (Id_modal) => {
+        if(Id_modal == 1){
+            limpiarFormularios();
+            if(idFormularioActivo.value != 1 && mostrarModal.value == true){
+                showN(
+                    {
+                    'Titulo': "Empleado Creado con exito", 
+                    'Descripcion': "El proceso de creacion del usuario se ha realizazo con éxito"
+                    }
+                )
+            }
+            mostrarModal.value = !mostrarModal.value;
+            idFormularioActivo.value = 1;
+        } else if(Id_modal == 2){
+            mostrarModal2.value = !mostrarModal2.value;
+
+        } else if(Id_modal == 3){
+            //console.log("mostrarmodal 3")
+            //modal en desarrollo
+            mostrarModal3.value = !mostrarModal3.value;
         }
-        mostrarModal.value = !mostrarModal.value;
-        idFormularioActivo.value = 1;
     }
+
     const retrocederForm = () => {
         if(idFormularioActivo.value > 1){
             idFormularioActivo.value--

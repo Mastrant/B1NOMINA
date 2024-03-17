@@ -113,7 +113,6 @@ const props = defineProps({
 // Define los eventos que el componente puede emitir
 const emit = defineEmits([
     'closeModal',
-    'finalizado',
     'respuesta',
 ]);
 
@@ -160,7 +159,6 @@ defineExpose({
 
 const CloseModal = () => {
     emit('closeModal');
-    emit('finalizado')
 };
 
 const crearDatosPago = async (ID_USERMASTER,Data) => {

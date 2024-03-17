@@ -24,11 +24,15 @@
                         </slot>
 
                         <!--contenedor botones-->
-                        <div class="contend-button-modal">
+                        <div class="contend-button-modal" v-if="FormId != null">
                             <TemplateButton :form="FormId" Tipo="submit" :text="textSubmit"/>
                             <slot name="boton">
 
                             </slot>
+                            <TemplateButton2 text="Cancelar" @click="close" />
+                        </div>
+                        <div class="contend-button-modal" v-else>
+                            <TemplateButton Tipo="submit" :text="textSubmit"/>
                             <TemplateButton2 text="Cancelar" @click="close" />
                         </div>
                     </div>
@@ -61,7 +65,8 @@ const props = defineProps({
         default: 'Siguiente'
     },
     FormId:{
-        String
+        String,
+        default: null
     },
     DataNotification: {
         type: Object, // Cambia el tipo a Object
@@ -70,6 +75,10 @@ const props = defineProps({
             valor: null
         }), // Proporciona un objeto vacío como valor predeterminado
     },
+    ModalActivo: {
+        type: Number,
+        default: null
+    }
 });
 
 // Define los eventos que el componente puede emitir
@@ -78,7 +87,7 @@ const emit = defineEmits([
 ]);
 
 const close = () => {
-    emit('closeModal');
+    emit('closeModal', props.ModalActivo);
 }; 
 
 //Inicializa las variables

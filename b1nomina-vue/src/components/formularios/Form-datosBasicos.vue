@@ -258,8 +258,18 @@ const CrearUsuario = async (Datos) => {
 // Utiliza axios para realizar una solicitud PUT al endpoint '/user/{EmpleadoID}/update_preuser'.
 // Los datos a actualizar se pasan como argumento 'Datos', y 'idCreator' es el ID del usuario que realiza la actualización.
 const subirFoto = async (idCreator, Datos, ID_EMpleado) => {
-  // Realiza la solicitud PUT y espera la respuesta.
-  await axios.post(`/user/${ID_EMpleado}/upload_file_users?creatorUserId=${idCreator}`, Datos)
+  const formData = new FormData();
+  formData.append('file', Datos.value); // Asegúrate de que 'file' coincida con lo que espera el servidor
+
+  console.log(formData)
+  axios.post(`/user/${ID_EMpleado}/upload_file_users?creatorUserId=${idCreator}`, 
+    formData, 
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }
+    }
+  )
   .then(
     // Maneja la respuesta exitosa.
     res => {
@@ -403,8 +413,6 @@ form.formulario {
   flex-direction: column;
   gap: 16px;
 }
-
-
 
 /* Estilo para el título del formulario, asegurando que el texto sea legible y estéticamente agradable */
 h2.titulo-form {
