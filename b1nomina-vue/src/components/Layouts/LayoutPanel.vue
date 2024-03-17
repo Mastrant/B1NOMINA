@@ -4,7 +4,7 @@
 
         </slot>
 
-        <div class="body">
+        <div class="body-panel">
             <slot name="panel">
             
             </slot>
@@ -20,7 +20,7 @@ section.layoutpanel {
     width: 100%;
 }
 
-div.body {
+div.body-panel {
     padding: 24px;
 }
 

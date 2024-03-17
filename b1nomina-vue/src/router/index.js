@@ -49,27 +49,27 @@ const router = createRouter({
         {
           path: '',
           name: 'dashboard',
-          component: () => import('../views/DashboardView.vue'),
+          component: () => import('@/views/DashboardView.vue'),
           alias: ['dashboard']
         },
         //panel gestion de nomina
         {
           path: 'gestionNomina',
-          component: () => import('../views/GestionNominaView.vue'),
+          component: () => import('@/views/GestionNominaView.vue'),
           alias: ['gestiosNomina', 'nomina']
         },
         //panel empleados
         {
           path: 'empleados',
           name: 'empleados',
-          component: () => import('../views/EmpleadosView.vue'),
+          component: () => import('@/views/EmpleadosView.vue'),
           props: true,
          
           //componentes hijos de la ruta empleados
           children:[
             {
               path: "",
-              component: () => import('../components/panel/Panel-empleados.vue'),
+              component: () => import('@/components/panel/Panel-empleados.vue'),
               name: 'listar',
               alias: 'listar',
               props: true,
@@ -78,13 +78,13 @@ const router = createRouter({
             {
               path: 'enContratacion',
               name: 'enContratacion',
-              component: () => import('../components/panel/Panel-EnContratacion.vue'),   
+              component: () => import('@/components/panel/Panel-EnContratacion.vue'),   
               alias: 'enContratacion'         
             },
             {
               path: 'inactivos',
               name: 'inactivos',
-              component: () => import('../components/panel/Panel-Inactivos.vue'),   
+              component: () => import('@/components/panel/Panel-Inactivos.vue'),   
               alias: 'inactivos'         
             },
           ]
@@ -93,28 +93,28 @@ const router = createRouter({
         {
           path: 'informes',
           name: 'informes',
-          component: () => import('../views/InformesView.vue'),
+          component: () => import('@/views/InformesView.vue'),
           alias: ['informes']
         },
         //panel configuracion
         {
           path: 'configuracion',
           name: 'configuracion',
-          component: () => import('../views/ConfiguracionView.vue'),
+          component: () => import('@/views/ConfiguracionView.vue'),
           alias: ['configuracion']
         },
         //panel eventos
         {
           path: 'eventos',
           name: 'eventos',
-          component: () => import('../views/EventosView.vue'),
+          component: () => import('@/views/EventosView.vue'),
           alias: ['eventos']
         },
         //panel notificaciones
         {
           path: 'notificaciones',
           name: 'notificaciones',
-          component: () => import('../views/NotificacionesView.vue'),
+          component: () => import('@/views/NotificacionesView.vue'),
           alias: ['notificaciones']
         },
         
@@ -130,7 +130,7 @@ const router = createRouter({
     {
       path: '/help',
       name: 'help',
-      component: () => import('../views/HelpView.vue'),
+      component: () => import('@/views/HelpView.vue'),
       meta: {
         requiereToken: false, //establece si es requerido autorizacion para acceder
       },

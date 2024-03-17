@@ -5,7 +5,7 @@
         </template>
 
         <template v-slot:panel>
-            <span>En Desarrollo, gracias por su paciencia.</span>
+            <PanelDashboard />
         </template>
     </LayoutPanel>
 </template>
@@ -13,6 +13,7 @@
 <script setup>
 import Headervue from '@/components/Header.vue';
 import LayoutPanel from '@/components/Layouts/LayoutPanel.vue';
+import PanelDashboard from '@/components/panel/Panel-Dashboard.vue';
 
 </script>
 

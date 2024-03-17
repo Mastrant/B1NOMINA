@@ -1,5 +1,4 @@
 <template>
-    <Teleport to="#modal-container">
         <transition name="fade">
             <div class="card-contend">
                 <h3>{{Titulo}}</h3>
@@ -7,10 +6,12 @@
                 <button>Cerrar</button>
             </div>
         </transition>
-    </Teleport>
 </template>
 
 <script setup>
+/**
+ * Uso
+ */
 import { defineProps } from 'vue';
 
 const props = defineProps({

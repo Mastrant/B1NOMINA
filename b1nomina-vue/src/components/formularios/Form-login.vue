@@ -40,12 +40,12 @@
 //componentes
 const InputLogin = defineAsyncComponent(() => import('@/components/inputs/Input-Login.vue') )
 const EmailIcon = defineAsyncComponent(() => import('@/components/icons/Email-icon.vue'));
-const PasswordIcon = defineAsyncComponent(() => import('../icons/Password-icon.vue'));
-const HiddenButton = defineAsyncComponent(() => import('../botones/Hidden-button.vue'));
-const InputCheckboxText = defineAsyncComponent(() => import('../inputs/Input-Checkbox-Text.vue'));
-const SubmitButton = defineAsyncComponent(() => import('../botones/Submit-button.vue'));
-const alertError = defineAsyncComponent(() => import('@/components/alertas/alert-Error.vue'));
-const alertWarning = defineAsyncComponent(() => import('@/components/alertas/alert-Warning.vue'));
+const PasswordIcon = defineAsyncComponent(() => import('@/components/icons/Password-icon.vue'));
+const HiddenButton = defineAsyncComponent(() => import('@/components/botones/Hidden-button.vue'));
+const InputCheckboxText = defineAsyncComponent(() => import('@/components/inputs/Input-Checkbox-Text.vue'));
+const SubmitButton = defineAsyncComponent(() => import('@/components/botones/Submit-button.vue'));
+const alertError = defineAsyncComponent(() => import('@/components/alertas/Alert-Error.vue'));
+const alertWarning = defineAsyncComponent(() => import('@/components/alertas/Alert-Warning.vue'));
 
 import LayoutLogin from '../Layouts/LayoutLogin.vue';
 
@@ -195,3 +195,4 @@ div.showError{
 
 </style>
 
+@/components/alertas/Alert-Warning.vue@/components/alertas/Alert-Error.vue
