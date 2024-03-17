@@ -97,17 +97,16 @@
                     :parametros="parametrosDL"
                     v-show="idFormularioActivo == 3"
                     ref="Form3"
-                    
                 />
 
                 <FormDatosPago
                     @closeModal="showModal"
                     @respuesta="sendData"
+                    @finalizado="showN({'Titulo': 'Empleado Creado', 'Descripcion': 'El empleado se ha creado y guardado en el sistema con exito'})"
                     :EmpleadoID="ID_Usuario_Creado"
                     :parametros="parametrosDPa"
                     v-show="idFormularioActivo == 4"
                     ref="Form4"
-                    
                 />
             
             </template>
@@ -129,6 +128,9 @@
 
             <EmpleadosGeneral v-else :listaEmpleados="ListaEmpleados"   @upData="InteraccionListaEmpleadosSelecionados"/>
         </div>
+        <AlertShort
+            ref="notificacionStatus"
+        />
     </div>
 </template>
 
@@ -147,6 +149,7 @@
     import FormDatosPersonalesVue from '@/components/formularios/Form-datosPersonales.vue';
     import FormDatosLaborales from '@/components/formularios/Form-datosLaborales.vue';
     import FormDatosPago from '@/components/formularios/Form-datosPago.vue';
+    import AlertShort from '@/components/alertas/Alert-short-template.vue';
 
     //iconos
     import PersonPlussIcon from '../icons/Person-Pluss-icon.vue';
@@ -176,6 +179,14 @@
         ListaIds.value = Array.from(arreglo);
         //console.log(ListaIds.value); // Ahora debería mostrar un array real
     }
+
+    //toma la referencia del componente notificacion para utilizar el metodo mostrar
+    const notificacionStatus = ref(null)
+    const showN = (Data) => {
+    notificacionStatus.value.ActivarNotificacion(
+       Data //Formato: {'Titulo': "empleado especial", 'Descripcion': "esta es la descripcion de la cartica"}   
+    );
+}
 
     //controla la visualizacion de las opciones
     const mostrarOpciones = ref(false);
@@ -210,6 +221,13 @@
      */
     const showModal = () => {
         limpiarFormularios();
+        if(idFormularioActivo.value != 1 && mostrarModal.value == true){
+            showN(
+                {
+                 'Titulo': "Empleado Creado con exito", 
+                 'Descripcion': "El proceso de creacion del usuario se ha realizazo con éxito"
+                })
+        }
         mostrarModal.value = !mostrarModal.value;
         idFormularioActivo.value = 1;
     }

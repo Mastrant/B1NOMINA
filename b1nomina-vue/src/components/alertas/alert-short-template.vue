@@ -1,8 +1,8 @@
 <template>
         <transition name="fade">
            <div class="card-contend" v-if="mostrarComponente">
-             <h3>{{Titulo}}</h3>
-             <p>{{Descripcion}}</p>
+             <h3 class="titulo">{{Titulo}}</h3>
+             <p class="descripcion">{{Descripcion}}</p>
              <div>
                <button type="button" class="button" @click="cerrarNotificacion">
                  <ExitColorIcon />
@@ -14,44 +14,43 @@
 </template>
 
 <script setup>
+/**
+ * Uso del componete:
+ * 
+ * <AlertShort ref="nombre de la referencia" />
+ * const nombre de la referencia = ref(null)
+   const showN = () => {
+    nombre de la referencia.value.ActivarNotificacion(
+        {'Titulo': "empleado especial", 'Descripcion': "esta es la descripcion de la cartica"}
+    );
+   }
+ */
+
 import ExitColorIcon from '@/components/icons/Exit-color-icon.vue';
-import { ref, watch, defineProps, onMounted, defineExpose } from 'vue';
+import { ref, defineExpose } from 'vue';
 
-const props = defineProps({
- Titulo: {
-    type: String,
-    default: 'Titulo Cartica'
- },
- Descripcion: {
-    type: String,
-    default: 'Texto area cartica'
- },
- visible: {
-    type: Boolean,
-    default: true
- }
-});
+const mostrarComponente = ref(false);
+const Titulo = ref('');
+const Descripcion = ref('')
 
-const mostrarComponente = ref(props.visible);
-
-const ActivarNotificacion = () => {
+const ActivarNotificacion = (DataRecivida) => {
+ Titulo.value = DataRecivida?.Titulo;
+ Descripcion.value = DataRecivida?.Descripcion;
  mostrarComponente.value= true;
  setTimeout(() => {
     mostrarComponente.value = false;
- }, 8000);
+ }, 4000);
 };
 
 const cerrarNotificacion = () => {
  mostrarComponente.value = false;
 };
 
-watch(() => props.visible, (valor) => {
- mostrarComponente.value = valor;
-});
 
-defineExpose(
+defineExpose({
     ActivarNotificacion,
-)
+    cerrarNotificacion,
+});
 </script>
 
 <style scoped>
@@ -63,14 +62,20 @@ div.card-contend {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
     border-radius: 6px; 
     flex-direction:column;
-    justify-content: center;
-    align-items: flex-end;
     gap: 12px;
-    display: inline-flex;
+    display:flex;
+    flex-direction: column;
     z-index: 5;
     box-sizing: border-box;
     position: absolute;
-}
+    align-self: baseline;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    bottom: 0; /* Ajusta la posición en el eje Y */
+    right: 0; /* Ajusta la posición en el eje X */
+    margin: 48px 24px;
+  }
 
 div.card-contend > h3 {
     color: black;
@@ -83,13 +88,17 @@ div.card-contend > h3 {
     width: 100%;
 }
 
-div.card-contend > p {
+div.card-contend > p.descripcion {
     margin: 0;
     color: black;
     font-size: 16px;
     font-weight: 400;
     line-height: 26px;
     word-wrap: break-word;
+    text-align: start;
+    width: 100%;
+    height: 100%;
+
 }
 
 button {

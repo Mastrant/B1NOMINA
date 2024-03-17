@@ -160,6 +160,7 @@ defineExpose({
 
 const CloseModal = () => {
     emit('closeModal');
+    emit('finalizado')
 };
 
 const crearDatosPago = async (ID_USERMASTER,Data) => {
@@ -320,9 +321,6 @@ const verificarMediodePago = (medio) => {
         CloseModal()
     }
 };
-
-
-
 </script>
 
 <style scoped>
