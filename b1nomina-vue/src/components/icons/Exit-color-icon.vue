@@ -11,7 +11,8 @@ import { defineProps } from 'vue';
 
 const props = defineProps({
     Stroke: {
-        String
+        String,
+        default: "black"
     }
 });
 </script>
