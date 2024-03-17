@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import AlertShort from '@/components/alertas/Alert-short-template.vue'
+import AlertShort from '@/components/alertas/alert-short-template.vue'
 import {ref} from 'vue'
 
 const notificacionStatus = ref(null)
