@@ -1,5 +1,5 @@
 <template>
-    <div class="formulario-empleados" id="formulaEmpleadoIDrio-empleados">
+    <div class="panel-empleados">
         <div class="acciones-form">
             <div class="filtros">
                 <InputShearch v-model="shearch" @update:modelValue="shearch = $event" />
@@ -134,28 +134,26 @@
 
 <script setup>
     //componentes
-    import InputShearch from '../inputs/Input-shearch.vue';
-    import TemplateButton from '../botones/Template-button.vue';
-    import TemplateButton2 from '../botones/Template-button2.vue'
-    import ListaTemplate from '../listas/Lista-template.vue';
-    import EmpleadosGeneral from '../tablas/Empleados/Empleados-general.vue';
-    import ListaOpciones from '../listas/Lista-Opciones.vue'
-    import BigOptionButton from '../botones/Big-Option-button.vue'
+    import InputShearch from '@/components/inputs/Input-shearch.vue';
+    import TemplateButton from '@/components/botones/Template-button.vue';
+    import TemplateButton2 from '@/components/botones/Template-button2.vue'
+    import ListaTemplate from '@/components/listas/Lista-template.vue';
+    import EmpleadosGeneral from '@/components/tablas/Empleados/Empleados-general.vue';
+    import ListaOpciones from '@/components/listas/Lista-Opciones.vue'
+    import BigOptionButton from '@/components/botones/Big-Option-button.vue'
     import TemplateModal from '@/components/modal/TemplateModal.vue';
     import NavForm from '@/components/navs/Nav-form.vue'
-    import FormDatosBasicos from './Form-datosBasicos.vue';
-    import FormDatosPersonalesVue from './Form-datosPersonales.vue';
-    import FormDatosLaborales from './Form-datosLaborales.vue';
-    import FormDatosPago from './Form-datosPago.vue';
+    import FormDatosBasicos from '@/components/formularios/Form-datosBasicos.vue';
+    import FormDatosPersonalesVue from '@/components/formularios/Form-datosPersonales.vue';
+    import FormDatosLaborales from '@/components/formularios/Form-datosLaborales.vue';
+    import FormDatosPago from '@/components/formularios/Form-datosPago.vue';
 
     //iconos
     import PersonPlussIcon from '../icons/Person-Pluss-icon.vue';
 
     //librerias
-    import { ref, onMounted, reactive, toRefs, watch  } from 'vue';
+    import { ref, onMounted, reactive, toRefs, watch, inject  } from 'vue';
     import axios from 'axios';
-
-    import { inject } from 'vue';
 
     // Inyectar el valor proporcionado por la url
     const idSociedad = inject('IDsociedad');
@@ -215,20 +213,20 @@
         mostrarModal.value = !mostrarModal.value;
         idFormularioActivo.value = 1;
     }
-
     const retrocederForm = () => {
         if(idFormularioActivo.value > 1){
             idFormularioActivo.value--
         }
         
     };
-
     const avanzarForm = (idEmpleadoCreado) => {
         ID_Usuario_Creado.value = idEmpleadoCreado;
         if(idFormularioActivo.value < 4){
             idFormularioActivo.value++
         }
     };
+
+    //fin control del modal
 
     //variables a utilizar de forma reactiva
     const state = reactive({
@@ -392,6 +390,7 @@
         )
     };
 
+    //parametros formularios
     const parametrosDP = ref({
         nacionalidad: [],
         estadocivil: [],
@@ -595,7 +594,7 @@
  y organizar sus elementos en una columna. El uso de 'display: flex' y 'flex-direction: column' permite
  una disposición flexible y ordenada de los elementos del formulario.
 */
-div.formulario-empleados {
+div.panel-empleados {
     width: 100%;
     height: 100%;
     display: flex;

@@ -126,6 +126,7 @@ const emit = defineEmits([
 ]);
 
 const inputFoto = ref(null)
+const ID_USERMASTER = JSON.parse(localStorage.getItem('userId'));
 
 // Método para reiniciar el formulario
 const resetForm = () => {
@@ -223,8 +224,16 @@ const CrearUsuario = async (Datos) => {
       if (res.status == 201){
         // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
         emit("respuesta", {'texto':res?.data?.message, 'valor':true})
-        // Llama a la función NextModal pasando el ID del nuevo usuario.
-        NextModal(res.data.newUserId);
+
+        const newUserId = res.data.newUserId;
+        
+        // Llama a la función si nexmodal data imagen esta vacia o es indefinido NextModal pasando el ID del nuevo usuario.
+        console.log(dataImagen.value == '')
+        if (dataImagen.value == undefined || dataImagen.value == '') {
+          NextModal(newUserId);
+        } else {
+          subirFoto(ID_USERMASTER, dataImagen, newUserId)
+        }
       }            
     }
  )
@@ -248,14 +257,42 @@ const CrearUsuario = async (Datos) => {
 // Función para actualizar los datos básicos de un usuario preliminar (preuser) en el sistema.
 // Utiliza axios para realizar una solicitud PUT al endpoint '/user/{EmpleadoID}/update_preuser'.
 // Los datos a actualizar se pasan como argumento 'Datos', y 'idCreator' es el ID del usuario que realiza la actualización.
-const ActualizarDatosBasicos = async (idCreator, Datos) => {
-  let data = await getData(props.EmpleadoID)
-  console.log(data)
-  console.log(Datos)
-
-  console.log(sonIguales(data, Datos))
+const subirFoto = async (idCreator, Datos, ID_EMpleado) => {
   // Realiza la solicitud PUT y espera la respuesta.
-  await axios.put(`/user/${props.EmpleadoID}/update_preuser?user_updater=${idCreator}`, Datos )
+  await axios.post(`/user/${ID_EMpleado}/upload_file_users?creatorUserId=${idCreator}`, Datos)
+  .then(
+    // Maneja la respuesta exitosa.
+    res => {
+      // Verifica si la respuesta tiene un estado HTTP 200 (OK).
+      if (res.status == 200 || res.status == 201 ){
+        // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
+        emit("respuesta", {'texto':res.data?.message, 'valor':true})        
+
+        // Llama a la función NextModal pasando el ID del empleado.
+        NextModal(props.EmpleadoID);            
+      }
+    }
+  )
+  .catch(
+    // Maneja los errores de la solicitud.
+    err => {
+      // Verifica si la respuesta del error contiene un objeto de respuesta.
+      if (err.response) { 
+        console.log(idCreator, Datos, ID_EMpleado)
+        console.log(err)
+
+        // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
+        emit("respuesta", {'texto':err.response.data?.message, 'valor':false})            
+      }
+    }
+  );
+}
+
+const ActualizarDatosBasicos = async (idCreator, Datos, ID_EMpleado) => {
+  let data = await getData(ID_EMpleado)
+
+  // Realiza la solicitud PUT y espera la respuesta.
+  await axios.put(`/user/${ID_EMpleado}/update_preuser?user_updater=${idCreator}`, Datos )
   .then(
     // Maneja la respuesta exitosa.
     res => {
@@ -264,8 +301,14 @@ const ActualizarDatosBasicos = async (idCreator, Datos) => {
         // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
         emit("respuesta", {'texto':res.data?.message, 'valor':true})        
       }
-      // Llama a la función NextModal pasando el ID del empleado.
-      NextModal(props.EmpleadoID);            
+
+      // Llama a la función si nexmodal data imagen esta vacia o es indefinido NextModal pasando el ID del nuevo usuario.
+        console.log(dataImagen.value)
+        if (dataImagen.value == undefined || dataImagen.value == '') {
+          NextModal(props.EmpleadoID);
+        } else {
+          subirFoto(ID_USERMASTER, dataImagen.value, props.EmpleadoID)
+        }          
     }
   )
   .catch(
@@ -282,11 +325,6 @@ const ActualizarDatosBasicos = async (idCreator, Datos) => {
       }
     }
   );
-}
-
-const sonIguales = (obj1, obj2) => {
-    const clavesObj1 = Object.keys(obj1);
-    return clavesObj1.every(clave => obj1[clave] == obj2[clave]);
 }
 
 //OPTIENE LA DATA DEL USUARIO indicado retorna verdadero o falso si se encuentra o no
@@ -333,8 +371,7 @@ const Enviar = () => {
 
   if(props.EmpleadoID != null && props.EmpleadoID > 0 ){
     if(statuspay == true){
-      let ID_USERMASTER = JSON.parse(localStorage.getItem('userId'));
-      ActualizarDatosBasicos(ID_USERMASTER, payload) 
+      ActualizarDatosBasicos(ID_USERMASTER, payload, props.EmpleadoID) 
     }else {
       NextModal(props.EmpleadoID)
     }   

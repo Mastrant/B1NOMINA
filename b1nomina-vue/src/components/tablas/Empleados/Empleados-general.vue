@@ -141,12 +141,12 @@ const listaEmpleadosSelecionados = ref([])
       // Verifica si el índice es válido (mayor que -1)
       if (index > -1) {
         // Remueve el valor de la lista usando splice
-        listaEmpleadosSelecionados.value.splice(index,   1);
+        listaEmpleadosSelecionados.value?.splice(index,   1);
       }
     } else {
       // Si el valor no está en la lista, lo agrega
       // Agrega el valor al final de la lista
-      listaEmpleadosSelecionados.value.push(value);
+      listaEmpleadosSelecionados.value?.push(value);
     }
   }
 };

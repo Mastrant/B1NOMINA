@@ -69,7 +69,7 @@ const router = createRouter({
           children:[
             {
               path: "",
-              component: () => import('../components/formularios/Form-empleados.vue'),
+              component: () => import('../components/panel/Panel-empleados.vue'),
               name: 'listar',
               alias: 'listar',
               props: true,
@@ -78,13 +78,13 @@ const router = createRouter({
             {
               path: 'enContratacion',
               name: 'enContratacion',
-              component: () => import('../views/EnContratacionView.vue'),   
+              component: () => import('../components/panel/Panel-EnContratacion.vue'),   
               alias: 'enContratacion'         
             },
             {
               path: 'inactivos',
               name: 'inactivos',
-              component: () => import('../views/InactivosView.vue'),   
+              component: () => import('../components/panel/Panel-Inactivos.vue'),   
               alias: 'inactivos'         
             },
           ]

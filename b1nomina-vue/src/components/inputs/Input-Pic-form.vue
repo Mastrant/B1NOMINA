@@ -57,7 +57,7 @@ const manejarimagen = (evento) => {
     const imagen = evento.target.files[0]
     
     // Verifica si la imagen tiene una extensión válida
-    if (ExtencionesValidas.includes(imagen.type)){
+    if (ExtencionesValidas.includes(imagen?.type)){
         // Crea un objeto FileReader para leer el contenido de la imagen
         let reader = new FileReader();
         
@@ -71,7 +71,7 @@ const manejarimagen = (evento) => {
         reader.readAsDataURL(imagen)
 
         // Emite el evento 'actualizarDataImagen' con el valor actual de 'ubicacion'
-        emit('actualizarDataImagen', ubicacion)
+        emit('actualizarDataImagen', imagen)
 
     } else {
         // Si la imagen no es válida, limpia la referencia reactiva 'ubicacion'

@@ -1,0 +1,152 @@
+<template>
+    <div class="panel-inactivos">
+        <div class="acciones-form">
+            <div class="filtros">
+                <InputShearch 
+                    v-model="shearch" 
+                    @update:modelValue="shearch = $event" />
+            </div>
+        </div>
+
+        <!--tabla con los datos-->
+        <div class="cuerpo-tabla">
+            <span class="NoEncontrado" 
+                v-if="(ListaEmpleados.length < 1)? true : false"
+            >
+                No hay datos asociados a los filtros
+            </span>
+
+            <EmpleadosGeneral v-else 
+                :listaEmpleados="ListaEmpleados"  
+                @upData="InteraccionListaEmpleadosSelecionados"
+            />
+        </div>
+    </div>
+</template>
+
+<script setup>
+import InputShearch from '@/components/inputs/Input-shearch.vue';
+import EmpleadosGeneral from '@/components/tablas/Empleados/Empleados-general.vue';
+   
+
+import {ref, inject, watch, reactive, toRefs, onMounted} from 'vue';
+import axios from 'axios';
+
+// Inyectar el valor proporcionado por la url
+const idSociedad = inject('IDsociedad');
+
+const shearch = ref('');
+
+const ListaEmpleados = ref([]);
+const ListaIds = ref([]); //Contiene los id de los empleados seleccionados
+
+//se ejecuta al selecionar empleados
+const InteraccionListaEmpleadosSelecionados = (arreglo) => {
+        // Convertir el objeto proxy a un array real
+        ListaIds.value = Array.from(arreglo);
+        //console.log(ListaIds.value); // Ahora debería mostrar un array real
+}
+
+// Arreglo que contiene el arreglo original
+let listaEmpleadosOriginal = null;
+/**
+     * aplica un filtro segun el texto ingresado
+     * @param {String} text - entrada del texto del usuario
+    
+    */
+    const filtrar = (text) => {
+        // Si no se ha establecido la lista original, se guarda
+        if (listaEmpleadosOriginal === null) {
+            listaEmpleadosOriginal = [...ListaEmpleados.value];
+        }
+
+        // Si el texto de entrada es diferente al texto ingresado reasigna el arreglo original
+        if (text.trim() === '') {
+           ListaEmpleados.value = [...listaEmpleadosOriginal];
+           return;
+        }
+
+         //convierte la entrada de texto a minusculas y elimina los espacios del inicio
+        const normalizarText = text.toLowerCase().trim();
+        const filtrado = ListaEmpleados.value.filter(
+            (empleado) => empleado.nombres?.toLowerCase().includes(normalizarText) || //filtrar por Nombres
+                          empleado.apellidos?.toLowerCase().includes(normalizarText) || // filtrar por apellidos
+                          empleado.rut?.includes(normalizarText)
+        );
+
+        //asigna el valor del arreglo con el filtro a la variable.
+        ListaEmpleados.value = filtrado
+    };
+
+watch(shearch, filtrar);
+
+/**
+    * Solicita a la API los datos de los empleados y los almacena en el componente ListaTemplate como props.
+    *
+    * @async
+    * @function pedirEmpleados
+    * @param parametrosPeticionEmpleados Json con los datos de la consulta
+    * @returns {Promise<void>} No devuelve nada, pero actualiza el valor de ListaEmpleados.
+    *
+    * @example
+    * // Llamada a la función para obtener los datos de los empleados
+    * pedirEmpleados();
+    *
+    * @throws {Error} Si ocurre un error durante la solicitud, se asigna un array vacío a ListaEmpleados.
+    */
+    const pedirEmpleados = async () => {
+        await axios.get(`/sociedad/${idSociedad}/list_empleados`)
+        .then(
+            (res) => {
+                ListaEmpleados.value = res.data; //almacena los datos devueltos por la api
+            }
+        )
+        .catch(
+            (err) => {
+                ListaEmpleados.value = []; // si hay un error asigna un valor vacio
+            }
+        )
+    };
+
+// al montar el componente ejecuta las funciones
+onMounted(async () => {
+
+   await pedirEmpleados(); //solicita los empleados
+});
+</script>
+
+<style scoped>
+
+/* 
+ Contenedor principal del formulario de empleados, configurado para ocupar todo el espacio disponible
+ y organizar sus elementos en una columna. El uso de 'display: flex' y 'flex-direction: column' permite
+ una disposición flexible y ordenada de los elementos del formulario.
+*/
+div.panel-inactivos {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap:24px; /* Espaciado entre los elementos del formulario para mejorar la legibilidad */
+}
+
+/* 
+ Sección de filtros, organiza los elementos en una fila con un espaciado específico entre ellos para
+ una fácil navegación y selección de filtros.
+*/
+div.filtros {
+    display: flex;
+    flex-direction: row;
+    gap: 12px; /* Espaciado entre los elementos de filtro para mantener la interfaz limpia y ordenada */
+}
+
+/* 
+ Mensaje de "No encontrado", ajustando el tamaño de fuente y el color para proporcionar un feedback
+ visual adecuado al usuario.
+*/
+span.NoEncontrado {
+    font-size: 24px;
+    color: rgb(56, 56, 56); /* Color gris oscuro para mantener un tono coherente con el diseño */
+}
+
+</style>

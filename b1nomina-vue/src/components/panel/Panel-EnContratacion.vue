@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <AddUserEnContratacion  v-show="show"/>
         <EnContratacion />
     </div>
