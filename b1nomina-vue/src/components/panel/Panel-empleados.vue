@@ -536,36 +536,37 @@
     };
 
     // Arreglo que contiene el arreglo original
-    let listaEmpleadosOriginal = null;
-
-    /**
+let listaEmpleadosOriginal = null;
+/**
      * aplica un filtro segun el texto ingresado
      * @param {String} text - entrada del texto del usuario
     
     */
     const filtrar = (text) => {
-        // Si no se ha establecido la lista original, se guarda
-        if (listaEmpleadosOriginal === null) {
-            listaEmpleadosOriginal = [...ListaEmpleados.value];
-        }
+    // Si la lista original no está establecida, guarda la lista actual como la original
+    if (listaEmpleadosOriginal === null) {
+        listaEmpleadosOriginal = [...ListaEmpleados.value];
+    }
 
-        // Si el texto de entrada es diferente al texto ingresado reasigna el arreglo original
-        if (text.trim() === '') {
-           ListaEmpleados.value = [...listaEmpleadosOriginal];
-           return;
-        }
+    // Si el texto es vacío, restablece la lista mostrada a la lista original
+    if (text.trim() === '') {
+        ListaEmpleados.value = [...listaEmpleadosOriginal];
+        return;
+    }
 
-         //convierte la entrada de texto a minusculas y elimina los espacios del inicio
-        const normalizarText = text.toLowerCase().trim();
-        const filtrado = ListaEmpleados.value.filter(
-            (empleado) => empleado.nombres?.toLowerCase().includes(normalizarText) || //filtrar por Nombres
-                          empleado.apellidos?.toLowerCase().includes(normalizarText) || // filtrar por apellidos
-                          empleado.rut?.includes(normalizarText)
-        );
+    // Normaliza el texto de búsqueda
+    let normalizarText = text?.toLowerCase().trim();
 
-        //asigna el valor del arreglo con el filtro a la variable.
-        ListaEmpleados.value = filtrado
-    };
+    // Filtra la lista original basándose en el texto de búsqueda
+    const filtrado = listaEmpleadosOriginal.filter(
+        (empleado) => empleado.nombre?.toLowerCase().includes(normalizarText) ||
+        empleado.apellido_paterno?.toLowerCase().includes(normalizarText) ||
+        empleado.rut?.includes(normalizarText)
+    );
+
+    // Actualiza la lista mostrada con los resultados filtrados
+    ListaEmpleados.value = filtrado;
+};
 
     //escucha el cambio de la variable y ejecuta la funcion
     watch(filtroSede, addSede);
