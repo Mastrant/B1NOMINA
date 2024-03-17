@@ -34,12 +34,12 @@ const props = defineProps({
 
 const mostrarComponente = ref(props.visible);
 
-const ActivarNotificacion(() => {
-    mostrarComponente.value= true;
+const ActivarNotificacion = () => {
+ mostrarComponente.value= true;
  setTimeout(() => {
     mostrarComponente.value = false;
  }, 8000);
-});
+};
 
 const cerrarNotificacion = () => {
  mostrarComponente.value = false;
@@ -50,7 +50,7 @@ watch(() => props.visible, (valor) => {
 });
 
 defineExpose(
-    activarNotificacion,
+    ActivarNotificacion,
 )
 </script>
 
