@@ -3,35 +3,61 @@
     <div class="multimedia">
       <!-- Contenedor para la funcionalidad de añadir una foto -->
       <div class="add-docs">
-        <!-- Muestra el texto "Arrastrar imagen aquí" si no hay una imagen cargada -->
-        <span v-if="Documento.length <= 0">Arrastrar Archivo Aquí</span>
-        <!-- Muestra la imagen cargada si la variable 'ubicacion' tiene una URL de imagen -->
-        <span v-else class="archivo">{{DocumentoEnviado}}</span>
-        <!-- Input oculto para seleccionar un archivo de imagen -->
-        <input 
-            name="input-docs"
-            id="input-docs"
-            type="file"
-            @change="ingresarDocs"
-        >
-        <!-- Etiqueta para el input de archivo, permite seleccionar un archivo de imagen -->
-        <label for="input-docs">Selecionar Archivo</label>
+
+        
+        <div class="Input-file" v-if="DocumentName.length <= 0">
+            
+            <span>Arrastrar Archivo Aquí</span>
+            <input 
+                name="input-docs"
+                id="input-docs"
+                type="file"
+                @change="ingresarDocs"
+            >
+            <label for="input-docs">Selecionar Archivo</label>
+        </div>
+
+        <div v-else class="show-file">
+            <span class="archivo">{{DocumentName}}</span>
+            <trashIcon 
+                Stroke="#000000" 
+                class="icon"
+                @click="reset"
+            />
+        </div>
+        
+        
       </div>
     </div>
 </template>
 
 <script setup>
+
+import UpLoadIcon from '@/components/icons/UpLoad-icon.vue';
+import trashIcon from '../icons/trash-icon.vue';
+import DonwloadIcon from '../icons/Donwload-icon.vue';
 // Importa las funciones ref y defineEmits de Vue
 import { ref, defineEmits, defineExpose } from 'vue';
 
 // Crea una referencia reactiva para almacenar el documento
 const Documento = ref('')
+const DocumentName = ref('')
 
 // Declara el evento que el componente puede emitir, en este caso, 'actualizarDocumento'
-const emit = defineEmits(['actualizarDocumento']);
+const emit = defineEmits([
+    'actualizarDocumento',
+    'respuesta'
+]);
 
 const reset = () => {
     Documento.value = '';
+    DocumentName.value = ''
+}
+
+const deleteDocumento = () => {
+    Documento.value = '';
+    DocumentName.value = '';
+    emit('actualizarDocumento', Documento.value)
 }
 
 defineExpose({
@@ -48,21 +74,24 @@ const ingresarDocs = (evento) => {
     // Define las extensiones de archivo válidas para la imagen
     const ExtencionesValidas = ['text/csv', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
     
-    // Obtiene la imagen seleccionada por el usuario
-    const DocumentoEnviado = evento.target.files[0]
-    console.log(DocumentoEnviado)
+    const DocumentoIngresado = evento.target.files[0]
+
     // Verifica si la imagen tiene una extensión válida
-    if (ExtencionesValidas.includes(DocumentoEnviado?.type)){
-        
+    if (ExtencionesValidas.includes(DocumentoIngresado?.type)){
+        DocumentName.value = DocumentoIngresado?.name;
+        Documento.value = DocumentoIngresado;
         // Emite el evento 'actualizarDocumento' con el valor actual de 'Documento'
-        emit('actualizarDocumento', Documento.value)
+        emit('actualizarDocumento', Documento)
+        emit("respuesta", {'texto':'Archivo compatible', 'valor': true})
 
     } else {
         // Si la imagen no es válida, limpia la referencia reactiva 'Documento'
-        Documento.value = ''
+        Documento.value = '';
+        DocumentName.value = '';
+        emit("respuesta", {'texto':'El documento selecionado no es valido', 'valor':false})
         
         // Emite el evento 'actualizarDocumento' con el valor actual de 'Documento'
-        emit('actualizarDocumento', Documento.value)
+        emit('actualizarDocumento', Documento);
     }
 };
 </script>
@@ -78,7 +107,7 @@ div.multimedia {
 }
 
 /* Estilo para los elementos de texto dentro del contenedor multimedia */
-div.multimedia div.add-docs > span {
+div.multimedia div.add-docs div > span {
     font-family: Poppins;
     color: #1A245B;
     font-size: 18px;
@@ -87,6 +116,20 @@ div.multimedia div.add-docs > span {
     letter-spacing: 0em;
     text-align: left;
 }
+
+div.multimedia div.add-docs div.show-file {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+} 
+
+div.multimedia div.add-docs div.Input-file {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+} 
 
 /* Estilo para el botón de añadir una foto */
 div.multimedia div.add-docs {
@@ -145,5 +188,9 @@ label {
 /* Estilo para la etiqueta del botón de añadir una foto al pasar el mouse */
 label:hover {
     background: #ebedf1; /* Color de fondo al pasar el mouse */
+}
+
+.icon {
+    cursor: pointer;
 }
 </style>

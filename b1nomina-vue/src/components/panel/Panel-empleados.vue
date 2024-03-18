@@ -125,14 +125,17 @@
         <TemplateModal 
             @closeModal="showModal" 
             :activarModal="mostrarModal2"
-            :FormId="'Form'+idFormularioActivo"
+            FormId="FormImport"
             :DataNotification="dataNotificacion"
             NombreAccion="Importación Masiva" 
             textSubmit="Enviar"
             :ModalActivo="2"
         >
             <template #default>
-                <FormImportacionMasiva />
+                <FormImportacionMasiva 
+                    @respuesta="sendData"
+                    ref="FormCargaMasiva"
+                />
             </template>
             
         </TemplateModal>
@@ -190,7 +193,7 @@
         dataNotificacion.value = DATA //asigna el valor
     }
 
-    const ID_Usuario_Creado = ref(333)
+    const ID_Usuario_Creado = ref('')
 
     const InteraccionListaEmpleadosSelecionados = (arreglo) => {
         // Convertir el objeto proxy a un array real

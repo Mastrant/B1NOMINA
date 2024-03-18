@@ -98,7 +98,7 @@ watch(shearch, (valor) => filtrar(valor));
     * @throws {Error} Si ocurre un error durante la solicitud, se asigna un array vacío a ListaEmpleados.
     */
     const pedirEmpleados = async () => {
-        await axios.get(`/sociedad/${idSociedad}/list_empleados`)
+        await axios.get(`/sociedad/${idSociedad}/list_no_empleados`)
         .then(
             (res) => {
                 ListaEmpleados.value = res.data; //almacena los datos devueltos por la api

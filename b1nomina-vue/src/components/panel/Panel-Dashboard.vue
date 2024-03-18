@@ -5,8 +5,7 @@
 </template>
 
 <script setup>
-import AlertShort from '@/components/alertas/Alert-short-template.vue'
-import {ref} from 'vue'
+
 </script>
 
 <style scoped>

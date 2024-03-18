@@ -32,7 +32,7 @@
                             <TemplateButton2 text="Cancelar" @click="close" />
                         </div>
                         <div class="contend-button-modal" v-else>
-                            <TemplateButton Tipo="submit" :text="textSubmit"/>
+                            <TemplateButton :form="FormID" Tipo="submit" :text="textSubmit"/>
                             <TemplateButton2 text="Cancelar" @click="close" />
                         </div>
                     </div>
@@ -45,7 +45,7 @@
 <script setup>
 // uso del componente: <TemplateModal @closeModal="" :activarModal="" NombreAccion="">
 
-import {defineProps, defineEmits, ref, watch, onMounted} from 'vue';
+import {defineProps, defineEmits, ref, watch} from 'vue';
 
 import CloseIconVue from '../icons/Close-icon.vue';
 import TemplateButton2 from '../botones/Template-button2.vue'

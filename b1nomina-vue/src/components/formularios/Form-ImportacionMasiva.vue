@@ -18,7 +18,10 @@
             Luego de haber terminado de llenar el archivo con toda la información de los nuevos empleados, puedes cargarlo aquí:
         </p>
         <div class="row-form">
-            <InputDocsForm />
+            <InputDocsForm
+                @respuesta="checkFile"
+                @actualizarDocumento="tomarData"
+            />
         </div>
     </form>
 </template>
@@ -26,10 +29,27 @@
 <script setup>
 import TemplateButton2 from '@/components/botones/Template-button2.vue'
 import InputDocsForm from '@/components/inputs/Input-Docs-form.vue';
+import { defineEmits, ref} from 'vue';
+import axios from 'axios'
 
-const Enviar = () => {
-    console.log("enviar archivo")
+const DataDocumento = ref('')
+
+const emit = defineEmits([
+    'actualizarDocumento',
+    'respuesta'
+]);
+
+const checkFile = (respuesta) => emit("respuesta", respuesta);
+
+const tomarData = (datosDelDocumento) => DataDocumento.value = datosDelDocumento.value;
+
+const cargarDocumentoDAtaMasiva = async () => {
+    axios.post()
 }
+const Enviar = () => {
+    console.log(DataDocumento.value)
+    
+};
 
 </script>
 

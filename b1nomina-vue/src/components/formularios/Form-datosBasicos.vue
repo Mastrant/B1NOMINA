@@ -259,12 +259,14 @@ const CrearUsuario = async (Datos) => {
 // Los datos a actualizar se pasan como argumento 'Datos', y 'idCreator' es el ID del usuario que realiza la actualización.
 const subirFoto = async (idCreator, Datos, ID_EMpleado) => {
 
-  
- await axios.post(`/user/${ID_EMpleado}/upload_pic_user?creatorUserId=${idCreator}`, {'File':Datos.value}, {
- headers: {
-    'Content-Type': 'multipart/form-data',
- },
-})
+  const formData = new FormData();
+  formData.append('File', Datos); // Asume que 'Datos' es un objeto File
+
+  await axios.post(`/user/${ID_EMpleado}/upload_pic_user?creatorUserId=${idCreator}`, formData, {
+  headers: {
+      'Content-Type': 'multipart/form-data',
+  },
+  })
   .then(
     // Maneja la respuesta exitosa.
     res => {
@@ -283,9 +285,6 @@ const subirFoto = async (idCreator, Datos, ID_EMpleado) => {
     err => {
       // Verifica si la respuesta del error contiene un objeto de respuesta.
       if (err.response) { 
-        console.log(idCreator, Datos, ID_EMpleado)
-        console.log(err)
-
         // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
         emit("respuesta", {'texto':err.response.data?.message, 'valor':false})            
       }

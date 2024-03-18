@@ -33,8 +33,6 @@ const ubicacion = ref('')
 // Declara el evento que el componente puede emitir, en este caso, 'actualizarDataImagen'
 const emit = defineEmits(['actualizarDataImagen']);
 
-
-
 const reset = () => {
     ubicacion.value = ''
 }
