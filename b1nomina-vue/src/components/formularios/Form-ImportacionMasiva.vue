@@ -43,11 +43,39 @@ const checkFile = (respuesta) => emit("respuesta", respuesta);
 
 const tomarData = (datosDelDocumento) => DataDocumento.value = datosDelDocumento.value;
 
-const cargarDocumentoDAtaMasiva = async () => {
-    axios.post()
+const cargarDocumentoDAtaMasiva = async (idCreator, Datos, ID_EMpleado) => {
+    const formData = new FormData();
+  formData.append('File', Datos); // Asume que 'Datos' es un objeto File
+    axios.post(`/user/${ID_EMpleado}/upload_file_users?creatorUserId=${idCreator}`, formData, {
+  headers: {
+      'Content-Type': 'multipart/form-data',
+  },
+  })
+  .then(
+    // Maneja la respuesta exitosa.
+    res => {
+      // Verifica si la respuesta tiene un estado HTTP 200 (OK).
+      if (res.status == 200 || res.status == 201 ){
+        // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
+        emit("respuesta", {'texto':res.data?.message, 'valor':true})        
+        
+      }
+    }
+  )
+  .catch(
+    // Maneja los errores de la solicitud.
+    err => {
+      // Verifica si la respuesta del error contiene un objeto de respuesta.
+      if (err.response) { 
+        // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
+        emit("respuesta", {'texto':err.response.data?.message, 'valor':false})            
+      }
+    }
+  );
 }
 const Enviar = () => {
     console.log(DataDocumento.value)
+    cargarDocumentoDAtaMasiva(ID_USERMASTER, dataImagen)
     
 };
 
