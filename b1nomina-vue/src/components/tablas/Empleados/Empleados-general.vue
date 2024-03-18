@@ -60,7 +60,7 @@
                     <InterruptorButton 
                         @click=" () => console.log('estado cambiado' + item.id)" 
                         :Objid="item.id" 
-                        :Estado="(item.activo == true)? true :false" 
+                        :Estado="item.activo" 
                     />
                     <span v-if="item.activo == true">Activo</span>
                     <span v-else>Inactivo</span>

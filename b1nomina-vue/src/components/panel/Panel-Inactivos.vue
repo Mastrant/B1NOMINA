@@ -29,7 +29,7 @@ import InputShearch from '@/components/inputs/Input-shearch.vue';
 import EmpleadosGeneral from '@/components/tablas/Empleados/Empleados-general.vue';
    
 
-import {ref, inject, watch, reactive, toRefs, onMounted} from 'vue';
+import {ref, inject, watch, onMounted} from 'vue';
 import axios from 'axios';
 
 // Inyectar el valor proporcionado por la url
