@@ -47,9 +47,9 @@ const InteraccionListaEmpleadosSelecionados = (arreglo) => {
         //console.log(ListaIds.value); // Ahora debería mostrar un array real
 }
 
-// Arreglo que contiene el arreglo original
-let listaEmpleadosOriginal = null;
-/**
+    // Arreglo que contiene el arreglo original
+    let listaEmpleadosOriginal = null;
+    /**
      * aplica un filtro segun el texto ingresado
      * @param {String} text - entrada del texto del usuario
     

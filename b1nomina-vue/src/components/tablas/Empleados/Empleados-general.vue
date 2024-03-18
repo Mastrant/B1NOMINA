@@ -81,7 +81,7 @@
             <!--Boton de Previo-->
             <PaginateButton @click="previosPage">
                 <template #icono>
-                    <img src="../../icons/svg/OneLeft-icon.svg" alt="prev"> 
+                    <img src="@/components/icons/svg/OneLeft-icon.svg" alt="prev"> 
                 </template>
             </PaginateButton>
 
@@ -91,7 +91,7 @@
             <!--Boton de siguiente-->
             <PaginateButton @click="nextPage">
                 <template #icono>
-                    <img src='../../icons/svg/OneRigth-icon.svg' alt="next">  
+                    <img src='@/components/icons/svg/OneRigth-icon.svg' alt="next">  
                 </template>
             </PaginateButton>
             </div>
@@ -285,7 +285,7 @@ tr.encabezado {
  * Evita que el texto sobrepase el límite de la celda
  * Aplica estilos para asegurar que el texto se ajuste dentro de las celdas
  */
-td,th {
+th {
  word-break: break-word;
  white-space: nowrap;
 }
@@ -352,24 +352,6 @@ th.acciones {
  * Alinea el texto al inicio y limita el ancho máximo para evitar desbordamientos
  */
 th.rowNombre,
-td.rowNombre > div {
-    text-align: start;
-    max-width: 290px;
-}
-
-/**
- * Estilos para la columna de estados
- * Utiliza Flexbox para organizar los elementos de estado y centrarlos
- */
-td.Estado > div {
-    display: flex;
-    gap: 10px; /* Espacio entre elementos de estado */
-    justify-content: center;
-    box-sizing: border-box;
-    margin: 0px; /* Sin margen para una alineación precisa */
-    align-self: center; /* Centrado verticalmente */
-    align-items: center; /* Centrado horizontalmente */
-}
 
 /* Estilos para la columna de acciones (iconos) */
 .acciones > div {

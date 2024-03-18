@@ -24,7 +24,8 @@
             </tr>
             <!--Final encabezado-->
 
-            <EnContratacionRow>
+            <EnContratacionRow v-for="(item) in DatosPaginados" :key="item.id">
+                {{ item }}
                 <template v-slot:Prospecto>
                     Juanito lopez
                 </template>
@@ -46,6 +47,29 @@
                 </template>
             </EnContratacionRow>
         </table>
+         <!--Fin Tabla-->
+         <div class="conted-pagination">
+            <!--Espacio para paginacion-->
+            <div class="pagination">
+
+            <!--Boton de Previo-->
+            <PaginateButton @click="previosPage">
+                <template #icono>
+                    <img src="@/components/icons/svg/OneLeft-icon.svg" alt="prev"> 
+                </template>
+            </PaginateButton>
+
+            <!--Listado de opciones-->
+            <PaginateButton  v-for="pagina in totalpaginas()" :key="pagina" :texto="pagina" @click="getDataPorPagina(pagina)" />
+
+            <!--Boton de siguiente-->
+            <PaginateButton @click="nextPage">
+                <template #icono>
+                    <img src="@/components/icons/svg/OneRigth-icon.svg" alt="Next"> 
+                </template>
+            </PaginateButton>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -55,7 +79,80 @@
     import CiculoCorrectIcon from '@/components/icons/Circulo-correct-icon.vue';
     import ExitColorIcon from '@/components/icons/Exit-color-icon.vue';
     import WaitButton from '@/components/botones/Wait-button.vue';
-    import EBarraProgresoVue from '../../elementos/E-BarraProgreso.vue';
+    import EBarraProgresoVue from '@/components/elementos/E-BarraProgreso.vue';
+    import PaginateButton from '@/components/botones/Paginate-button.vue';
+    import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
+
+    // Define los props
+    const props = defineProps({
+    listaEmpleados: {
+        type: Array,
+        default: () => []
+    }
+    });
+
+    const ListaEmpleados = ref(props.listaEmpleados);
+
+    //configuracion del paginado
+    const DatosPaginados = ref([]); //arreglo con los datos picados
+    const paginaActual = ref(1); //inicializacion de la pagina
+    const elementosPorPagina = 12; //numero de filas por pagina
+
+    //total de paginas
+    const totalpaginas = () => {
+        //devuelve el numero de paginas segun los datos y redondea el resultado
+        return Math.ceil(ListaEmpleados.value.length / elementosPorPagina);
+    };
+
+    //optener data segun la pagina
+    function getDataPorPagina(numeroPagina){
+        //vacia la lista al cambiar iniciar
+
+        //si el valor de numeroPagina es null o undefined le asigna 1
+        (numeroPagina == undefined || numeroPagina == null)
+            ? numeroPagina = 1
+            : paginaActual.value = numeroPagina;   
+        
+        DatosPaginados.value = ([]);
+
+        //rango del indice
+        let ini = (numeroPagina * elementosPorPagina) - elementosPorPagina;
+        let fin = (numeroPagina * elementosPorPagina);
+        
+        //recorre los datos de lista y los indexa en la paginacion
+        DatosPaginados.value = ListaEmpleados.value.slice(ini, fin)
+    };
+
+    //metodo para retroceder pagina
+    const previosPage = () => {
+        //evalua si esta al inicio de la paginacion
+        if(paginaActual.value > 1){
+            paginaActual.value = paginaActual.value - 1; //decrementa la pagina en 1
+        }
+            //ejecuta la actualizaicon del paginado
+        getDataPorPagina(paginaActual.value);
+    };
+
+    //metodo para avanzar pagina
+    const nextPage = () => {
+        //evalua si está al final de la paginacion
+        if(paginaActual.value < totalpaginas()){
+            paginaActual.value = paginaActual.value + 1; //aumenta la pagina en 1
+        }
+        //ejecuta la actualizaicon del paginado
+        getDataPorPagina(paginaActual.value)
+    };
+    watch(props.listaEmpleados, () => {
+        ListaEmpleados.value = props.listaEmpleados;
+        //al detectar el cambio en la lista solicita los datos
+        getDataPorPagina();
+    })
+
+    //al montar el componente solicita la data
+    onMounted(()=> {
+        //ejecuta la actualizacion del paginado
+        ListaEmpleados.value = props.listaEmpleados;
+    });
 </script>
 
 

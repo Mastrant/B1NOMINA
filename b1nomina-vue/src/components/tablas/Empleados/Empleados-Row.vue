@@ -112,6 +112,10 @@ td.rowNombre > div {
     max-width: 290px;
 }
 
+
+td.Estado {
+    justify-content: center;
+}
 /**
  * Estilos para la columna de estados
  * Utiliza Flexbox para organizar los elementos de estado y centrarlos
@@ -124,6 +128,7 @@ td.Estado > div {
     margin: 0px; /* Sin margen para una alineación precisa */
     align-self: center; /* Centrado verticalmente */
     align-items: center; /* Centrado horizontalmente */
+    width: 120px;
 }
 
 /* Estilos para la columna de acciones (iconos) */

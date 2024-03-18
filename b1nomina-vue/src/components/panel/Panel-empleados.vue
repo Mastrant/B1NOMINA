@@ -165,12 +165,14 @@
     import BigOptionButton from '@/components/botones/Big-Option-button.vue'
     import TemplateModal from '@/components/modal/TemplateModal.vue';
     import NavForm from '@/components/navs/Nav-form.vue'
+    //formularios
     import FormDatosBasicos from '@/components/formularios/Form-datosBasicos.vue';
     import FormDatosPersonalesVue from '@/components/formularios/Form-datosPersonales.vue';
     import FormDatosLaborales from '@/components/formularios/Form-datosLaborales.vue';
     import FormDatosPago from '@/components/formularios/Form-datosPago.vue';
-    import AlertShort from '@/components/alertas/Alert-short-template.vue';
     import FormImportacionMasiva from '@/components/formularios/Form-ImportacionMasiva.vue'
+    //alertas
+    import AlertShort from '@/components/alertas/Alert-short-template.vue';
 
     //iconos
     import PersonPlussIcon from '../icons/Person-Pluss-icon.vue';
