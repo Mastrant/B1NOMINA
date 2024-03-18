@@ -11,7 +11,6 @@
 
         </div>
 
-        
         <h2 class="titulo-form">
             Cargar Archivo
         </h2>
@@ -19,14 +18,14 @@
             Luego de haber terminado de llenar el archivo con toda la información de los nuevos empleados, puedes cargarlo aquí:
         </p>
         <div class="row-form">
-            <input type="file">
+            <InputDocsForm />
         </div>
     </form>
 </template>
 
 <script setup>
 import TemplateButton2 from '@/components/botones/Template-button2.vue'
-    
+import InputDocsForm from '@/components/inputs/Input-Docs-form.vue';
 
 const Enviar = () => {
     console.log("enviar archivo")
