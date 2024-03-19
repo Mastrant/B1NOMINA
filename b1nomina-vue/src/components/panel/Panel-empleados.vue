@@ -182,7 +182,13 @@
     import axios from 'axios';
 
     // Inyectar el valor proporcionado por la url
-    const idSociedad = inject('IDsociedad');
+
+    
+    import { useRoute } from 'vue-router';
+
+    const route = useRoute();
+    // idSociedad es un String
+    const idSociedad = route.params.sociedadId;
 
     const ListaIds = ref([]); //Contiene los id de los empleados seleccionados
 

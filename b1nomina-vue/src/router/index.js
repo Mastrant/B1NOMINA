@@ -62,6 +62,7 @@ const router = createRouter({
         {
           path: 'empleados',
           name: 'empleados',
+          alias: ['empleados'],
           component: () => import('@/views/EmpleadosView.vue'),
           props: true,
          
@@ -88,6 +89,13 @@ const router = createRouter({
               alias: 'inactivos'         
             },
           ]
+        },
+        {
+          path: 'panel-empleado',
+          name: 'panel-empleado',
+          alias: ['panel-empleado'],
+          component: () => import('@/views/PerfilEmpleado.vue'),
+          props: true,
         },
         //panel informes
         {

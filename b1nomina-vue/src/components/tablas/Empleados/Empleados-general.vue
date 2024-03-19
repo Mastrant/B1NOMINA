@@ -66,7 +66,12 @@
                     <span v-else>Inactivo</span>
                 </template>
                 <template v-slot:accionButton>
-                    <OjitoIcon @click="console.log('ir a info' + item.id)" class="icon" />
+                    <router-link :to="'panel-empleado'">
+                        <OjitoIcon class="icon" />    
+                    </router-link>
+                    
+                        
+          
                     <DescargaIcon @click="console.log('descargar info' + item.id)" class="icon" />
                 </template>
             </EmpleadosRow>
@@ -109,6 +114,11 @@ import InputCheckbox from '@/components/inputs/Input-Checkbox.vue';
 import EmpleadosRow from './Empleados-Row.vue';
 
 import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
+
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const sociedadId = route.params.sociedadId;
 
 // Define los props
 const props = defineProps({
