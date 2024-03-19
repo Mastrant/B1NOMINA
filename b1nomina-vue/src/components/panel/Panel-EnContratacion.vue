@@ -68,7 +68,7 @@ watch(shearch, (valor) => filtrar(valor));
             }
         )
         .catch(
-            (err) => {
+            (error) => {
                 ListaEmpleados.value = []; // si hay un error asigna un valor vacio
             }
         )
