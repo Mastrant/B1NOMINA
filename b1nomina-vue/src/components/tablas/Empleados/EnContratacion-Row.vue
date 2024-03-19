@@ -2,9 +2,9 @@
     <tr class="rowTabla cuerpo">
         <!--Nombre y apelidos-->
         <td class="rowNombre">
-            <div>
+            <span>
                 <slot name="Prospecto"></slot>
-            </div>                    
+            </span>                    
         </td>
         <!--Rut-->
         <td class="">
@@ -72,7 +72,9 @@ tr.rowTabla {
     display: table-row;
 }
 
-/* Estilos para cada celda de la tabla */
+/* 
+* Estilos para cada celda de la tabla 
+*/
 
 tr.cuerpo > td {
     width: auto; /* Ancho automático basado en el contenido */
@@ -99,6 +101,11 @@ td > div {
     max-width: 100%;
 }
 
+td.rowNombre > span {
+    width: 100%;
+    display: flex;
+    text-align: start;
+}
 /* Estilos para la columna de acciones (iconos) */
 .acciones > div {
     display: flex;

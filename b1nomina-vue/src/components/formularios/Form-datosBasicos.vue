@@ -228,11 +228,11 @@ const CrearUsuario = async (Datos) => {
         const newUserId = res.data.newUserId;
         
         // Llama a la función si nexmodal data imagen esta vacia o es indefinido NextModal pasando el ID del nuevo usuario.
-        console.log(dataImagen.value == '')
+        console.log(dataImagen)
         if (dataImagen.value == undefined || dataImagen.value == '') {
           NextModal(newUserId);
         } else {
-          subirFoto(ID_USERMASTER, dataImagen, newUserId)
+          subirFoto(ID_USERMASTER, dataImagen.value, newUserId)
         }
       }            
     }
@@ -249,7 +249,7 @@ const CrearUsuario = async (Datos) => {
           // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
           emit("respuesta", {'texto':err?.response?.data?.message, 'valor':false})
         }        
-      }
+      }      
     }
  );
 }
@@ -276,7 +276,7 @@ const subirFoto = async (idCreator, Datos, ID_EMpleado) => {
         emit("respuesta", {'texto':res.data?.message, 'valor':true})        
 
         // Llama a la función NextModal pasando el ID del empleado.
-        NextModal(props.EmpleadoID);            
+        NextModal(ID_EMpleado);            
       }
     }
   )
@@ -285,6 +285,7 @@ const subirFoto = async (idCreator, Datos, ID_EMpleado) => {
     err => {
       // Verifica si la respuesta del error contiene un objeto de respuesta.
       if (err.response) { 
+        console.log(err)
         // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
         emit("respuesta", {'texto':err.response.data?.message, 'valor':false})            
       }

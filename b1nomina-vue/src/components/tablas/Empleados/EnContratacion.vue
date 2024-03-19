@@ -25,25 +25,32 @@
             <!--Final encabezado-->
 
             <EnContratacionRow v-for="(item) in DatosPaginados" :key="item.id">
-                {{ item }}
+                
                 <template v-slot:Prospecto>
-                    Juanito lopez
+                    {{ item.nombre }} {{ item.apellido_paterno }} {{ item.apellido_materno }}
                 </template>
                 <template v-slot:rut>
-                    1234567-8
+                    {{ item.rut }}
                 </template>
                 <template v-slot:CV>
-                    <DescartarButton />
+                    <DescartarButton @click="() => console.log(item.id)"/>
                 </template>
                 <template v-slot:Contrato>
-                    <WaitButton />
+                    <WaitButton @click="() => console.log(item.id)"/>
                 </template>
                 <template v-slot:Completado>
                     <EBarraProgresoVue class="icon" porcentaje="15" @click="() => console.log('selecionado')" />
                 </template>
                 <template v-slot:accionButton>
-                    <CiculoCorrectIcon class="icon" style="stroke: #1A245B"/>
-                    <ExitColorIcon class="icon" style="stroke: #1A245B" />
+                    <CiculoCorrectIcon 
+                        @click="() => console.log(item.id)"
+                        class="icon" 
+                        style="stroke: #1A245B"/>
+                    <ExitColorIcon
+                        @click="() => console.log(item.id)" 
+                        class="icon" 
+                        style="stroke: #1A245B" 
+                        />
                 </template>
             </EnContratacionRow>
         </table>
@@ -142,11 +149,12 @@
         //ejecuta la actualizaicon del paginado
         getDataPorPagina(paginaActual.value)
     };
-    watch(props.listaEmpleados, () => {
+    //al cambiar los datos reinicia el renderizado
+    watchEffect(() => {
         ListaEmpleados.value = props.listaEmpleados;
         //al detectar el cambio en la lista solicita los datos
         getDataPorPagina();
-    })
+    });
 
     //al montar el componente solicita la data
     onMounted(()=> {
@@ -215,22 +223,9 @@ tr.encabezado {
  * Evita que el texto sobrepase el límite de la celda
  * Aplica estilos para asegurar que el texto se ajuste dentro de las celdas
  */
-td,th {
+th {
  word-break: break-word;
  white-space: nowrap;
-}
-
-/**
- * Estilos para el cuerpo de la tabla
- * Define la altura de las filas y utiliza Flexbox para organizar el contenido
- */
-tr.cuerpo {
-    width: 100%;
-    height: 48px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: row;
-    align-self: end;
 }
 
 /**
@@ -244,21 +239,6 @@ tr.rowTabla {
     display: table-row;
 }
 
-/* Estilos para cada celda de la tabla */
-tr.cuerpo > td {
-    width: auto; /* Ancho automático basado en el contenido */
-    height: 48px;
-    background: none; /* Sin fondo para una apariencia limpia */
-    box-sizing: border-box; /* Para incluir padding y borde en el ancho total */
-    padding: 12px; /* Espacio interno para mejorar la legibilidad */
-    border:#FCFCFD; /* Borde superior para separar las filas */
-    border-bottom: 0.96px #EAECF0 solid;
-    align-self: center; /* Centrado verticalmente */
-    align-items: center; /* Centrado horizontalmente */
-    text-align: center; /* Alineación del texto al centro */
-    margin: auto; /* Margen automático para centrar el contenido */
-}
-
 /**
  * Estilos para la columna de acciones (generalmente botones o iconos)
  * Organiza los elementos de acción en un contenedor flex
@@ -270,43 +250,17 @@ th.acciones {
     box-sizing: border-box;
 }
 
-/* Estilos para la primera columna, que puede contener checkboxes */
-.filaCheckbox {
-    max-width: 80px !important; /* Ancho máximo para mantener la consistencia */
-    box-sizing: border-box;
-    margin: auto; /* Margen automático para centrar */
-}
-
 /**
  * Estilos para la columna de nombres de empleados
  * Alinea el texto al inicio y limita el ancho máximo para evitar desbordamientos
  */
-th.rowNombre,
-td.rowNombre > div {
+th.rowNombre  {
     max-width: 290px;
+    text-align: start;
+    padding: 24px;
 }
 
-/**
- * Estilos para la columna de estados
- * Utiliza Flexbox para organizar los elementos de estado y centrarlos
- */
-td.Estado > div {
-    display: flex;
-    gap: 10px; /* Espacio entre elementos de estado */
-    justify-content: center;
-    box-sizing: border-box;
-    margin: 0px; /* Sin margen para una alineación precisa */
-    align-self: center; /* Centrado verticalmente */
-    align-items: center; /* Centrado horizontalmente */
-}
 
-/* Estilos para la columna de acciones (iconos) */
-.acciones > div {
-    display: flex;
-    gap: 12px; /* Espacio entre iconos */
-    justify-content: center; /* Centrado de iconos */
-    white-space: nowrap; /* Evita el salto de línea para iconos */
-}
 
 /**
  * Estilo para los iconos dentro de las acciones
