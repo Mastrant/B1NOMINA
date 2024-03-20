@@ -146,7 +146,12 @@
                 No hay datos asociados a los filtros
             </span>
 
-            <EmpleadosGeneral v-else :listaEmpleados="ListaEmpleados"   @upData="InteraccionListaEmpleadosSelecionados"/>
+            <EmpleadosGeneral 
+                v-else 
+                :listaEmpleados="ListaEmpleados"   
+                @upData="InteraccionListaEmpleadosSelecionados"
+                @actualizar_Lista="pedirEmpleados()"
+            />
         </div>
         <AlertShort
             ref="notificacionStatus"

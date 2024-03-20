@@ -15,8 +15,6 @@
 //componentes
 import Headervue from '@/components/Header.vue';
 import LayoutPanel from '@/components/Layouts/LayoutPanel.vue';
-import LayoutForm from '@/components/Layouts/LayoutForm.vue'
-import NavButtonPanel from '@/components/botones/Nav-button-panel.vue';
 import axios from 'axios';
 
 </script>

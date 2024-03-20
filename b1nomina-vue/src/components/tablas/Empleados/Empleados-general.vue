@@ -57,8 +57,9 @@
                 </template>
                 <!--Estado-->
                 <template v-slot:activateComponente>
+                    {{ item.activo }}
                     <InterruptorButton 
-                        @click=" () => console.log('estado cambiado' + item.id)" 
+                        @change=" () => (false == false) ?showModal(1,item.id) : showModal(2,item.id)" 
                         :Objid="item.id" 
                         :Estado="item.activo" 
                     />
@@ -66,7 +67,7 @@
                     <span v-else>Inactivo</span>
                 </template>
                 <template v-slot:accionButton>
-                    <router-link :to="'panel-empleado'">
+                    <router-link :to="{name:'panel-empleado'}">
                         <OjitoIcon class="icon" />    
                     </router-link>
                     
@@ -78,6 +79,33 @@
             <!--Final cuerpo-->
         </table>
 
+        <TemplateModal 
+            @closeModal="showModal" 
+            FormId="FormSend"
+            :NombreAccion="TituloModal" 
+            :textSubmit="TextoButton"
+            :activarModal="activarModal"
+            :ModalActivo="1"
+         >
+            <template #default>
+                <div v-if="formActivo==1">
+                    <form id="FormSend" @submit.prevent="Enviar(EmpleadoID_Selecionado, true)">
+                        <span>Al desactivarlo debes tener en cuenta que:</span>
+                        <ol>
+                            <li>No aparecerá en la sección Gestionar Nómina.</li>
+                            <li>Como Usuario no podrá acceder a la plataforma.</li>
+                            <li>Se detendrán los eventos recurrentes asignados para el empleado.</li>
+                        </ol>
+                    </form>
+                </div>
+                <div v-else>
+                    <form id="FormSend" @submit.prevent="Enviar(EmpleadoID_Selecionado, false)">
+                        <p>Activándolo comenzará a aparecer en la sección Gestión de Empleado, Gestión de Nómina y tendrás acceso a sus datos. </p>
+                    </form>
+                </div>
+            </template>
+        </TemplateModal>
+        
         <!--Fin Tabla-->
         <div class="conted-pagination">
             <!--Espacio para paginacion-->
@@ -112,13 +140,54 @@ import PaginateButton from '@/components/botones/Paginate-button.vue';
 import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
 import InputCheckbox from '@/components/inputs/Input-Checkbox.vue';
 import EmpleadosRow from './Empleados-Row.vue';
+import TemplateModal from '@/components/modal/TemplateModal.vue';
 
 import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
 
 import { useRoute } from 'vue-router';
 
+import axios from 'axios';
+
 const route = useRoute();
 const sociedadId = route.params.sociedadId;
+
+/////////// programacion de los modales de activacion ///////////////
+const activarModal = ref(false)
+const formActivo = ref(null)
+const TextoButton = ref('')
+const TituloModal = ref('')
+const EmpleadoID_Selecionado = ref(null)
+/**
+     * Controla el despliegue del modal
+     * @param mostrarModal
+     */
+     const showModal = (Id_modal, idEmpleado=null) => {
+        
+        EmpleadoID_Selecionado.value = idEmpleado
+        if(Id_modal == 1){
+            activarModal.value = !activarModal.value;
+            formActivo.value = 1;
+            TextoButton.value = 'Si, activar'
+            TituloModal.value = '¿Estás seguro que deseas activar a este empleado?'
+            
+        } else if(Id_modal == 2){
+            console.log(Id_modal, idEmpleado)
+            activarModal.value = !activarModal.value;
+            formActivo.value = 2;
+            TextoButton.value = 'Si, desactivar'
+            TituloModal.value = '¿Estás seguro que deseas desactivar a este empleado?'
+        } 
+    }
+
+    const Enviar = (id,intencion) => {
+        if(intencion == true){
+            console.log("post activar")
+        } else if (intencion == false) {
+            console.log("post desactivar")
+        }else {
+
+        }
+    }
 
 // Define los props
 const props = defineProps({
@@ -127,7 +196,11 @@ const props = defineProps({
     default: () => []
   }
 });
-const emit = defineEmits(['upData']);
+const emit = defineEmits([
+    'upData',
+    'actualizar_Lista'
+
+]);
 // Accede a la lista de empleados desde props
 const ListaEmpleados = ref(props.listaEmpleados);
 
@@ -168,8 +241,6 @@ const upData = (arrayData) => {
 };
 
 watch(listaEmpleadosSelecionados.value, upData)
-
-
 
 //configuracion del paginado
 const DatosPaginados = ref([]); //arreglo con los datos picados
@@ -233,7 +304,6 @@ onMounted(()=> {
     //ejecuta la actualizacion del paginado
     ListaEmpleados.value = props.listaEmpleados;
 });
-
 </script>
 
 <style scoped>

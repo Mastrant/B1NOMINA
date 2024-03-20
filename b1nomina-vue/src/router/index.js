@@ -14,6 +14,9 @@ const router = createRouter({
       meta: {
         requiereToken: false, //establece si es requerido autorizacion para acceder
       },
+      children: [
+
+      ]
 
     },
     //Pagina de logIn
@@ -41,7 +44,6 @@ const router = createRouter({
       meta: {
         requiereToken: true, //establece si es requerido autorizacion para acceder
       },
-      
       
       // rutas derivadas de la seleccion de la sociedad
       children: [
@@ -91,7 +93,7 @@ const router = createRouter({
           ]
         },
         {
-          path: 'panel-empleado',
+          path: 'panelEmpleado',
           name: 'panel-empleado',
           alias: ['panel-empleado'],
           component: () => import('@/views/PerfilEmpleado.vue'),
@@ -125,7 +127,6 @@ const router = createRouter({
           component: () => import('@/views/NotificacionesView.vue'),
           alias: ['notificaciones']
         },
-        
         //si la ruta buscada no existe
         {
           path: ':pathMatch(.*)*',
