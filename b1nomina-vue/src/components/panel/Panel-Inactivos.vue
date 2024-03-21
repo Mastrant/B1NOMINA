@@ -27,7 +27,7 @@
 <script setup>
 import InputShearch from '@/components/inputs/Input-shearch.vue';
 import EmpleadosGeneral from '@/components/tablas/Empleados/Empleados-general.vue';
-   
+import CicloCrearEmpleado from '@/components/elementos/Ciclo-Crear-Empleado.vue';
 
 import {ref, inject, watch, onMounted} from 'vue';
 import axios from 'axios';
@@ -98,7 +98,7 @@ watch(shearch, (valor) => filtrar(valor));
     * @throws {Error} Si ocurre un error durante la solicitud, se asigna un array vacío a ListaEmpleados.
     */
     const pedirEmpleados = async () => {
-        await axios.get(`/sociedad/${idSociedad}/list_no_empleados`)
+        await axios.get(`/sociedad/${idSociedad}/list_empleados_inactivos`)
         .then(
             (res) => {
                 ListaEmpleados.value = res.data; //almacena los datos devueltos por la api
@@ -150,6 +150,26 @@ div.filtros {
 span.NoEncontrado {
     font-size: 24px;
     color: rgb(56, 56, 56); /* Color gris oscuro para mantener un tono coherente con el diseño */
+}
+
+/* 
+ Sección de filtros, organiza los elementos en una fila con un espaciado específico entre ellos para
+ una fácil navegación y selección de filtros.
+*/
+div.filtros {
+    display: flex;
+    flex-direction: row;
+    gap: 12px; /* Espaciado entre los elementos de filtro para mantener la interfaz limpia y ordenada */
+}
+
+/* 
+ Sección de acciones del formulario, distribuye los elementos en una fila y justifica el espacio entre ellos
+ para una distribución equilibrada.
+*/
+div.acciones-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 </style>
