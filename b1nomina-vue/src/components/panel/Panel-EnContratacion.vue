@@ -1,35 +1,35 @@
 <template>
-    <div class="panel-inactivos">
-        <AddUserEnContratacion  v-show="show"/>
-        
-        <div class="acciones-form">
-            <div class="filtros">
-                <InputShearch 
-                    v-model="shearch" 
-                    @update:modelValue="shearch = $event" />
+    <div class="panel">   
+            <div class="acciones-form">
+                <div class="filtros">
+                    <InputShearch 
+                        v-model="shearch" 
+                        @update:modelValue="shearch = $event" />
+                </div>
+                <CicloCrearEmpleado />
+                
             </div>
-            <CicloCrearEmpleado />
-            
-        </div>
-
-        <!--tabla con los datos-->
-        <div class="cuerpo-tabla">
-            <span class="NoEncontrado" v-if="(ListaEmpleados.length < 1)? true : false"
-            >
-                No hay datos asociados a los filtros
-            </span>
-
-            <EnContratacion v-else :listaEmpleados="ListaEmpleados"  
-            />
-            <AlertShort
-                ref="notificacionStatus"
-            />
-        </div>
+            <AddUserEnContratacion  v-if="show"/> 
+            <!--tabla con los datos-->
+            <div class="cuerpo-tabla" v-else>
+                
+                <span class="NoEncontrado" v-if="(ListaEmpleados.length < 1)? true : false"
+                >
+                    No hay datos asociados a los filtros
+                </span>
+    
+                <EnContratacion v-else :listaEmpleados="ListaEmpleados"  
+                />
+                <AlertShort
+                    ref="notificacionStatus"
+                />
+            </div>
+        
     </div>
 </template>
 
 <script setup>
-import AddUserEnContratacion from '@/components/Add-User-enContratacion.vue';
+import AddUserEnContratacion from '@/components/elementos/Add-User-enContratacion.vue';
 import EnContratacion from '@/components/tablas/Empleados/EnContratacion.vue';
 import InputShearch from '@/components/inputs/Input-shearch.vue';
 import AlertShort from '@/components/alertas/Alert-short-template.vue';
@@ -38,7 +38,7 @@ import CicloCrearEmpleado from '@/components/elementos/Ciclo-Crear-Empleado.vue'
 import {ref, inject, watch, onMounted, toRef} from 'vue';
 import axios from 'axios';
 
-const show = ref(false)
+const show = ref(true)
 
 // Inyectar el valor proporcionado por la url
 const idSociedad = inject('IDsociedad');
@@ -68,11 +68,13 @@ watch(shearch, (valor) => filtrar(valor));
         .then(
             (res) => {
                 ListaEmpleados.value = res.data; //almacena los datos devueltos por la api
+                show.value = false;
             }
         )
         .catch(
             (error) => {
                 ListaEmpleados.value = []; // si hay un error asigna un valor vacio
+                show.value = true;
             }
         )
     };
@@ -89,12 +91,13 @@ onMounted(async () => {
  y organizar sus elementos en una columna. El uso de 'display: flex' y 'flex-direction: column' permite
  una disposición flexible y ordenada de los elementos del formulario.
 */
-div.panel-inactivos {
+div.panel {
     width: 100%;
-    height: 100%;
+    height: 50%;
     display: flex;
     flex-direction: column;
     gap:24px; /* Espaciado entre los elementos del formulario para mejorar la legibilidad */
+    box-sizing: border-box;
 }
 
 /* 
