@@ -24,6 +24,7 @@ div.contenedor{
     justify-content: center;
     align-items: center;
     width: 100%;
+    box-sizing: border-box;
 
 }
 

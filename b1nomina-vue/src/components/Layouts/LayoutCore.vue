@@ -15,7 +15,7 @@
 
 <style scoped>
 section.layout-section {
-    height: 100%;
+    height: 100vh;
     display: flex;
     flex-direction: row;
     width: 100%;

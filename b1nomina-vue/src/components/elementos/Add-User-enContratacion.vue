@@ -29,7 +29,7 @@ import PlusCirculoIcon from '@/components/icons/Plus-Circulo-icon.vue';
 .conted{
     width: 100%; 
     height: 100%; 
-    padding: 48px; 
+    padding: 24px; 
     background: #EDF6FF; 
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25); 
     justify-content: center; 
@@ -39,6 +39,7 @@ import PlusCirculoIcon from '@/components/icons/Plus-Circulo-icon.vue';
     flex-direction: row;
     align-items: center;
     align-self: center;
+    box-sizing: border-box;
 }
 
 h3 {
