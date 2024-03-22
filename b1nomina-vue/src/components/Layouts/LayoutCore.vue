@@ -18,6 +18,7 @@ section.layout-section {
     height: 100%;
     display: flex;
     flex-direction: row;
+    width: 100%;
 }
 
 div.Contenedor-body {
