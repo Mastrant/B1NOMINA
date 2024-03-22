@@ -33,10 +33,11 @@
                     {{ item.rut }}
                 </template>
                 <template v-slot:CV>
+                    <WaitButton @click="() => console.log(item.id)"/>
                     <DescartarButton @click="() => console.log(item.id)"/>
                 </template>
                 <template v-slot:Contrato>
-                    <WaitButton @click="() => console.log(item.id)"/>
+                    <DescartarButton @click="() => console.log(item.id)"/>
                 </template>
                 <template v-slot:Completado>
                     <EBarraProgresoVue class="icon" porcentaje="15" @click="() => console.log('selecionado')" />
@@ -54,6 +55,7 @@
                 </template>
             </EnContratacionRow>
         </table>
+
          <!--Fin Tabla-->
          <div class="conted-pagination">
             <!--Espacio para paginacion-->

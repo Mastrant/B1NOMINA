@@ -74,6 +74,23 @@
             </EmpleadosRow>
             <!--Final cuerpo-->
         </table>
+        <TemplateModal 
+                @closeModal="showModal" 
+                FormId="FormSend"
+                :NombreAccion="TituloModal" 
+                :textSubmit="TextoButton"
+                :activarModal="activarModal"
+                :ModalActivo="1"
+            >
+                <template #default>
+                    <div v-if="formActivo==1">
+                        fomulario 1
+                    </div>
+                    <div v-else>
+                        
+                    </div>
+                </template>
+            </TemplateModal>
 
         
         
@@ -111,6 +128,7 @@ import PaginateButton from '@/components/botones/Paginate-button.vue';
 import InterruptorButton from '@/components/inputs/Interruptor-modal-button.vue';
 import InputCheckbox from '@/components/inputs/Input-Checkbox.vue';
 import EmpleadosRow from './Empleados-Row.vue';
+import TemplateModal from '@/components/modal/TemplateModal.vue';
 
 import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
 
@@ -120,6 +138,7 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const sociedadId = route.params.sociedadId;
+
 
 
 
@@ -135,10 +154,38 @@ const emit = defineEmits([
     'actualizar_Lista'
 
 ]);
+
+/////////// programacion de los modales de activacion ///////////////
+const activarModal = ref(false)
+const formActivo = ref(null)
+const TextoButton = ref('')
+const TituloModal = ref('')
+const EmpleadoID_Selecionado = ref(null)
+/**
+     * Controla el despliegue del modal
+     * @param mostrarModal
+     */
+    const showModal = (Id_modal, idEmpleado=null) => {
+    
+    EmpleadoID_Selecionado.value = idEmpleado
+    if(Id_modal == 2){
+        activarModal.value = !activarModal.value;
+        formActivo.value = 1;
+        TextoButton.value = 'Si, activar'
+        TituloModal.value = '¿Estás seguro que deseas activar a este empleado?'
+        
+    } else if(Id_modal == 1){
+        activarModal.value = !activarModal.value;
+        formActivo.value = 2;
+        TextoButton.value = 'Si, desactivar'
+        TituloModal.value = '¿Estás seguro que deseas desactivar a este empleado?'
+    } 
+};
+
 // Accede a la lista de empleados desde props
 const ListaEmpleados = ref(props.listaEmpleados);
 
-const listaEmpleadosSelecionados = ref([])
+const listaEmpleadosSelecionados = ref([]);
 
 /**
  * Función para manejar la interacción con una lista de empleados seleccionados.

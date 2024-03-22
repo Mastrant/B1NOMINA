@@ -13,25 +13,25 @@
 
         <div>
             <TemplateModal 
-            @closeModal="showModal" 
-            FormId="FormSend"
-            :NombreAccion="TituloModal" 
-            :textSubmit="TextoButton"
-            :activarModal="activarModal"
-            :ModalActivo="1"
-         >
-            <template #default>
-                <div v-if="formActivo==1">
-                    <FormEmpleadoActivar
-                        :EmpleadoIDSelecionado="EmpleadoID_Selecionado"
-                    />
-                </div>
-                <div v-else>
-                    <FormEmpleadoDesactivar 
-                        :EmpleadoIDSelecionado="EmpleadoID_Selecionado"
-                    />
-                </div>
-            </template>
+                @closeModal="showModal" 
+                FormId="FormSend"
+                :NombreAccion="TituloModal" 
+                :textSubmit="TextoButton"
+                :activarModal="activarModal"
+                :ModalActivo="1"
+            >
+                <template #default>
+                    <div v-if="formActivo==1">
+                        <FormEmpleadoActivar
+                            :EmpleadoIDSelecionado="EmpleadoID_Selecionado"
+                        />
+                    </div>
+                    <div v-else>
+                        <FormEmpleadoDesactivar 
+                            :EmpleadoIDSelecionado="EmpleadoID_Selecionado"
+                        />
+                    </div>
+                </template>
             </TemplateModal>
         </div>        
     </div>       
