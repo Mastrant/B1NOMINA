@@ -92,13 +92,20 @@ const router = createRouter({
             },
           ]
         },
+       // Asegúrate de que el alias para 'panelEmpleado/:empleadoId' esté correctamente definido
         {
-          path: 'panelEmpleado',
+          path: 'panelEmpleado/:empleadoId',
           name: 'panel-empleado',
-          alias: ['panel-empleado'],
           component: () => import('@/views/PerfilEmpleado.vue'),
           props: true,
+          // Asegúrate de que el alias coincida con la estructura de rutas esperada
+          alias: ['/sociedad/:sociedadId/panelEmpleado/:empleadoId'],
+          beforeEnter: (to, from, next) => {
+            // Aquí puedes definir la lógica para redirigir a una ruta específica
+            next();
+          }
         },
+         
         //panel informes
         {
           path: 'informes',

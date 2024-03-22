@@ -65,7 +65,7 @@
                     <span v-else>Inactivo</span>
                 </template>
                 <template v-slot:accionButton>
-                    <router-link :to="{name:'panel-empleado'}">
+                    <router-link :to="{ name: 'panel-empleado', params: { sociedadId: 1, empleadoId: 1 } }">
                         <OjitoIcon class="icon" />    
                     </router-link>
           
@@ -114,9 +114,9 @@ import EmpleadosRow from './Empleados-Row.vue';
 
 import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
 
+import axios from 'axios';
 import { useRoute } from 'vue-router';
 
-import axios from 'axios';
 
 const route = useRoute();
 const sociedadId = route.params.sociedadId;

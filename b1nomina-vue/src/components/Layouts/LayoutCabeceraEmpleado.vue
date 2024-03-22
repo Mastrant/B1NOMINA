@@ -1,32 +1,52 @@
 <template>
+    <!-- Contenedor principal del componente -->
     <div class="contend">
+        <!-- Sección para la foto del empleado -->
         <div class="foto-empleado">
-            <slot name="Imagen"></slot>
+            <!-- Slot para insertar contenido personalizado para la imagen del empleado -->
+            <slot name="Imagen">
+                
+            </slot>
             
-            <button class="edit">
-
+            <!-- Botón para editar, que emite un evento 'clickEvent' cuando se hace clic -->
+            <button @click="emit('clickEvent')" class="edit">
+                <!-- Icono de edición dentro del botón -->
+                <EditIcon />
             </button>
         </div>
+        <!-- Sección para mostrar acciones y detalles del empleado -->
         <div class="acciones">
+            <!-- Slot para insertar contenido personalizado para el rol del empleado -->
             <span>
                 <slot name="Rol"></slot>
             </span>
+            <!-- Slot para insertar contenido personalizado para el nombre del empleado -->
             <h2>
                 <slot name="Nombre"></slot>
             </h2>
+            <!-- Slot para insertar contenido personalizado para el cargo del empleado -->
             <p>
                 <slot name="Cargo"></slot>
             </p>
+            <!-- Slot para insertar contenido personalizado para botones adicionales -->
             <div class="botones">
-                <slot name="Botones">
-
-                </slot>
+                <slot name="Botones"></slot>
             </div>
         </div>
     </div>
 </template>
 
+<script setup>
+    // Importa el componente EditIcon para usarlo dentro del botón de edición
+    import EditIcon from '@/components/icons/Edit-icon.vue';
+    // Importa la función defineEmits para declarar eventos personalizados
+    import { defineEmits } from 'vue';
+    // Declara el evento 'clickEvent' que este componente puede emitir
+    const emit = defineEmits(['clickEvent']);
+</script>
+
 <style scoped>
+/* Estilos para el contenedor principal del componente */
 div.contend {
     padding: 24px; 
     background: white; 
@@ -41,6 +61,7 @@ div.contend {
     gap: 12px;
 }
 
+/* Estilos para la sección de la foto del empleado */
 div.foto-empleado {
     position: relative;
     width: 10rem;
@@ -55,17 +76,22 @@ div.foto-empleado {
     z-index: 1;
 }
 
+/* Estilos para el botón de edición */
 button.edit {
     position: absolute;
     z-index: 2;
-    top: 112px; /* Posiciona el elemento 20px desde el borde superior del ancestro posicionado más cercano */
-    left: 111px; /* Posiciona el elemento 30px desde el borde izquierdo del ancestro posicionado más cercano */
+    top: 112px;
+    left: 111px;
     width: 48px;
     height: 48px;
     border-radius: 9999px;
     background-color: #1A245B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+/* Estilos para la sección de acciones y detalles del empleado */
 div.acciones {
     flex-grow: 1;
     box-sizing: border-box;
@@ -75,6 +101,7 @@ div.acciones {
     flex-direction: column;
 }
 
+/* Estilos para la sección de información adicional del empleado */
 div.acciones > div.info {
     display: flex;
     flex-direction: column;
@@ -83,6 +110,7 @@ div.acciones > div.info {
     align-items: stretch;
 }
 
+/* Estilos para el rol del empleado */
 div.acciones > span {
     margin: 0;
     width: fit-content;
@@ -103,6 +131,7 @@ div.acciones > span {
     word-wrap: break-word;
 }
 
+/* Estilos para el nombre del empleado */
 div.acciones > h2 {
     color: black;
     font-size: 24px;
@@ -113,6 +142,7 @@ div.acciones > h2 {
     margin: 0;
 }
 
+/* Estilos para el cargo del empleado */
 div.acciones > p {
     margin: 0;
     color: black; 
@@ -122,6 +152,7 @@ div.acciones > p {
     word-wrap: break-word;
 }
 
+/* Estilos para la sección de botones adicionales */
 .botones {
     background: white;
     display: flex;

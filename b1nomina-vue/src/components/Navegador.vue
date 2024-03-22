@@ -14,7 +14,7 @@
                         <!--Dashboard-->
                         <NavButton :class="{'order': !desplegarMenu}">
                             <template #direccion>
-                                <router-link :to="modulo.urlModulo">
+                                <router-link :to="{ path: `/sociedad/${sociedadId}/${modulo.urlModulo}` }">
                                     <CuboIcon />
                                     <span :class="{'show': desplegarMenu}">
                                         {{modulo.nombreModulo}}
@@ -30,7 +30,7 @@
                         <!--Notificaciones-->
                         <NotificationButton :class="{'order': !desplegarMenu}">
                             <template #direccion>
-                                <router-link to="notificaciones">
+                                <router-link :to="{ name: 'notificaciones' }">
                                     <CampanaIcon />
                                     <span :class="{'show': desplegarMenu}">
                                         Notificaciones
@@ -51,7 +51,7 @@
                         <!--Configuración-->
                         <NavButton :class="{'order': !desplegarMenu}">
                             <template #direccion>
-                                <router-link to="configuracion">
+                                <router-link :to="{ name: 'configuracion'}">
                                     <TuerquitaIcon />
                                     <span :class="{'show': desplegarMenu}">
                                         Configuración
@@ -94,6 +94,15 @@ import axios from 'axios';
 // Generar reactividad del componente
 import {onMounted, ref} from 'vue';
 
+
+import { useRoute } from 'vue-router';
+
+
+const route = useRoute();
+const sociedadId = route.params.sociedadId;
+
+console.log(sociedadId)
+
 //controla si se a acionado el desplegar menú
 const desplegarMenu = ref(false)
 
@@ -110,8 +119,7 @@ const modulosAsignados = ref(
     ]
 );
 
-const listaModulos2 = ref([{}])
-
+const listaModulos2 = ref([{}]);
 
 //solicita los modulos disponibles
 const OptenerModulos = () => {
@@ -128,15 +136,14 @@ const OptenerModulos = () => {
         (error) => {
             //console.log(error)
         }
-    )
+    );
 }
 
 //al momento de  montar el componente
 onMounted(() => {
     //ejecuta la peticion
-    OptenerModulos()
+    OptenerModulos();
 });
-
 
 </script>
 
