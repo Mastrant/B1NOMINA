@@ -97,11 +97,8 @@ import {onMounted, ref} from 'vue';
 
 import { useRoute } from 'vue-router';
 
-
 const route = useRoute();
 const sociedadId = route.params.sociedadId;
-
-console.log(sociedadId)
 
 //controla si se a acionado el desplegar menú
 const desplegarMenu = ref(false)

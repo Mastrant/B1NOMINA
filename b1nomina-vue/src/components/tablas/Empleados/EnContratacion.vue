@@ -24,8 +24,7 @@
             </tr>
             <!--Final encabezado-->
 
-            <EnContratacionRow v-for="(item) in DatosPaginados" :key="item.id">
-                
+            <EnContratacionRow v-for="(item) in DatosPaginados" :key="item.id">      
                 <template v-slot:Prospecto>
                     {{ item.nombre }} {{ item.apellido_paterno }} {{ item.apellido_materno }}
                 </template>
@@ -33,8 +32,8 @@
                     {{ item.rut }}
                 </template>
                 <template v-slot:CV>
-                    <WaitButton @click="() => console.log(item.id)"/>
-                    <DescartarButton @click="() => console.log(item.id)"/>
+                    <WaitButton @click="showModal(1,item.id)"/>
+                    <DescartarButton @click="showModal(2,item.id)"/>
                 </template>
                 <template v-slot:Contrato>
                     <DescartarButton @click="() => console.log(item.id)"/>
@@ -46,15 +45,43 @@
                     <CiculoCorrectIcon 
                         @click="() => console.log(item.id)"
                         class="icon" 
-                        style="stroke: #1A245B"/>
+                        style="stroke: #1A245B"
+                    />
                     <ExitColorIcon
                         @click="() => console.log(item.id)" 
                         class="icon" 
                         style="stroke: #1A245B" 
-                        />
+                    />
                 </template>
             </EnContratacionRow>
         </table>
+
+        <TemplateModal 
+            @closeModal="showModal" 
+            FormId="FormSendCV"
+            :NombreAccion="TituloModal" 
+            :textSubmit="TextoButton"
+            :activarModal="activarModal"
+            :ModalActivo="1"
+        >
+            <template #default>
+                <div v-if="formActivo==1">
+                    <LayoutForm>
+                        <template v-slot:cabecera>
+                            <NavButtonTemplate text="Cargar Curriculum Vitae" :seleccionado="panelShow== 1" @click="showInfo(1)" />
+                            <NavButtonTemplate text="Descartar esta acción" :seleccionado="panelShow== 2" @click="showInfo(2)" />  
+                        </template>
+                        <template v-slot:formulario>
+                            <div class="contenedorInfo" v-if="panelShow ==1">panel 1</div>
+                            <div class="contenedorInfo" v-if="panelShow ==2">panel 2</div>
+                        </template>
+                    </LayoutForm>
+                </div>
+                <div v-else>
+                    formulario contrato
+                </div>
+            </template>
+        </TemplateModal>
 
          <!--Fin Tabla-->
          <div class="conted-pagination">
@@ -90,7 +117,10 @@
     import WaitButton from '@/components/botones/Wait-button.vue';
     import EBarraProgresoVue from '@/components/elementos/E-BarraProgreso.vue';
     import PaginateButton from '@/components/botones/Paginate-button.vue';
-    import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
+    import TemplateModal from '@/components/modal/TemplateModal.vue';
+    import LayoutForm from '@/components/Layouts/LayoutForm.vue';
+    import NavButtonTemplate from '@/components/botones/Nav-button-templateForm.vue';
+    import { ref, defineProps, watchEffect, onMounted} from 'vue';
 
     // Define los props
     const props = defineProps({
@@ -99,6 +129,39 @@
         default: () => []
     }
     });
+
+/////////// programacion de los modales de activacion ///////////////
+const activarModal = ref(false)
+const formActivo = ref(null)
+const TextoButton = ref('')
+const TituloModal = ref('')
+const EmpleadoID_Selecionado = ref(null)
+/**
+     * Controla el despliegue del modal
+     * @param mostrarModal
+     */
+const showModal = (Id_modal, idEmpleado=null) => {
+    
+    EmpleadoID_Selecionado.value = idEmpleado
+    if(Id_modal == 1){
+        activarModal.value = !activarModal.value;
+        formActivo.value = 1;
+        TextoButton.value = 'Guardar Documento'
+        TituloModal.value = 'Cargar Curriculum Vitae / Hoja de vida'
+        
+    } else if(Id_modal == 2){
+        activarModal.value = !activarModal.value;
+        formActivo.value = 2;
+        TextoButton.value = 'Si, desactivar'
+        TituloModal.value = '¿Estás seguro que deseas desactivar a este empleado?'
+    } 
+};
+
+const panelShow = ref(1)
+const showInfo = (id) => {
+    panelShow.value = id
+}
+
 
     const ListaEmpleados = ref(props.listaEmpleados);
 

@@ -76,7 +76,6 @@ import NavButtonTemplate from '@/components/botones/Nav-button-templateForm.vue'
 import DolarIcon from '@/components/icons/Dolar-icon-blanco.vue';
 import InfoIcon from '@/components/icons/Info-icon.vue';
 import SolIcon from '@/components/icons/Sol-icon.vue';
-import LayoutFormVue from '../Layouts/LayoutForm.vue';
 
 import {ref} from 'vue';
 
