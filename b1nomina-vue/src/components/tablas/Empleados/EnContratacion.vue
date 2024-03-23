@@ -72,8 +72,21 @@
                             <NavButtonTemplate text="Descartar esta acción" :seleccionado="panelShow== 2" @click="showInfo(2)" />  
                         </template>
                         <template v-slot:formulario>
-                            <div class="contenedorInfo" v-if="panelShow ==1">panel 1</div>
-                            <div class="contenedorInfo" v-if="panelShow ==2">panel 2</div>
+                            <div class="contenedorInfo" v-if="panelShow ==1">
+                                <form @submit.prevent="Enviar" id="FormSendCV" >
+                                    <p>En esta sección puedes cargar el Curriculum Vitae del prospecto y tener un soporte anexado al perfil del mismo. </p>
+                                    <h3>Cargar Curriculum Vitae</h3>
+                                    <InputDocsForm2 />
+                                </form>
+                            </div>
+                            <div class="contenedorInfo"  v-if="panelShow ==2">
+                                <form @submit.prevent="descartarCV" id="FormSendCV">
+                                    <p>
+                                        Descarta esta acción si no quieres realizar el proceso de <span> Cargar Curriculum Vitae</span> al prospecto. Una acción descartada cuenta como un proceso "Completado".
+                                    </p>
+                                    
+                                </form>
+                            </div>
                         </template>
                     </LayoutForm>
                 </div>
@@ -120,6 +133,7 @@
     import TemplateModal from '@/components/modal/TemplateModal.vue';
     import LayoutForm from '@/components/Layouts/LayoutForm.vue';
     import NavButtonTemplate from '@/components/botones/Nav-button-templateForm.vue';
+    import InputDocsForm2 from '@/components/inputs/Input-Docs-form2.vue';
     import { ref, defineProps, watchEffect, onMounted} from 'vue';
 
     // Define los props
@@ -160,6 +174,11 @@ const showModal = (Id_modal, idEmpleado=null) => {
 const panelShow = ref(1)
 const showInfo = (id) => {
     panelShow.value = id
+    if (id == 1){
+        TextoButton.value = "Guardar Documento"
+    } else {
+        TextoButton.value = "Descartar Acción"
+    } 
 }
 
 
