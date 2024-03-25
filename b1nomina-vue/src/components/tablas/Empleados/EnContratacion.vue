@@ -76,7 +76,7 @@
                                 <form @submit.prevent="EnviarCV" id="FormSendCV" >
                                     <p>En esta sección puedes cargar el Curriculum Vitae del prospecto y tener un soporte anexado al perfil del mismo. </p>
                                     <h3>Cargar Curriculum Vitae</h3>
-                                    <InputDocsForm2 ref="InputDoc"  @respuesta="()=> console.log('respuesta')"/>
+                                    <InputDocsForm2 ref="InputDoc"  @respuesta="(valor)=> console.log(valor)"/>
                                 </form>
                             </div>
                             <div class="contenedorInfo"  v-show="panelShow ==2">
@@ -133,7 +133,7 @@
     import LayoutForm from '@/components/Layouts/LayoutForm.vue';
     import NavButtonTemplate from '@/components/botones/Nav-button-templateForm.vue';
     import InputDocsForm2 from '@/components/inputs/Input-Docs-form2.vue';
-    import { ref, defineProps, watchEffect, onMounted} from 'vue';
+    import { ref, defineProps, watchEffect, onMounted, defineEmits} from 'vue';
 
     // Define los props
     const props = defineProps({
@@ -143,10 +143,13 @@
     }
     });
 
+    const emit = defineEmits({
+        
+    });
     const InputDoc = ref(null);
 /////////// programacion de los modales de activacion ///////////////
 const activarModal = ref(false)
-const formActivo = ref(null)
+const formActivo = ref(1)
 const TextoButton = ref('')
 const TituloModal = ref('')
 const EmpleadoID_Selecionado = ref(null)
@@ -155,7 +158,7 @@ const EmpleadoID_Selecionado = ref(null)
      * Controla el despliegue del modal
      * @param mostrarModal
      */
-const showModal = (Id_modal, idEmpleado=null) => {
+const showModal = (Id_modal, idEmpleado) => {
     
     EmpleadoID_Selecionado.value = idEmpleado
     
@@ -164,7 +167,12 @@ const showModal = (Id_modal, idEmpleado=null) => {
         formActivo.value = 1;
         TextoButton.value = 'Guardar Documento'
         TituloModal.value = 'Cargar Curriculum Vitae / Hoja de vida'
-        InputDoc.value.reset();
+        try {
+            InputDoc.value.reset();
+        } catch (error) {
+            console.error('Error en showModal:', error);
+        }
+        
     } else if(Id_modal == 2){
         activarModal.value = !activarModal.value;
         formActivo.value = 2;
@@ -198,7 +206,7 @@ const showInfo = (id) => {
     };
 
     //optener data segun la pagina
-    function getDataPorPagina(numeroPagina){
+    const getDataPorPagina = (numeroPagina) => {
         //vacia la lista al cambiar iniciar
 
         //si el valor de numeroPagina es null o undefined le asigna 1

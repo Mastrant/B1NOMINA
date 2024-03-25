@@ -1,12 +1,12 @@
 <template>
-    <form class="formulario" ref="FormImport" id="FormImport" @submit.prevent="Enviar">
+    <form class="formulario" ref="FormImport" id="FormImportM" @submit.prevent="EnviarDoc">
         <p>
             Descarga el formato de Excel que te ayudará a ingresar la información de tus empleados y luego cargarlo en nuestro sistema.
         </p>
         <div class="row-form">
             <TemplateButton2 
                 text="Descargar formato Excel" 
-                @click="()=> console.log('descargar documento')" 
+                @click="descargarPlantilla" 
             />  
 
         </div>
@@ -19,6 +19,7 @@
         </p>
         <div class="row-form">
             <InputDocsForm
+                requerido="true"
                 @respuesta="checkFile"
                 @actualizarDocumento="tomarData"
             />
@@ -32,52 +33,79 @@ import InputDocsForm from '@/components/inputs/Input-Docs-form.vue';
 import { defineEmits, ref} from 'vue';
 import axios from 'axios'
 
-const DataDocumento = ref('')
+const DataDocumento = ref('');
+const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
 
 const emit = defineEmits([
     'actualizarDocumento',
-    'respuesta'
+    'respuesta',
+    'closeModal',
 ]);
 
 const checkFile = (respuesta) => emit("respuesta", respuesta);
 
 const tomarData = (datosDelDocumento) => DataDocumento.value = datosDelDocumento.value;
 
-const cargarDocumentoDAtaMasiva = async (idCreator, Datos, ID_EMpleado) => {
-    const formData = new FormData();
-  formData.append('File', Datos); // Asume que 'Datos' es un objeto File
-    axios.post(`/user/${ID_EMpleado}/upload_file_users?creatorUserId=${idCreator}`, formData, {
-  headers: {
-      'Content-Type': 'multipart/form-data',
-  },
-  })
-  .then(
-    // Maneja la respuesta exitosa.
-    res => {
-      // Verifica si la respuesta tiene un estado HTTP 200 (OK).
-      if (res.status == 200 || res.status == 201 ){
-        // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
-        emit("respuesta", {'texto':res.data?.message, 'valor':true})        
-        
-      }
+
+
+const EnviarDoc = () => {
+    try {
+        cargarDocumentoDAtaMasiva(ID_USERMASTER, DataDocumento.value)
+    } catch (error) {
+      console.log(error)
+      emit("respuesta", {'texto':error, 'valor':false});
     }
-  )
-  .catch(
-    // Maneja los errores de la solicitud.
-    err => {
-      // Verifica si la respuesta del error contiene un objeto de respuesta.
-      if (err.response) { 
-        // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
-        emit("respuesta", {'texto':err.response.data?.message, 'valor':false})            
-      }
-    }
-  );
-}
-const Enviar = () => {
-    console.log(DataDocumento.value)
-    cargarDocumentoDAtaMasiva(ID_USERMASTER, dataImagen)
-    
 };
+
+const descargarPlantilla = () => {
+  const BaseURL = (window.location);
+  //abre una ventana para descargar un recurso dado por el servidor
+  //window.open('http://' + "archivo" + '/' + archivo, "_blank", "width=500,height=500");
+  console.log("descargar doc")
+}
+
+const cargarDocumentoDAtaMasiva = async (idCreator, Datos) => {
+  const formData = new FormData();
+  formData.append('File', Datos); // Asume que 'Datos' es un objeto File
+  if(Datos != '') {
+    await axios.post(`/user/bulk_load_users?sociedadId=${idCreator}&creatorUserId=${idCreator}`, formData, {
+    headers: {
+        'Content-Type': 'multipart/form-data',
+    },
+    })
+    .then(
+      // Maneja la respuesta exitosa.
+      res => {
+        // Verifica si la respuesta tiene un estado HTTP 200 (OK).
+        if (res.status == 200 || res.status == 201 ){
+          // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
+          emit("respuesta", {'texto':res.data?.message, 'valor':true})   
+          
+          let archivo = res.data?.fileResult
+          if(res.data?.fileResult){
+            //toma la direccion del navegador
+            const BaseURL = (window.location);
+            //abre una ventana para descargar un recurso dado por el servidor
+            window.open('http://' + BaseURL.hostname + '/' + archivo, "_blank", "width=500,height=500");
+          }
+
+        }
+      }
+    )
+    .catch(
+      // Maneja los errores de la solicitud.
+      err => {
+        // Verifica si la respuesta del error contiene un objeto de respuesta.
+        if (err.response) { 
+          // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
+          emit("respuesta", {'texto':err.response.data?.message, 'valor':false})            
+        }
+      }
+    );
+  } else {
+    emit("respuesta", {'texto':'El campo esta vacio', 'valor':false})
+  }
+}
 
 </script>
 

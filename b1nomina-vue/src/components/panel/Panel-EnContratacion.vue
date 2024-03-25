@@ -79,6 +79,39 @@ watch(shearch, (valor) => filtrar(valor));
         )
     };
 
+    // Arreglo que contiene el arreglo original
+    let listaEmpleadosOriginal = null;
+/**
+     * aplica un filtro segun el texto ingresado
+     * @param {String} text - entrada del texto del usuario
+    
+    */
+    const filtrar = (text) => {
+    // Si la lista original no está establecida, guarda la lista actual como la original
+        if (listaEmpleadosOriginal === null) {
+            listaEmpleadosOriginal = [...ListaEmpleados.value];
+        }
+
+        // Si el texto es vacío, restablece la lista mostrada a la lista original
+        if (text.trim() === '') {
+            ListaEmpleados.value = [...listaEmpleadosOriginal];
+            return;
+        }
+
+        // Normaliza el texto de búsqueda
+        let normalizarText = text?.toLowerCase().trim();
+
+        // Filtra la lista original basándose en el texto de búsqueda
+        const filtrado = listaEmpleadosOriginal.filter(
+            (empleado) => empleado.nombre?.toLowerCase().includes(normalizarText) ||
+            empleado.apellido_paterno?.toLowerCase().includes(normalizarText) ||
+            empleado.rut?.includes(normalizarText)
+        );
+
+        // Actualiza la lista mostrada con los resultados filtrados
+        ListaEmpleados.value = filtrado;
+    };
+
 // al montar el componente ejecuta las funciones
 onMounted(async () => {
    await pedirEmpleados(); //solicita los empleados

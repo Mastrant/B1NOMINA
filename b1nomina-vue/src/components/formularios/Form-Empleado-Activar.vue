@@ -9,7 +9,7 @@ import {defineProps} from 'vue';
 
 import axios from 'axios';
 
-var IDMaster = JSON.parse(localStorage.getItem("userId"));
+const IDMaster = JSON.parse(localStorage.getItem("userId"));
 
 const props = defineProps({
     EmpleadoIDSelecionado:{

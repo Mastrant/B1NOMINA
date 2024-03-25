@@ -37,7 +37,7 @@ import UpLoadIcon from '@/components/icons/UpLoad-icon.vue';
 import trashIcon from '../icons/trash-icon.vue';
 import DonwloadIcon from '../icons/Donwload-icon.vue';
 // Importa las funciones ref y defineEmits de Vue
-import { ref, defineEmits, defineExpose } from 'vue';
+import { ref, defineEmits, defineExpose} from 'vue';
 
 // Crea una referencia reactiva para almacenar el documento
 const Documento = ref('')
@@ -48,6 +48,7 @@ const emit = defineEmits([
     'actualizarDocumento',
     'respuesta'
 ]);
+
 
 const reset = () => {
     Documento.value = '';

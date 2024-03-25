@@ -323,29 +323,29 @@
     */
     const filtrar = (text) => {
     // Si la lista original no está establecida, guarda la lista actual como la original
-    if (listaEmpleadosOriginal === null) {
-        listaEmpleadosOriginal = [...ListaEmpleados.value];
-    }
+        if (listaEmpleadosOriginal === null) {
+            listaEmpleadosOriginal = [...ListaEmpleados.value];
+        }
 
-    // Si el texto es vacío, restablece la lista mostrada a la lista original
-    if (text.trim() === '') {
-        ListaEmpleados.value = [...listaEmpleadosOriginal];
-        return;
-    }
+        // Si el texto es vacío, restablece la lista mostrada a la lista original
+        if (text.trim() === '') {
+            ListaEmpleados.value = [...listaEmpleadosOriginal];
+            return;
+        }
 
-    // Normaliza el texto de búsqueda
-    let normalizarText = text?.toLowerCase().trim();
+        // Normaliza el texto de búsqueda
+        let normalizarText = text?.toLowerCase().trim();
 
-    // Filtra la lista original basándose en el texto de búsqueda
-    const filtrado = listaEmpleadosOriginal.filter(
-        (empleado) => empleado.nombre?.toLowerCase().includes(normalizarText) ||
-        empleado.apellido_paterno?.toLowerCase().includes(normalizarText) ||
-        empleado.rut?.includes(normalizarText)
-    );
+        // Filtra la lista original basándose en el texto de búsqueda
+        const filtrado = listaEmpleadosOriginal.filter(
+            (empleado) => empleado.nombre?.toLowerCase().includes(normalizarText) ||
+            empleado.apellido_paterno?.toLowerCase().includes(normalizarText) ||
+            empleado.rut?.includes(normalizarText)
+        );
 
-    // Actualiza la lista mostrada con los resultados filtrados
-    ListaEmpleados.value = filtrado;
-};
+        // Actualiza la lista mostrada con los resultados filtrados
+        ListaEmpleados.value = filtrado;
+    };
 
     //escucha el cambio de la variable y ejecuta la funcion
     watch(filtroSede, addSede);

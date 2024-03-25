@@ -56,10 +56,6 @@ const props = defineProps({
         type: String,
         default: ""
     },
-    Tipo: {
-        String,
-        default: "multiple"
-    }
 });
 
 const emit = defineEmits(["ValorEstado"]);
@@ -73,10 +69,6 @@ const modificarUsuario = (evento) => {
     }
 }
 
-const updateValue = (event) => {
-    
-        emit('ValorEstado', event.target.checked ? props.Objid : props.Objid);
-};
 
 /////////// programacion de los modales de activacion ///////////////
 const activarModal = ref(false)

@@ -30,7 +30,7 @@
         </td>
         <!--Estado-->
         <td class="Estado">
-            <div>
+            <div class="Estado">
                 <slot name="activateComponente"></slot>
             </div>                    
         </td>
@@ -113,8 +113,10 @@ td.rowNombre > div {
 }
 
 
-td.Estado {
+div.Estado {
+    display: flex;
     justify-content: center;
+    width: 100%;
 }
 /**
  * Estilos para la columna de estados

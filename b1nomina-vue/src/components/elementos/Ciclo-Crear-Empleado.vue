@@ -107,14 +107,15 @@
             <TemplateModal 
                 @closeModal="showModal" 
                 :activarModal="mostrarModal2"
-                FormId="FormImport"
+                FormId="FormImportM"
                 :DataNotification="dataNotificacion"
                 NombreAccion="Importación Masiva" 
                 textSubmit="Enviar"
                 :ModalActivo="2"
             >
                 <template #default>
-                    <FormImportacionMasiva 
+                    <FormImportacionMasiva
+                        @closeModal="showModal"
                         @respuesta="sendData"
                         ref="FormCargaMasiva"
                     />
