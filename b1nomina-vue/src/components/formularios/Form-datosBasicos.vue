@@ -207,7 +207,7 @@ watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor?.toLowerCas
 watch(() => props.EmpleadoID, (nuevoValor) => {
   
   if(nuevoValor == null){
-    console.log(nuevoValor)
+    //console.log(nuevoValor)
     mostrarFoto.value = true
   } else {
     ExisteFoto(nuevoValor);
@@ -265,11 +265,11 @@ const CrearUsuario = async (Datos) => {
 };
 
 const ExisteFoto = (IDUsuario) => {
- console.log("ejecutando consulta");
+ //console.log("ejecutando consulta");
  axios.get(`/user/${IDUsuario}/have_pic`)
     .then((respuesta) => {
       if(respuesta.status == 200){
-        console.log("consulta true");
+       // console.log("consulta true");
 
         mostrarFoto.value = false;
         inputFoto.value.reset();
@@ -277,7 +277,7 @@ const ExisteFoto = (IDUsuario) => {
     })
     .catch((err) => {
       if (err) {
-        console.log("consulta false");
+        //console.log("consulta false");
         mostrarFoto.value = true;
       }
     });
@@ -347,7 +347,7 @@ const ActualizarDatosBasicos = async (idCreator, Datos, ID_EMpleado) => {
             if (dataImagen.value == undefined || dataImagen.value == "") {
               NextModal(props.EmpleadoID);
             } else {
-              console.log(mostrarFoto.value+ "mostrar foto")
+              //console.log(mostrarFoto.value+ "mostrar foto")
               subirFoto(ID_USERMASTER, dataImagen.value, props.EmpleadoID);
             } 
           }
