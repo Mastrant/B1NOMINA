@@ -59,7 +59,12 @@ const emit = defineEmits([
 
 const reset = () => {
     Documento.value = '';
-    DocumentName.value = ''
+    DocumentName.value = '';
+    // Limpiar el input de archivo
+    const inputFile = document.getElementById('input-docs');
+    if (inputFile) {
+        inputFile.value = '';
+    }
 }
 
 const deleteDocumento = () => {

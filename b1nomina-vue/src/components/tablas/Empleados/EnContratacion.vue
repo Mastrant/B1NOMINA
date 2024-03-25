@@ -72,19 +72,18 @@
                             <NavButtonTemplate text="Descartar esta acción" :seleccionado="panelShow== 2" @click="showInfo(2)" />  
                         </template>
                         <template v-slot:formulario>
-                            <div class="contenedorInfo" v-if="panelShow ==1">
-                                <form @submit.prevent="Enviar" id="FormSendCV" >
+                            <div class="contenedorInfo" v-show="panelShow ==1">
+                                <form @submit.prevent="EnviarCV" id="FormSendCV" >
                                     <p>En esta sección puedes cargar el Curriculum Vitae del prospecto y tener un soporte anexado al perfil del mismo. </p>
                                     <h3>Cargar Curriculum Vitae</h3>
-                                    <InputDocsForm2 />
+                                    <InputDocsForm2 ref="InputDoc"  @respuesta="()=> console.log('respuesta')"/>
                                 </form>
                             </div>
-                            <div class="contenedorInfo"  v-if="panelShow ==2">
+                            <div class="contenedorInfo"  v-show="panelShow ==2">
                                 <form @submit.prevent="descartarCV" id="FormSendCV">
                                     <p>
                                         Descarta esta acción si no quieres realizar el proceso de <span> Cargar Curriculum Vitae</span> al prospecto. Una acción descartada cuenta como un proceso "Completado".
                                     </p>
-                                    
                                 </form>
                             </div>
                         </template>
@@ -144,12 +143,14 @@
     }
     });
 
+    const InputDoc = ref(null);
 /////////// programacion de los modales de activacion ///////////////
 const activarModal = ref(false)
 const formActivo = ref(null)
 const TextoButton = ref('')
 const TituloModal = ref('')
 const EmpleadoID_Selecionado = ref(null)
+
 /**
      * Controla el despliegue del modal
      * @param mostrarModal
@@ -157,12 +158,13 @@ const EmpleadoID_Selecionado = ref(null)
 const showModal = (Id_modal, idEmpleado=null) => {
     
     EmpleadoID_Selecionado.value = idEmpleado
+    
     if(Id_modal == 1){
         activarModal.value = !activarModal.value;
         formActivo.value = 1;
         TextoButton.value = 'Guardar Documento'
         TituloModal.value = 'Cargar Curriculum Vitae / Hoja de vida'
-        
+        InputDoc.value.reset();
     } else if(Id_modal == 2){
         activarModal.value = !activarModal.value;
         formActivo.value = 2;

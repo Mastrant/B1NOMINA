@@ -72,8 +72,7 @@
                         :EmpleadoID="ID_Usuario_Creado"
                         :parametros="parametrosDP"
                         v-show="idFormularioActivo == 2"
-                        ref="Form2"
-                        
+                        ref="Form2"   
                     />
                     
                     <FormDatosLaborales 
@@ -191,7 +190,7 @@
         Form2.value?.resetForm();
         Form3.value?.resetForm();
         Form4.value?.resetForm();
-        ID_Usuario_Creado.value = null
+        ID_Usuario_Creado.value = null;
     };
 
     const mostrarModal = ref(false)
@@ -204,7 +203,7 @@
      */
     const showModal = (Id_modal) => {
         if(Id_modal == 1){
-            limpiarFormularios();
+            
             if(idFormularioActivo.value != 1 && mostrarModal.value == true){
                 showN(
                     {
@@ -213,8 +212,10 @@
                     }
                 )
             }
+            limpiarFormularios();
             mostrarModal.value = !mostrarModal.value;
             idFormularioActivo.value = 1;
+            
         } else if(Id_modal == 2){
             mostrarModal2.value = !mostrarModal2.value;
 
