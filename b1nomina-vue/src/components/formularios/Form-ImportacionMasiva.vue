@@ -33,8 +33,17 @@ import InputDocsForm from '@/components/inputs/Input-Docs-form.vue';
 import { defineEmits, ref} from 'vue';
 import axios from 'axios'
 
+import { useRoute } from 'vue-router';
+
+    const route = useRoute();
+    // idSociedad es un String
+    const idSociedad = route.params.sociedadId;
+
+
 const DataDocumento = ref('');
 const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
+//toma la direccion del navegador
+            const BaseURL = (window.location);
 
 const emit = defineEmits([
     'actualizarDocumento',
@@ -60,7 +69,15 @@ const EnviarDoc = () => {
 const descargarPlantilla = () => {
   const BaseURL = (window.location);
   //abre una ventana para descargar un recurso dado por el servidor
-  //window.open('http://' + "archivo" + '/' + archivo, "_blank", "width=500,height=500");
+  axios.get(`sociedad/${idSociedad}/dowload_file_bulk_user`)
+  .then(response => {
+    const direccion = response?.data
+    window.open('http://' + BaseURL.hostname + '/' + direccion, "_blank", "width=500,height=500");
+  })
+  .catch(error => {
+    console.log(error)
+  })
+  
   console.log("descargar doc")
 }
 
@@ -83,8 +100,6 @@ const cargarDocumentoDAtaMasiva = async (idCreator, Datos) => {
           
           let archivo = res.data?.fileResult
           if(res.data?.fileResult){
-            //toma la direccion del navegador
-            const BaseURL = (window.location);
             //abre una ventana para descargar un recurso dado por el servidor
             window.open('http://' + BaseURL.hostname + '/' + archivo, "_blank", "width=500,height=500");
           }

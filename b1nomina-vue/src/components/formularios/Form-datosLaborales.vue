@@ -173,7 +173,7 @@ import InterruptorButton from '../inputs/Interruptor-button.vue';
 import InputCheckbox from '../inputs/Input-Checkbox.vue';
 
 import axios from "axios";
-import { ref, watch, reactive, defineProps, defineEmits, onMounted, inject} from 'vue';
+import { ref, watch, reactive, defineProps, defineEmits, inject} from 'vue';
 
 // Define las propiedades que el componente espera recibir. En este caso, se espera una propiedad llamada EmpleadoID de tipo Number.
 const props = defineProps({

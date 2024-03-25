@@ -21,12 +21,12 @@
                 :ModalActivo="1"
             >
                 <template #default>
-                    <div v-if="formActivo==1">
+                    <div v-show="formActivo==1">
                         <FormEmpleadoActivar
                             :EmpleadoIDSelecionado="EmpleadoID_Selecionado"
                         />
                     </div>
-                    <div v-else>
+                    <div v-show="formActivo==2">
                         <FormEmpleadoDesactivar 
                             :EmpleadoIDSelecionado="EmpleadoID_Selecionado"
                         />
