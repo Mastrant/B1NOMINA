@@ -310,7 +310,7 @@
         .catch(
             err => {
                 // Maneja errores de la solicitud
-                console.log(err)
+                //console.log(err)
             }
         )
     }

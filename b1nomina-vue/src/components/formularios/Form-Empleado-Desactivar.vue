@@ -1,5 +1,5 @@
 <template>
-    <form id="FormSend" @submit.prevent="Enviar">
+    <form id="FormSend-D" @submit.prevent="Enviar">
         <span>Al desactivarlo debes tener en cuenta que:</span>
         <ol>
             <li>No aparecerá en la sección Gestionar Nómina.</li>
@@ -10,8 +10,17 @@
 </template>
 
 <script setup>
+
 import {defineProps} from 'vue';
-import axios from 'axios'
+
+import axios from 'axios';
+import { useRoute } from 'vue-router';
+
+    const route = useRoute();
+    // idSociedad es un String
+    const idSociedad = route.params.sociedadId;
+    const IDMaster = JSON.parse(localStorage.getItem("userId"));
+
 const props = defineProps({
     EmpleadoIDSelecionado:{
         type: [String, Number],
@@ -19,11 +28,22 @@ const props = defineProps({
     }
 })
 
-const Enviar = () => {
-    axios.put(`user/${props.EmpleadoIDSelecionado}/deactivate_user?user_updater=${IDMaster}`)
-    .then()
-    .catch()
-};
+const Enviar = async () => {
+    console.log("ActivarUsuario")
+    
+    await axios.put(`user/${props.EmpleadoIDSelecionado}/deactivate_user?user_updater=${IDMaster}`)
+    .then(
+        respuesta => {
+            console.log(respuesta)
+        }
+    )
+    .catch(
+        error => {
+            console.log(error)
+        }
+    )
+}
+
 </script>
 
 <style scoped>

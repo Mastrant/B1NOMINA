@@ -14,7 +14,21 @@
                 Cargo del empleado                
             </template>
             <template #Botones>
-
+                <TemplateButton2 text="Ver último combrobante de pago">
+                    <template #post>                                        
+                        <OjitoIcon Stroke="#002E99"/>
+                    </template>
+                </TemplateButton2>
+                <TemplateButton2 text="Liquidar">
+                    <template #post>                                        
+                        <DolarIcon color="#002E99" />
+                    </template>
+                </TemplateButton2>
+                <TemplateButton2 text="Desactivar">
+                    <template #post>                                        
+                        <ExitColorIcon Stroke="#002E99" />
+                    </template>
+                </TemplateButton2>
             </template>
         </LayoutCabeceraEmpleado>
 
@@ -72,10 +86,13 @@ import LayoutCabeceraEmpleado from '@/components/Layouts/LayoutCabeceraEmpleado.
 import LayoutForm from '@/components/Layouts/LayoutForm.vue';
 import boxInfo from '@/components/elementos/Box-info.vue';
 import NavButtonTemplate from '@/components/botones/Nav-button-templateForm.vue';
+import TemplateButton2 from '../botones/Template-button2.vue';
 //iconos
 import DolarIcon from '@/components/icons/Dolar-icon-blanco.vue';
 import InfoIcon from '@/components/icons/Info-icon.vue';
 import SolIcon from '@/components/icons/Sol-icon.vue';
+import OjitoIcon from '@/components/icons/Ojito-icon.vue';
+import ExitColorIcon from '@/components/icons/Exit-color-icon.vue'
 
 import {ref} from 'vue';
 

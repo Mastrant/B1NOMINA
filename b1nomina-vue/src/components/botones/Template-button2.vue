@@ -6,6 +6,9 @@
         <span>
             {{ text }}
         </span>
+        <slot name="post">
+
+        </slot>
     </button>    
 </template>
 

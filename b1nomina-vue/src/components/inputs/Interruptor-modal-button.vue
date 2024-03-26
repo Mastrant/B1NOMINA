@@ -14,7 +14,7 @@
         <div>
             <TemplateModal 
                 @closeModal="showModal" 
-                FormId="FormSend"
+                :FormId="FormId"
                 :NombreAccion="TituloModal" 
                 :textSubmit="TextoButton"
                 :activarModal="activarModal"
@@ -76,6 +76,7 @@ const formActivo = ref(null)
 const TextoButton = ref('')
 const TituloModal = ref('')
 const EmpleadoID_Selecionado = ref(null)
+const FormId = ref('')
 /**
      * Controla el despliegue del modal
      * @param mostrarModal
@@ -86,14 +87,17 @@ const EmpleadoID_Selecionado = ref(null)
     if(Id_modal == 2){
         activarModal.value = !activarModal.value;
         formActivo.value = 1;
-        TextoButton.value = 'Si, activar'
-        TituloModal.value = '¿Estás seguro que deseas activar a este empleado?'
+        TextoButton.value = 'Si, activar';
+        TituloModal.value = '¿Estás seguro que deseas activar a este empleado?';
+        FormId.value = "FormSend-A";
         
     } else if(Id_modal == 1){
         activarModal.value = !activarModal.value;
         formActivo.value = 2;
-        TextoButton.value = 'Si, desactivar'
-        TituloModal.value = '¿Estás seguro que deseas desactivar a este empleado?'
+        TextoButton.value = 'Si, desactivar';
+        TituloModal.value = '¿Estás seguro que deseas desactivar a este empleado?';
+        FormId.value = "FormSend-D";
+
     } 
 };
 </script>
