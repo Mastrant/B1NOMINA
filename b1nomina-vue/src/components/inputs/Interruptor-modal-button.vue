@@ -19,16 +19,21 @@
                 :textSubmit="TextoButton"
                 :activarModal="activarModal"
                 :ModalActivo="1"
+                :DataNotification="dataNotificacion"
             >
                 <template #default>
                     <div v-show="formActivo==1">
                         <FormEmpleadoActivar
                             :EmpleadoIDSelecionado="EmpleadoID_Selecionado"
+                            @notificacion="sendData"
+                            @activarUsuario="accionCorrecta(1)"
                         />
                     </div>
                     <div v-show="formActivo==2">
                         <FormEmpleadoDesactivar 
                             :EmpleadoIDSelecionado="EmpleadoID_Selecionado"
+                            @notificacion="sendData"
+                            @desactivarUsuario="accionCorrecta(2)"
                         />
                     </div>
                 </template>
@@ -58,7 +63,12 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(["ValorEstado"]);
+const emit = defineEmits(
+    [
+        "ValorEstado",
+        'actualizarListado',
+    ]
+);
 
 const modificarUsuario = (evento) => {
     if (props.Estado == true) {
@@ -69,7 +79,25 @@ const modificarUsuario = (evento) => {
     }
 }
 
+const accionCorrecta = (tipo) => {
+    if(tipo == 1){
+        showModal()
+        emit('actualizarListado')
+    } else if(tipo == 2){
+        showModal()
+        emit('actualizarListado')
+    } else {
+        console.log("error al activar");
+    }
+}
 
+ //arreglo con la data
+ const dataNotificacion = ref({})
+const sendData = (DATA) => {
+        dataNotificacion.value = DATA //asigna el valor
+    }
+
+const DataNotificacion = ref('')
 /////////// programacion de los modales de activacion ///////////////
 const activarModal = ref(false)
 const formActivo = ref(null)
@@ -81,24 +109,30 @@ const FormId = ref('')
      * Controla el despliegue del modal
      * @param mostrarModal
      */
-    const showModal = (Id_modal, idEmpleado=null) => {
+    const showModal = (Id_modal=null, idEmpleado=null) => {
     
-    EmpleadoID_Selecionado.value = idEmpleado
-    if(Id_modal == 2){
+    if(Id_modal == null && idEmpleado == null) {
         activarModal.value = !activarModal.value;
-        formActivo.value = 1;
-        TextoButton.value = 'Si, activar';
-        TituloModal.value = '¿Estás seguro que deseas activar a este empleado?';
-        FormId.value = "FormSend-A";
-        
-    } else if(Id_modal == 1){
-        activarModal.value = !activarModal.value;
-        formActivo.value = 2;
-        TextoButton.value = 'Si, desactivar';
-        TituloModal.value = '¿Estás seguro que deseas desactivar a este empleado?';
-        FormId.value = "FormSend-D";
+    } else {
+        EmpleadoID_Selecionado.value = idEmpleado
+        if(Id_modal == 2){
+            activarModal.value = !activarModal.value;
+            formActivo.value = 1;
+            TextoButton.value = 'Si, activar';
+            TituloModal.value = '¿Estás seguro que deseas activar a este empleado?';
+            FormId.value = "FormSend-A";
+            
+        } else if(Id_modal == 1){
+            activarModal.value = !activarModal.value;
+            formActivo.value = 2;
+            TextoButton.value = 'Si, desactivar';
+            TituloModal.value = '¿Estás seguro que deseas desactivar a este empleado?';
+            FormId.value = "FormSend-D";
 
-    } 
+        } 
+    }
+
+    
 };
 </script>
 

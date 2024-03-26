@@ -5,32 +5,30 @@
                 {{ name }}
             </h3>
             <img class="cardAvatar" src="../components/icons/svg/Avatar-svg-icon.svg" alt="ICON sociedad">
-            <router-link class="cardsociedad-button" :to="`/sociedad/${id}/`">
+            <router-link class="cardsociedad-button" :to="`/sociedad/${id}/`" @click="() => almacen.updatedSociedadID(id)">
                     Selecionar
             </router-link>
         </div>
     </div>
 </template>
 
-<script>
-export default {
-    //datos recividos del componente padre
-    props: {
-        //informacion del sociedad id, nombre y el icono a utilizar 
-        //nombre de la sociedad
-        name: {String},
-        //ID de la sociedad
-        id : {
-            Number,
-            default: null,
-        },
-        //icono de la sociedad
-        icon : {
-            String,
-            default: '@/icons/svg/Avatar-svg-icon.svg'
-        }
+<script setup>
+import almacen from '@/store/almacen.js';
+import {defineProps} from 'vue';
+
+const props = defineProps({
+    name: {String},
+    //ID de la sociedad
+    id : {
+        Number,
+        default: null,
     },
-}
+    //icono de la sociedad
+    icon : {
+        String,
+        default: '@/icons/svg/Avatar-svg-icon.svg'
+        }
+});
 </script>
 
 <style scoped>

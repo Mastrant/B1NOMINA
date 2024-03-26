@@ -47,7 +47,8 @@ const SubmitButton = defineAsyncComponent(() => import('@/components/botones/Sub
 const alertError = defineAsyncComponent(() => import('@/components/alertas/Alert-Error.vue'));
 const alertWarning = defineAsyncComponent(() => import('@/components/alertas/Alert-Warning.vue'));
 
-import LayoutLogin from '../Layouts/LayoutLogin.vue';
+import LayoutLogin from '@/components/Layouts/LayoutLogin.vue';
+import almacen from '@/store/almacen.js';
 
 //librerias
 import axios from 'axios';
@@ -128,6 +129,8 @@ export default {
                     if(res.status==202 || res.status==200 || res.status==201){
                         //Almacena el token en el local Storage
                         localStorage.setItem('token', res.data.token)
+                        //almacena 
+                        almacen.updatedUserID(res.data.userId)
                         //almacena el id del usuario en el local Storage
                         localStorage.setItem('userId', res.data.userId)
                         // Envia a la pagina sociedad

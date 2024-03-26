@@ -27,7 +27,7 @@
                 v-else 
                 :listaEmpleados="ListaEmpleados"   
                 @upData="InteraccionListaEmpleadosSelecionados"
-                @actualizar_Lista="pedirEmpleados()"
+                @actualizar_Lista="pedirEmpleados"
             />
         </div>
         <AlertShort

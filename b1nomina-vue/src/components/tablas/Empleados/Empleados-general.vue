@@ -59,7 +59,8 @@
                 <template v-slot:activateComponente>
                     <InterruptorButton 
                         :Objid="item.id" 
-                        :Estado="item.activo" 
+                        :Estado="item.activo"
+                        @actualizarListado="() => emit('actualizar_Lista')"
                     />
                     <span v-if="item.activo == true">Activo</span>
                     <span v-else>Inactivo</span>

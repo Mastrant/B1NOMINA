@@ -20,19 +20,25 @@ const props = defineProps({
         type: [String, Number],
         default: null
     }
-})
+});
+const emit = defineEmits([
+    'activarUsuario',
+    'notificacion',
+]);
+
 
 const Enviar = async () => {
     
     await axios.put(`user/${props.EmpleadoIDSelecionado}/activate_user?user_updater=${IDMaster}`)
     .then(
         respuesta => {
-            console.log(respuesta)
+            emit('activarUsuario')
         }
     )
     .catch(
         error => {
             console.log(error)
+            emit('notificacion', {'texto':err?.response.data?.message, 'valor':false})
         }        
     )
     

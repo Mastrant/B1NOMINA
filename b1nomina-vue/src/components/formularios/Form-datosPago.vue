@@ -316,7 +316,7 @@ const verificarMediodePago = (medio) => {
             emit("respuesta", {'texto':"Error al validar el ID del usuario", 'valor':false})  
         }
     } else {//no hay modificaciones en los payloads
-        CloseModal()
+        CloseModal();
     }
 };
 </script>

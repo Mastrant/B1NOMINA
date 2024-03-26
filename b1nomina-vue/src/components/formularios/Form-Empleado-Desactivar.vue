@@ -11,7 +11,7 @@
 
 <script setup>
 
-import {defineProps} from 'vue';
+import {defineProps, defineEmits} from 'vue';
 
 import axios from 'axios';
 import { useRoute } from 'vue-router';
@@ -28,18 +28,22 @@ const props = defineProps({
     }
 })
 
+const emit = defineEmits([
+    'desactivarUsuario',
+    'notificacion'
+])
+
 const Enviar = async () => {
-    console.log("ActivarUsuario")
     
     await axios.put(`user/${props.EmpleadoIDSelecionado}/deactivate_user?user_updater=${IDMaster}`)
     .then(
         respuesta => {
-            console.log(respuesta)
+            emit('desactivarUsuario')
         }
     )
     .catch(
         error => {
-            console.log(error)
+            emit('notificacion', {'texto':err?.response.data?.message, 'valor':false})
         }
     )
 }
