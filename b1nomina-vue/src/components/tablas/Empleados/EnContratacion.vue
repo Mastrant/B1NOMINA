@@ -26,15 +26,16 @@
             <!--Final encabezado-->
 
             <EnContratacionRow v-for="(item) in DatosPaginados" :key="item.id">      
+               
                 <template v-slot:Prospecto>
-                    {{ item.nombre }} {{ item.apellido_paterno }} {{ item.apellido_materno }}
+                    {{ item.nombre }} {{ item.apellido_paterno }} {{ item.apellido_materno }}                    
                 </template>
                 <template v-slot:rut>
                     {{ item.rut }}
                 </template>
                 <template v-slot:CV>
                     <WaitButton @click="showModal(1,item.id)"/>
-                    <DescartarButton @click="showModal(2,item.id)"/>
+                    <DescartarButton @click="showModal(1,item.id)"/>
                 </template>
                 <template v-slot:Contrato>
                     <DescartarButton @click="() => console.log(item.id)"/>
@@ -67,22 +68,22 @@
             :DataNotification="checkfile"
             
         >
-            <template #default>
-                <div v-if="formActivo==1">
+            <template #default><!--Espacio para los formularios -->
+                <div v-if="formActivo==1"> <!--Cargar Curriculum-->
                     <LayoutForm>
                         <template v-slot:cabecera>
                             <NavButtonTemplate text="Cargar Curriculum Vitae" :seleccionado="panelShow== 1" @click="showInfo(1)" />
                             <NavButtonTemplate text="Descartar esta acción" :seleccionado="panelShow== 2" @click="showInfo(2)" />  
                         </template>
                         <template v-slot:formulario>
-                            <div class="contenedorInfo" v-show="panelShow ==1">
+                            <div class="contenedorInfo" v-show="panelShow == 1">
                                 <form @submit.prevent="EnviarCV" id="FormSendCV" >
                                     <p>En esta sección puedes cargar el Curriculum Vitae del prospecto y tener un soporte anexado al perfil del mismo. </p>
                                     <h3>Cargar Curriculum Vitae</h3>
                                     <InputDocsForm2 ref="InputDoc"  @respuesta="checkFile"/>
                                 </form>
                             </div>
-                            <div class="contenedorInfo"  v-show="panelShow ==2">
+                            <div class="contenedorInfo"  v-show="panelShow == 2">
                                 <form @submit.prevent="descartarCV" id="FormSendCV">
                                     <p>
                                         Descarta esta acción si no quieres realizar el proceso de <span> Cargar Curriculum Vitae</span> al prospecto. Una acción descartada cuenta como un proceso "Completado".
@@ -92,7 +93,7 @@
                         </template>
                     </LayoutForm>
                 </div>
-                <div v-else>
+                <div v-if="formActivo == 4">
                     formulario contrato
                 </div>
             </template>

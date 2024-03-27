@@ -20,7 +20,7 @@
         <img src="../icons/svg/Line-icon.svg">
 
         <!-- Componente PositionText con número "4", texto "Datos de Pago" y propiedad seleccionado establecida en falso -->
-        <PositionText numero="4" texto="Datos de Pago" :selecionado="idFormularioActivo == 4" />
+        <PositionText numero="4" texto="Datos Adicionales" :selecionado="idFormularioActivo == 4" />
     </div>
 </template>
 

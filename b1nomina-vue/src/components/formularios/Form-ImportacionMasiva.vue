@@ -81,7 +81,7 @@ const descargarPlantilla = () => {
     const direccion = response?.data
    
     //console.log('http://' + BaseURL.hostname + '/' + direccion.data, "_blank", "width=500,height=500")
-    window.open('http://' + BaseURL.hostname + direccion.data, "_blank", "width=500,height=500");
+    window.open('http://' + BaseURL.hostname + '/' + direccion.data, "_blank", "width=500,height=500");
     //InputDocsMasive.value?.reset();
   })
   .catch(error => {
