@@ -18,7 +18,7 @@
         </td>
         <!--Cargo-->
         <td class="">
-            <span>
+            <span class="cargo">
                 <slot name="cargo"></slot>
             </span>
         </td>
@@ -29,8 +29,8 @@
             </span>
         </td>
         <!--Estado-->
-        <td class="Estado">
-            <div class="Estado">
+        <td class="estado">
+            <div class="estado">
                 <slot name="activateComponente"></slot>
             </div>                    
         </td>
@@ -106,23 +106,17 @@ tr.cuerpo > td {
  * Estilos para la columna de nombres de empleados
  * Alinea el texto al inicio y limita el ancho máximo para evitar desbordamientos
  */
-th.rowNombre,
 td.rowNombre > div {
     text-align: start;
     max-width: 290px;
 }
 
 
-div.Estado {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
 /**
  * Estilos para la columna de estados
  * Utiliza Flexbox para organizar los elementos de estado y centrarlos
  */
-td.Estado > div {
+td.estado > div {
     display: flex;
     gap: 10px; /* Espacio entre elementos de estado */
     justify-content: center;
@@ -130,7 +124,7 @@ td.Estado > div {
     margin: 0px; /* Sin margen para una alineación precisa */
     align-self: center; /* Centrado verticalmente */
     align-items: center; /* Centrado horizontalmente */
-    width: 120px;
+    width: auto;
 }
 
 /* Estilos para la columna de acciones (iconos) */
