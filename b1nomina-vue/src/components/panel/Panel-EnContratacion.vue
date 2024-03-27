@@ -13,13 +13,18 @@
             <!--tabla con los datos-->
             <div class="cuerpo-tabla" v-else>
                 
-                <span class="NoEncontrado" v-if="(ListaEmpleados.length < 1)? true : false"
+                <span 
+                    class="NoEncontrado" 
+                    v-if="(ListaEmpleados.length < 1) ? true : false"
                 >
                     No hay datos asociados a los filtros
                 </span>
     
-                <EnContratacion v-else :listaEmpleados="ListaEmpleados"  
+                <EnContratacion v-else 
+                    :listaEmpleados="ListaEmpleados"
+                    @ActualizarData="actualizarEmpleados"
                 />
+                
                 <AlertShort
                     ref="notificacionStatus"
                 />
@@ -75,6 +80,20 @@ watch(shearch, (valor) => filtrar(valor));
             (error) => {
                 ListaEmpleados.value = []; // si hay un error asigna un valor vacio
                 show.value = true;
+            }
+        )
+    };
+
+    const actualizarEmpleados = async () => {
+        await axios.get(`/sociedad/${idSociedad}/list_no_empleados`)
+        .then(
+            (res) => {
+                ListaEmpleados.value = res.data; //almacena los datos devueltos por la api
+            }
+        )
+        .catch(
+            (error) => {
+                ListaEmpleados.value = []; // si hay un error asigna un valor vacio
             }
         )
     };

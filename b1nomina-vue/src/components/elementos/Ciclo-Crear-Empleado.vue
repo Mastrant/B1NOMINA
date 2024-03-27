@@ -114,8 +114,7 @@
                 :ModalActivo="2"
             >
                 <template #default>
-                    <FormImportacionMasiva
-                        @closeModal="showModal"
+                    <FormImportacionMasiva                       
                         @respuesta="sendData"
                         ref="FormCargaMasiva"
                     />
@@ -177,7 +176,9 @@
         dataNotificacion.value = DATA //asigna el valor
     }
 
-    const ID_Usuario_Creado = ref('')
+    
+
+    const ID_Usuario_Creado = ref('');
 
     // Crear referencias a los componentes hijos
     const Form1 = ref(null);
@@ -198,6 +199,8 @@
     const mostrarModal2 = ref(false)
     const mostrarModal3 = ref(false)
 
+    const FormCargaMasiva = ref(null);
+
     /**
      * Controla el despliegue del modal
      * @param mostrarModal
@@ -217,8 +220,9 @@
             mostrarModal.value = !mostrarModal.value;
             idFormularioActivo.value = 1;
             
-        } else if(Id_modal == 2){
+        } else if(Id_modal == 2){            
             mostrarModal2.value = !mostrarModal2.value;
+            FormCargaMasiva.value.resetInput()
 
         } else if(Id_modal == 3){
             //console.log("mostrarmodal 3")

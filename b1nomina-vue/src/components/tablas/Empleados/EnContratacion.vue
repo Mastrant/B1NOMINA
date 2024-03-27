@@ -1,5 +1,6 @@
 <template>
     <div class="conted">
+        <!--Tabla con los datos-->
         <table class="TablaEncontratacion">
              <!--Encabezado de la tabla-->
              <tr class="rowTabla encabezado">
@@ -55,7 +56,7 @@
                 </template>
             </EnContratacionRow>
         </table>
-
+        <!--Modales-->
         <TemplateModal 
             @closeModal="showModal" 
             FormId="FormSendCV"
@@ -63,6 +64,8 @@
             :textSubmit="TextoButton"
             :activarModal="activarModal"
             :ModalActivo="1"
+            :DataNotification="checkfile"
+            
         >
             <template #default>
                 <div v-if="formActivo==1">
@@ -76,7 +79,7 @@
                                 <form @submit.prevent="EnviarCV" id="FormSendCV" >
                                     <p>En esta sección puedes cargar el Curriculum Vitae del prospecto y tener un soporte anexado al perfil del mismo. </p>
                                     <h3>Cargar Curriculum Vitae</h3>
-                                    <InputDocsForm2 ref="InputDoc"  @respuesta="(valor)=> console.log(valor)"/>
+                                    <InputDocsForm2 ref="InputDoc"  @respuesta="checkFile"/>
                                 </form>
                             </div>
                             <div class="contenedorInfo"  v-show="panelShow ==2">
@@ -95,8 +98,8 @@
             </template>
         </TemplateModal>
 
-         <!--Fin Tabla-->
-         <div class="conted-pagination">
+        
+        <div class="conted-pagination">
             <!--Espacio para paginacion-->
             <div class="pagination">
 
@@ -143,54 +146,100 @@
     }
     });
 
-    const emit = defineEmits({
-        
-    });
+    const emit = defineEmits([
+        'ActualizarData'
+    ]);
     const InputDoc = ref(null);
-/////////// programacion de los modales de activacion ///////////////
-const activarModal = ref(false)
-const formActivo = ref(1)
-const TextoButton = ref('')
-const TituloModal = ref('')
-const EmpleadoID_Selecionado = ref(null)
 
-/**
-     * Controla el despliegue del modal
-     * @param mostrarModal
-     */
-const showModal = (Id_modal, idEmpleado) => {
-    
-    EmpleadoID_Selecionado.value = idEmpleado
-    
-    if(Id_modal == 1){
-        activarModal.value = !activarModal.value;
-        formActivo.value = 1;
-        TextoButton.value = 'Guardar Documento'
-        TituloModal.value = 'Cargar Curriculum Vitae / Hoja de vida'
-        try {
-            InputDoc.value.reset();
-        } catch (error) {
-            console.error('Error en showModal:', error);
-        }
+    const checkfile = ref({})
+    const checkFile = (respuesta) => {
+        checkfile.value = respuesta
+    };
+
+    /////////// programacion de los modales de activacion ///////////////
+    const activarModal = ref(false)
+    const formActivo = ref(1)
+    const TextoButton = ref('')
+    const TituloModal = ref('')
+    const EmpleadoID_Selecionado = ref(null)
+
+    /**
+         * Controla el despliegue del modal
+         * @param mostrarModal
+         */
+    const showModal = (Id_modal, idEmpleado) => {
         
-    } else if(Id_modal == 2){
-        activarModal.value = !activarModal.value;
-        formActivo.value = 2;
-        TextoButton.value = 'Si, desactivar'
-        TituloModal.value = '¿Estás seguro que deseas desactivar a este empleado?'
-    } 
-};
+        EmpleadoID_Selecionado.value = idEmpleado
+        
+        if(Id_modal == 1){
+            activarModal.value = !activarModal.value;
+            formActivo.value = 1;
+            TextoButton.value = 'Guardar Documento'
+            TituloModal.value = 'Cargar Curriculum Vitae / Hoja de vida'
+            try {
+                InputDoc.value.reset();
+            } catch (error) {
+                console.error('Error en showModal:', error);
+            }
+            
+        } else if(Id_modal == 2){
+            activarModal.value = !activarModal.value;
+            formActivo.value = 2;
+            TextoButton.value = 'Si, desactivar'
+            TituloModal.value = '¿Estás seguro que deseas desactivar a este empleado?'
+        } 
+    };
 
-const panelShow = ref(1)
-const showInfo = (id) => {
-    panelShow.value = id
-    if (id == 1){
-        TextoButton.value = "Guardar Documento"
+    const panelShow = ref(1)
+    const showInfo = (id) => {
+        panelShow.value = id
+        if (id == 1){
+            TextoButton.value = "Guardar Documento"
+        } else {
+            TextoButton.value = "Descartar Acción"
+        } 
+    }
+
+    const cargarCV = async (idCreator, Datos) => {
+    const formData = new FormData();
+    formData.append('File', Datos); // Asume que 'Datos' es un objeto File
+    if(Datos != '') {
+        await axios.post(`/user/bulk_load_users?sociedadId=${idCreator}&creatorUserId=${idCreator}`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+        })
+        .then(
+        // Maneja la respuesta exitosa.
+        res => {
+            // Verifica si la respuesta tiene un estado HTTP 200 (OK).
+            if (res.status == 200 || res.status == 201 ){
+            // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
+            emit("respuesta", {'texto':res.data?.message, 'valor':true})   
+            
+            let archivo = res.data?.fileResult
+            if(res.data?.fileResult){
+                //abre una ventana para descargar un recurso dado por el servidor
+                window.open('http://' + BaseURL.hostname + '/' + archivo, "_blank", "width=500,height=500");
+            }
+
+            }
+        }
+        )
+        .catch(
+        // Maneja los errores de la solicitud.
+        err => {
+            // Verifica si la respuesta del error contiene un objeto de respuesta.
+            if (err.response) { 
+            // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
+            emit("respuesta", {'texto':err.response.data?.message, 'valor':false})            
+            }
+        }
+        );
     } else {
-        TextoButton.value = "Descartar Acción"
-    } 
-}
-
+        emit("respuesta", {'texto':'El campo esta vacio', 'valor':false})
+    }
+    }
 
     const ListaEmpleados = ref(props.listaEmpleados);
 

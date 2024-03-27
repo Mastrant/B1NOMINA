@@ -1,5 +1,5 @@
 <template>
-    <form class="formulario" ref="FormImport" id="FormImportM" @submit.prevent="EnviarDoc">
+    <form class="formulario" id="FormImportM" @submit.prevent="EnviarDoc">
         <p>
             Descarga el formato de Excel que te ayudará a ingresar la información de tus empleados y luego cargarlo en nuestro sistema.
         </p>
@@ -19,9 +19,9 @@
         </p>
         <div class="row-form">
             <InputDocsForm
-                requerido="true"
                 @respuesta="checkFile"
                 @actualizarDocumento="tomarData"
+                ref="InputDocsMasive"
             />
         </div>
     </form>
@@ -30,7 +30,7 @@
 <script setup>
 import TemplateButton2 from '@/components/botones/Template-button2.vue'
 import InputDocsForm from '@/components/inputs/Input-Docs-form.vue';
-import { defineEmits, ref} from 'vue';
+import { defineEmits, ref, defineExpose} from 'vue';
 import axios from 'axios'
 
 import { useRoute } from 'vue-router';
@@ -39,7 +39,7 @@ import { useRoute } from 'vue-router';
     // idSociedad es un String
     const idSociedad = route.params.sociedadId;
 
-
+const InputDocsMasive = ref(null)
 const DataDocumento = ref('');
 const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
 //toma la direccion del navegador
@@ -48,20 +48,27 @@ const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
 const emit = defineEmits([
     'actualizarDocumento',
     'respuesta',
-    'closeModal',
 ]);
+
+const resetInput = () => {
+
+  InputDocsMasive.value?.reset();
+}
+
+defineExpose({
+  resetInput
+});
 
 const checkFile = (respuesta) => emit("respuesta", respuesta);
 
 const tomarData = (datosDelDocumento) => DataDocumento.value = datosDelDocumento.value;
 
 
-
 const EnviarDoc = () => {
     try {
         cargarDocumentoDAtaMasiva(ID_USERMASTER, DataDocumento.value)
     } catch (error) {
-      console.log(error)
+      InputDocsMasive.value?.reset();
       emit("respuesta", {'texto':error, 'valor':false});
     }
 };
@@ -72,13 +79,14 @@ const descargarPlantilla = () => {
   axios.get(`sociedad/${idSociedad}/dowload_file_bulk_user`)
   .then(response => {
     const direccion = response?.data
-    window.open('http://' + BaseURL.hostname + '/' + direccion, "_blank", "width=500,height=500");
+   
+    //console.log('http://' + BaseURL.hostname + '/' + direccion.data, "_blank", "width=500,height=500")
+    window.open('http://' + BaseURL.hostname + direccion.data, "_blank", "width=500,height=500");
+    //InputDocsMasive.value?.reset();
   })
   .catch(error => {
-    console.log(error)
+    emit("respuesta", {'texto':error?.data.message, 'valor':false});
   })
-  
-  console.log("descargar doc")
 }
 
 const cargarDocumentoDAtaMasiva = async (idCreator, Datos) => {
@@ -101,7 +109,7 @@ const cargarDocumentoDAtaMasiva = async (idCreator, Datos) => {
           let archivo = res.data?.fileResult
           if(res.data?.fileResult){
             //abre una ventana para descargar un recurso dado por el servidor
-            window.open('http://' + BaseURL.hostname + '/' + archivo, "_blank", "width=500,height=500");
+            window.open('http://' + BaseURL.hostname + archivo, "_blank", "width=500,height=500");
           }
 
         }

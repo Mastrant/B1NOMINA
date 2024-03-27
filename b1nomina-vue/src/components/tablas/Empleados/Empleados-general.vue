@@ -120,9 +120,6 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 const sociedadId = route.params.sociedadId;
 
-
-
-
 // Define los props
 const props = defineProps({
   listaEmpleados: {
