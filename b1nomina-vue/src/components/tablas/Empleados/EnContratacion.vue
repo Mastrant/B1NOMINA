@@ -77,7 +77,7 @@
                         </template>
                         <template v-slot:formulario>
                             <div class="contenedorInfo" v-show="panelShow == 1">
-                                <form @submit.prevent="EnviarCV" id="FormSendCV" >
+                                <form @submit.prevent="cargarCV" id="FormSendCV" >
                                     <p>En esta sección puedes cargar el Curriculum Vitae del prospecto y tener un soporte anexado al perfil del mismo. </p>
                                     <h3>Cargar Curriculum Vitae</h3>
                                     <InputDocsForm2 ref="InputDoc"  @respuesta="checkFile"/>
@@ -138,6 +138,8 @@
     import NavButtonTemplate from '@/components/botones/Nav-button-templateForm.vue';
     import InputDocsForm2 from '@/components/inputs/Input-Docs-form2.vue';
     import { ref, defineProps, watchEffect, onMounted, defineEmits} from 'vue';
+
+    
 
     // Define los props
     const props = defineProps({
@@ -201,7 +203,7 @@
         } 
     }
 
-    const cargarCV = async (idCreator, Datos) => {
+    const cargarCV = async () => {
     const formData = new FormData();
     formData.append('File', Datos); // Asume que 'Datos' es un objeto File
     if(Datos != '') {

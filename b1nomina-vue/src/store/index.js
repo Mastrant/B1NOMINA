@@ -1,11 +1,11 @@
-import { createStore } from "vuex";
-import perfil from '@/store/modulos/perfil-vuex'
+import { createStore, } from "vuex";
+import { perfilModulo } from './modulos/perfil-vuex'
 
-const Almacen = createStore({    
+const store = createStore({    
     modules:{
-        perfil
+        perfil: perfilModulo
     }
 
 })
 
-export default Almacen
+export default store
