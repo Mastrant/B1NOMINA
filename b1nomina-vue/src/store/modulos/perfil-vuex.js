@@ -2,7 +2,7 @@ const perfilModulo =  {
     namespaced: true,
     state() {
         return {
-            UserID: null,
+            UserID: 2,
             SOCIEDAD_ID: null,
 
         }

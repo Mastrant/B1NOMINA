@@ -43,13 +43,6 @@ import CicloCrearEmpleado from '@/components/elementos/Ciclo-Crear-Empleado.vue'
 import {ref, inject, watch, onMounted, toRef} from 'vue';
 import axios from 'axios';
 
-
-
-import { useStore } from 'vuex';
-
-const store = useStore();
-const userID = store.getters['perfil/getUserID'];
-
 const show = ref(true)
 
 // Inyectar el valor proporcionado por la url
