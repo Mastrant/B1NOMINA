@@ -34,11 +34,14 @@
                     {{ item.rut }}
                 </template>
                 <template v-slot:CV>
-                    <WaitButton @click="showModal(1,item.id)"/>
-                    <DescartarButton @click="showModal(1,item.id)"/>
+                    <WaitButton @click="ActionButton(1,1,item.id)"/>
+                    <DescartarButton @click="ActionButton(1,2,item.id)"/>
+                    <CorrectButton />
                 </template>
                 <template v-slot:Contrato>
-                    <DescartarButton @click="() => console.log(item.id)"/>
+                    <WaitButton @click="ActionButton(1,3,item.id)"/>
+                    <DescartarButton @click="ActionButton(1,4,item.id)"/>
+                    <CorrectButton />
                 </template>
                 <template v-slot:Completado>
                     <EBarraProgresoVue class="icon" porcentaje="15" @click="() => console.log('selecionado')" />
@@ -60,11 +63,11 @@
         <!--Modales-->
         <TemplateModal 
             @closeModal="showModal" 
-            FormId="FormSendCV"
+            :FormId="IDFormModal"
             :NombreAccion="TituloModal" 
             :textSubmit="TextoButton"
             :activarModal="activarModal"
-            :ModalActivo="1"
+            :ModalActivo="modalActivo"
             :DataNotification="checkfile"
             
         >
@@ -77,14 +80,14 @@
                         </template>
                         <template v-slot:formulario>
                             <div class="contenedorInfo" v-show="panelShow == 1">
-                                <form @submit.prevent="cargarCV" id="FormSendCV" >
+                                <form @submit.prevent="cargarCV" id="sendCV" >
                                     <p>En esta sección puedes cargar el Curriculum Vitae del prospecto y tener un soporte anexado al perfil del mismo. </p>
                                     <h3>Cargar Curriculum Vitae</h3>
                                     <InputDocsForm2 ref="InputDoc"  @respuesta="checkFile"/>
                                 </form>
                             </div>
                             <div class="contenedorInfo"  v-show="panelShow == 2">
-                                <form @submit.prevent="descartarCV" id="FormSendCV">
+                                <form @submit.prevent="descartarCV" id="Descartar">
                                     <p>
                                         Descarta esta acción si no quieres realizar el proceso de <span> Cargar Curriculum Vitae</span> al prospecto. Una acción descartada cuenta como un proceso "Completado".
                                     </p>
@@ -93,13 +96,48 @@
                         </template>
                     </LayoutForm>
                 </div>
-                <div v-if="formActivo == 4">
-                    formulario contrato
+                <div v-if=" formActivo == 2"> <!--retomar Curriculum-->                    
+                    <div class="contenedorInfo" v-show="panelShow == 1">
+                        <form @submit.prevent="retomarCV" id="retomarCV" >
+                            <p>En caso de que desees retomar el proceso de firma electrónica del contrato <span>a este prospecto, da clic en</span>retomar acción. </p>                            
+                        </form>
+                    </div>
+                </div>
+                <div v-if="formActivo == 3"><!--Cargar contrato-->
+                    <LayoutForm>
+                        <template v-slot:cabecera>
+                            <NavButtonTemplate text="Firma del contrato" :seleccionado="panelShow== 1" @click="showInfo(1)" />
+                            <NavButtonTemplate text="Descartar esta acción" :seleccionado="panelShow== 2" @click="showInfo(2)" />  
+                        </template>
+                        <template v-slot:formulario>
+                            <div class="contenedorInfo" v-show="panelShow == 1">
+                                <form @submit.prevent="cargarContrato" id="FormSendContrato" >
+                                    <p>Recoge firmas de contratos cómo de una forma rápida y segura, cargando aquí tus documentos y permitiendo que las personas firmen desde su correo electrónico. </p>
+                                    <h3>Cargar contrato</h3>
+                                    <InputDocsForm2 ref="InputDoc"  @respuesta="checkFile"/>
+                                    <h3>Quiénes firman este documento</h3>
+                                </form>
+                            </div>
+                            <div class="contenedorInfo"  v-show="panelShow == 2">
+                                <form @submit.prevent="descartarContrato" id="Descartar">
+                                    <p>
+                                        Descarta esta acción si no quieres realizar el proceso de <span> Enviar Firma Electrónica del Contrato </span> al prospecto. Una acción descartada cuenta como un proceso "Completado".   
+                                    </p>                                    
+                                </form>
+                            </div>
+                        </template>
+                    </LayoutForm>
+                </div>
+                <div v-if=" formActivo == 4"> <!--retomar contrato-->                    
+                    <div class="contenedorInfo" v-show="panelShow == 1">
+                        <form @submit.prevent="retomarContrato" id="retomarContrato" >
+                            <p>En caso de que desees retomar el proceso de firma electrónica del contrato <span> a este prospecto, da clic en</span>retomar acción. </p>                            
+                        </form>
+                    </div>
                 </div>
             </template>
         </TemplateModal>
 
-        
         <div class="conted-pagination">
             <!--Espacio para paginacion-->
             <div class="pagination">
@@ -137,9 +175,8 @@
     import LayoutForm from '@/components/Layouts/LayoutForm.vue';
     import NavButtonTemplate from '@/components/botones/Nav-button-templateForm.vue';
     import InputDocsForm2 from '@/components/inputs/Input-Docs-form2.vue';
-    import { ref, defineProps, watchEffect, onMounted, defineEmits} from 'vue';
-
-    
+    import CorrectButton from '@/components/botones/Correct-button.vue';
+    import { ref, defineProps, watchEffect, onMounted, defineEmits} from 'vue';    
 
     // Define los props
     const props = defineProps({
@@ -165,32 +202,16 @@
     const TextoButton = ref('')
     const TituloModal = ref('')
     const EmpleadoID_Selecionado = ref(null)
+    const modalActivo = ref(0)
+    const IDFormModal = ref('')
 
     /**
-         * Controla el despliegue del modal
-         * @param mostrarModal
-         */
+    * Controla el despliegue del modal
+    * @param mostrarModal
+    */
     const showModal = (Id_modal, idEmpleado) => {
-        
-        EmpleadoID_Selecionado.value = idEmpleado
-        
-        if(Id_modal == 1){
-            activarModal.value = !activarModal.value;
-            formActivo.value = 1;
-            TextoButton.value = 'Guardar Documento'
-            TituloModal.value = 'Cargar Curriculum Vitae / Hoja de vida'
-            try {
-                InputDoc.value.reset();
-            } catch (error) {
-                console.error('Error en showModal:', error);
-            }
-            
-        } else if(Id_modal == 2){
-            activarModal.value = !activarModal.value;
-            formActivo.value = 2;
-            TextoButton.value = 'Si, desactivar'
-            TituloModal.value = '¿Estás seguro que deseas desactivar a este empleado?'
-        } 
+        activarModal.value = !activarModal.value;
+        modalActivo.value = Id_modal;
     };
 
     const panelShow = ref(1)
@@ -204,45 +225,110 @@
     }
 
     const cargarCV = async () => {
-    const formData = new FormData();
-    formData.append('File', Datos); // Asume que 'Datos' es un objeto File
-    if(Datos != '') {
-        await axios.post(`/user/bulk_load_users?sociedadId=${idCreator}&creatorUserId=${idCreator}`, formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-        })
-        .then(
-        // Maneja la respuesta exitosa.
-        res => {
-            // Verifica si la respuesta tiene un estado HTTP 200 (OK).
-            if (res.status == 200 || res.status == 201 ){
-            // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
-            emit("respuesta", {'texto':res.data?.message, 'valor':true})   
-            
-            let archivo = res.data?.fileResult
-            if(res.data?.fileResult){
-                //abre una ventana para descargar un recurso dado por el servidor
-                window.open('http://' + BaseURL.hostname + '/' + archivo, "_blank", "width=500,height=500");
-            }
+        const formData = new FormData();
+        formData.append('File', Datos); // Asume que 'Datos' es un objeto File
+        if(Datos != '') {
+            await axios.post(`/user/bulk_load_users?sociedadId=${idCreator}&creatorUserId=${idCreator}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            })
+            .then(
+            // Maneja la respuesta exitosa.
+            res => {
+                // Verifica si la respuesta tiene un estado HTTP 200 (OK).
+                if (res.status == 200 || res.status == 201 ){
+                // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
+                emit("respuesta", {'texto':res.data?.message, 'valor':true})   
+                
+                let archivo = res.data?.fileResult
+                if(res.data?.fileResult){
+                    //abre una ventana para descargar un recurso dado por el servidor
+                    window.open('http://' + BaseURL.hostname + '/' + archivo, "_blank", "width=500,height=500");
+                }
 
+                }
             }
-        }
-        )
-        .catch(
-        // Maneja los errores de la solicitud.
-        err => {
-            // Verifica si la respuesta del error contiene un objeto de respuesta.
-            if (err.response) { 
-            // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
-            emit("respuesta", {'texto':err.response.data?.message, 'valor':false})            
+            )
+            .catch(
+            // Maneja los errores de la solicitud.
+            err => {
+                // Verifica si la respuesta del error contiene un objeto de respuesta.
+                if (err.response) { 
+                // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
+                emit("respuesta", {'texto':err.response.data?.message, 'valor':false})            
+                }
             }
+            );
+        } else {
+            emit("respuesta", {'texto':'El campo esta vacio', 'valor':false})
         }
-        );
-    } else {
-        emit("respuesta", {'texto':'El campo esta vacio', 'valor':false})
     }
-    }
+    /**
+     * 
+     * @param {Number} IdModal Modal a mostrar
+     * @param {Number} TipoAccion cargarCV > 1, retomarCV > 2, CargarContrato > 3,  retomarContrato > 4,
+     * @param {*}  item_ID 
+     */
+    const ActionButton = (IdModal = 0, TipoAccion = 0, item_ID = 0) => {
+        switch (TipoAccion) {
+            case 1:
+                console.log("cargar CV")
+                
+                formActivo.value = 1;
+                TextoButton.value = 'Guardar Documento';
+                TituloModal.value = 'Cargar Curriculum Vitae / Hoja de vida';
+                IDFormModal.value = 'sendCV';
+                InputDoc.value?.reset();
+                panelShow.value = 1
+                TextoButton.value = "Guardar Documento"
+                
+                showModal(IdModal)
+                break;
+            case 2:
+                console.log("cargar retomarCV")
+                break;
+            case 3:
+                console.log("cargar Contrato")
+
+                formActivo.value = 3;
+                TextoButton.value = 'Guardar Documento';
+                TituloModal.value = 'Firma del contrato';
+                IDFormModal.value = 'sendCV';
+                InputDoc.value?.reset();
+                panelShow.value = 1
+                TextoButton.value = "Guardar Documento"
+                showModal(IdModal)
+                break;
+            case 4:
+                console.log("retomar Contrato")
+                break;
+            case 5:
+                
+                break;
+            
+            default:
+                // código a ejecutar si la expresión no coincide con ninguno de los valores anteriores
+        }
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     const ListaEmpleados = ref(props.listaEmpleados);
 
@@ -406,8 +492,6 @@ th.rowNombre  {
     padding: 24px;
 }
 
-
-
 /**
  * Estilo para los iconos dentro de las acciones
  * Indica que los iconos son interactivos (clickeables)
@@ -416,4 +500,29 @@ th.rowNombre  {
     cursor: pointer; /* Cambia el cursor al pasar sobre el icono */
 }
 
+
+form h3 {
+    color: #1A245B;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 40px;
+    word-wrap: break-word;
+}
+
+form p {
+    color: black;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 36px;
+    text-align: justify;
+    
+}
+
+form p > span {
+    color: black;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 36px;
+    word-wrap: break-word;
+}
 </style>
