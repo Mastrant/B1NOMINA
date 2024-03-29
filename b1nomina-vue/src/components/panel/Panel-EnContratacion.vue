@@ -17,7 +17,7 @@
                     class="NoEncontrado" 
                     v-if="(ListaEmpleados.length < 1) ? true : false"
                 >
-                    No hay datos asociados a los filtros
+                    No hay datos asociados
                 </span>
     
                 <EnContratacion v-else 
@@ -42,6 +42,13 @@ import CicloCrearEmpleado from '@/components/elementos/Ciclo-Crear-Empleado.vue'
 
 import {ref, inject, watch, onMounted, toRef} from 'vue';
 import axios from 'axios';
+
+
+
+import { useStore } from 'vuex';
+
+const store = useStore();
+const userID = store.getters['perfil/getUserID'];
 
 const show = ref(true)
 

@@ -1,10 +1,14 @@
-const modulo =  {
+const perfilModulo =  {
+    namespaced: true,
     state() {
         return {
             UserID: null,
             SOCIEDAD_ID: null,
 
         }
+    },
+    getters: {
+        getUserID: (state) => state.UserID,
     },
     mutations: {
         asignarUserID(state, ID){
@@ -16,4 +20,4 @@ const modulo =  {
     },
 }
 
-export default modulo
+export default perfilModulo
