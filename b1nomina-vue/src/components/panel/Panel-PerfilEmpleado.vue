@@ -298,10 +298,38 @@
                             </template>
                         </LayoutTablaEMpleados>
                     </div>
-                    <div class="contenedorInfo" v-if="panelShow ==3">panel 3</div>
-                    <div class="contenedorInfo" v-if="panelShow ==4">panel 4</div>
+                    <div class="contenedorInfo" v-if="panelShow ==3">
+                        <LayoutEmpy>
+                            <template #imagen>
+                            
+                                <img src="@/components/icons/svg/Calculadora-icon.svg">    
+                                
+                            </template>
+                            <template #contenido>
+                                <h3 class="titulo">Eventos Recurrentes</h3>
+                                <span class="texto">
+                                    Acá puedes agregar asignaciones o retenciones recurrentes a pagos de tipos previsionales y no previsionales.
+                                </span>
+                                <TemplateButton2 text="Añadir Evento"/>
+                            </template>
+                        </LayoutEmpy>
+                    </div>
+                    <div class="contenedorInfo" v-if="panelShow ==4">
+                        <LayoutEmpy>
+                            <template #imagen>
+                                <img src="@/components/icons/svg/NotificationPerson-icon.svg">    
+                            </template>
+                            <template #contenido>
+                                <h3 class="titulo">No tienes solicitudes Pendientes</h3>
+                                <span class="texto">
+                                    Aquí podrás visualizar, aceptar y rechazar las solicitudes realizadas por tu empleado.
+                                </span>
+                                
+                            </template>
+                        </LayoutEmpy>    
+                    </div>
                 </template>
-            </LayoutForm>
+        </LayoutForm>
     </div>
 </template>
 
@@ -315,13 +343,14 @@ import NavButtonTemplate from '@/components/botones/Nav-button-templateForm.vue'
 import TemplateButton2 from '../botones/Template-button2.vue';
 import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
 import TemplateBlanckButton from '@/components/botones/Template-blank-button.vue';
+import LayoutEmpy from '@/components/Layouts/LayoutEmpy.vue'
 //iconos
 import DolarIcon from '@/components/icons/Dolar-icon-blanco.vue';
 import InfoIcon from '@/components/icons/Info-icon.vue';
 import SolIcon from '@/components/icons/Sol-icon.vue';
 import OjitoIcon from '@/components/icons/Ojito-icon.vue';
 import ExitColorIcon from '@/components/icons/Exit-color-icon.vue'
-import EdiIcon from '@/components/icons/Edit-icon.vue'
+import EdiIcon from '@/components/icons/Edit-icon.vue';
 
 import {ref} from 'vue';
 
@@ -355,5 +384,22 @@ div.cards {
 
 div.contenedorInfo {
     background: #fcfcfc;
+}
+
+h3.titulo {
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 34px;
+    text-align: left;
+    color: #1A2771;
+    margin: 0;
+}
+
+span.texto {
+    display: flex;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 26px;
+    text-align: justify;
 }
 </style>
