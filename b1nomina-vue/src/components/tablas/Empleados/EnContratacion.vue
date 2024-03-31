@@ -115,7 +115,7 @@
                         </template>
                         <template v-slot:formulario>
                             <div class="contenedorInfo" v-show="panelShow == 1">
-                                <form @submit.prevent="cargarContrato" id="FormSendContrato" >
+                                <form @submit.prevent="cargarContrato" id="CargarDescartarContrato" >
                                     <p>Recoge firmas de contratos cómo de una forma rápida y segura, cargando aquí tus documentos y permitiendo que las personas firmen desde su correo electrónico. </p>
                                     <h3>Cargar contrato</h3>
                                     <InputDocsForm2
@@ -127,7 +127,7 @@
                                 </form>
                             </div>
                             <div class="contenedorInfo"  v-show="panelShow == 2">
-                                <form @submit.prevent="descartarContrato" id="Descartar">
+                                <form @submit.prevent="descartarContrato" id="CargarDescartarContrato">
                                     <p>
                                         Descarta esta acción si no quieres realizar el proceso de <span> Enviar Firma Electrónica del Contrato </span> al prospecto. Una acción descartada cuenta como un proceso "Completado".   
                                     </p>                                    
@@ -238,8 +238,6 @@
         } 
     }
 
-    
-
     /**
      * Se ejecuta desde los botones de la tabla de Encontratacion
      * Controla los modales y los formularios activos
@@ -275,14 +273,15 @@
                 break;
             case 3:
                 console.log("cargar Contrato")
-
+                panelShow.value = 1;
                 formActivo.value = 3;
+                EmpleadoID_Selecionado.value = item_ID;
                 TextoButton.value = 'Guardar Documento';
                 TituloModal.value = 'Firma del contrato';
-                IDFormModal.value = 'sendCV';
-                InputContrato.value?.reset();
-                panelShow.value = 1
-                TextoButton.value = "Guardar Documento"
+                IDFormModal.value = 'CargarDescartarContrato';
+                Contrato.value = '';
+                InputContrato.value?.reset();                
+
                 showModal(IdModal)
                 break;
             case 4:
@@ -389,8 +388,32 @@ const actualizarValorContrato = (Datos) => {
         CV.value = ''
     }
 
+    const cargarContrato = async () => {
+        const formData = new FormData();
+        formData.append('File', Contrato.value); // Asume que 'Datos' es un objeto File
+        if(Contrato.value != undefined && CV.value != '') {
+            //logica para cargar CV con axios
+            console.log("subir CV " + EmpleadoID_Selecionado.value)
+        } else {
+            checkfile.value = {'texto':'El campo esta vacio', 'valor':false};
+        }
+    }
 
+    const descartarContrato = async () => {
+        console.log("decartar" + EmpleadoID_Selecionado.value)
+    }
 
+    const retomarContrato = () => {
+        console.log("retomar Contrato")
+
+        formActivo.value = 3;
+        panelShow.value = 1;
+        TextoButton.value = 'Guardar Documento';
+        TituloModal.value = 'Cargar Curriculum Vitae / Hoja de vida';
+        IDFormModal.value = 'CargarDescartarContrato';
+        InputContrato.value?.reset();
+        Contrato.value = '';
+    }
 
 
 
@@ -469,8 +492,9 @@ const actualizarValorContrato = (Datos) => {
 
 <style scoped>
 /* Estilos generales para la tabla de empleados */
-.TablaEmpleados {
+.TablaEncontratacion {
     width: 100%; /* Asegura que la tabla ocupe el ancho completo del contenedor */
+    box-sizing: border-box;
 }
 
 /**
