@@ -103,7 +103,7 @@
                 <div v-if=" formActivo == 2"> <!--retomar Curriculum-->                    
                     <div class="contenedorInfo" v-show="panelShow == 1">
                         <form @submit.prevent="retomarCV" id="retomarCV" >
-                            <p>En caso de que desees retomar el proceso de  <span> cargar el contrato </span>a este prospecto, da clic enretomar acción. </p>                            
+                            <p>En caso de que desees retomar el proceso de  <span> cargar  </span>a este prospecto, da clic enretomar acción. </p>                            
                         </form>
                     </div>
                 </div>
@@ -139,7 +139,7 @@
                 <div v-if=" formActivo == 4"> <!--retomar contrato-->                    
                     <div class="contenedorInfo" v-show="panelShow == 1">
                         <form @submit.prevent="retomarContrato" id="retomarContrato" >
-                            <p>En caso de que desees retomar el proceso de firma electrónica del contrato <span> a este prospecto, da clic en</span>retomar acción. </p>                            
+                            <p>En caso de que desees retomar el proceso de  <span> cargar el contrato </span>a este prospecto, da clic enretomar acción. </p>                          
                         </form>
                     </div>
                 </div>
@@ -286,6 +286,13 @@
                 break;
             case 4:
                 console.log("retomar Contrato")
+
+                formActivo.value = 4;
+                EmpleadoID_Selecionado.value = item_ID;
+                TituloModal.value = 'Esta acción ha sido descartada';
+                TextoButton.value = 'Retomar Acción';
+                IDFormModal.value = 'retomarContrato';
+                showModal(IdModal)
                 break;
             case 5:
                 
