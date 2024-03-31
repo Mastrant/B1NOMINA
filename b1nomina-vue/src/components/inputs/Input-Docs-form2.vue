@@ -35,7 +35,6 @@
 /* 
 Uso:
     <InputFile 
-        v-model="documento" Captura del valor del documento
         @actualizarDocumento="manejarActualizacion" Maneja la actualización del documento
         @respuesta="manejarRespuesta" Maneja la respuesta del componente
     />
@@ -65,12 +64,7 @@ const reset = () => {
     if (inputFile) {
         inputFile.value = '';
     }
-}
-
-const deleteDocumento = () => {
-    Documento.value = '';
-    DocumentName.value = '';
-    emit('actualizarDocumento', Documento.value)
+    emit('actualizarDocumento', Documento);
 }
 
 defineExpose({
@@ -87,7 +81,7 @@ const ingresarDocs = (evento) => {
     // Define las extensiones de archivo válidas para la imagen
     const ExtencionesValidas = [
         'application/pdf',
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ];
     
     const DocumentoIngresado = evento.target.files[0]

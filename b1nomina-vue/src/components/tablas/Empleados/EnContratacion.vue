@@ -44,16 +44,16 @@
                     <CorrectButton />
                 </template>
                 <template v-slot:Completado>
-                    <EBarraProgresoVue class="icon" porcentaje="15" @click="() => console.log('selecionado')" />
+                    <EBarraProgresoVue class="icon" porcentaje="15"/>
                 </template>
                 <template v-slot:accionButton>
                     <CiculoCorrectIcon 
-                        @click="() => console.log(item.id)"
+                        @click="ActionButton(2,1,item.id)"
                         class="icon" 
                         style="stroke: #1A245B"
                     />
                     <ExitColorIcon
-                        @click="() => console.log(item.id)" 
+                        @click="ActionButton(2,2,item.id)" 
                         class="icon" 
                         style="stroke: #1A245B" 
                     />
@@ -79,15 +79,19 @@
                             <NavButtonTemplate text="Descartar esta acción" :seleccionado="panelShow== 2" @click="showInfo(2)" />  
                         </template>
                         <template v-slot:formulario>
-                            <div class="contenedorInfo" v-show="panelShow == 1">
-                                <form @submit.prevent="cargarCV" id="sendCV" >
+                            <div class="contenedorInfo" v-if="panelShow == 1">
+                                <form @submit.prevent="cargarCV" id="CargarDescartarCV" >
                                     <p>En esta sección puedes cargar el Curriculum Vitae del prospecto y tener un soporte anexado al perfil del mismo. </p>
                                     <h3>Cargar Curriculum Vitae</h3>
-                                    <InputDocsForm2 ref="InputDoc"  @respuesta="checkFile"/>
+                                    <InputDocsForm2
+                                        @respuesta="checkFile"
+                                        @actualizarDocumento="actualizarValorCV"
+                                        ref="InputCV"
+                                    />
                                 </form>
                             </div>
-                            <div class="contenedorInfo"  v-show="panelShow == 2">
-                                <form @submit.prevent="descartarCV" id="Descartar">
+                            <div class="contenedorInfo"  v-if="panelShow == 2">
+                                <form @submit.prevent="descartarCV" id="CargarDescartarCV">
                                     <p>
                                         Descarta esta acción si no quieres realizar el proceso de <span> Cargar Curriculum Vitae</span> al prospecto. Una acción descartada cuenta como un proceso "Completado".
                                     </p>
@@ -114,7 +118,11 @@
                                 <form @submit.prevent="cargarContrato" id="FormSendContrato" >
                                     <p>Recoge firmas de contratos cómo de una forma rápida y segura, cargando aquí tus documentos y permitiendo que las personas firmen desde su correo electrónico. </p>
                                     <h3>Cargar contrato</h3>
-                                    <InputDocsForm2 ref="InputDoc"  @respuesta="checkFile"/>
+                                    <InputDocsForm2
+                                        @respuesta="checkFile"
+                                        @actualizarDocumento="actualizarValorContrato"
+                                        ref="InputContrato"
+                                    />
                                     <h3>Quiénes firman este documento</h3>
                                 </form>
                             </div>
@@ -176,7 +184,9 @@
     import NavButtonTemplate from '@/components/botones/Nav-button-templateForm.vue';
     import InputDocsForm2 from '@/components/inputs/Input-Docs-form2.vue';
     import CorrectButton from '@/components/botones/Correct-button.vue';
-    import { ref, defineProps, watchEffect, onMounted, defineEmits} from 'vue';    
+    import { ref, defineProps, watchEffect, onMounted, defineEmits} from 'vue';
+    import almacen from '@/store/almacen.js'
+    import axios from 'axios';
 
     // Define los props
     const props = defineProps({
@@ -186,15 +196,19 @@
     }
     });
 
-    const emit = defineEmits([
-        'ActualizarData'
-    ]);
-    const InputDoc = ref(null);
+    //almacen de los inputs
+    const Contrato = ref('');
+    const CV = ref({});
+    const idCreator = almacen.userID;
 
-    const checkfile = ref({})
-    const checkFile = (respuesta) => {
-        checkfile.value = respuesta
-    };
+    const emit = defineEmits([
+        'ActualizarData',
+    ]);
+    //referencia de los inputs
+    const InputCV = ref(null);
+    const InputContrato = ref(null);
+
+    
 
     /////////// programacion de los modales de activacion ///////////////
     const activarModal = ref(false)
@@ -209,7 +223,7 @@
     * Controla el despliegue del modal
     * @param mostrarModal
     */
-    const showModal = (Id_modal, idEmpleado) => {
+    const showModal = (Id_modal) => {
         activarModal.value = !activarModal.value;
         modalActivo.value = Id_modal;
     };
@@ -224,65 +238,28 @@
         } 
     }
 
-    const cargarCV = async () => {
-        const formData = new FormData();
-        formData.append('File', Datos); // Asume que 'Datos' es un objeto File
-        if(Datos != '') {
-            await axios.post(`/user/bulk_load_users?sociedadId=${idCreator}&creatorUserId=${idCreator}`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-            })
-            .then(
-            // Maneja la respuesta exitosa.
-            res => {
-                // Verifica si la respuesta tiene un estado HTTP 200 (OK).
-                if (res.status == 200 || res.status == 201 ){
-                // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
-                emit("respuesta", {'texto':res.data?.message, 'valor':true})   
-                
-                let archivo = res.data?.fileResult
-                if(res.data?.fileResult){
-                    //abre una ventana para descargar un recurso dado por el servidor
-                    window.open('http://' + BaseURL.hostname + '/' + archivo, "_blank", "width=500,height=500");
-                }
+    
 
-                }
-            }
-            )
-            .catch(
-            // Maneja los errores de la solicitud.
-            err => {
-                // Verifica si la respuesta del error contiene un objeto de respuesta.
-                if (err.response) { 
-                // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
-                emit("respuesta", {'texto':err.response.data?.message, 'valor':false})            
-                }
-            }
-            );
-        } else {
-            emit("respuesta", {'texto':'El campo esta vacio', 'valor':false})
-        }
-    }
     /**
-     * 
+     * Se ejecuta desde los botones de la tabla de Encontratacion
+     * Controla los modales y los formularios activos
      * @param {Number} IdModal Modal a mostrar
      * @param {Number} TipoAccion cargarCV > 1, retomarCV > 2, CargarContrato > 3,  retomarContrato > 4,
      * @param {*}  item_ID 
      */
     const ActionButton = (IdModal = 0, TipoAccion = 0, item_ID = 0) => {
-        switch (TipoAccion) {
-            case 1:
-                console.log("cargar CV")
-                
+        if (IdModal == 1){
+            switch (TipoAccion) {
+            case 1:                
                 formActivo.value = 1;
+                panelShow.value = 1;
+                EmpleadoID_Selecionado.value = item_ID;
                 TextoButton.value = 'Guardar Documento';
                 TituloModal.value = 'Cargar Curriculum Vitae / Hoja de vida';
-                IDFormModal.value = 'sendCV';
-                InputDoc.value?.reset();
-                panelShow.value = 1
-                TextoButton.value = "Guardar Documento"
-                
+                IDFormModal.value = 'CargarDescartarCV';
+                InputCV.value?.reset();
+                CV.value = ''
+
                 showModal(IdModal)
                 break;
             case 2:
@@ -295,7 +272,7 @@
                 TextoButton.value = 'Guardar Documento';
                 TituloModal.value = 'Firma del contrato';
                 IDFormModal.value = 'sendCV';
-                InputDoc.value?.reset();
+                InputContrato.value?.reset();
                 panelShow.value = 1
                 TextoButton.value = "Guardar Documento"
                 showModal(IdModal)
@@ -305,17 +282,92 @@
                 break;
             case 5:
                 
-                break;
-            
+                break;        
             default:
                 // código a ejecutar si la expresión no coincide con ninguno de los valores anteriores
+            }
         }
+        
     };
 
+    const checkfile = ref({})
+    /**
+     * Cambia el valor de lanotificacion del modal
+     * @param {Objeto} respuesta Recive el diccionario necesario para mostrar la notificacion del modal
+    */
+    const checkFile = (respuesta) => {
+        checkfile.value = respuesta
+    };
 
+    /**
+ * Actualiza el valor del CV con los datos proporcionados.
+ * 
+ * @param {File} Datos - Objeto File que contiene los datos del CV.
+ * @example
+ * const datosCV = new File([""], "cv.pdf", { type: "application/pdf" });
+ * actualizarValorCV(datosCV);
+ */
+const actualizarValorCV = (Datos) => {
+    CV.value = Datos.value;
+}
 
+/**
+ * Actualiza el valor del contrato con los datos proporcionados.
+ * 
+ * @param {File} Datos - Objeto File que contiene los datos del contrato.
+ * @example
+ * const datosContrato = new File([""], "contrato.pdf", { type: "application/pdf" });
+ * actualizarValorContrato(datosContrato);
+ */
+const actualizarValorContrato = (Datos) => {
+    CV.value = Datos.value;
+}
 
+    const cargarCV = async () => {
+        const formData = new FormData();
+        formData.append('File', CV.value); // Asume que 'Datos' es un objeto File
+        if(CV.value != undefined && CV.value != '') {
+            //logica para cargar CV con axios
+            console.log("subir CV " + EmpleadoID_Selecionado.value)
+        } else {
+            checkfile.value = {'texto':'El campo esta vacio', 'valor':false};
+        }
+        /*
+        if(CV.value != {}) {
+            await axios.post(`/user/bulk_load_users?sociedadId=${idCreator}&creatorUserId=${idCreator}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+            .then(
+            // Maneja la respuesta exitosa.
+            res => {
+                // Verifica si la respuesta tiene un estado HTTP 200 (OK).
+                if (res.status == 200 || res.status == 201 ){
+                    // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
+                    console.log(res)   
+                }
+            }
+            )
+            .catch(
+            // Maneja los errores de la solicitud.
+            err => {
+                // Verifica si la respuesta del error contiene un objeto de respuesta.
+                if (err.response) { 
+                    // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
+                    console.log(err)           
+                }
+            }
+            );
+        } else {
+            emit("respuesta", {'texto':'El campo esta vacio', 'valor':false})
+        }
+        */
+    }
 
+    const descartarCV = async () => {
+        console.log("decartar" + EmpleadoID_Selecionado.value)
+    }
 
 
 

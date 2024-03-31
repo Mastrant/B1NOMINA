@@ -51,8 +51,7 @@ const emit = defineEmits([
 
 
 const reset = () => {
-    Documento.value = '';
-    DocumentName.value = ''
+    deleteDocumento
 }
 
 const deleteDocumento = () => {
