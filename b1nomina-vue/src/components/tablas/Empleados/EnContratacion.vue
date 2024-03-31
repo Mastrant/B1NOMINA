@@ -239,12 +239,20 @@
     }
 
     /**
-     * Se ejecuta desde los botones de la tabla de Encontratacion
-     * Controla los modales y los formularios activos
-     * @param {Number} IdModal Modal a mostrar
-     * @param {Number} TipoAccion cargarCV > 1, retomarCV > 2, CargarContrato > 3,  retomarContrato > 4,
-     * @param {*}  item_ID 
-     */
+ * Ejecuta acciones específicas basadas en los botones de la tabla de Encontratación.
+ * Controla la visualización de modales y la activación de formularios.
+ * 
+ * @param {number} IdModal - Identificador del modal a mostrar.
+ * @param {number} TipoAccion - Tipo de acción a realizar:
+ *                             1: Cargar CV,
+ *                             2: Retomar CV,
+ *                             3: Cargar Contrato,
+ *                             4: Retomar Contrato.
+ * @param {number} item_ID - ID del elemento seleccionado.
+ * 
+ * @example
+ * ActionButton(1, 1, 123); // Muestra el modal para cargar CV con el ID 123.
+ */
     const ActionButton = (IdModal = 0, TipoAccion = 0, item_ID = 0) => {
         if (IdModal == 1){
             switch (TipoAccion) {
