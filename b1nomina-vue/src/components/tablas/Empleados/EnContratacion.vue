@@ -103,7 +103,7 @@
                 <div v-if=" formActivo == 2"> <!--retomar Curriculum-->                    
                     <div class="contenedorInfo" v-show="panelShow == 1">
                         <form @submit.prevent="retomarCV" id="retomarCV" >
-                            <p>En caso de que desees retomar el proceso de firma electrónica del contrato <span>a este prospecto, da clic en</span>retomar acción. </p>                            
+                            <p>En caso de que desees retomar el proceso de  <span> cargar el contrato </span>a este prospecto, da clic enretomar acción. </p>                            
                         </form>
                     </div>
                 </div>
@@ -264,6 +264,14 @@
                 break;
             case 2:
                 console.log("cargar retomarCV")
+                
+                formActivo.value = 2;
+                EmpleadoID_Selecionado.value = item_ID;
+                TituloModal.value = 'Esta acción ha sido descartada';
+                TextoButton.value = 'Retomar Acción';
+                IDFormModal.value = 'retomarCV';
+                showModal(IdModal)
+
                 break;
             case 3:
                 console.log("cargar Contrato")
@@ -369,6 +377,17 @@ const actualizarValorContrato = (Datos) => {
         console.log("decartar" + EmpleadoID_Selecionado.value)
     }
 
+    const retomarCV = () => {
+        console.log("retomar CV")
+
+        formActivo.value = 1;
+        panelShow.value = 1;
+        TextoButton.value = 'Guardar Documento';
+        TituloModal.value = 'Cargar Curriculum Vitae / Hoja de vida';
+        IDFormModal.value = 'CargarDescartarCV';
+        InputCV.value?.reset();
+        CV.value = ''
+    }
 
 
 
