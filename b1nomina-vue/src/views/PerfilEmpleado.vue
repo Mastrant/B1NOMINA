@@ -16,6 +16,8 @@
 import Headervue from '@/components/Header.vue';
 import LayoutPanel from '@/components/Layouts/LayoutPanel.vue';
 import PanelPerfilEmpleado from '@/components/panel/Panel-PerfilEmpleado.vue';
-import axios from 'axios';
+
+
+
 
 </script>

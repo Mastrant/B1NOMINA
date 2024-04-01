@@ -23,6 +23,7 @@
                 <EnContratacion v-else 
                     :listaEmpleados="ListaEmpleados"
                     @ActualizarData="actualizarEmpleados"
+                    @showNotificacion="showNotificacionShort"
                 />
                 
                 <AlertShort
@@ -34,27 +35,32 @@
 </template>
 
 <script setup>
-import AddUserEnContratacion from '@/components/elementos/Add-User-enContratacion.vue';
-import EnContratacion from '@/components/tablas/Empleados/EnContratacion.vue';
-import InputShearch from '@/components/inputs/Input-shearch.vue';
-import AlertShort from '@/components/alertas/Alert-short-template.vue';
-import CicloCrearEmpleado from '@/components/elementos/Ciclo-Crear-Empleado.vue';
+    import AddUserEnContratacion from '@/components/elementos/Add-User-enContratacion.vue';
+    import EnContratacion from '@/components/tablas/Empleados/EnContratacion.vue';
+    import InputShearch from '@/components/inputs/Input-shearch.vue';
+    import AlertShort from '@/components/alertas/Alert-short-template.vue';
+    import CicloCrearEmpleado from '@/components/elementos/Ciclo-Crear-Empleado.vue';
 
-import {ref, inject, watch, onMounted, toRef} from 'vue';
-import axios from 'axios';
+    import {ref, inject, watch, onMounted, toRef} from 'vue';
+    import axios from 'axios';
 
-const show = ref(true)
+    const show = ref(true)
 
-// Inyectar el valor proporcionado por la url
-const idSociedad = inject('IDsociedad');
+    const notificacionStatus = ref(null)
+    const showNotificacionShort = (Info) => {
+        notificacionStatus?.value.ActivarNotificacion(Info);
+    }
 
-const shearch = ref('');
+    // Inyectar el valor proporcionado por la url
+    const idSociedad = inject('IDsociedad');
 
-const ListaEmpleados = toRef([]);
+    const shearch = ref('');
 
-watch(shearch, (valor) => filtrar(valor));
+    const ListaEmpleados = toRef([]);
 
-/**
+    watch(shearch, (valor) => filtrar(valor));
+
+    /**
     * Solicita a la API los datos de los empleados y los almacena en el componente ListaTemplate como props.
     *
     * @async
@@ -88,7 +94,7 @@ watch(shearch, (valor) => filtrar(valor));
         await axios.get(`/sociedad/${idSociedad}/list_no_empleados`)
         .then(
             (res) => {
-                ListaEmpleados.value = res.data; //almacena los datos devueltos por la api
+                ListaEmpleados.value = res?.data; //almacena los datos devueltos por la api
             }
         )
         .catch(
@@ -100,10 +106,11 @@ watch(shearch, (valor) => filtrar(valor));
 
     // Arreglo que contiene el arreglo original
     let listaEmpleadosOriginal = null;
-/**
+
+    /**
      * aplica un filtro segun el texto ingresado
      * @param {String} text - entrada del texto del usuario
-    
+
     */
     const filtrar = (text) => {
     // Si la lista original no está establecida, guarda la lista actual como la original
@@ -131,10 +138,12 @@ watch(shearch, (valor) => filtrar(valor));
         ListaEmpleados.value = filtrado;
     };
 
-// al montar el componente ejecuta las funciones
-onMounted(async () => {
-   await pedirEmpleados(); //solicita los empleados
-});
+    // al montar el componente ejecuta las funciones
+    onMounted(
+        async () => {
+            await pedirEmpleados(); //solicita los empleados
+        }
+    );
 </script>
 
 <style scoped>

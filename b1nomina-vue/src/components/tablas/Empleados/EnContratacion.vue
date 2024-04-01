@@ -114,7 +114,7 @@
                             <NavButtonTemplate text="Descartar esta acción" :seleccionado="panelShow== 2" @click="showInfo(2)" />  
                         </template>
                         <template v-slot:formulario>
-                            <div class="contenedorInfo" v-show="panelShow == 1">
+                            <div class="contenedorInfo" v-if="panelShow == 1">
                                 <form @submit.prevent="cargarContrato" id="CargarDescartarContrato" >
                                     <p>Recoge firmas de contratos cómo de una forma rápida y segura, cargando aquí tus documentos y permitiendo que las personas firmen desde su correo electrónico. </p>
                                     <h3>Cargar contrato</h3>
@@ -126,7 +126,7 @@
                                     <h3>Quiénes firman este documento</h3>
                                 </form>
                             </div>
-                            <div class="contenedorInfo"  v-show="panelShow == 2">
+                            <div class="contenedorInfo"  v-if="panelShow == 2">
                                 <form @submit.prevent="descartarContrato" id="CargarDescartarContrato">
                                     <p>
                                         Descarta esta acción si no quieres realizar el proceso de <span> Enviar Firma Electrónica del Contrato </span> al prospecto. Una acción descartada cuenta como un proceso "Completado".   
@@ -145,6 +145,8 @@
                 </div>
             </template>
         </TemplateModal>
+
+        
 
         <div class="conted-pagination">
             <!--Espacio para paginacion-->
@@ -184,7 +186,9 @@
     import NavButtonTemplate from '@/components/botones/Nav-button-templateForm.vue';
     import InputDocsForm2 from '@/components/inputs/Input-Docs-form2.vue';
     import CorrectButton from '@/components/botones/Correct-button.vue';
+
     import { ref, defineProps, watchEffect, onMounted, defineEmits} from 'vue';
+
     import almacen from '@/store/almacen.js'
     import axios from 'axios';
 
@@ -196,19 +200,20 @@
     }
     });
 
-    //almacen de los inputs
-    const Contrato = ref('');
-    const CV = ref({});
-    const idCreator = almacen.userID;
-
     const emit = defineEmits([
         'ActualizarData',
+        'showNotificacion',
     ]);
+
+    const idCreator = almacen.userID;
+
+
+    //almacen de los inputs
+    const Contrato = ref('');
+    const CV = ref('');
     //referencia de los inputs
     const InputCV = ref(null);
     const InputContrato = ref(null);
-
-    
 
     /////////// programacion de los modales de activacion ///////////////
     const activarModal = ref(false)
@@ -223,7 +228,7 @@
     * Controla el despliegue del modal
     * @param mostrarModal
     */
-    const showModal = (Id_modal) => {
+    const showModal = (Id_modal = 0) => {
         activarModal.value = !activarModal.value;
         modalActivo.value = Id_modal;
     };
@@ -239,20 +244,20 @@
     }
 
     /**
- * Ejecuta acciones específicas basadas en los botones de la tabla de Encontratación.
- * Controla la visualización de modales y la activación de formularios.
- * 
- * @param {number} IdModal - Identificador del modal a mostrar.
- * @param {number} TipoAccion - Tipo de acción a realizar:
- *                             1: Cargar CV,
- *                             2: Retomar CV,
- *                             3: Cargar Contrato,
- *                             4: Retomar Contrato.
- * @param {number} item_ID - ID del elemento seleccionado.
- * 
- * @example
- * ActionButton(1, 1, 123); // Muestra el modal para cargar CV con el ID 123.
- */
+     * Ejecuta acciones específicas basadas en los botones de la tabla de Encontratación.
+     * Controla la visualización de modales y la activación de formularios.
+     * 
+     * @param {number} IdModal - Identificador del modal a mostrar.
+     * @param {number} TipoAccion - Tipo de acción a realizar:
+     *                             1: Cargar CV,
+     *                             2: Retomar CV,
+     *                             3: Cargar Contrato,
+     *                             4: Retomar Contrato.
+     * @param {number} item_ID - ID del elemento seleccionado.
+     * 
+     * @example
+     * ActionButton(1, 1, 123); // Muestra el modal para cargar CV con el ID 123.
+     */
     const ActionButton = (IdModal = 0, TipoAccion = 0, item_ID = 0) => {
         if (IdModal == 1){
             switch (TipoAccion) {
@@ -269,8 +274,7 @@
                 showModal(IdModal)
                 break;
             case 2:
-                console.log("cargar retomarCV")
-                
+            
                 formActivo.value = 2;
                 EmpleadoID_Selecionado.value = item_ID;
                 TituloModal.value = 'Esta acción ha sido descartada';
@@ -280,7 +284,6 @@
 
                 break;
             case 3:
-                console.log("cargar Contrato")
                 panelShow.value = 1;
                 formActivo.value = 3;
                 EmpleadoID_Selecionado.value = item_ID;
@@ -293,8 +296,6 @@
                 showModal(IdModal)
                 break;
             case 4:
-                console.log("retomar Contrato")
-
                 formActivo.value = 4;
                 EmpleadoID_Selecionado.value = item_ID;
                 TituloModal.value = 'Esta acción ha sido descartada';
@@ -302,11 +303,32 @@
                 IDFormModal.value = 'retomarContrato';
                 showModal(IdModal)
                 break;
-            case 5:
                 
                 break;        
             default:
                 // código a ejecutar si la expresión no coincide con ninguno de los valores anteriores
+            }
+        } else if(IdModal == 2) {
+            switch (TipoAccion) {
+            case 1:                
+                formActivo.value = 1;
+                EmpleadoID_Selecionado.value = item_ID;
+                TituloModal.value = '¿Estás seguro que deseas activar el prospecto?';
+                TextoButton.value = 'Si, activar';                
+                IDFormModal.value = 'AceptarProspecto';
+
+                showModal(IdModal)
+                break;
+            case 2:
+            
+                formActivo.value = 1;
+                EmpleadoID_Selecionado.value = item_ID;
+                TituloModal.value = '¿Estás seguro que deseas descartar el prospecto?';
+                TextoButton.value = 'Si, Descartar';                
+                IDFormModal.value = 'DescartarProspecto';
+
+                showModal(IdModal)
+                break;
             }
         }
         
@@ -322,28 +344,28 @@
     };
 
     /**
- * Actualiza el valor del CV con los datos proporcionados.
- * 
- * @param {File} Datos - Objeto File que contiene los datos del CV.
- * @example
- * const datosCV = new File([""], "cv.pdf", { type: "application/pdf" });
- * actualizarValorCV(datosCV);
- */
-const actualizarValorCV = (Datos) => {
-    CV.value = Datos.value;
-}
+     * Actualiza el valor del CV con los datos proporcionados.
+     * 
+     * @param {File} Datos - Objeto File que contiene los datos del CV.
+     * @example
+     * const datosCV = new File([""], "cv.pdf", { type: "application/pdf" });
+     * actualizarValorCV(datosCV);
+     */
+    const actualizarValorCV = (Datos) => {
+        CV.value = Datos.value;
+    }
 
-/**
- * Actualiza el valor del contrato con los datos proporcionados.
- * 
- * @param {File} Datos - Objeto File que contiene los datos del contrato.
- * @example
- * const datosContrato = new File([""], "contrato.pdf", { type: "application/pdf" });
- * actualizarValorContrato(datosContrato);
- */
-const actualizarValorContrato = (Datos) => {
-    CV.value = Datos.value;
-}
+    /**
+     * Actualiza el valor del contrato con los datos proporcionados.
+     * 
+     * @param {File} Datos - Objeto File que contiene los datos del contrato.
+     * @example
+     * const datosContrato = new File([""], "contrato.pdf", { type: "application/pdf" });
+     * actualizarValorContrato(datosContrato);
+     */
+    const actualizarValorContrato = (Datos) => {
+        CV.value = Datos.value;
+    }
 
     const cargarCV = async () => {
         const formData = new FormData();
@@ -351,6 +373,12 @@ const actualizarValorContrato = (Datos) => {
         if(CV.value != undefined && CV.value != '') {
             //logica para cargar CV con axios
             console.log("subir CV " + EmpleadoID_Selecionado.value)
+            showModal(0)
+            emit('showNotificacion', 
+                {'Titulo': "¡Listo curriculum vitae cargado con exito!", 
+                'Descripcion': "El documento fue cargado de forma exitosa, podaras acceder a el desde la sección de Perfil del Empleado."
+                }
+            )
         } else {
             checkfile.value = {'texto':'El campo esta vacio', 'valor':false};
         }
@@ -388,7 +416,9 @@ const actualizarValorContrato = (Datos) => {
     }
 
     const descartarCV = async () => {
-        console.log("decartar" + EmpleadoID_Selecionado.value)
+        console.log("decartar" + EmpleadoID_Selecionado.value);
+        showModal(0);
+        emit('showNotificacion', {'Titulo': "Accion Descartada", 'Descripcion': "esta es la descripcion de la cartica"});
     }
 
     const retomarCV = () => {
@@ -409,13 +439,22 @@ const actualizarValorContrato = (Datos) => {
         if(Contrato.value != undefined && CV.value != '') {
             //logica para cargar CV con axios
             console.log("subir CV " + EmpleadoID_Selecionado.value)
+            showModal(0)
+            emit('showNotificacion', 
+                {'Titulo': "¡Listo contrato cargado! ", 
+                 'Descripcion': "Los documentos fueron cargados en el sistema de forma exitosa."
+                }
+            )
         } else {
             checkfile.value = {'texto':'El campo esta vacio', 'valor':false};
         }
     }
 
     const descartarContrato = async () => {
-        console.log("decartar" + EmpleadoID_Selecionado.value)
+        console.log("decartar" + EmpleadoID_Selecionado.value);
+        showModal(0);
+        emit('showNotificacion', {'Titulo': "Accion Descartada", 'Descripcion': "esta es la descripcion de la cartica"});
+        emit('ActualizarData')
     }
 
     const retomarContrato = () => {
@@ -429,11 +468,6 @@ const actualizarValorContrato = (Datos) => {
         InputContrato.value?.reset();
         Contrato.value = '';
     }
-
-
-
-
-
 
 
 

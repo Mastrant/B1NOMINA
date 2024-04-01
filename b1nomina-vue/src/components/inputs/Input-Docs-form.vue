@@ -14,7 +14,10 @@
                 type="file"
                 @change="ingresarDocs"
             >
-            <label for="input-docs">Selecionar Archivo</label>
+            <label for="input-docs">                
+                Selecionar Archivo
+                <UpLoadIcon />
+            </label>
         </div>
 
         <div v-else class="show-file">
@@ -35,7 +38,7 @@
 
 import UpLoadIcon from '@/components/icons/UpLoad-icon.vue';
 import trashIcon from '../icons/trash-icon.vue';
-import DonwloadIcon from '../icons/Donwload-icon.vue';
+
 // Importa las funciones ref y defineEmits de Vue
 import { ref, defineEmits, defineExpose} from 'vue';
 
@@ -51,12 +54,17 @@ const emit = defineEmits([
 
 
 const reset = () => {
-    deleteDocumento
+
+    deleteDocumento()
 }
 
 const deleteDocumento = () => {
     Documento.value = '';
     DocumentName.value = '';
+    const inputFile = document.getElementById('input-docs');
+    if (inputFile) {
+        inputFile.value = '';
+    }
     emit('actualizarDocumento', Documento.value)
 }
 
@@ -170,6 +178,7 @@ label {
     border: 0.96px #1A2771 solid; /* Borde sólido de 0.96px de ancho y color #1A2771 */
     justify-content: center; /* Alinea los elementos horizontalmente al centro */
     align-items: center; /* Alinea los elementos verticalmente al centro */
+    align-self: center;
     gap: 7.69px; /* Espaciado entre los elementos */
     display: flex; /* Utiliza Flexbox para organizar los elementos */
     justify-content: space-between; /* Distribuye el espacio entre los elementos */

@@ -4,10 +4,14 @@
             Descarga el formato de Excel que te ayudará a ingresar la información de tus empleados y luego cargarlo en nuestro sistema.
         </p>
         <div class="row-form">
-            <TemplateButton2 
-                text="Descargar formato Excel" 
-                @click="descargarPlantilla" 
-            />  
+          <TemplateButton2 
+            text="Descargar formato Excel" 
+            @click="descargarPlantilla" 
+          >
+            <template #post>
+              <DonwloadIconVue />
+            </template>            
+          </TemplateButton2>  
 
         </div>
 
@@ -28,11 +32,11 @@
 </template>
 
 <script setup>
+import DonwloadIconVue from '@/components/icons/Donwload-icon.vue';
 import TemplateButton2 from '@/components/botones/Template-button2.vue'
 import InputDocsForm from '@/components/inputs/Input-Docs-form.vue';
 import { defineEmits, ref, defineExpose} from 'vue';
 import axios from 'axios'
-
 import { useRoute } from 'vue-router';
 
     const route = useRoute();
@@ -61,7 +65,10 @@ defineExpose({
 
 const checkFile = (respuesta) => emit("respuesta", respuesta);
 
-const tomarData = (datosDelDocumento) => DataDocumento.value = datosDelDocumento.value;
+const tomarData = (datosDelDocumento) => {
+  console.log("tomar data")
+  DataDocumento.value = datosDelDocumento.value;
+}
 
 
 const EnviarDoc = () => {

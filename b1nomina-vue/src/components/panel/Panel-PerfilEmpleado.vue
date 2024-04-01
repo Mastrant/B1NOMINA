@@ -168,9 +168,7 @@
                             </template>
                             <template #text-20>                                                                    
                                 <InterruptorButton />
-                            </template>
-
-                            
+                            </template>                            
 
                         </LayoutTablaEMpleados>
                     </div>
@@ -300,10 +298,8 @@
                     </div>
                     <div class="contenedorInfo" v-if="panelShow ==3">
                         <LayoutEmpy>
-                            <template #imagen>
-                            
-                                <img src="@/components/icons/svg/Calculadora-icon.svg">    
-                                
+                            <template #imagen>                           
+                                <img src="@/components/icons/svg/Calculadora-icon.svg">                                    
                             </template>
                             <template #contenido>
                                 <h3 class="titulo">Eventos Recurrentes</h3>
@@ -352,7 +348,12 @@ import OjitoIcon from '@/components/icons/Ojito-icon.vue';
 import ExitColorIcon from '@/components/icons/Exit-color-icon.vue'
 import EdiIcon from '@/components/icons/Edit-icon.vue';
 
-import {ref} from 'vue';
+import {ref, defineProps} from 'vue';
+const props = defineProps({
+    DatosUsuario: {
+        default: {}
+    }
+})
 
 const panelShow = ref(1)
 const showInfo = (id) => {
