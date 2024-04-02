@@ -46,7 +46,7 @@ const Enviar = async () => {
             emit('notificacion', {'texto':err?.response.data?.message, 'valor':false})
         }
     )
-}
+};
 
 </script>
 

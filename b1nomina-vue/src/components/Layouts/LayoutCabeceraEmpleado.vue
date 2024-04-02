@@ -4,10 +4,10 @@
         <!-- Sección para la foto del empleado -->
         <div class="foto-empleado">
             <!-- Slot para insertar contenido personalizado para la imagen del empleado -->
-            <slot name="Imagen">
-                
-            </slot>
-            
+            <div class="contend-img">
+                <img id="EmpleadoFoto" src="" alt="Foto" class="photo">   
+            </div>
+                            
             <!-- Botón para editar, que emite un evento 'clickEvent' cuando se hace clic -->
             <button @click="emit('clickEvent')" class="edit">
                 <!-- Icono de edición dentro del botón -->
@@ -40,9 +40,24 @@
     // Importa el componente EditIcon para usarlo dentro del botón de edición
     import EditIcon from '@/components/icons/Edit-icon.vue';
     // Importa la función defineEmits para declarar eventos personalizados
-    import { defineEmits } from 'vue';
+    import {defineProps, defineEmits, onMounted } from 'vue';
     // Declara el evento 'clickEvent' que este componente puede emitir
     const emit = defineEmits(['clickEvent']);
+    const props = defineProps({
+        imagen: {
+            default: ''
+        }
+    })
+
+    const manejarimagen = (imagen) => {
+        const base64String = imagen
+        document.getElementById('EmpleadoFoto').src = base64String;
+    };
+
+    onMounted(()=>{
+        manejarimagen(props.imagen)
+    });
+
 </script>
 
 <style scoped>
@@ -70,10 +85,31 @@ div.foto-empleado {
     max-height: 10rem;
     display: flex;
     align-items: center;
+    align-self: center;
     justify-content: center;
     border-radius: 999999px;
-    border: #1A245B solid 1px;
+    border: #1A245B solid 4px;
     z-index: 1;
+    box-sizing: content-box;
+}
+
+div.contend-img {
+    overflow: hidden;
+    width: 100%;
+    height: 101%;
+    border-radius: 999999px;
+    display: flex;
+    align-items: center;
+    align-self: center;
+    justify-content: center;
+    box-sizing: border-box;
+    
+}
+
+div.contend-img > img {
+    max-height: 10rem;
+    max-width: auto;
+    object-fit: contain;
 }
 
 /* Estilos para el botón de edición */
@@ -89,6 +125,7 @@ button.edit {
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
 
 /* Estilos para la sección de acciones y detalles del empleado */

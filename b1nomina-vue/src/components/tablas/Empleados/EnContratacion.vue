@@ -67,7 +67,7 @@
             :NombreAccion="TituloModal" 
             :textSubmit="TextoButton"
             :activarModal="activarModal"
-            :ModalActivo="modalActivo"
+            :ModalActivo="1"
             :DataNotification="checkfile"
             
         >
@@ -146,7 +146,37 @@
             </template>
         </TemplateModal>
 
-        
+        <TemplateModal 
+            @closeModal="showModal" 
+            :FormId="IDFormModal"
+            :NombreAccion="TituloModal" 
+            :textSubmit="TextoButton"
+            :activarModal="activarModal2"
+            :ModalActivo="2"
+            :DataNotification="checkfile"
+            
+        >
+        <div v-if="formActivo==1" class="contenedorInfo">
+            <form class="aceptar-descartar" @submit.prevent="AceptarProspecto">
+                <span>Al activar el prospecto debes tener en cuenta que:</span>
+                <ol>
+                    <li>Aparecerá en la sección de <span>Gestionar Nómina</span> como empleado.</li>
+                    <li>Se enviará un correo con usuario y contraseña de acceso a <span>B1 Nómina.</span></li>
+                    <li>No podrá ser borrado de <span>B1 Nómina.</span></li>
+                </ol> 
+            </form>           
+        </div>
+        <div v-if="formActivo==2" class="contenedorInfo">
+            <form class="aceptar-descartar" @submit.prevent="DescartarProspecto">
+                <span>Al descartar el prospecto debes tener en cuenta que:</span>
+                <ol>
+                    <li>Sera descartado de la sección de contratación de <span>B1 Nómina.</span></li>
+                    <li>Todos los datos almacenados serán borrados permanente.</li>
+                    <li>No podrá recuperar los datos del prospecto.</li>
+                </ol>   
+            </form>            
+        </div>
+        </TemplateModal>
 
         <div class="conted-pagination">
             <!--Espacio para paginacion-->
@@ -217,6 +247,7 @@
 
     /////////// programacion de los modales de activacion ///////////////
     const activarModal = ref(false)
+    const activarModal2 = ref(false)
     const formActivo = ref(1)
     const TextoButton = ref('')
     const TituloModal = ref('')
@@ -229,8 +260,13 @@
     * @param mostrarModal
     */
     const showModal = (Id_modal = 0) => {
-        activarModal.value = !activarModal.value;
-        modalActivo.value = Id_modal;
+        if(Id_modal == 1){
+            activarModal.value = !activarModal.value;
+            modalActivo.value = Id_modal;
+        } else if(Id_modal == 2){
+            activarModal2.value = !activarModal2.value;
+            modalActivo.value = Id_modal;
+        }
     };
 
     const panelShow = ref(1)
@@ -321,7 +357,7 @@
                 break;
             case 2:
             
-                formActivo.value = 1;
+                formActivo.value = 2;
                 EmpleadoID_Selecionado.value = item_ID;
                 TituloModal.value = '¿Estás seguro que deseas descartar el prospecto?';
                 TextoButton.value = 'Si, Descartar';                
@@ -470,9 +506,6 @@
     }
 
 
-
-
-
     const ListaEmpleados = ref(props.listaEmpleados);
 
     //configuracion del paginado
@@ -585,7 +618,7 @@ tr.encabezado {
     width: 100%;
     height: 24px;
     box-sizing: border-box;
-    background: #FCFCFD;
+    background: var(--color-backgrond-contraste);
     border-bottom: 0.96px #EAECF0 solid;
     color: #667085;
     font-size: 16px;
@@ -668,5 +701,36 @@ form p > span {
     font-weight: 600;
     line-height: 36px;
     word-wrap: break-word;
+}
+
+form.aceptar-descartar > span {
+
+    color: black;
+    font-size: 16px;
+    font-family: Poppins;
+    font-weight: 400;
+    line-height: 36px;
+    word-wrap: break-word;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-wrap: break-word; /* Cambiado de word-wrap a overflow-wrap */
+    white-space: normal; /* Asegura que el espacio en blanco se maneje normalmente */
+    width: 100%; /* Asegura que el span tenga un ancho definido */
+    text-align: justify;    
+}
+form.aceptar-descartar  li {
+    text-align: start;
+}
+
+form.aceptar-descartar li > span {
+    color: black;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 36px;
+    word-wrap: break-word;
+}
+
+form.aceptar-descartar  li::marker {
+    text-align: center;
 }
 </style>

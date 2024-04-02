@@ -1,17 +1,14 @@
 <template>
     <div class="panel-PerfilEmpleado">
-        <LayoutCabeceraEmpleado @clickEvent="() => console.log('editarfoto')">
-            <template #Imagen>
-                Foto                
-            </template>
+        <LayoutCabeceraEmpleado @clickEvent="() => console.log('editarfoto')" :imagen="DatosUsuario.foto">
             <template #Rol>
                 Rol                
             </template>
             <template #Nombre>
-                Nombre del empleado
+                {{ DatosUsuario["nombres"] }} {{ DatosUsuario["apellido_paterno"] }}
             </template>
             <template #Cargo>
-                Cargo del empleado                
+                {{ DatosUsuario["cargo"] }}           
             </template>
             <template #Botones>
                 <TemplateButton2 text="Ver último combrobante de pago">
@@ -24,14 +21,18 @@
                         <DolarIcon color="#002E99" />
                     </template>
                 </TemplateButton2>
-                <TemplateButton2 text="Desactivar">
+                <TemplateButton2 text="Desactivar" v-if="DatosUsuario.activo == 1">
+                    <template #post>                                        
+                        <ExitColorIcon Stroke="#002E99" />
+                    </template>
+                </TemplateButton2>
+                <TemplateButton2 text="Activar" v-else>
                     <template #post>                                        
                         <ExitColorIcon Stroke="#002E99" />
                     </template>
                 </TemplateButton2>
             </template>
-        </LayoutCabeceraEmpleado>
-
+        </LayoutCabeceraEmpleado>        
         <div class="cards">
             <boxInfo color="rgba(0, 112, 255, 0.20)">
                 <template #Titulo>
@@ -39,7 +40,7 @@
                     Salario mensual
                 </template>
                 <template #Texto>
-                    $0.00
+                    ${{DatosUsuario.sueldo >> 0}}
                 </template>
             </boxInfo>
 
@@ -58,7 +59,7 @@
                     <SolIcon color="black" />Vacaciones acumuladas
                 </template>
                 <template #Texto>
-                    0 días
+                    {{DatosUsuario["vacaciones_acumuladas"]}} días
                 </template>
             </boxInfo>
         </div>
@@ -89,7 +90,7 @@
                                 Cantidad
                             </template>
                             <template #text-1>                                                                    
-                                $450.00
+                                ${{DatosUsuario["sueldo"]>>0}}
                             </template>
                             <template #st-2>  <!--Salario base-->                                                                 
                                 Salario base
@@ -107,31 +108,31 @@
                                 Tipo de contrato
                             </template>
                             <template #text-9>                                                                    
-                                Empleado
+                                {{DatosUsuario["tipo_contrato"]}}
                             </template>
                             <template #st-10> <!--Término de contrato-->                                                                 
                                 Término de contrato
                             </template>
                             <template #text-10>                                                                    
-                                Indefinido
+                                {{DatosUsuario["termino_contrato"]}}
                             </template>
                             <template #st-11>  <!--Fecha de contratación-->                                                                            
                                 Fecha de contratación
                             </template>
                             <template #text-11>                                                                    
-                                08/11/2023
+                                {{DatosUsuario["fecha_inicio"]}}
                             </template>
                             <template #st-12> <!--Fecha terminación del contrato-->                                                                     
                                 Fecha terminación del contrato
                             </template>
                             <template #text-12>                                                                    
-                                08/05/2024
+                                {{DatosUsuario["fecha_fin"]}}
                             </template>
                             <template #st-13> <!--Nivel de estudio-->                                                                      
                                 Nivel de estudio
                             </template>
                             <template #text-13>                                                                    
-                                Universitario
+                                {{DatosUsuario["nivel_estudio"]}}
                             </template>
                             <template #st-14> <!--Días de descanso-->    
                                 Días de descanso
@@ -149,19 +150,19 @@
                                 Sede de Trabajo
                             </template>
                             <template #text-17>                                                                    
-                                Oficina Principal
+                                {{DatosUsuario["nombre_sede"]}}
                             </template>
                             <template #st-18> <!--Departamento-->                                                                     
                                 Departamento
                             </template>
                             <template #text-18>                                                                    
-                                Ventas
+                                {{DatosUsuario["nomdepartamento"]}}
                             </template>
                             <template #st-19> <!--Cargo-->                                                                      
                                 Cargo
                             </template>
                             <template #text-19>                                                                    
-                                Supervisor (a)     
+                                {{DatosUsuario["cargo"]}}
                             </template>
                             <template #st-20> <!--Modalidad-->    
                                 Modalidad
@@ -190,37 +191,37 @@
                                 Nombres
                             </template>
                             <template #text-1>                                                                    
-                                Nombre del Empleado
+                                {{DatosUsuario["nombres"]}}
                             </template>
                             <template #st-2>                                                                    
                                 Apellidos
                             </template>
                             <template #text-2>                                                                    
-                                Apellidos del Empleado
+                                {{DatosUsuario["apellido_paterno"]}} {{DatosUsuario["apellido_materno"]}}
                             </template>
                             <template #st-3>                                                                    
                                 Fecha de Nacimiento
                             </template>
                             <template #text-3>                                                                    
-                                15/11/1990
+                                {{DatosUsuario["fecha_nacimiento"]}}
                             </template>
                             <template #st-4>                                                                    
                                 N° de Rut
                             </template>
                             <template #text-4>                                                                    
-                                26985625-4
+                                {{DatosUsuario["rut"]}}
                             </template>
                             <template #st-5>                                                                    
                                 Sexo
                             </template>
                             <template #text-5>                                                                    
-                               Femenino
+                                {{DatosUsuario["sexo"]}}
                             </template>
                             <template #st-6>                                                                    
                                Estado Civil
                             </template>
                             <template #text-6>                                                                    
-                                Soltero
+                                {{DatosUsuario["estado_civil"]}}
                             </template>
                             
                         <!--segundo apartado-->
@@ -232,37 +233,37 @@
                                 Correo Electrónico
                             </template>
                             <template #text-9>                                                                    
-                                empleado@email.com
+                                {{DatosUsuario["email"]}}
                             </template>
                             <template #st-10> <!--Telefono Celular-->                                                                 
                                 Telefono Celular
                             </template>
                             <template #text-10>                                                                    
-                                0000-000.00.00
+                                {{DatosUsuario["movil"]}}
                             </template>
                             <template #st-11>  <!--Telefono Local-->                                                                            
                                 Telefono Local
                             </template>
                             <template #text-11>                                                                    
-                                0000-000.00.00
+                                {{DatosUsuario["fijo"]}}
                             </template>
                             <template #st-12> <!--Región-->                                                                     
                                 Región
                             </template>
                             <template #text-12>                                                                    
-                                Metropolitana
+                                {{DatosUsuario["nomregion"]}}
                             </template>
                             <template #st-13> <!--Localidad-->                                                                      
                                 Localidad
                             </template>
                             <template #text-13>                                                                    
-                                Santiago
+                                {{DatosUsuario["nomcomuna"]}}
                             </template>
                             <template #st-14> <!--Dirección-->    
                                Dirección
                             </template>
                             <template #text-14>                                                                    
-                                Pocuro 2255
+                                {{DatosUsuario["direccion"]}}
                             </template>
 
                         <!--segundo apartado-->
@@ -274,7 +275,7 @@
                                 Medio de pago
                             </template>
                             <template #text-17>                                                                    
-                                Transferencia Bancaria
+                                {{DatosUsuario["nomcomuna"]}}
                             </template>
                             <template #st-18> <!--Banco-->                                                                     
                                 Banco
@@ -292,7 +293,7 @@
                                 Número de cuenta
                             </template>
                             <template #text-20>                                                                    
-                                000 000 000
+                                {{DatosUsuario["numero_cuenta"]}}
                             </template>
                         </LayoutTablaEMpleados>
                     </div>
@@ -348,7 +349,7 @@ import OjitoIcon from '@/components/icons/Ojito-icon.vue';
 import ExitColorIcon from '@/components/icons/Exit-color-icon.vue'
 import EdiIcon from '@/components/icons/Edit-icon.vue';
 
-import {ref, defineProps} from 'vue';
+import {ref, defineProps, watch, onMounted} from 'vue';
 const props = defineProps({
     DatosUsuario: {
         default: {}
@@ -359,6 +360,7 @@ const panelShow = ref(1)
 const showInfo = (id) => {
     panelShow.value = id
 };
+
 </script>
 
 <style scoped>

@@ -1,11 +1,6 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  font-family:  "Poppins-Bold", Helvetica;
-  width: auto;
-  height: 100%;
-  background: #FFFFFF;
-}
-#modal-container {
-  display: none;
+
+:root {
+  --color-blanco: #FFFFFF;
+  --color-backgrond-contraste: #FCFCFD;
+  --tipografia-general: "Poppins-Bold", Helvetica;
 }

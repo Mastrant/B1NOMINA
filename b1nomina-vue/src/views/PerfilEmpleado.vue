@@ -7,7 +7,9 @@
         </template>
         
         <template v-slot:panel>
-            <PanelPerfilEmpleado />
+            <PanelPerfilEmpleado 
+                :DatosUsuario="dataEmpleado"
+            />
         </template>
     </LayoutPanel>
 </template>
@@ -23,17 +25,36 @@ import peticiones from '@/peticiones/p_empleado';
 
 import { useRoute } from 'vue-router';
 
-import {onMounted, ref} from 'vue'
+import {onMounted, ref, watch} from 'vue'
 
 const route = useRoute();
 
 const estado = ref(false)
-const dataEmpleado = ref({})
+const dataEmpleado = ref(null)
+const empleadoId = route.params.empleadoId;
 
- // al montar el componente ejecuta las funciones
- onMounted(
-    async () => {
-        estado.value, dataEmpleado.value = peticiones.datosDelEmpleado(route.params?.empleadoId);
-    }        
-);
+const resultado = ref('')
+
+const solicitarDatos = async () => {
+    try {
+        const empleadoId = route.params.empleadoId;
+        if (empleadoId) {
+            resultado.value = await peticiones.datosDelEmpleado(empleadoId);            
+        }
+    } catch (error) {
+        console.error("Error al solicitar datos del empleado:", error);
+        // Manejar el error según sea necesario
+    }
+};
+
+// Observa cambios en 'estado' y 'dataEmpleado'
+watch(resultado, (nuevo) => {
+    estado.value = nuevo.success;
+    dataEmpleado.value = nuevo.data;
+});
+
+// Al montar el componente, ejecuta las funciones
+onMounted(() => {
+    solicitarDatos();
+});
 </script>

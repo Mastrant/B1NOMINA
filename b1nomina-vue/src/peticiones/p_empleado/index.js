@@ -18,7 +18,16 @@ const nombreFuncion = async (parametro) =>{
 
 const peticiones = {
 
-    async datosDelEmpleado(id) {
+    datosDelEmpleado(id){
+        return axios.get(`user/${id}/profile`)
+            .then(respuesta => {
+                return { success: true, data: respuesta.data.data };
+            })
+            .catch(error => {
+                return { success: false, error: error };
+            });
+    },    
+    async datosDelUsuario(id){
         await axios.get(`user/${id}/profile`)    
         .then(
             respuesta => {
@@ -27,24 +36,7 @@ const peticiones = {
         )
         .catch(
             error => {
-                return false, error
-                
-            }
-        )
-        
-    },
-    async datosDelUsuario(id){
-        await axios.get(`user/${id}/profile`)    
-        .then(
-            respuesta => {
-                console.log(respuesta)
-               
-            }
-        )
-        .catch(
-            error => {
-                console.log(error)
-                
+                return false, error                
             }
         )
     }

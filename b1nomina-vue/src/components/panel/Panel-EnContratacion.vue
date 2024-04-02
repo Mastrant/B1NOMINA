@@ -12,7 +12,6 @@
             <AddUserEnContratacion  v-if="show"/> 
             <!--tabla con los datos-->
             <div class="cuerpo-tabla" v-else>
-                
                 <span 
                     class="NoEncontrado" 
                     v-if="(ListaEmpleados.length < 1) ? true : false"
@@ -30,7 +29,6 @@
                     ref="notificacionStatus"
                 />
             </div>
-        
     </div>
 </template>
 
@@ -75,6 +73,7 @@
     * @throws {Error} Si ocurre un error durante la solicitud, se asigna un array vacío a ListaEmpleados.
     */
     const pedirEmpleados = async () => {
+    try {
         await axios.get(`/sociedad/${idSociedad}/list_no_empleados`)
         .then(
             (res) => {
@@ -84,11 +83,18 @@
         )
         .catch(
             (error) => {
+                console.error("Error al pedir empleados:", error);
                 ListaEmpleados.value = []; // si hay un error asigna un valor vacio
                 show.value = true;
             }
-        )
-    };
+        );
+    } catch (error) {
+        console.error("Error en pedirEmpleados:", error);
+        ListaEmpleados.value = [];
+        show.value = true;
+    }
+};
+
 
     const actualizarEmpleados = async () => {
         await axios.get(`/sociedad/${idSociedad}/list_no_empleados`)
@@ -143,10 +149,7 @@
     onMounted(
         async () => {
             await pedirEmpleados(); //solicita los empleados
-            peticiones.datosDelEmpleado(6)
-
-        }
-        
+        }        
     );
 </script>
 
