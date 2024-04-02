@@ -138,11 +138,15 @@
         ListaEmpleados.value = filtrado;
     };
 
+    
     // al montar el componente ejecuta las funciones
     onMounted(
         async () => {
             await pedirEmpleados(); //solicita los empleados
+            peticiones.datosDelEmpleado(6)
+
         }
+        
     );
 </script>
 

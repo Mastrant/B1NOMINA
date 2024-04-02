@@ -16,38 +16,39 @@ const nombreFuncion = async (parametro) =>{
 }
 */
 
-const datosDelEmpleado = async (id) =>{
-    console.log("123")
-    /*await axios.get(`user/${id}/profile`)    
-    .then(
-        respuesta => {
-            console.log(respuesta)
-           
-        }
-    )
-    .catch(
-        error => {
-            console.log(error)
-            
-        }
-    )
-    */
+const peticiones = {
+
+    async datosDelEmpleado(id) {
+        await axios.get(`user/${id}/profile`)    
+        .then(
+            respuesta => {
+                return true, respuesta
+            }
+        )
+        .catch(
+            error => {
+                return false, error
+                
+            }
+        )
+        
+    },
+    async datosDelUsuario(id){
+        await axios.get(`user/${id}/profile`)    
+        .then(
+            respuesta => {
+                console.log(respuesta)
+               
+            }
+        )
+        .catch(
+            error => {
+                console.log(error)
+                
+            }
+        )
+    }
+
 }
 
-const datosDelUsuario = async (id) =>{
-    await axios.get(`user/${id}/profile`)    
-    .then(
-        respuesta => {
-            console.log(respuesta)
-           
-        }
-    )
-    .catch(
-        error => {
-            console.log(error)
-            
-        }
-    )
-}
-
-export default datosDelEmpleado
+export default peticiones

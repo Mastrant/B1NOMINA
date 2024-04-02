@@ -34,14 +34,14 @@
                     {{ item.rut }}
                 </template>
                 <template v-slot:CV>
-                    <WaitButton @click="ActionButton(1,1,item.id)"/>
-                    <DescartarButton @click="ActionButton(1,2,item.id)"/>
-                    <CorrectButton />
+                    <WaitButton v-if="item?.cv_estatus == 1" @click="ActionButton(1,1,item.id)"/>
+                    <DescartarButton v-if="item?.cv_estatus == 3" @click="ActionButton(1,2,item.id)"/>
+                    <CorrectButton v-if="item?.cv_estatus == 2" />
                 </template>
                 <template v-slot:Contrato>
-                    <WaitButton @click="ActionButton(1,3,item.id)"/>
-                    <DescartarButton @click="ActionButton(1,4,item.id)"/>
-                    <CorrectButton />
+                    <WaitButton v-if="item?.contrato_estatus == 1" @click="ActionButton(1,3,item.id)"/>
+                    <DescartarButton v-if="item?.contrato_estatus == 3" @click="ActionButton(1,4,item.id)"/>
+                    <CorrectButton v-if="item?.contrato_estatus == 2" />
                 </template>
                 <template v-slot:Completado>
                     <EBarraProgresoVue class="icon" porcentaje="15"/>
