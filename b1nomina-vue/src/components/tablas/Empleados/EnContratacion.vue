@@ -404,7 +404,7 @@
      * actualizarValorContrato(datosContrato);
      */
     const actualizarValorContrato = (Datos) => {
-        CV.value = Datos.value;
+        Contrato.value = Datos.value;
     }
 
     const cargarCV = async () => {
@@ -432,37 +432,6 @@
         } else {
             checkfile.value = {'texto':'El campo esta vacio', 'valor':false};
         }
-        /*
-        if(CV.value != {}) {
-            await axios.post(`/user/bulk_load_users?sociedadId=${idCreator}&creatorUserId=${idCreator}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            })
-            .then(
-            // Maneja la respuesta exitosa.
-            res => {
-                // Verifica si la respuesta tiene un estado HTTP 200 (OK).
-                if (res.status == 200 || res.status == 201 ){
-                    // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
-                    console.log(res)   
-                }
-            }
-            )
-            .catch(
-            // Maneja los errores de la solicitud.
-            err => {
-                // Verifica si la respuesta del error contiene un objeto de respuesta.
-                if (err.response) { 
-                    // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
-                    console.log(err)           
-                }
-            }
-            );
-        } else {
-            emit("respuesta", {'texto':'El campo esta vacio', 'valor':false})
-        }
-        */
     }
 
     const descartarCV = async () => {
@@ -483,18 +452,29 @@
         CV.value = ''
     }
 
-    const cargarContrato = async () => {
-        const formData = new FormData();
-        formData.append('File', Contrato.value); // Asume que 'Datos' es un objeto File
-        if(Contrato.value != undefined && CV.value != '') {
-            //logica para cargar CV con axios
-            console.log("subir CV " + EmpleadoID_Selecionado.value)
-            showModal(0)
-            emit('showNotificacion', 
-                {'Titulo': "¡Listo contrato cargado! ", 
-                 'Descripcion': "Los documentos fueron cargados en el sistema de forma exitosa."
-                }
+    const cargarContrato = async () => {        
+
+        if(Contrato.value != undefined && Contrato.value != '') {
+        
+            const respuesta = await peticiones_EnContratacion?.cargarContrato(
+                EmpleadoID_Selecionado.value,
+                idCreator,
+                Contrato.value
             )
+
+            if(respuesta?.success){
+                //logica para cargar CV con axios
+                showModal(0)
+                emit('showNotificacion', 
+                    {'Titulo': "¡Listo contrato cargado! ", 
+                    'Descripcion': "Los documentos fueron cargados en el sistema de forma exitosa."
+                    }
+                )
+                emit("ActualizarData")
+            } else {
+                checkfile.value = {'texto':respuesta?.error, 'valor':false};
+            }
+            
         } else {
             checkfile.value = {'texto':'El campo esta vacio', 'valor':false};
         }
