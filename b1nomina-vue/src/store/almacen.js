@@ -1,9 +1,9 @@
 import { reactive } from "vue";
 
 const almacen = reactive({
-    userID: null,
+    userID: Number(localStorage.getItem("userId")),
     updatedUserID(userID) {
-        this.userID = userID
+        this.userID = userID;
     },
     SociedadID: null,
     updatedSociedadID(SociedadID) {

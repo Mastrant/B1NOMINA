@@ -66,7 +66,6 @@ defineExpose({
 const checkFile = (respuesta) => emit("respuesta", respuesta);
 
 const tomarData = (datosDelDocumento) => {
-  console.log("tomar data")
   DataDocumento.value = datosDelDocumento.value;
 }
 
@@ -125,6 +124,7 @@ const cargarDocumentoDAtaMasiva = async (idCreator, Datos) => {
     .catch(
       // Maneja los errores de la solicitud.
       err => {
+        console.log(err)
         // Verifica si la respuesta del error contiene un objeto de respuesta.
         if (err.response) { 
           // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.

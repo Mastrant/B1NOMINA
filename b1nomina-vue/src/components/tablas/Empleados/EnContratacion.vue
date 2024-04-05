@@ -31,7 +31,7 @@
                     {{ item.nombre }} {{ item.apellido_paterno }} {{ item.apellido_materno }}                    
                 </template>
                 <template v-slot:rut>
-                    {{ item.rut }}
+                    {{ item.rut }}                   
                 </template>
                 <template v-slot:CV>
                     <WaitButton v-if="item?.cv_estatus == 1" @click="ActionButton(1,1,item.id)"/>
@@ -44,7 +44,7 @@
                     <CorrectButton v-if="item?.contrato_estatus == 2" />
                 </template>
                 <template v-slot:Completado>
-                    <EBarraProgresoVue class="icon" porcentaje="15"/>
+                    <EBarraProgresoVue class="icon" :porcentaje="item.avance"/>
                 </template>
                 <template v-slot:accionButton>
                     <CiculoCorrectIcon 
@@ -220,14 +220,15 @@
     import { ref, defineProps, watchEffect, onMounted, defineEmits} from 'vue';
 
     import almacen from '@/store/almacen.js'
-    import axios from 'axios';
+
+    import peticiones_EnContratacion from '@/peticiones/g_empleado';
 
     // Define los props
     const props = defineProps({
-    listaEmpleados: {
-        type: Array,
-        default: () => []
-    }
+        listaEmpleados: {
+            type: Array,
+            default: () => []
+        }
     });
 
     const emit = defineEmits([
@@ -266,6 +267,9 @@
         } else if(Id_modal == 2){
             activarModal2.value = !activarModal2.value;
             modalActivo.value = Id_modal;
+        } else {
+            activarModal.value = false;
+            activarModal2.value = false;
         }
     };
 
@@ -404,17 +408,27 @@
     }
 
     const cargarCV = async () => {
-        const formData = new FormData();
-        formData.append('File', CV.value); // Asume que 'Datos' es un objeto File
-        if(CV.value != undefined && CV.value != '') {
-            //logica para cargar CV con axios
-            console.log("subir CV " + EmpleadoID_Selecionado.value)
-            showModal(0)
-            emit('showNotificacion', 
-                {'Titulo': "¡Listo curriculum vitae cargado con exito!", 
-                'Descripcion': "El documento fue cargado de forma exitosa, podaras acceder a el desde la sección de Perfil del Empleado."
-                }
+         if(CV.value != undefined && CV.value != '') {
+
+            const respuesta = await peticiones_EnContratacion.cargarCV(
+                EmpleadoID_Selecionado.value,
+                idCreator,
+                CV.value
             )
+
+            if(respuesta?.success){
+                //logica para cargar CV con axios
+                showModal(0)
+                emit('showNotificacion', 
+                    {'Titulo': "¡Listo curriculum vitae cargado con exito!", 
+                    'Descripcion': "El documento fue cargado de forma exitosa, podaras acceder a el desde la sección de Perfil del Empleado."
+                    }
+                )
+                emit("ActualizarData")
+            } else {
+                checkfile.value = {'texto':respuesta?.error, 'valor':false};
+            }
+            
         } else {
             checkfile.value = {'texto':'El campo esta vacio', 'valor':false};
         }
