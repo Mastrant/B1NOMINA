@@ -37,14 +37,18 @@ const peticiones_EnContratacion = {
             return { success: false, error: error };
         }                    
     },
-    DescartarCV(idEmpleado, idMaster,){
-        return axios.get(`user/${id}/profile`)
+    descartarCV(idEmpleado, idMaster,){
+        try {
+            return axios.put(`user/${idEmpleado}/skip_cv_user?creatorUserId=${idMaster}`)
             .then(respuesta => {
-                return { success: true, data: respuesta.data.data };
+                return { success: true, data: respuesta?.data.data };
             })
             .catch(error => {
-                return { success: false, error: error };
+                return { success: false, error: error?.response.data.message };
             });
+        } catch (error) {
+            return { success: false, error: error };
+        }  
     },      
     RetomarCV(idEmpleado, idMaster,){
         return axios.get(`user/${id}/profile`)
@@ -77,14 +81,18 @@ const peticiones_EnContratacion = {
             return { success: false, error: error };
         }
     },  
-    DescartarContrato(idEmpleado, idMaster,){
-        return axios.get(`user/${id}/profile`)
+    descartarContrato(idEmpleado, idMaster,){
+        try {
+            return axios.put(`user/${idEmpleado}/skip_contrato_user?creatorUserId=${idMaster}`)
             .then(respuesta => {
-                return { success: true, data: respuesta.data.data };
+                return { success: true, data: respuesta?.data.data };
             })
             .catch(error => {
-                return { success: false, error: error };
+                return { success: false, error: error?.response.data.message };
             });
+        } catch (error) {
+            return { success: false, error: error };
+        }  
     }, 
     RetomarContrato(idEmpleado, idMaster,){
         return axios.get(`user/${id}/profile`)

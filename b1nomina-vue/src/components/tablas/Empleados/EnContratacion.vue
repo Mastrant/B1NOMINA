@@ -435,9 +435,26 @@
     }
 
     const descartarCV = async () => {
-        console.log("decartar" + EmpleadoID_Selecionado.value);
-        showModal(0);
-        emit('showNotificacion', {'Titulo': "Accion Descartada", 'Descripcion': "esta es la descripcion de la cartica"});
+
+        const respuesta = await peticiones_EnContratacion?.descartarCV(
+                EmpleadoID_Selecionado.value,
+                idCreator
+            )
+
+        if(respuesta?.success){
+            //logica para cargar CV con axios
+            showModal(0)
+            emit('showNotificacion', 
+                {
+                    'Titulo': "Accion Descartada", 
+                    'Descripcion': "esta es la descripcion de la cartica"
+                }
+            );
+
+            emit("ActualizarData")
+        } else {
+            checkfile.value = {'texto':respuesta?.error, 'valor':false};
+        }
     }
 
     const retomarCV = () => {
@@ -481,10 +498,25 @@
     }
 
     const descartarContrato = async () => {
-        console.log("decartar" + EmpleadoID_Selecionado.value);
-        showModal(0);
-        emit('showNotificacion', {'Titulo': "Accion Descartada", 'Descripcion': "esta es la descripcion de la cartica"});
-        emit('ActualizarData')
+        const respuesta = await peticiones_EnContratacion?.descartarContrato(
+                EmpleadoID_Selecionado.value,
+                idCreator
+            )
+
+        if(respuesta?.success){
+            //logica para cargar CV con axios
+            showModal(0)
+            emit('showNotificacion', 
+                {
+                    'Titulo': "Accion Descartada", 
+                    'Descripcion': "esta es la descripcion de la cartica"
+                }
+            );
+
+            emit("ActualizarData")
+        } else {
+            checkfile.value = {'texto':respuesta?.error, 'valor':false};
+        }
     }
 
     const retomarContrato = () => {
