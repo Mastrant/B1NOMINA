@@ -51,13 +51,17 @@ const peticiones_EnContratacion = {
         }  
     },      
     RetomarCV(idEmpleado, idMaster,){
-        return axios.get(`user/${id}/profile`)
+        try {
+            return axios.put(`user/${idEmpleado}/activate_contrato_user?creatorUserId=${idMaster}`)
             .then(respuesta => {
-                return { success: true, data: respuesta.data.data };
+                return { success: true, data: respuesta?.data.data };
             })
             .catch(error => {
-                return { success: false, error: error };
+                return { success: false, error: error?.response.data.message };
             });
+        } catch (error) {
+            return { success: false, error: error };
+        }
     },  
 
     cargarContrato(idEmpleado, idMaster, Data){
@@ -95,15 +99,18 @@ const peticiones_EnContratacion = {
         }  
     }, 
     RetomarContrato(idEmpleado, idMaster,){
-        return axios.get(`user/${id}/profile`)
+        try {
+            return axios.put(`user/${idEmpleado}/activate_contrato_user?creatorUserId=${idMaster}`)
             .then(respuesta => {
-                return { success: true, data: respuesta.data.data };
+                return { success: true, data: respuesta?.data.data };
             })
             .catch(error => {
-                return { success: false, error: error };
+                return { success: false, error: error?.response.data.message };
             });
+        } catch (error) {
+            return { success: false, error: error };
+        }  
     },
-
     ActivarProspecto(idEmpleado, idMaster,){
         return axios.get(`user/${id}/profile`)
             .then(respuesta => {

@@ -101,7 +101,7 @@
                     </LayoutForm>
                 </div>
                 <div v-if=" formActivo == 2"> <!--retomar Curriculum-->                    
-                    <div class="contenedorInfo" v-show="panelShow == 1">
+                    <div class="contenedorInfo">
                         <form @submit.prevent="retomarCV" id="retomarCV" >
                             <p>En caso de que desees retomar el proceso de  <span> cargar  </span>a este prospecto, da clic enretomar acción. </p>                            
                         </form>
@@ -137,7 +137,7 @@
                     </LayoutForm>
                 </div>
                 <div v-if=" formActivo == 4"> <!--retomar contrato-->                    
-                    <div class="contenedorInfo" v-show="panelShow == 1">
+                    <div class="contenedorInfo">
                         <form @submit.prevent="retomarContrato" id="retomarContrato" >
                             <p>En caso de que desees retomar el proceso de  <span> cargar el contrato </span>a este prospecto, da clic enretomar acción. </p>                          
                         </form>
@@ -457,16 +457,25 @@
         }
     }
 
-    const retomarCV = () => {
-        console.log("retomar CV")
+    const retomarCV = async () => {
 
-        formActivo.value = 1;
-        panelShow.value = 1;
-        TextoButton.value = 'Guardar Documento';
-        TituloModal.value = 'Cargar Curriculum Vitae / Hoja de vida';
-        IDFormModal.value = 'CargarDescartarCV';
-        InputCV.value?.reset();
-        CV.value = ''
+        const respuesta = await peticiones_EnContratacion?.RetomarCV(
+                EmpleadoID_Selecionado.value,
+                idCreator
+            )
+
+        if(respuesta?.success){
+            formActivo.value = 1;
+            panelShow.value = 1;
+            TextoButton.value = 'Guardar Documento';
+            TituloModal.value = 'Cargar Curriculum Vitae / Hoja de vida';
+            IDFormModal.value = 'CargarDescartarCV';
+            InputCV.value?.reset();
+            CV.value = '';
+            emit("ActualizarData");
+        } else {
+            checkfile.value = {'texto':respuesta?.error, 'valor':false};
+        }
     }
 
     const cargarContrato = async () => {        
@@ -519,16 +528,27 @@
         }
     }
 
-    const retomarContrato = () => {
-        console.log("retomar Contrato")
+    const retomarContrato = async () => {
 
-        formActivo.value = 3;
-        panelShow.value = 1;
-        TextoButton.value = 'Guardar Documento';
-        TituloModal.value = 'Cargar Curriculum Vitae / Hoja de vida';
-        IDFormModal.value = 'CargarDescartarContrato';
-        InputContrato.value?.reset();
-        Contrato.value = '';
+        const respuesta = await peticiones_EnContratacion?.RetomarContrato(
+                EmpleadoID_Selecionado.value,
+                idCreator
+            )
+
+        if(respuesta?.success){
+            formActivo.value = 3;
+            panelShow.value = 1;
+            TextoButton.value = 'Guardar Documento';
+            TituloModal.value = 'Cargar Curriculum Vitae / Hoja de vida';
+            IDFormModal.value = 'CargarDescartarContrato';
+            InputContrato.value?.reset();
+            Contrato.value = '';
+            emit("ActualizarData");
+        } else {
+            checkfile.value = {'texto':respuesta?.error, 'valor':false};
+        }
+
+        
     }
 
 
