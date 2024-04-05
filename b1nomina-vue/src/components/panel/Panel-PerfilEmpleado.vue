@@ -72,7 +72,7 @@
                     
                 </template>
                 <template v-slot:formulario>
-                    <div class="contenedorInfo" v-if="panelShow ==1">
+                    <div class="contenedorInfo" v-if="panelShow ==1">                        
                         <LayoutTablaEMpleados>
                             <template #boton>                                                                    
                                 <TemplateBlanckButton text="Editar">
@@ -138,7 +138,7 @@
                                 Días de descanso
                             </template>
                             <template #text-14>                                                                    
-                                Sábado, Domingo
+                                {{Dias_descanso}}
                             </template>
 
                              <!--segundo apartado-->
@@ -168,7 +168,7 @@
                                 Modalidad
                             </template>
                             <template #text-20>                                                                    
-                                <InterruptorButton />
+                                <InterruptorButton Tipo="individual" Texto="Teletrabajo" :Estado="(DatosUsuario['modalidad'])?false :true" />
                             </template>                            
 
                         </LayoutTablaEMpleados>
@@ -215,13 +215,13 @@
                                 Sexo
                             </template>
                             <template #text-5>                                                                    
-                                {{DatosUsuario["sexo"]}}
+                                {{(DatosUsuario["sexo"] == 0)? "Femenino" : "Masculino"}}
                             </template>
                             <template #st-6>                                                                    
                                Estado Civil
                             </template>
                             <template #text-6>                                                                    
-                                {{DatosUsuario["estado_civil"]}}
+                                {{DatosUsuario["estado_civil_id"]}}
                             </template>
                             
                         <!--segundo apartado-->
@@ -349,7 +349,10 @@ import OjitoIcon from '@/components/icons/Ojito-icon.vue';
 import ExitColorIcon from '@/components/icons/Exit-color-icon.vue'
 import EdiIcon from '@/components/icons/Edit-icon.vue';
 
-import {ref, defineProps, watch, onMounted} from 'vue';
+import {ref, defineProps} from 'vue';
+
+import almacen from '@/store/almacen';
+
 const props = defineProps({
     DatosUsuario: {
         default: {}
@@ -360,6 +363,21 @@ const panelShow = ref(1)
 const showInfo = (id) => {
     panelShow.value = id
 };
+
+// Declara una constante 'lista_dias' que almacena un arreglo de días de descanso tomado de los datos del usuario.
+// Utiliza el operador de encadenamiento opcional (?.) para acceder a 'dias_descanso' dentro de 'props.DatosUsuario'.
+// Si 'props.DatosUsuario' es nulo o indefinido, 'lista_dias' será nulo.
+// Luego, utiliza el método 'split(',')' para dividir la cadena 'dias_descanso' en un arreglo,
+// donde cada elemento del arreglo es un día de descanso.
+const lista_dias = props.DatosUsuario?.dias_descanso.split(',');
+
+// Declara una constante 'Dias_descanso' que almacena una cadena de texto con los días de descanso.
+// Utiliza el método 'map()' para iterar sobre cada elemento en 'lista_dias'.
+// Para cada 'dia' en 'lista_dias', accede al valor correspondiente en 'almacen.diasLaborales[dia]'.
+// Esto asume que 'almacen' es un objeto que contiene un diccionario 'diasLaborales' con claves numéricas.
+// Luego, utiliza el método 'join(', ')' para unir todos los elementos del arreglo resultante en una cadena de texto,
+// separada por comas y espacios.
+const Dias_descanso = lista_dias.map(dia => almacen?.diasLaborales[dia]).join(', ');
 
 </script>
 

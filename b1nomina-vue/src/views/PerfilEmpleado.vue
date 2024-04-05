@@ -37,7 +37,6 @@ const resultado = ref('')
 
 const solicitarDatos = async () => {
     try {
-        const empleadoId = route.params.empleadoId;
         if (empleadoId) {
             resultado.value = await peticiones.datosDelEmpleado(empleadoId);            
         }
