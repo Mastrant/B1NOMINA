@@ -70,7 +70,7 @@
                         <OjitoIcon class="icon" />    
                     </router-link>
           
-                    <DescargaIcon @click="console.log('descargar info' + item.id)" class="icon" />
+                    <DescargaIcon @click="console.log('descargar info' + item.id)" text="Descargar"/>
                 </template>
             </EmpleadosRow>
             <!--Final cuerpo-->
