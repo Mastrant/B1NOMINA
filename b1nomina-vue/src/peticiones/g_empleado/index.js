@@ -28,10 +28,10 @@ const peticiones_EnContratacion = {
                 },
             })
             .then(respuesta => {
-                return { success: true, data: respuesta.data.data };
+                return { success: true, data: respuesta.data?.data };
             })
             .catch(error => {
-                return { success: false, error: error?.response.data.message };
+                return { success: false, error: error?.response?.data.message };
             });
         } catch (error) {
             return { success: false, error: error };
@@ -41,10 +41,10 @@ const peticiones_EnContratacion = {
         try {
             return axios.put(`user/${idEmpleado}/skip_cv_user?creatorUserId=${idMaster}`)
             .then(respuesta => {
-                return { success: true, data: respuesta?.data.data };
+                return { success: true, data: respuesta?.data?.data };
             })
             .catch(error => {
-                return { success: false, error: error?.response.data.message };
+                return { success: false, error: error?.response.data?.message };
             });
         } catch (error) {
             return { success: false, error: error };
@@ -54,10 +54,10 @@ const peticiones_EnContratacion = {
         try {
             return axios.put(`user/${idEmpleado}/activate_contrato_user?creatorUserId=${idMaster}`)
             .then(respuesta => {
-                return { success: true, data: respuesta?.data.data };
+                return { success: true, data: respuesta?.data?.data };
             })
             .catch(error => {
-                return { success: false, error: error?.response.data.message };
+                return { success: false, error: (error.response.data.message)?error.response.data?.message: error};
             });
         } catch (error) {
             return { success: false, error: error };

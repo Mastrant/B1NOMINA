@@ -1,19 +1,23 @@
 <template>
     <!--Contenedor General-->
     <div class="switch">
+        <!-- Checkbox con propiedades dinámicas y evento de cambio -->
         <input 
             type="checkbox" 
-            :id="Objid" 
+            :id="+Objid" 
             :checked="Estado"
             :value="Estado"
             @change="modificarUsuario"
         >
+        <!-- Etiqueta asociada al checkbox -->
         <label :for="Objid"></label>
+        <!-- Texto descriptivo del switch -->
         <span>{{ Texto }}</span>
 
+        <!-- Modal con formularios para activar/desactivar usuarios -->
         <div>
             <TemplateModal 
-                @closeModal="showModal" 
+                @closeModal="showModal(0)" 
                 :FormId="FormId"
                 :NombreAccion="TituloModal" 
                 :textSubmit="TextoButton"
@@ -22,6 +26,7 @@
                 :DataNotification="dataNotificacion"
             >
                 <template #default>
+                    <!-- Formulario para activar usuario -->
                     <div v-show="formActivo==1">
                         <FormEmpleadoActivar
                             :EmpleadoIDSelecionado="EmpleadoID_Selecionado"
@@ -29,6 +34,7 @@
                             @activarUsuario="accionCorrecta(1)"
                         />
                     </div>
+                    <!-- Formulario para desactivar usuario -->
                     <div v-show="formActivo==2">
                         <FormEmpleadoDesactivar 
                             :EmpleadoIDSelecionado="EmpleadoID_Selecionado"
@@ -40,15 +46,17 @@
             </TemplateModal>
         </div>        
     </div>       
-    
 </template>
 
+
 <script setup>
+// Importación de componentes y funciones de Vue
 import TemplateModal from '@/components/modal/TemplateModal.vue';
 import FormEmpleadoDesactivar from '@/components/formularios/Form-Empleado-Desactivar.vue';
 import FormEmpleadoActivar from '@/components/formularios/Form-Empleado-Activar.vue';
-import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
+import { ref, defineProps, defineEmits} from 'vue';
 
+// Definición de las propiedades que recibe el componente
 const props = defineProps({
     Estado: {
         type: Boolean,
@@ -63,6 +71,7 @@ const props = defineProps({
     },
 });
 
+// Definición de los eventos que emite el componente
 const emit = defineEmits(
     [
         "ValorEstado",
@@ -70,15 +79,22 @@ const emit = defineEmits(
     ]
 );
 
+/**
+ * Maneja el cambio de estado del checkbox, mostrando el modal correspondiente.
+ * @param {Event} evento - Evento de cambio del checkbox.
+ */
 const modificarUsuario = (evento) => {
     if (props.Estado == true) {
         showModal(1, props.Objid)
     } else {
-        console.log("Activar")
         showModal(2, props.Objid)
     }
 }
 
+/**
+ * Ejecuta acciones basadas en el tipo de acción (activar/desactivar usuario).
+ * @param {Number} tipo - Tipo de acción a realizar.
+ */
 const accionCorrecta = (tipo) => {
     if(tipo == 1){
         showModal()
@@ -91,29 +107,41 @@ const accionCorrecta = (tipo) => {
     }
 }
 
- //arreglo con la data
- const dataNotificacion = ref({})
+// Referencia para almacenar datos de notificación
+const dataNotificacion = ref({})
+/**
+ * Asigna datos de notificación a la referencia.
+ * @param {Object} DATA - Datos de notificación.
+ */
 const sendData = (DATA) => {
-        dataNotificacion.value = DATA //asigna el valor
-    }
+    dataNotificacion.value = DATA //asigna el valor
+}
 
-const DataNotificacion = ref('')
 /////////// programacion de los modales de activacion ///////////////
+
+// Variables para controlar la activación y configuración de los modales
 const activarModal = ref(false)
 const formActivo = ref(null)
 const TextoButton = ref('')
 const TituloModal = ref('')
 const EmpleadoID_Selecionado = ref(null)
 const FormId = ref('')
+
 /**
-     * Controla el despliegue del modal
-     * @param mostrarModal
-     */
+ * Controla el despliegue del modal y su configuración.
+ * @param {Number} Id_modal - Identificador del modal a mostrar.
+ * @param {Number} idEmpleado - ID del empleado seleccionado.
+ */
     const showModal = (Id_modal=null, idEmpleado=null) => {
-    
+        
     if(Id_modal == null && idEmpleado == null) {
         activarModal.value = !activarModal.value;
-    } else {
+
+    } else if (Id_modal == 0) {
+        activarModal.value = !activarModal.value;
+        document.getElementById(props.Objid).checked = props.Estado
+        
+    }else {
         EmpleadoID_Selecionado.value = idEmpleado
         if(Id_modal == 2){
             activarModal.value = !activarModal.value;
@@ -128,10 +156,9 @@ const FormId = ref('')
             TextoButton.value = 'Si, desactivar';
             TituloModal.value = '¿Estás seguro que deseas desactivar a este empleado?';
             FormId.value = "FormSend-D";
-
+            
         } 
     }
-
     
 };
 </script>
