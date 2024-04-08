@@ -25,7 +25,7 @@ import peticiones from '@/peticiones/p_empleado';
 
 import { useRoute } from 'vue-router';
 
-import {onMounted, ref, watch} from 'vue'
+import {onMounted, ref, watch, provide} from 'vue'
 
 const route = useRoute();
 
@@ -51,6 +51,7 @@ watch(resultado, (nuevo) => {
     estado.value = nuevo.success;
     dataEmpleado.value = nuevo.data;
 });
+provide('dataEmpleado', dataEmpleado)
 
 // Al montar el componente, ejecuta las funciones
 onMounted(() => {

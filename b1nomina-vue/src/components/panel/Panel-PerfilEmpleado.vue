@@ -32,7 +32,8 @@
                     </template>
                 </TemplateButton2>
             </template>
-        </LayoutCabeceraEmpleado>        
+        </LayoutCabeceraEmpleado>     
+        <!--Descripciones Generales-->  
         <div class="cards">
             <boxInfo color="rgba(0, 112, 255, 0.20)">
                 <template #Titulo>
@@ -63,6 +64,7 @@
                 </template>
             </boxInfo>
         </div>
+        <!--Tabla para mostrar información-->
         <LayoutForm>
                 <template v-slot:cabecera>
                     <NavButtonTemplate text="Datos Laborales" :seleccionado="panelShow== 1" @click="showInfo(1)" />
@@ -328,6 +330,8 @@
                     </div>
                 </template>
         </LayoutForm>
+        <!--Modales Editar información-->
+        <CicloEditarEmpleado ref="EditarInfo" />
     </div>
 </template>
 
@@ -338,10 +342,11 @@ import LayoutForm from '@/components/Layouts/LayoutForm.vue';
 import LayoutTablaEMpleados from '@/components/Layouts/LayoutTabla-datosEmpleado.vue'
 import boxInfo from '@/components/elementos/Box-info.vue';
 import NavButtonTemplate from '@/components/botones/Nav-button-templateForm.vue';
-import TemplateButton2 from '../botones/Template-button2.vue';
+import TemplateButton2 from '@/components/botones/Template-button2.vue';
 import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
 import TemplateBlanckButton from '@/components/botones/Template-blank-button.vue';
 import LayoutEmpy from '@/components/Layouts/LayoutEmpy.vue'
+import CicloEditarEmpleado from '@/components/elementos/Ciclo-Editar-Empleado.vue';
 //iconos
 import DolarIcon from '@/components/icons/Dolar-icon-blanco.vue';
 import InfoIcon from '@/components/icons/Info-icon.vue';
@@ -350,6 +355,7 @@ import OjitoIcon from '@/components/icons/Ojito-icon.vue';
 import ExitColorIcon from '@/components/icons/Exit-color-icon.vue'
 import EdiIcon from '@/components/icons/Edit-icon.vue';
 
+//Librerias y acciones
 import {ref, defineProps} from 'vue';
 
 import almacen from '@/store/almacen';
@@ -362,8 +368,10 @@ const props = defineProps({
 
 const panelShow = ref(1)
 const showInfo = (id) => {
-    panelShow.value = id
+    panelShow.value = id;
 };
+
+const EditarInfo = ref(null);
 
 // Declara una constante 'lista_dias' que almacena un arreglo de días de descanso tomado de los datos del usuario.
 // Utiliza el operador de encadenamiento opcional (?.) para acceder a 'dias_descanso' dentro de 'props.DatosUsuario'.
