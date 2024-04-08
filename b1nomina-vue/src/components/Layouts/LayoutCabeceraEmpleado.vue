@@ -5,9 +5,10 @@
         <div class="foto-empleado">
             <!-- Slot para insertar contenido personalizado para la imagen del empleado -->
             <div class="contend-img">
-                <img id="EmpleadoFoto" src="" alt="Foto" class="photo">   
+                <img v-if="imagen" id="EmpleadoFoto" src="" alt="Foto" class="photo">   
+                <img v-else src="@/components/icons/svg/Avatar-svg-2-icon.svg" class="photo">
             </div>
-                            
+
             <!-- Botón para editar, que emite un evento 'clickEvent' cuando se hace clic -->
             <button @click="emit('clickEvent')" class="edit">
                 <!-- Icono de edición dentro del botón -->

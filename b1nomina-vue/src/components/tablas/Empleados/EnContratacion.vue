@@ -50,12 +50,14 @@
                     <CiculoCorrectIcon 
                         @click="ActionButton(2,1,item.id)"
                         class="icon" 
-                        style="stroke: #1A245B"
+                        Stroke="#1A245B"
+                        text="Contratar"
                     />
                     <ExitColorIcon
                         @click="ActionButton(2,2,item.id)" 
                         class="icon" 
-                        style="stroke: #1A245B" 
+                        Stroke="#1A245B" 
+                        text="Eliminar"
                     />
                 </template>
             </EnContratacionRow>

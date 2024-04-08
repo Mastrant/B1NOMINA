@@ -270,7 +270,8 @@
 
                             <template #titulo5>                                                                    
                                 Datos de pago
-                            </template>                                                        
+                            </template>     
+                                                                               
                             <template #st-17>  <!--Medio de pago-->                                                                            
                                 Medio de pago
                             </template>

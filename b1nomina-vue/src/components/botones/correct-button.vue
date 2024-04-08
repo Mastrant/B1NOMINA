@@ -1,6 +1,6 @@
 <template>
     <button type="button">
-        <CirculoCorrectIcon style="stroke: #18B055" />
+        <CirculoCorrectIcon Stroke="#18B055" />
         <span>{{ texto }}</span>
     </button>        
 </template>
