@@ -1,6 +1,7 @@
 <template>
     <div class="contend">
-        <div class="loader"></div>
+        <div class="loader">
+        </div>
     </div>
 </template>
 
@@ -14,20 +15,22 @@
     width: 100px;
     height: 50px;
     position: fixed;
+    z-index: 999;
+    box-sizing: border-box;
 }
 
 div.loader,
 div.loader::before,
 div.loader::after {
+    background: #1A2771;
     border-radius: 50%;
     width: 2.5em;
     height: 2.5em;
-    animation: cargar 1.5 infinite ease-in-out;
+    animation: animacion 1.5 infinite ease-in-out;
 
 }
 
-div.loader {
-    color: #1A2771;
+div.loader {    
     font-size: 12px;
     position: relative;
 }
@@ -48,7 +51,7 @@ div.loader::after {
     left: 3.5em;
 }
 
-@keyframes cargar{
+@keyframes animacion{
     0%,
     80%,
     100% {
