@@ -41,7 +41,7 @@ const route = useRoute();
 
 const estado = ref(false)
 const dataEmpleado = ref(null)
-const empleadoId = route.params.empleadoId;
+const empleadoId = route.params?.empleadoId;
 const error = ref(null); // Estado para manejar errores
 
 const resultado = ref('')
