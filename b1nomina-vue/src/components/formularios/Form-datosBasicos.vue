@@ -291,8 +291,7 @@ const subirFoto = async (idCreator, Datos, ID_EMpleado) => {
   const formData = new FormData();
   formData.append("File", Datos); // Asume que 'Datos' es un objeto File
 
-  await axios
-    .post(`/user/${ID_EMpleado}/upload_pic_user?creatorUserId=${idCreator}`, formData, {
+  await axios.post(`/user/${ID_EMpleado}/upload_pic_user?creatorUserId=${idCreator}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -361,9 +360,10 @@ const ActualizarDatosBasicos = async (idCreator, Datos, ID_EMpleado) => {
             // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
             if (err.response.status == 422) {
               emit.log({ texto: "no se puede procesar la solcitud", valor: false });
-            }
-            // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
-            emit("respuesta", { texto: err.response.data.message, valor: false });
+            }else {
+              // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
+              emit("respuesta", { texto: err.response.data.message, valor: false });
+            }            
           }
         }
       );

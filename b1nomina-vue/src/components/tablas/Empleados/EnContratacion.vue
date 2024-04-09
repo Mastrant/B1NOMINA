@@ -410,7 +410,7 @@
     }
 
     const cargarCV = async () => {
-         if(CV.value != undefined && CV.value != '') {
+        if(CV.value != undefined && CV.value != '' && CV != null) {
 
             const respuesta = await peticiones_EnContratacion.cargarCV(
                 EmpleadoID_Selecionado.value,

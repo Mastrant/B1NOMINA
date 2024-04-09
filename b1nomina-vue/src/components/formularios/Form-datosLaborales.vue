@@ -260,8 +260,12 @@ const payload = reactive({
     fecha_inicio: "",
     fecha_fin: "",
     periodo_salario: '',
-    "unidad_sueldo": "",
+    unidad_sueldo: "",
     salario_base: '',
+    hora_ingreso: '',
+    hora_egreso: '',
+    jefatura: '',
+
 
     sede_id: '',
     departamento_id: '',
@@ -272,16 +276,10 @@ const payload = reactive({
     user_id: '',
     sociedad_id: '',
     dias_descanso: '',
+
+    
+
 });
-/*
-const payload2 = reactive({
-    SedeDeTrabajo: '',
-    Departamento: '',
-    Cargo: '',
-    Grupo: '',
-    Modalidad: '',
-});
-*/
 
 //actualizar datos del payload
 const ActualizarPayload = (propiedad, valor) => {
@@ -346,13 +344,13 @@ const resetForm = () => {
 }
 
 defineExpose({
-    resetForm
+    resetForm,
 })
 const NextModal = (idEpleadoCreado) => {
   emit("nextModal", idEpleadoCreado); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
 };
 
-const crearDatoslaborales = async (ID_USERMASTER,Data) => {
+const crearDatoslaborales = async (ID_USERMASTER, Data) => {
     await axios.post(`create_datos_laborales?userCreatorId=${ID_USERMASTER}`,Data)
     .then(
         // Maneja la respuesta exitosa.
@@ -369,53 +367,88 @@ const crearDatoslaborales = async (ID_USERMASTER,Data) => {
     .catch(
         // Maneja los errores de la solicitud.
         err => {
+            //console.log(err)
             // Verifica si la respuesta del error contiene un objeto de respuesta.
             if (err.response) { 
                 // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
                 if (err.status == 422){
-                emit({'texto': "no se puede procesar la solcitud", 'valor':false});
-                } 
+                    emit({'texto': "no se puede procesar la solcitud", 'valor':false});
+                }else if (err.response.status == 521) {
+                    actualizadDatosLaborales(Data)
+                }  else {
                     // Imprime el error completo.
-                    console.log(err);
+                    console.error(err?.response);
                     // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
-                    emit("respuesta", {'texto':err?.response?.data?.message, 'valor':false})
-                                   
+                    emit("respuesta", {'texto':err?.response?.data?.message, 'valor':false})                    
+                }                                   
             }
         }
     );
 }
 
-const actualizadDatosLaborales = async (Data) =>{
+const actualizadDatosLaborales = async (Data) => {
     if(data){
         await axios.put(`datos_laborales/${props.EmpleadoID}/update`,Data)
         .then(
-        respuesta => {
-            NextModal(props.EmpleadoID)
-        }
-    )
-    .catch(
-        err => {
-            console.log("error al crear los datos")
-        })
+            // Maneja la respuesta exitosa.
+            (res) => {
+                // Verifica si la respuesta tiene un estado HTTP 200 (OK).
+                if (res.status == 200) {
+                    // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
+                    emit("respuesta", { texto: res.data?.message, valor: true });
+                }
+
+            
+                // Llama a la función si nexmodal data imagen esta vacia o es indefinido NextModal pasando el ID del nuevo usuario.
+                if (mostrarFoto.value == false) {
+                    NextModal(props.EmpleadoID);
+                } else {
+                    if (dataImagen.value == undefined || dataImagen.value == "") {
+                    NextModal(props.EmpleadoID);
+                    } else {
+                    //console.log(mostrarFoto.value+ "mostrar foto")
+                    subirFoto(ID_USERMASTER, dataImagen.value, props.EmpleadoID);
+                    } 
+                }
+            }
+        )
+        .catch(
+            // Maneja los errores de la solicitud.
+            (err) => {
+            // Verifica si la respuesta del error contiene un objeto de respuesta.
+            if (err.response) {
+                // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
+                if (err.response.status == 422) {
+                emit.log({ texto: "no se puede procesar la solcitud", valor: false });
+                }
+                // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
+                emit("respuesta", { texto: err.response.data.message, valor: false });
+            }
+            }
+        );
     }
 }
 
 const getData = async (ID_empleado) => {
+    console.log(ID_empleado)
     return new Promise(async (resolve, reject) => {
         if (ID_empleado != null && ID_empleado >= 0) {
             try {
                 // Solicita los datos personales
                 const respuesta =  await axios.get(`/user/${ID_empleado}/datos_labores`)
-                console.log(respuesta);
-                if (respuesta?.data) {
+                console.log(respuesta)
+                if (respuesta) {
+                    console.log(respuesta)
                     // Resuelve la promesa con true si hay datos
                     resolve({ success: true, data: respuesta.data });
                 } else {
+                    console.log(respuesta)
                     // Resuelve la promesa con false si no hay datos
                     resolve({ success: false, data: {} });
                 }
             } catch (error) {
-                if (error.response && error.response.status == 404) {
+                console.log(error)
+                if (error?.response?.status == 404) {
                     // Resuelve la promesa con false si no hay datos
                     resolve({ success: false, data: {} });
                 } else {
@@ -438,65 +471,70 @@ const getData = async (ID_empleado) => {
  * Ejecuta la peticion con axios
  */
  const Enviar = async () => {
-    if (props.EmpleadoID == null) {
-        console.log("enviar al formulario 1");
-    }
+    if (props.EmpleadoID != null && props.EmpleadoID > 0) {    
 
-    //verifica si los payloads tienen datos
-    let statuspay = Object.values(payload).some(value => value !== "");
-    //let statuspay2 = Object.values(payload2).some(value => value !== "");
+        //verifica si los payloads tienen datos
+        let statuspay = Object.values(payload).some(value => value !== "");
+        //let statuspay2 = Object.values(payload2).some(value => value !== "");
 
-    //si uno de los payload tiene cambios
-    if (statuspay  == true){
-        console.log(props.EmpleadoID)
-        //verifica que el id pasado sea diferente de nullo y mayor que 0
-        if (props.EmpleadoID != null && props.EmpleadoID >= 0) {
-            //Almacena si hay datos Laboras o no del usuario en el sistema
-            let respuestaGetData = await getData(props.EmpleadoID);
+        //si uno de los payload tiene cambios
+        if (statuspay  == true){
+            //verifica que el id pasado sea diferente de nullo y mayor que 0
+            if (props.EmpleadoID != null && props.EmpleadoID > 0) {
 
-            // Recuperar el objeto como una cadena de texto y convertirlo de nuevo a un objeto
-            let ID_USUARIO = JSON.parse(localStorage.getItem('userId'));
+                //Almacena si hay datos Laboras o no del usuario en el sistema
+                console.log(props.EmpleadoID)
+                let respuestaGetData = await getData(props.EmpleadoID);
 
 
-            if(respuestaGetData.success != null){
+                // Recuperar el objeto como una cadena de texto y convertirlo de nuevo a un objeto
+                let ID_USUARIO = JSON.parse(localStorage.getItem('userId'));
+                
+                console.log(respuestaGetData?.success)
 
-                if(respuestaGetData.success == true){
-                    let DataLaborales = respuestaGetData.data
-                    //actualizar datos laborales
-                } else {
-                    console.log("creardata")
-                    if(ID_USUARIO > 0){
-                        payload.user_id = props.EmpleadoID                        
-                        payload.sociedad_id = Number(idSociedad)
-                        
-                        if (ListaDiasLibres.value.length >= 1) {
-                            payload.dias_descanso = ListaDiasLibres.value.join(",")
-                        } else {
-                            payload.dias_descanso = '6,7';
-                        }
+                if(respuestaGetData.success != null){
 
-                        if (payload.modalidad == ''){
-                            payload.modalidad = 0
-                        }
-
-                        console.log(payload)
-                        crearDatoslaborales(ID_USUARIO, payload)
-
-                        
+                    if(respuestaGetData.success == true){
+                        let DataLaborales = respuestaGetData.data
+                        //actualizar datos laborales
                     } else {
-                        console.log("usuario no autorizado")
-                    }                    
-                }
-            } else {
-                emit("nextModal", {"texto":"error al verificar los datos del empleado", "valor": false})
-            }
+                        if(ID_USUARIO > 0){
+                            payload.user_id = props.EmpleadoID                        
+                            payload.sociedad_id = Number(idSociedad)
+                            
+                            if (ListaDiasLibres.value.length >= 1) {
+                                payload.dias_descanso = ListaDiasLibres.value.join(",")
+                            } else {
+                                payload.dias_descanso = '6,7';
+                            }
 
-            
-        } else {
-            emit("respuesta", {'texto':"Error al validar el ID del usuario", 'valor':false})  
+                            if (payload.modalidad == ''){
+                                payload.modalidad = 0
+                            }
+
+                            payload.hora_ingreso = "08:00";
+                            payload.hora_egreso = "18:00";
+                            payload.jefatura = 0;
+
+                            crearDatoslaborales(ID_USUARIO, payload)
+
+                        } else {
+                            console.error("usuario no autorizado")
+                        }                    
+                    }
+                } else {
+                    emit("nextModal", {"texto":"error al verificar los datos del empleado", "valor": false})
+                }
+
+                
+            } else {
+                emit("respuesta", {'texto':"Error al validar el ID del usuario", 'valor':false})  
+            }
+        } else {//no hay modificaciones en los payloads
+            NextModal(props.EmpleadoID)
         }
-    } else {//no hay modificaciones en los payloads
-        NextModal(props.EmpleadoID)
+    } else {
+        emit("respuesta", {'texto':"Error enviar los datos", 'valor':false})  
     }
 };
 </script>
