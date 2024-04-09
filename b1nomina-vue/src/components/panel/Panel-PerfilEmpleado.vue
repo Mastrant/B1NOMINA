@@ -1,14 +1,14 @@
 <template>
     <div class="panel-PerfilEmpleado">
-        <LayoutCabeceraEmpleado @clickEvent="() => console.log('editarfoto')" :imagen="DatosUsuario.foto">
+        <LayoutCabeceraEmpleado @clickEvent="() => console.log('editarfoto')" :imagen="DatosUsuario?.foto">
             <template #Rol>
                 Rol                
             </template>
             <template #Nombre>
-                {{ DatosUsuario["nombres"] }} {{ DatosUsuario["apellido_paterno"] }}
+                {{ DatosUsuario?.nombres }} {{ DatosUsuario?.apellido_paterno }}
             </template>
             <template #Cargo>
-                {{ DatosUsuario["cargo"] }}           
+                {{ DatosUsuario?.cargo }}           
             </template>
             <template #Botones>
                 <TemplateButton2 text="Ver último combrobante de pago">
@@ -21,7 +21,7 @@
                         <DolarIcon color="#002E99" />
                     </template>
                 </TemplateButton2>
-                <TemplateButton2 text="Desactivar" v-if="DatosUsuario.activo == 1">
+                <TemplateButton2 text="Desactivar" v-if="DatosUsuario?.activo == 1">
                     <template #post>                                        
                         <ExitColorIcon Stroke="#002E99" />
                     </template>
@@ -41,7 +41,7 @@
                     Salario mensual
                 </template>
                 <template #Texto>
-                    ${{DatosUsuario.sueldo >> 0}}
+                    ${{DatosUsuario?.sueldo >> 0}}
                 </template>
             </boxInfo>
 
@@ -60,7 +60,7 @@
                     <SolIcon color="black" />Vacaciones acumuladas
                 </template>
                 <template #Texto>
-                    {{DatosUsuario["vacaciones_acumuladas"]}} días
+                    {{DatosUsuario?.vacaciones_acumuladas}} días
                 </template>
             </boxInfo>
         </div>
@@ -92,7 +92,7 @@
                                 Cantidad
                             </template>
                             <template #text-1>                                                                    
-                                ${{DatosUsuario["sueldo"]>>0}}
+                                ${{DatosUsuario?.sueldo >> 0}}
                             </template>
                             <template #st-2>  <!--Salario base-->                                                                 
                                 Salario base
@@ -110,31 +110,31 @@
                                 Tipo de contrato
                             </template>
                             <template #text-9>                                                                    
-                                {{DatosUsuario["tipo_contrato"]}}
+                                {{DatosUsuario?.tipo_contrato}}
                             </template>
                             <template #st-10> <!--Término de contrato-->                                                                 
                                 Término de contrato
                             </template>
                             <template #text-10>                                                                    
-                                {{DatosUsuario["termino_contrato"]}}
+                                {{DatosUsuario?.termino_contrato}}
                             </template>
                             <template #st-11>  <!--Fecha de contratación-->                                                                            
                                 Fecha de contratación
                             </template>
                             <template #text-11>                                                                    
-                                {{DatosUsuario["fecha_inicio"]}}
+                                {{DatosUsuario?.fecha_inicio}}
                             </template>
                             <template #st-12> <!--Fecha terminación del contrato-->                                                                     
                                 Fecha terminación del contrato
                             </template>
                             <template #text-12>                                                                    
-                                {{DatosUsuario["fecha_fin"]}}
+                                {{DatosUsuario?.fecha_fin}}
                             </template>
                             <template #st-13> <!--Nivel de estudio-->                                                                      
                                 Nivel de estudio
                             </template>
                             <template #text-13>                                                                    
-                                {{DatosUsuario["nivel_estudio"]}}
+                                {{DatosUsuario?.nivel_estudio}}
                             </template>
                             <template #st-14> <!--Días de descanso-->    
                                 Días de descanso
@@ -152,25 +152,25 @@
                                 Sede de Trabajo
                             </template>
                             <template #text-17>                                                                    
-                                {{DatosUsuario["nombre_sede"]}}
+                                {{DatosUsuario?.nombre_sede}}
                             </template>
                             <template #st-18> <!--Departamento-->                                                                     
                                 Departamento
                             </template>
                             <template #text-18>                                                                    
-                                {{DatosUsuario["nomdepartamento"]}}
+                                {{DatosUsuario?.nomdepartamento}}
                             </template>
                             <template #st-19> <!--Cargo-->                                                                      
                                 Cargo
                             </template>
                             <template #text-19>                                                                    
-                                {{DatosUsuario["cargo"]}}
+                                {{DatosUsuario?.cargo}}
                             </template>
                             <template #st-20> <!--Modalidad-->    
                                 Modalidad
                             </template>
                             <template #text-20>                                                                    
-                                <InterruptorButton Tipo="individual" Texto="Teletrabajo" :Estado="(DatosUsuario['modalidad'])?false :true" />
+                                <InterruptorButton Tipo="individual" Texto="Teletrabajo" :Estado="(DatosUsuario?.modalidad)?false :true" />
                             </template>                            
 
                         </LayoutTablaEMpleados>
@@ -193,37 +193,37 @@
                                 Nombres
                             </template>
                             <template #text-1>                                                                    
-                                {{DatosUsuario["nombres"]}}
+                                {{DatosUsuario?.nombres}}
                             </template>
                             <template #st-2>                                                                    
                                 Apellidos
                             </template>
                             <template #text-2>                                                                    
-                                {{DatosUsuario["apellido_paterno"]}} {{DatosUsuario["apellido_materno"]}}
+                                {{DatosUsuario?.apellido_paterno}} {{DatosUsuario?.apellido_materno}}
                             </template>
                             <template #st-3>                                                                    
                                 Fecha de Nacimiento
                             </template>
                             <template #text-3>                                                                    
-                                {{DatosUsuario["fecha_nacimiento"]}}
+                                {{DatosUsuario?.fecha_nacimiento}}
                             </template>
                             <template #st-4>                                                                    
                                 N° de Rut
                             </template>
                             <template #text-4>                                                                    
-                                {{DatosUsuario["rut"]}}
+                                {{DatosUsuario?.rut}}
                             </template>
                             <template #st-5>                                                                    
                                 Sexo
                             </template>
                             <template #text-5>                                                                    
-                                {{(DatosUsuario["sexo"] == 0)? "Femenino" : "Masculino"}}
+                                {{(DatosUsuario?.sexo == 0)? "Femenino" : "Masculino"}}
                             </template>
                             <template #st-6>                                                                    
                                Estado Civil
                             </template>
                             <template #text-6>                                                                    
-                                {{DatosUsuario["estado_civil_id"]}}
+                                {{DatosUsuario?.estado_civil_id}}
                             </template>
                             
                         <!--segundo apartado-->
@@ -235,37 +235,37 @@
                                 Correo Electrónico
                             </template>
                             <template #text-9>                                                                    
-                                {{DatosUsuario["email"]}}
+                                {{DatosUsuario?.email}}
                             </template>
                             <template #st-10> <!--Telefono Celular-->                                                                 
                                 Telefono Celular
                             </template>
                             <template #text-10>                                                                    
-                                {{DatosUsuario["movil"]}}
+                                {{DatosUsuario?.movil}}
                             </template>
                             <template #st-11>  <!--Telefono Local-->                                                                            
                                 Telefono Local
                             </template>
                             <template #text-11>                                                                    
-                                {{DatosUsuario["fijo"]}}
+                                {{DatosUsuario?.fijo}}
                             </template>
                             <template #st-12> <!--Región-->                                                                     
                                 Región
                             </template>
                             <template #text-12>                                                                    
-                                {{DatosUsuario["nomregion"]}}
+                                {{DatosUsuario?.nomregion}}
                             </template>
                             <template #st-13> <!--Localidad-->                                                                      
                                 Localidad
                             </template>
                             <template #text-13>                                                                    
-                                {{DatosUsuario["nomcomuna"]}}
+                                {{DatosUsuario?.nomcomuna}}
                             </template>
                             <template #st-14> <!--Dirección-->    
                                Dirección
                             </template>
                             <template #text-14>                                                                    
-                                {{DatosUsuario["direccion"]}}
+                                {{DatosUsuario?.direccion}}
                             </template>
 
                         <!--segundo apartado-->
@@ -278,7 +278,7 @@
                                 Medio de pago
                             </template>
                             <template #text-17>                                                                    
-                                {{DatosUsuario["nomcomuna"]}}
+                                {{DatosUsuario?.nomcomuna}}
                             </template>
                             <template #st-18> <!--Banco-->                                                                     
                                 Banco
@@ -296,7 +296,7 @@
                                 Número de cuenta
                             </template>
                             <template #text-20>                                                                    
-                                {{DatosUsuario["numero_cuenta"]}}
+                                {{DatosUsuario?.numero_cuenta}}
                             </template>
                         </LayoutTablaEMpleados>
                     </div>
@@ -386,7 +386,7 @@ const lista_dias = props.DatosUsuario?.dias_descanso.split(',');
 // Esto asume que 'almacen' es un objeto que contiene un diccionario 'diasLaborales' con claves numéricas.
 // Luego, utiliza el método 'join(', ')' para unir todos los elementos del arreglo resultante en una cadena de texto,
 // separada por comas y espacios.
-const Dias_descanso = lista_dias.map(dia => almacen?.diasLaborales[dia]).join(', ');
+const Dias_descanso = lista_dias?.map(dia => almacen?.diasLaborales[dia]).join(', ');
 
 </script>
 

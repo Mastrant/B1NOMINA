@@ -1,20 +1,21 @@
 <template>
-
     <Suspense>
         <template #default>
-            <NotFount v-show="estado == false"/>
-            <LayoutPanel v-show="estado == true">
-        
-                <template #cabecera>
-                    <Headervue nombrePagina="Empleados > Perfil del Empleado" />
-                </template>
-                
-                <template v-slot:panel>
-                    <PanelPerfilEmpleado 
-                        :DatosUsuario="dataEmpleado"
-                    />
-                </template>
-            </LayoutPanel>
+            <div>
+                <NotFount v-show="estado == false"/>
+                <LayoutPanel v-show="estado == true">
+            
+                    <template #cabecera>
+                        <Headervue nombrePagina="Empleados > Perfil del Empleado" />
+                    </template>
+                    
+                    <template #panel>
+                        <PanelPerfilEmpleado 
+                            :DatosUsuario="dataEmpleado"
+                        />
+                    </template>
+                </LayoutPanel>
+            </div>
         </template>
         <template #fallback>
             <CargandoInformaciónVue />

@@ -53,7 +53,7 @@
 
     const manejarimagen = (imagen) => {
         const base64String = imagen
-        if(imagen == null || imagen == undefined) {
+        if(imagen == null || imagen == undefined || imagen == '') {
 
         }else {
             empleadoFoto.value.src = base64String;
