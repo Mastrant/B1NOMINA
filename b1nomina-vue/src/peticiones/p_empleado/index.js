@@ -18,8 +18,8 @@ const nombreFuncion = async (parametro) =>{
 
 const peticiones = {
 
-    datosDelEmpleado(id){
-        return axios.get(`user/${id}/profile`)
+    async datosDelEmpleado(id){
+        return  await axios.get(`user/${id}/profile`)
             .then(respuesta => {
                 return { success: true, data: respuesta.data.data };
             })

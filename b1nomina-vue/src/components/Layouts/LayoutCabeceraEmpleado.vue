@@ -5,7 +5,7 @@
         <div class="foto-empleado">
             <!-- Slot para insertar contenido personalizado para la imagen del empleado -->
             <div class="contend-img">
-                <img v-if="imagen" id="EmpleadoFoto" src="" alt="Foto" class="photo">   
+                <img ref="empleadoFoto" v-if="imagen" id="EmpleadoFoto" alt="Foto" class="photo">   
                 <img v-else src="@/components/icons/svg/Avatar-svg-2-icon.svg" class="photo">
             </div>
 
@@ -41,9 +41,10 @@
     // Importa el componente EditIcon para usarlo dentro del botón de edición
     import EditIcon from '@/components/icons/Edit-icon.vue';
     // Importa la función defineEmits para declarar eventos personalizados
-    import {defineProps, defineEmits, onMounted } from 'vue';
+    import {defineProps, defineEmits, onMounted, ref } from 'vue';
     // Declara el evento 'clickEvent' que este componente puede emitir
     const emit = defineEmits(['clickEvent']);
+    const empleadoFoto = ref(null);
     const props = defineProps({
         imagen: {
             default: ''
@@ -52,7 +53,11 @@
 
     const manejarimagen = (imagen) => {
         const base64String = imagen
-        document.getElementById('EmpleadoFoto').src = base64String;
+        if(imagen == null || imagen == undefined) {
+
+        }else {
+            empleadoFoto.value.src = base64String;
+        }
     };
 
     onMounted(()=>{

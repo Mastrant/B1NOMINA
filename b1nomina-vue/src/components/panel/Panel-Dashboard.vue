@@ -1,12 +1,11 @@
 <template>
     <div class="conted">
         <span>En Desarrollo, gracias por su paciencia.</span>
-        <CargandoInformación />
     </div>
 </template>
 
 <script setup>
-import CargandoInformación from '@/components/elementos/Cargando-Información.vue';
+
 
 </script>
 
