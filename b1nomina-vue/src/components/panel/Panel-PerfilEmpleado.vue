@@ -74,10 +74,10 @@
                     
                 </template>
                 <template v-slot:formulario>
-                    <div class="contenedorInfo" v-if="panelShow ==1">                        
+                    <div class="contenedorInfo" v-if="panelShow ==1">                  
                         <LayoutTablaEMpleados>
                             <template #boton>                                                                    
-                                <TemplateBlanckButton text="Editar">
+                                <TemplateBlanckButton @click="EditarInformacion(1)" text="Editar">
                                     <template #default>
                                         <EdiIcon color="#000000"/>
                                     </template>
@@ -367,11 +367,16 @@ const props = defineProps({
 })
 
 const panelShow = ref(1)
-const showInfo = (id) => {
-    panelShow.value = id;
+const showInfo = (id_apartado) => {
+    panelShow.value = id_apartado;
 };
 
 const EditarInfo = ref(null);
+const EditarInformacion = (ID_Info) => {
+    console.log(ID_Info)
+    EditarInfo?.value.ActionButton(ID_Info, props.DatosUsuario?.id)
+    
+}
 
 // Declara una constante 'lista_dias' que almacena un arreglo de días de descanso tomado de los datos del usuario.
 // Utiliza el operador de encadenamiento opcional (?.) para acceder a 'dias_descanso' dentro de 'props.DatosUsuario'.

@@ -48,7 +48,4 @@ if (sociedadesRef.value.length > 0){
         CardSociedad
     })
 }
-
-
-
 </script>
