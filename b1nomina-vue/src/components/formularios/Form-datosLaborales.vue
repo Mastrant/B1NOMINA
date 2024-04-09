@@ -367,7 +367,7 @@ const crearDatoslaborales = async (ID_USERMASTER, Data) => {
     .catch(
         // Maneja los errores de la solicitud.
         err => {
-            //console.log(err)
+            ////console.log(err)
             // Verifica si la respuesta del error contiene un objeto de respuesta.
             if (err.response) { 
                 // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
@@ -387,13 +387,14 @@ const crearDatoslaborales = async (ID_USERMASTER, Data) => {
 }
 
 const actualizadDatosLaborales = async (Data) => {
-    if(data){
+    console.log(Data)
+    if(Data){
         await axios.put(`datos_laborales/${props.EmpleadoID}/update`,Data)
         .then(
             // Maneja la respuesta exitosa.
             (res) => {
                 // Verifica si la respuesta tiene un estado HTTP 200 (OK).
-                if (res.status == 200) {
+                if (res.status == 200 || res.status == 201 ) {
                     // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
                     emit("respuesta", { texto: res.data?.message, valor: true });
                 }
@@ -406,7 +407,7 @@ const actualizadDatosLaborales = async (Data) => {
                     if (dataImagen.value == undefined || dataImagen.value == "") {
                     NextModal(props.EmpleadoID);
                     } else {
-                    //console.log(mostrarFoto.value+ "mostrar foto")
+                    ////console.log(mostrarFoto.value+ "mostrar foto")
                     subirFoto(ID_USERMASTER, dataImagen.value, props.EmpleadoID);
                     } 
                 }
@@ -419,7 +420,7 @@ const actualizadDatosLaborales = async (Data) => {
             if (err.response) {
                 // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
                 if (err.response.status == 422) {
-                emit.log({ texto: "no se puede procesar la solcitud", valor: false });
+                emit({ texto: "no se puede procesar la solcitud", valor: false });
                 }
                 // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
                 emit("respuesta", { texto: err.response.data.message, valor: false });
@@ -430,24 +431,23 @@ const actualizadDatosLaborales = async (Data) => {
 }
 
 const getData = async (ID_empleado) => {
-    console.log(ID_empleado)
     return new Promise(async (resolve, reject) => {
         if (ID_empleado != null && ID_empleado >= 0) {
             try {
                 // Solicita los datos personales
                 const respuesta =  await axios.get(`/user/${ID_empleado}/datos_labores`)
-                console.log(respuesta)
+                //console.log(respuesta)
                 if (respuesta) {
-                    console.log(respuesta)
+                    //console.log(respuesta)
                     // Resuelve la promesa con true si hay datos
                     resolve({ success: true, data: respuesta.data });
                 } else {
-                    console.log(respuesta)
+                    //console.log(respuesta)
                     // Resuelve la promesa con false si no hay datos
                     resolve({ success: false, data: {} });
                 }
             } catch (error) {
-                console.log(error)
+                //console.log(error)
                 if (error?.response?.status == 404) {
                     // Resuelve la promesa con false si no hay datos
                     resolve({ success: false, data: {} });
@@ -483,14 +483,14 @@ const getData = async (ID_empleado) => {
             if (props.EmpleadoID != null && props.EmpleadoID > 0) {
 
                 //Almacena si hay datos Laboras o no del usuario en el sistema
-                console.log(props.EmpleadoID)
+                //console.log(props.EmpleadoID)
                 let respuestaGetData = await getData(props.EmpleadoID);
 
 
                 // Recuperar el objeto como una cadena de texto y convertirlo de nuevo a un objeto
                 let ID_USUARIO = JSON.parse(localStorage.getItem('userId'));
                 
-                console.log(respuestaGetData?.success)
+                //console.log(respuestaGetData?.success)
 
                 if(respuestaGetData.success != null){
 
