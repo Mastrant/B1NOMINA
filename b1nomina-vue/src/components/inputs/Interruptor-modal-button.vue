@@ -99,9 +99,11 @@ const accionCorrecta = (tipo) => {
     if(tipo == 1){
         showModal()
         emit('actualizarListado')
+        emit('Notificar',{})
     } else if(tipo == 2){
         showModal()
         emit('actualizarListado')
+        emit('Notificar', {})
     } else {
         console.log("error al activar");
     }
@@ -127,40 +129,40 @@ const TituloModal = ref('')
 const EmpleadoID_Selecionado = ref(null)
 const FormId = ref('')
 
-/**
- * Controla el despliegue del modal y su configuración.
- * @param {Number} Id_modal - Identificador del modal a mostrar.
- * @param {Number} idEmpleado - ID del empleado seleccionado.
- */
+    /**
+     * Controla el despliegue del modal y su configuración.
+     * @param {Number} Id_modal - Identificador del modal a mostrar.
+     * @param {Number} idEmpleado - ID del empleado seleccionado.
+     */
     const showModal = (Id_modal=null, idEmpleado=null) => {
         
-    if(Id_modal == null && idEmpleado == null) {
-        activarModal.value = !activarModal.value;
+        if(Id_modal == null && idEmpleado == null) {
+            activarModal.value = !activarModal.value;
 
-    } else if (Id_modal == 0) {
-        activarModal.value = !activarModal.value;
-        document.getElementById(props.Objid).checked = props.Estado
+        } else if (Id_modal == 0) {
+            activarModal.value = !activarModal.value;
+            document.getElementById(props.Objid).checked = props.Estado
+            
+        }else {
+            EmpleadoID_Selecionado.value = idEmpleado
+            if(Id_modal == 2){
+                activarModal.value = !activarModal.value;
+                formActivo.value = 1;
+                TextoButton.value = 'Si, activar';
+                TituloModal.value = '¿Estás seguro que deseas activar a este empleado?';
+                FormId.value = "FormSend-A";
+                
+            } else if(Id_modal == 1){
+                activarModal.value = !activarModal.value;
+                formActivo.value = 2;
+                TextoButton.value = 'Si, desactivar';
+                TituloModal.value = '¿Estás seguro que deseas desactivar a este empleado?';
+                FormId.value = "FormSend-D";
+                
+            } 
+        }
         
-    }else {
-        EmpleadoID_Selecionado.value = idEmpleado
-        if(Id_modal == 2){
-            activarModal.value = !activarModal.value;
-            formActivo.value = 1;
-            TextoButton.value = 'Si, activar';
-            TituloModal.value = '¿Estás seguro que deseas activar a este empleado?';
-            FormId.value = "FormSend-A";
-            
-        } else if(Id_modal == 1){
-            activarModal.value = !activarModal.value;
-            formActivo.value = 2;
-            TextoButton.value = 'Si, desactivar';
-            TituloModal.value = '¿Estás seguro que deseas desactivar a este empleado?';
-            FormId.value = "FormSend-D";
-            
-        } 
-    }
-    
-};
+    };
 </script>
 
 

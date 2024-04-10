@@ -8,7 +8,9 @@
                 <ListaTemplate v-model="filtroDepartamento" :options="ListaDepartamentos" optionsSelected="Departamento"/>
                 <ListaTemplate v-model="filtroGrupo" :options="ListaGrupos" optionsSelected="Grupo"/>
             </div>     
-            <CicloCrearEmpleado />            
+            <CicloCrearEmpleado 
+                @Notificacion="showN"
+            />            
 
         </div><!--final contenedor acciones-form-->
 
@@ -28,6 +30,7 @@
                 :listaEmpleados="ListaEmpleados"   
                 @upData="InteraccionListaEmpleadosSelecionados"
                 @actualizar_Lista="pedirEmpleados"
+                @Notificacion="showN"
             />
         </div>
         <AlertShort
@@ -40,23 +43,16 @@
     //componentes
     import CicloCrearEmpleado from '@/components/elementos/Ciclo-Crear-Empleado.vue';
     import InputShearch from '@/components/inputs/Input-shearch.vue';
-    import TemplateButton from '@/components/botones/Template-button.vue';
-    import TemplateButton2 from '@/components/botones/Template-button2.vue'
     import ListaTemplate from '@/components/listas/Lista-template.vue';
     import EmpleadosGeneral from '@/components/tablas/Empleados/Empleados-general.vue';
     //alertas
     import AlertShort from '@/components/alertas/Alert-short-template.vue';
-
-    //iconos
-    import PersonPlussIcon from '../icons/Person-Pluss-icon.vue';
 
     //librerias
     import { ref, onMounted, reactive, toRefs, watch, inject  } from 'vue';
     import axios from 'axios';
 
     // Inyectar el valor proporcionado por la url
-
-    
     import { useRoute } from 'vue-router';
 
     const route = useRoute();
@@ -64,7 +60,6 @@
     const idSociedad = route.params.sociedadId;
 
     const ListaIds = ref([]); //Contiene los id de los empleados seleccionados
-
 
     const InteraccionListaEmpleadosSelecionados = (arreglo) => {
         // Convertir el objeto proxy a un array real
@@ -74,11 +69,10 @@
     //toma la referencia del componente notificacion para utilizar el metodo mostrar
     const notificacionStatus = ref(null)
     const showN = (Data) => {
-    notificacionStatus.value.ActivarNotificacion(
-       Data //Formato: {'Titulo': "empleado especial", 'Descripcion': "esta es la descripcion de la cartica"}   
-    );
-}
-
+        notificacionStatus.value.ActivarNotificacion(
+            Data //Formato: {'Titulo': "empleado especial", 'Descripcion': "esta es la descripcion de la cartica"}   
+        );
+    }
 
     //fin control del modal
 

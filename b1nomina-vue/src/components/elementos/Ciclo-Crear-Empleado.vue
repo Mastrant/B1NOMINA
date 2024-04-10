@@ -127,11 +127,8 @@
 
 <script setup>
     //componentes
-    import InputShearch from '@/components/inputs/Input-shearch.vue';
     import TemplateButton from '@/components/botones/Template-button.vue';
     import TemplateButton2 from '@/components/botones/Template-button2.vue'
-    import ListaTemplate from '@/components/listas/Lista-template.vue';
-    import EmpleadosGeneral from '@/components/tablas/Empleados/Empleados-general.vue';
     import ListaOpciones from '@/components/listas/Lista-Opciones.vue'
     import BigOptionButton from '@/components/botones/Big-Option-button.vue'
     import TemplateModal from '@/components/modal/TemplateModal.vue';
@@ -141,17 +138,18 @@
     import FormDatosPersonalesVue from '@/components/formularios/Form-datosPersonales.vue';
     import FormDatosLaborales from '@/components/formularios/Form-datosLaborales.vue';
     import FormDatosPago from '@/components/formularios/Form-datosPago.vue';
-    import FormImportacionMasiva from '@/components/formularios/Form-ImportacionMasiva.vue'
-    //alertas
-    import AlertShort from '@/components/alertas/Alert-short-template.vue';
-
+    import FormImportacionMasiva from '@/components/formularios/Form-ImportacionMasiva.vue';
     //iconos
     import PersonPlussIcon from '../icons/Person-Pluss-icon.vue';
 
     //librerias
-    import { ref, onMounted, reactive, toRefs, watch, inject  } from 'vue';
+    import { ref, onMounted, defineEmits} from 'vue';
     import axios from 'axios';
     import { useRoute } from 'vue-router';
+
+    const emit = defineEmits([
+        "Notificacion",
+    ])
 
     const route = useRoute();
     // idSociedad es un String
@@ -244,6 +242,10 @@
         }
     };
 
+    const showN = (Data) => {
+        emit('Notificacion',Data);
+    }
+
     //parametros formularios
     const parametrosDP = ref({
         nacionalidad: [],
@@ -318,6 +320,7 @@
             }
         )
     }
+    
 // al montar el componente ejecuta las funciones
 onMounted(async () => {
     await pedirParametros(); //solicita los parametros para crear usuarios

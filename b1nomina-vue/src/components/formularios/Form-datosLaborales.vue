@@ -369,9 +369,9 @@ const crearDatoslaborales = async (ID_USERMASTER, Data) => {
         err => {
             ////console.log(err)
             // Verifica si la respuesta del error contiene un objeto de respuesta.
-            if (err.response) { 
+            if (err) { 
                 // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
-                if (err.status == 422){
+                if (err?.status == 422){
                     emit({'texto': "no se puede procesar la solcitud", 'valor':false});
                 }else if (err.response.status == 521) {
                     actualizadDatosLaborales(Data)
@@ -395,36 +395,31 @@ const actualizadDatosLaborales = async (Data) => {
             (res) => {
                 // Verifica si la respuesta tiene un estado HTTP 200 (OK).
                 if (res.status == 200 || res.status == 201 ) {
-                    // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
+                    // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.                    
                     emit("respuesta", { texto: res.data?.message, valor: true });
-                }
-
-            
-                // Llama a la función si nexmodal data imagen esta vacia o es indefinido NextModal pasando el ID del nuevo usuario.
-                if (mostrarFoto.value == false) {
                     NextModal(props.EmpleadoID);
                 } else {
-                    if (dataImagen.value == undefined || dataImagen.value == "") {
+                    // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
+                    emit("respuesta", { texto: res, valor: true });
                     NextModal(props.EmpleadoID);
-                    } else {
-                    ////console.log(mostrarFoto.value+ "mostrar foto")
-                    subirFoto(ID_USERMASTER, dataImagen.value, props.EmpleadoID);
-                    } 
                 }
+
             }
         )
         .catch(
             // Maneja los errores de la solicitud.
             (err) => {
-            // Verifica si la respuesta del error contiene un objeto de respuesta.
-            if (err.response) {
-                // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
-                if (err.response.status == 422) {
-                emit({ texto: "no se puede procesar la solcitud", valor: false });
+                console.log(err)
+                // Verifica si la respuesta del error contiene un objeto de respuesta.
+                if (err.response) {
+                    // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
+                    if (err.status == 422) {
+                        emit("respuesta", {texto: "no se puede procesar la solcitud", valor: false });
+                    } else {
+                        // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
+                        emit("respuesta", { texto: err.response.data.message, valor: false });
+                    }                    
                 }
-                // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
-                emit("respuesta", { texto: err.response.data.message, valor: false });
-            }
             }
         );
     }
