@@ -15,7 +15,7 @@
                     <FormSalario />
                 </div>
                 <div v-if=" formActivo == 2"> <!--retomar contrato-->                    
-                    <FormDatosContacto />
+                    <FormDatosContrato />
                 </div>
                 <div v-if=" formActivo == 3"> <!--retomar contrato-->                    
                    <FormPuesto />
@@ -27,10 +27,10 @@
                     <FormDatosPrincipales />                                
                 </div>
                 <div v-if=" formActivo == 6"> <!--retomar contrato-->                    
-                   Datos de contacto
+                    <FormDatosContacto />
                 </div>
                 <div v-if=" formActivo == 7"> <!--retomar contrato-->                    
-                   Datos de pago
+                    <FormDatosPago />
                 </div>
             </template>
         </TemplateModal>
@@ -41,9 +41,11 @@
     import TemplateModal from '@/components/modal/TemplateModal.vue';
     //formularios
     import FormSalario from '@/components/formularios/perfilEmpleado/Form-Salario.vue';
-    import FormDatosContacto from '@/components/formularios/perfilEmpleado/Form-DatosContrato.vue';
+    import FormDatosContrato from '@/components/formularios/perfilEmpleado/Form-DatosContrato.vue';
     import FormPuesto from '@/components/formularios/perfilEmpleado/Form-Puesto.vue';
     import FormDatosPrincipales from '@/components/formularios/perfilEmpleado/Form-DatosPrincipales.vue';
+    import FormDatosContacto from '@/components/formularios/perfilEmpleado/Form-DatosContacto.vue';
+    import FormDatosPago from '@/components/formularios/perfilEmpleado/Form-DatosPago.vue';
     
     //librerias
     import { ref, onMounted, reactive, inject, defineExpose } from 'vue';

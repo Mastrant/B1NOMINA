@@ -96,9 +96,6 @@
     const TerminoContrato = ref('');
     const FechaContratacion = ref('');
     const FechaFinalizacionContrato = ref('');
-    const SalarioBase = ref('');
-    const UnidadSueldo =ref('')
-    const MontoSalario = ref('');
 
 
     // payload de las peticiones
