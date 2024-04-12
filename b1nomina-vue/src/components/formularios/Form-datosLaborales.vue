@@ -591,14 +591,5 @@ h2.titulo-form {
     word-wrap: break-word;
 }
 
-/* Estilo para el texto dentro del botón de añadir una foto, 
-asegurando que el texto sea legible y coherente con el diseño */
-.add-photo > span {
-    color: #C2C2C2;
-    font-size:  18px;
-    font-family: Poppins;
-    font-weight:  600;
-    line-height:  40px;
-    word-wrap: break-word;
-}
+
 </style>

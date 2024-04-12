@@ -76,10 +76,24 @@
                 <template v-slot:formulario>
                     <div class="contenedorInfo" v-if="panelShow ==1">                  
                         <LayoutTablaEMpleados>
-                            <template #boton>                                                                    
-                                <TemplateBlanckButton @click="EditarInformacion(1)" text="Editar">
+                            <template #boton1>                                                                    
+                                <TemplateBlanckButton @click="() => EditarInfo?.ActionButton(1, EmpleadoID)" text="Editar">
                                     <template #default>
-                                        <EdiIcon color="#000000"/>
+                                        <EdiIcon Stroke="#000000"/>
+                                    </template>
+                                </TemplateBlanckButton>
+                            </template>
+                            <template #boton3>                                                                    
+                                <TemplateBlanckButton @click="EditarInfo?.ActionButton(2,EmpleadoID)" text="Editar">
+                                    <template #default>
+                                        <EdiIcon Stroke="#000000"/>
+                                    </template>
+                                </TemplateBlanckButton>
+                            </template>
+                            <template #boton5>                                                                    
+                                <TemplateBlanckButton @click="EditarInfo?.ActionButton(3,EmpleadoID)" text="Editar">
+                                    <template #default>
+                                        <EdiIcon Stroke="#000000"/>
                                     </template>
                                 </TemplateBlanckButton>
                             </template>
@@ -146,7 +160,7 @@
                              <!--segundo apartado-->
 
                             <template #titulo5>                                                                    
-                                Datos puesto de trabajo
+                                Puesto de trabajo
                             </template>                                                        
                             <template #st-17>  <!--Sede de Trabajo-->                                                                            
                                 Sede de Trabajo
@@ -177,10 +191,24 @@
                     </div>
                     <div class="contenedorInfo" v-if="panelShow ==2">
                         <LayoutTablaEMpleados>
-                            <template #boton>                                                                    
-                                <TemplateBlanckButton text="Editar">
+                            <template #boton1>                                                                    
+                                <TemplateBlanckButton @click="EditarInfo?.ActionButton(5,EmpleadoID)" text="Editar">
                                     <template #default>
-                                        <EdiIcon color="#000000"/>
+                                        <EdiIcon Stroke="#000000"/>
+                                    </template>
+                                </TemplateBlanckButton>
+                            </template>
+                            <template #boton3>                                                                    
+                                <TemplateBlanckButton @click="EditarInfo?.ActionButton(6,EmpleadoID)" text="Editar">
+                                    <template #default>
+                                        <EdiIcon Stroke="#000000"/>
+                                    </template>
+                                </TemplateBlanckButton>
+                            </template>
+                            <template #boton5>                                                                    
+                                <TemplateBlanckButton @click="EditarInfo?.ActionButton(7,EmpleadoID)" text="Editar">
+                                    <template #default>
+                                        <EdiIcon Stroke="#000000"/>
                                     </template>
                                 </TemplateBlanckButton>
                             </template>
@@ -357,8 +385,11 @@ import EdiIcon from '@/components/icons/Edit-icon.vue';
 
 //Librerias y acciones
 import {ref, defineProps} from 'vue';
-
+import {useRoute}  from 'vue-router';
 import almacen from '@/store/almacen';
+
+const route = useRoute();  
+const EmpleadoID = route.params.empleadoId
 
 const props = defineProps({
     DatosUsuario: {
@@ -370,13 +401,8 @@ const panelShow = ref(1)
 const showInfo = (id_apartado) => {
     panelShow.value = id_apartado;
 };
-
+//referencia del ciclo editar info
 const EditarInfo = ref(null);
-const EditarInformacion = (ID_Info) => {
-    console.log(ID_Info)
-    EditarInfo?.value.ActionButton(ID_Info, props.DatosUsuario?.id)
-    
-}
 
 // Declara una constante 'lista_dias' que almacena un arreglo de días de descanso tomado de los datos del usuario.
 // Utiliza el operador de encadenamiento opcional (?.) para acceder a 'dias_descanso' dentro de 'props.DatosUsuario'.

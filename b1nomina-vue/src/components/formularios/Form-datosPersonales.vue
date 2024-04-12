@@ -261,32 +261,6 @@ watch(direccion, (nuevoValor) => ActualizarPayload1('direccion', nuevoValor));
 watch(telefonoCelular, (nuevoValor) => ActualizarPayload1('telefonoCelular', nuevoValor));
 watch(telefonoLocal, (nuevoValor) => ActualizarPayload1('telefonoLocal', nuevoValor));
 
-/*
-const enviarDatosPersonales = async (Datos) => {
-  await axios.post('/user/create_preuser2', Datos )
-  .then(
-    res => {
-      console.log(res)
-      if (res.status == 201){
-        emit("respuesta", {'texto':res?.data?.message, 'valor':true})
-        NextModal(res.data.newUserId);
-      }            
-    }
-  )
-  .catch(
-    err => {
-      if (err.response) { 
-        if (err.response.status == 422){
-          console.log({'texto': "no se puede procesar la solcitud", 'valor':false});
-        } 
-          console.log(err);
-          emit("respuesta", {'texto':err?.response.data?.message, 'valor':false})
-      
-      }
-    }
-  );
-}
-*/
 
 const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
   await axios.put(`/user/${props.EmpleadoID}/save_preuser?userUpdater=${ID_USERMASTER}`, Datos)

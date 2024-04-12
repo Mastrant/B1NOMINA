@@ -12,16 +12,25 @@
         >
             <template #default><!--Espacio para los formularios -->
                 <div v-if=" formActivo == 1"> <!--retomar contrato-->                    
-                   formulario 1
+                    <FormSalario />
                 </div>
                 <div v-if=" formActivo == 2"> <!--retomar contrato-->                    
-                   formulario 2
+                    <FormDatosContacto />
                 </div>
                 <div v-if=" formActivo == 3"> <!--retomar contrato-->                    
-                   formulario 3
+                   <FormPuesto />
                 </div>
                 <div v-if=" formActivo == 4"> <!--retomar contrato-->                    
-                   formulario 4
+                    formulario Centralizacion
+                </div>
+                <div v-if=" formActivo == 5"> <!--retomar contrato-->     
+                    <FormDatosPrincipales />                                
+                </div>
+                <div v-if=" formActivo == 6"> <!--retomar contrato-->                    
+                   Datos de contacto
+                </div>
+                <div v-if=" formActivo == 7"> <!--retomar contrato-->                    
+                   Datos de pago
                 </div>
             </template>
         </TemplateModal>
@@ -29,18 +38,15 @@
 
 <script setup>
     //componentes
-    import TemplateButton from '@/components/botones/Template-button.vue';
-    import TemplateButton2 from '@/components/botones/Template-button2.vue'
     import TemplateModal from '@/components/modal/TemplateModal.vue';
     //formularios
-    import FormDatosBasicos from '@/components/formularios/Form-datosBasicos.vue';
-    import FormDatosPersonalesVue from '@/components/formularios/Form-datosPersonales.vue';
-    import FormDatosLaborales from '@/components/formularios/Form-datosLaborales.vue';
-    import FormDatosPago from '@/components/formularios/Form-datosPago.vue';
-    import FormImportacionMasiva from '@/components/formularios/Form-ImportacionMasiva.vue'
-
+    import FormSalario from '@/components/formularios/perfilEmpleado/Form-Salario.vue';
+    import FormDatosContacto from '@/components/formularios/perfilEmpleado/Form-DatosContrato.vue';
+    import FormPuesto from '@/components/formularios/perfilEmpleado/Form-Puesto.vue';
+    import FormDatosPrincipales from '@/components/formularios/perfilEmpleado/Form-DatosPrincipales.vue';
+    
     //librerias
-    import { ref, onMounted, reactive, toRefs, watch, inject, defineExpose } from 'vue';
+    import { ref, onMounted, reactive, inject, defineExpose } from 'vue';
     import axios from 'axios';
     import { useRoute } from 'vue-router';
 
@@ -56,7 +62,7 @@
     const formActivo = ref(1)
     const TextoButton = ref('')
     const TituloModal = ref('')
-    const EmpleadoID_Selecionado = ref(null)
+    const EmpleadoID_Selecionado = ref(0)
     const modalActivo = ref(0)
     const IDFormModal = ref('')
 
@@ -74,28 +80,28 @@
      * Ejecuta acciones específicas basadas en los botones de la tabla de Encontratación.
      * Controla la visualización de modales y la activación de formularios.
      * 
-     * @param {number} IdModal - Identificador del modal a mostrar.
      * @param {number} TipoAccion - Tipo de acción a realizar:
-     *                             1: Cargar CV,
-     *                             2: Retomar CV,
-     *                             3: Cargar Contrato,
+     *                             1: Salario,
+     *                             2: Datos de contrato,
+     *                             3: Datos puesto de trabajo,
+     *                             4: Centralizacion.
+     *                             4: Retomar Contrato.
+     *                             4: Retomar Contrato.
      *                             4: Retomar Contrato.
      * @param {number} item_ID - ID del elemento seleccionado.
      * 
      * @example
      * ActionButton(1, 1, 123); // Muestra el modal para cargar CV con el ID 123.
      */
-    const ActionButton = (TipoAccion = 0, item_ID = 0, IdModal = 1, ) => {
-           
+    const ActionButton = (TipoAccion, item_ID) => {
+        console.log(TipoAccion, item_ID)
         switch (TipoAccion) {
             case 1:                
                 formActivo.value = TipoAccion;
                 EmpleadoID_Selecionado.value = item_ID;
                 TextoButton.value = 'Actualizar';
                 TituloModal.value = 'Datos Laborales';
-                IDFormModal.value = 'ActualizarSalario';
-
-                showModal(IdModal)
+                IDFormModal.value = 'ActualizarSalario';               
                 break;
             case 2:
                 formActivo.value = TipoAccion;
@@ -103,8 +109,6 @@
                 TextoButton.value = 'Actualizar';
                 TituloModal.value = 'Datos Laborales';
                 IDFormModal.value = 'ActualizarContrato';
-
-                showModal(IdModal)
             
                 break;
             case 3:
@@ -114,8 +118,6 @@
                 TituloModal.value = 'Datos Laborales';
                 IDFormModal.value = 'ActualizarPuesto';
 
-                showModal(IdModal)
-                
                 break;
             case 4:
                 formActivo.value = TipoAccion;
@@ -124,8 +126,6 @@
                 TituloModal.value = 'Datos Laborales';
                 IDFormModal.value = 'ActualizarCentralizacion';
 
-                showModal(IdModal)
-                
                 break; 
             case 5:
                 formActivo.value = TipoAccion;
@@ -134,7 +134,6 @@
                 TituloModal.value = 'Datos Personales';
                 IDFormModal.value = 'ActualizarDatosPrincipales';
 
-                showModal(IdModal)
                 break;
             case 6:
                 formActivo.value = TipoAccion;
@@ -143,7 +142,6 @@
                 TituloModal.value = 'Datos Personales';
                 IDFormModal.value = 'ActualizarContacto';
 
-                showModal(IdModal)
                 break;
             case 7:
                 formActivo.value = TipoAccion;
@@ -152,12 +150,10 @@
                 TituloModal.value = 'Datos Personales';
                 IDFormModal.value = 'ActualizarDatosPago';
 
-                showModal(IdModal)
                 break; 
-        
-            default:            
+                
         }
-            
+        showModal(1)
     }
 
     const NotificacionModal = ref({})
@@ -220,7 +216,7 @@
 
 // al montar el componente ejecuta las funciones
 onMounted(async () => {
-    await pedirParametros(); //solicita los parametros para crear usuarios
+    //await pedirParametros(); //solicita los parametros para crear usuarios
 });
 </script>
 

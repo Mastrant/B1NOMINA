@@ -4,9 +4,9 @@ import axios from 'axios';
 
 //base de la URL
 
-//axios.defaults.baseURL = 'http://192.168.3.54:8000/V1.0';
+axios.defaults.baseURL = 'http://192.168.3.54:8000/V1.0';
 
-axios.defaults.baseURL = 'http://10.0.2.3:8000/V1.0';
+//axios.defaults.baseURL = 'http://10.0.2.3:8000/V1.0';
 
 //tiempo de espera predeterminado
 axios.defaults.timeout = 300000; //30s

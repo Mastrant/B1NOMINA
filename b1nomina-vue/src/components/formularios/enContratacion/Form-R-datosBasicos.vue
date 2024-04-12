@@ -4,13 +4,12 @@
     <!---->
     <div class="row-form">
       <LayoutInputLineal textLabel="Tipo de Documento" :requerido="RequiereActualizar">
-        <template>
+        <template v-slot>
           <ListaTemplateLineal
             v-model="tipoDocumentoSelect"
             :options="ListaTiposDocumentos"
             :requerido="RequiereActualizar"
             optionsSelected="Seleccionar"
-            
           />
         </template>
       </LayoutInputLineal>
@@ -72,8 +71,28 @@ import LayoutInputLineal from "@/components/Layouts/LayoutInputLineal.vue";
 import InputRadioButton from "@/components/botones/Input-Radio-button.vue";
 import inputPicForm from "@/components/inputs/Input-Pic-form.vue";
 
-import { ref, watch, defineEmits, defineProps, reactive, defineExpose } from "vue";
+import { ref, watch, defineEmits, defineProps, reactive, defineExpose, onBeforeMount } from "vue";
 import axios from "axios";
+
+
+
+//Configuracion del componente
+
+// se espera una propiedad EmpleadoID de tipo Number o String que corresponde al ID del empleado que se esta añadiendo.
+const props = defineProps({
+  EmpleadoID: {
+    type: [Number, String], // Especifica que el tipo de la propiedad es Number
+    default: 0
+  },
+  parametros: {
+    type: Object,
+    default: {},
+  },
+  Informacion: {
+    type: Object,
+    default: {}
+  }
+});
 
 
 // inicializacion de variables reactivas
@@ -81,7 +100,7 @@ import axios from "axios";
 const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
 
 //Valores
-const numeroDocumento = ref("");
+const numeroDocumento = ref("123456");
 const nombres = ref("");
 const apellidos = ref("");
 const correo = ref("");
@@ -99,7 +118,7 @@ const DatosUserOriginal = {}
 
 
 //Configuraciones
-const tipoDocumentoSelect = ref(""); //Documento selecionado
+const tipoDocumentoSelect = ref("2"); //Documento selecionado
 const mostrarFoto = ref(true);
 const ListaTiposDocumentos = [
   {
@@ -147,18 +166,15 @@ const inputFoto = ref(null);
 
 
 watch(numeroDocumento, (nuevoValor) => ActualizarPayload("documento", nuevoValor));
-watch(nombres, (nuevoValor) => ActualizarPayload("nombres", nuevoValor?.toUpperCase()));
-watch(apellidos, (nuevoValor) => ActualizarPayload("apellidos", nuevoValor?.toUpperCase()));
-watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor?.toLowerCase()));
+watch(nombres, (nuevoValor) => { ActualizarPayload("nombres", nuevoValor.toUpperCase())});
+watch(apellidos, (nuevoValor) => ActualizarPayload("apellidos", nuevoValor.toUpperCase()));
+watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor.toLowerCase()));
 watch(() => props.EmpleadoID, (nuevoValor) => { (nuevoValor == null) ? mostrarFoto.value = true : ExisteFoto(nuevoValor);});
 
 watch(() => props.Informacion, (nuevoValor) => { 
   console.log(nuevoValor)
 });
 
-
-
-Informacion
 
 /**
  * Actualiza el valor de una propiedad específica dentro del objeto 'payload'.
@@ -220,7 +236,6 @@ const resetForm = () => {
   apellidos.value = "";
   tipoDocumentoSelect.value = "";
   correo.value = "";
-  invitacion.value = 0;
   // Reinicia el payload
   Object.keys(payload).forEach((key) => {
     payload[key] = "";
@@ -238,6 +253,11 @@ const resetForm = () => {
  const Enviar = () => {
   //si ID es nulo crea un usuario
   let statuspay = Object.values(payload).some((value) => value !== "");
+
+  console.log(statuspay)
+  console.log(payload)
+  console.log(props.EmpleadoID)
+  console.log(props.Informacion)
 
   if (props.EmpleadoID == null && statuspay == true) {
     CrearUsuario(payload);
@@ -466,22 +486,6 @@ const ExisteFoto = (IDUsuario) => {
 
 
 
-//Configuracion del componente
-
-// se espera una propiedad EmpleadoID de tipo Number o String que corresponde al ID del empleado que se esta añadiendo.
-const props = defineProps({
-  EmpleadoID: {
-    type: [Number, String], // Especifica que el tipo de la propiedad es Number
-  },
-  parametros: {
-    type: Object,
-    default: {},
-  },
-  Informacion: {
-    type: Object,
-    default: {}
-  }
-});
 
 // Define los eventos que el componente puede emitir. En este caso, se especifica un evento llamado 'nextModal'.
 const emit = defineEmits([
@@ -495,10 +499,12 @@ defineExpose({
 });
 
 
-
-//cortar esta parte:
-
-
+onBeforeMount(() => {
+  numeroDocumento.value = ref("123456");
+  nombres.value = ref("test");
+  apellidos.value = ref("test2");
+  correo.value = ref("correo");
+});
 
 
 

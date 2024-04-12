@@ -1,9 +1,11 @@
 <template>
     <div class="contend">
-        <div class="boton-position">
-            <slot name="boton">boton</slot>
-        </div>
+        
         <div class="elementos">
+
+            <div class="boton-position">
+                <slot name="boton1"></slot>
+            </div>
             <h3><slot name="titulo1"></slot></h3>
             <div class="row-elementos">
                 <div class="box">
@@ -24,6 +26,9 @@
                 </div>
             </div>
 
+            <div class="boton-position">
+                <slot name="boton2"></slot>
+            </div>
             <h3><slot name="titulo2"></slot></h3>
             <div class="row-elementos">
                 <div class="box">
@@ -44,6 +49,9 @@
                 </div>
             </div>
 
+            <div class="boton-position">
+                <slot name="boton3"></slot>
+            </div>
             <h3><slot name="titulo3"></slot></h3>
             <div class="row-elementos">
                 <div class="box">
@@ -64,6 +72,9 @@
                 </div>
             </div>
 
+            <div class="boton-position">
+                <slot name="boton4"></slot>
+            </div>
             <h3><slot name="titulo4"></slot></h3>
             <div class="row-elementos">
                 <div class="box">
@@ -84,6 +95,9 @@
                 </div>
             </div>
 
+            <div class="boton-position">
+                <slot name="boton5"></slot>
+            </div>
             <h3><slot name="titulo5"></slot></h3>
             <div class="row-elementos">
                 <div class="box">
@@ -104,6 +118,9 @@
                 </div>
             </div>
 
+            <div class="boton-position">
+                <slot name="boton6"></slot>
+            </div>
             <h3><slot name="titulo6"></slot></h3>
             <div class="row-elementos">
                 <div class="box">
@@ -123,6 +140,7 @@
                     <h4><slot name="text-25"></slot></h4>
                 </div>
             </div>
+
         </div>
     </div>
 </template>
@@ -137,15 +155,15 @@ div.contend {
 
 div.boton-position {
     display: flex;
-    width: fit-content;
+    width: 100%;
     justify-content: end;
-    box-sizing: border-boxox;
+    box-sizing: border-box;
 }
 
 div.elementos {
     display: flex;
     flex-direction: column;
-    gap: 6;
+    gap: 3px;
     width: 100%;
 }
 
@@ -155,7 +173,6 @@ div.row-elementos {
     gap: 12px;
     box-sizing: border-box;
     justify-content: space-between;
-    margin-bottom: 24px;
 }
 
 div.row-elementos > div.box {

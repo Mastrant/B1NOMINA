@@ -28,10 +28,10 @@ button {
     padding-top: 9.62px; 
     padding-bottom: 9.62px;
     background: none;
-    box-shadow: 0px 0.9615941643714905px 1.923188328742981px rgba(16, 24, 40, 0.05);
+
     border-radius: 6px;
     overflow: hidden;
-    border: 0.96px #1A2771 solid;
+    border:none;
     justify-content: center;
     align-items: center;
     gap: 7.69px;

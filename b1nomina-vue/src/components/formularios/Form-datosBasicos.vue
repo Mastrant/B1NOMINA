@@ -6,7 +6,6 @@
       <LayoutInputLineal textLabel="Tipo de Documento" :requerido="true">
         <template v-slot>
           <ListaTemplateLineal
-            requirido="true"
             v-model="tipoDocumentoSelect"
             :options="ListaTiposDocumentos"
             optionsSelected="Seleccionar"
