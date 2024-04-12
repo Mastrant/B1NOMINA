@@ -237,7 +237,6 @@
         )
     };
 
-
     //filtros
     /**
     * Asigna el valor de "departamento" al arreglo de parámetros de la petición de empleados.

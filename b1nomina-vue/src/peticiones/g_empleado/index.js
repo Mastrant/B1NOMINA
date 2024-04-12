@@ -129,6 +129,19 @@ const peticiones_EnContratacion = {
                 return { success: false, error: error };
             });
     }, 
+    PedirDatosProspecto(idEmpleado){
+        try {
+            return axios.get(`/user/${idEmpleado}/precarga`)
+            .then(respuesta => {
+                return { success: true, data: (respuesta.data?.data)? respuesta.data?.data : respuesta?.data };
+            })
+            .catch(error => {
+                return { success: false, error: error?.response?.data.message };
+            });
+        } catch (error) {
+            return { success: false, error: error };
+        }           
+    }
 
 }
 

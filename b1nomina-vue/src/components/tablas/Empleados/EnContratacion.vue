@@ -31,7 +31,7 @@
                     {{ item.nombre }} {{ item.apellido_paterno }} {{ item.apellido_materno }}                    
                 </template>
                 <template v-slot:rut>
-                    {{ item.rut }}                   
+                    {{ item.rut }}                  
                 </template>
                 <template v-slot:CV>
                     <WaitButton v-if="item?.cv_estatus == 1" @click="ActionButton(1,1,item.id)"/>
@@ -47,18 +47,22 @@
                     <EBarraProgresoVue class="icon" :porcentaje="item.avance"/>
                 </template>
                 <template v-slot:accionButton>
+                    <EditIcon 
+                        @click="ReanudarInformación(item.id)"
+                        Stroke="#1A245B"
+                        text="Editar"
+                    />
                     <CiculoCorrectIcon 
                         @click="ActionButton(2,1,item.id)"
-                        class="icon" 
                         Stroke="#1A245B"
                         text="Contratar"
                     />
                     <ExitColorIcon
                         @click="ActionButton(2,2,item.id)" 
-                        class="icon" 
                         Stroke="#1A245B" 
                         text="Eliminar"
                     />
+                    
                 </template>
             </EnContratacionRow>
         </table>
@@ -202,6 +206,8 @@
             </PaginateButton>
             </div>
         </div>
+
+        <CicloRetomarEmpleado ref='CicloCrearEmpleado' />
     </div>
 </template>
 
@@ -218,6 +224,9 @@
     import NavButtonTemplate from '@/components/botones/Nav-button-templateForm.vue';
     import InputDocsForm2 from '@/components/inputs/Input-Docs-form2.vue';
     import CorrectButton from '@/components/botones/Correct-button.vue';
+    import CicloRetomarEmpleado from '@/components/elementos/Ciclo-Retomar-Empleado.vue';
+    import EditIcon from '@/components/icons/Edit-icon.vue';
+
 
     import { ref, defineProps, watchEffect, onMounted, defineEmits} from 'vue';
 
@@ -237,6 +246,8 @@
         'ActualizarData',
         'showNotificacion',
     ]);
+
+    const CicloCrearEmpleado = ref(null)
 
     const idCreator = almacen.userID;
 
@@ -274,6 +285,9 @@
             activarModal2.value = false;
         }
     };
+    const ReanudarInformación = (ID_Empleado = null) => {
+        CicloCrearEmpleado.value?.PedirInfo(ID_Empleado)
+    }
 
     const panelShow = ref(1)
     const showInfo = (id) => {
