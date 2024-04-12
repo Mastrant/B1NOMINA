@@ -23,15 +23,16 @@
                     
                     <FormRDatosBasicos 
                         @nextModal="avanzarForm"
-                        @respuesta="sendData" 
-                        :EmpleadoID="ID_Usuario_Creado"                    
+                        @respuesta="activarNotificacionModal" 
+                        :EmpleadoID="ID_Usuario_Creado"
+                        :Informacion="Data_Usuario"                 
                         v-show="idFormularioActivo == 1"
                         ref="Form1" 
                     />
                     
                     <FormDatosPersonalesVue 
                         @nextModal="avanzarForm"
-                        @respuesta="sendData"
+                        @respuesta="activarNotificacionModal"
                         :EmpleadoID="ID_Usuario_Creado"
                         :parametros="parametrosDP"
                         v-show="idFormularioActivo == 2"
@@ -40,7 +41,7 @@
                     
                     <FormDatosLaborales 
                         @nextModal="avanzarForm"
-                        @respuesta="sendData"
+                        @respuesta="activarNotificacionModal"
                         :EmpleadoID="ID_Usuario_Creado"
                         :parametros="parametrosDL"
                         v-show="idFormularioActivo == 3"
@@ -49,7 +50,7 @@
 
                     <FormDatosPago
                         @closeModal="showModal"
-                        @respuesta="sendData"
+                        @respuesta="activarNotificacionModal"
                         :EmpleadoID="ID_Usuario_Creado"
                         :parametros="parametrosDPa"
                         v-show="idFormularioActivo == 4"
@@ -100,12 +101,12 @@
      //arreglo con la data
     const dataNotificacion = ref({})
     
-    const sendData = (DATA) => {
+    const activarNotificacionModal = (DATA) => {
         dataNotificacion.value = DATA //asigna el valor
     }    
 
     const ID_Usuario_Creado = ref('');
-    const Data_Usuario = ref('')
+    const Data_Usuario = ref(''); // almacena la información de usuario dada por la api
 
     // Crear referencias a los componentes hijos
     const Form1 = ref(null);
@@ -129,6 +130,19 @@
             ID_Usuario_Creado.value = ID_Empleado
             //Data_Usuario.value = respuesta.data
             Data_Usuario.value = {
+                'documento': '1',
+                'nombres': 'Admin',
+                'apellidos': 'Root',
+                'correo': 'null',
+                'nacionalidad': '1',
+                'genero': '1',
+                'fechaNacimiento': '1990-01-01',
+                'estadoCivil': '1',
+                'region': '13',
+                'localidad': '13106',
+                'direccion': 'alguna dirección dos',
+                'telefonoCelular': 'null',
+                'telefonoLocal': 'null'
             }
             showModal(1)
         } else {
@@ -227,7 +241,7 @@
                 };
 
                 // Función para asignar valores a los objetos de destino
-                function asignarValores(parametros, objetoDestino) {
+                const asignarValores = (parametros, objetoDestino) => {
                     for (const clave in parametros) {
                         if (parametros.hasOwnProperty(clave) && mapeoParametros[clave]) {
                             const propiedadDestino = mapeoParametros[clave];
@@ -247,7 +261,7 @@
         .catch(
             err => {
                 // Maneja errores de la solicitud
-                //console.log(err)
+                console.error(err?.response.data)
             }
         )
     }

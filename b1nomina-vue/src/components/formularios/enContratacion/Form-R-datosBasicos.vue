@@ -3,14 +3,14 @@
     <h2 class="titulo-form">Datos básicos</h2>
     <!---->
     <div class="row-form">
-      <LayoutInputLineal textLabel="Tipo de Documento" :requerido="true">
+      <LayoutInputLineal textLabel="Tipo de Documento" :requerido="RequiereActualizar">
         <template>
           <ListaTemplateLineal
-            requirido="true"
             v-model="tipoDocumentoSelect"
             :options="ListaTiposDocumentos"
+            :requerido="RequiereActualizar"
             optionsSelected="Seleccionar"
-            :requerido="true"
+            
           />
         </template>
       </LayoutInputLineal>
@@ -21,7 +21,7 @@
         name="Documento"
         v-model="numeroDocumento"
         @update:modelValue="numeroDocumento = $event"
-        :requerido="true"
+        :requerido="RequiereActualizar"
         :Deshabilitar="tipoDocumentoSelect != 2"
         :minimo-caracteres="3"
         :maximo-caracteres="100"
@@ -34,7 +34,7 @@
         Titulo="Nombres"
         v-model="nombres"
         @update:modelValue="nombres = $event"
-        :requerido="true"
+        :requerido="RequiereActualizar"
         name="Nombres"
       />
       <InputLinealDescripcion
@@ -42,7 +42,7 @@
         Titulo="Apellido Paterno"
         v-model="apellidos"
         @update:modelValue="apellidos = $event"
-        :requerido="true"
+        :requerido="RequiereActualizar"
         name="Apellidos"
       />
     </div>
@@ -54,7 +54,7 @@
         v-model="correo"
         @update:modelValue="correo = $event"
         Tipo="email"
-        :requerido="true"
+        :requerido="RequiereActualizar"
         name="CorreoElectronico"
       />
     </div>
@@ -88,19 +88,12 @@ const correo = ref("");
 
 
 
-
-
-
-
-
-
-const foto = ref("");
 const dataImagen = ref("");
 
 
+const RequiereActualizar = ref(false)
 
-
-
+const DatosUserOriginal = {}
 
 
 
@@ -159,10 +152,13 @@ watch(apellidos, (nuevoValor) => ActualizarPayload("apellidos", nuevoValor?.toUp
 watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor?.toLowerCase()));
 watch(() => props.EmpleadoID, (nuevoValor) => { (nuevoValor == null) ? mostrarFoto.value = true : ExisteFoto(nuevoValor);});
 
+watch(() => props.Informacion, (nuevoValor) => { 
+  console.log(nuevoValor)
+});
 
 
 
-
+Informacion
 
 /**
  * Actualiza el valor de una propiedad específica dentro del objeto 'payload'.
@@ -224,7 +220,6 @@ const resetForm = () => {
   apellidos.value = "";
   tipoDocumentoSelect.value = "";
   correo.value = "";
-  foto.value = "";
   invitacion.value = 0;
   // Reinicia el payload
   Object.keys(payload).forEach((key) => {
@@ -305,8 +300,7 @@ const subirFoto = async (idCreator, Datos, ID_EMpleado) => {
 // Los datos del usuario a crear se pasan como argumento 'Datos'.
 const CrearUsuario = async (Datos) => {
   // Realiza la solicitud POST y espera la respuesta.
-  await axios
-    .post("/user/create_preuser", Datos)
+  await axios.post("/user/create_preuser", Datos)
     .then(
       // Maneja la respuesta exitosa.
       (res) => {
@@ -333,13 +327,13 @@ const CrearUsuario = async (Datos) => {
         if (err?.response) {
           // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
           if (err.status == 422) {
-            emit({ texto: "no se puede procesar la solcitud", valor: false });
+            emit("respuesta",{ texto: "no se puede procesar la solcitud", valor: false });
           } else {
             // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
             emit("respuesta", { texto: err.response.data?.message, valor: false });
           }
         } else {
-          emit({ texto: "no se puede procesar la solcitud", valor: false });
+          emit("respuesta", { texto: "no se puede procesar la solcitud", valor: false });
         }
       }
     );
@@ -354,8 +348,7 @@ const ActualizarDatosBasicos = async (idCreator, Datos, ID_EMpleado) => {
     CrearUsuario(Datos);
   } else {
     // Realiza la solicitud PUT y espera la respuesta.
-    await axios
-      .put(`/user/${ID_EMpleado}/update_preuser?user_updater=${idCreator}`, Datos)
+    await axios.put(`/user/${ID_EMpleado}/update_preuser?user_updater=${idCreator}`, Datos)
       .then(
         // Maneja la respuesta exitosa.
         (res) => {
@@ -386,7 +379,7 @@ const ActualizarDatosBasicos = async (idCreator, Datos, ID_EMpleado) => {
           if (err.response) {
             // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
             if (err.response.status == 422) {
-              emit.log({ texto: "no se puede procesar la solcitud", valor: false });
+              emit.log("respuesta",{ texto: "no se puede procesar la solcitud", valor: false });
             }else {
               // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
               emit("respuesta", { texto: err.response.data.message, valor: false });
