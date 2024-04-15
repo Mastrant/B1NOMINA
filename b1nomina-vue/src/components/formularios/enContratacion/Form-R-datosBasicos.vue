@@ -8,7 +8,8 @@
           <ListaTemplateLineal
             v-model="tipoDocumentoSelect"
             :options="ListaTiposDocumentos"
-            :requerido="RequiereActualizar"
+            :requerido="RequiereActualizar"            
+            :preseleccion="tipoDocumentoSelect"  
             optionsSelected="Seleccionar"
           />
         </template>
@@ -137,6 +138,13 @@ const ListaTiposDocumentos = [
 
 
 //Contiene la información a enviar
+const payload_old = reactive({
+  apellidos: "",
+  correo: "",
+  documento: "",
+  nombres: "",
+});
+
 const payload = reactive({
   apellidos: "",
   correo: "",
@@ -207,21 +215,68 @@ watch(() => props.Informacion, (nuevoValor) => {
  const ActualizarPayload = (propiedad, valor) => {
   // Asigna el nuevo valor a la propiedad especificada dentro del objeto 'payload'.
   payload[propiedad] = valor;
+  
+  verificarCambios();
+
 };
+
+// Define la función verificarCambios que verifica si hay cambios entre los valores antiguos y nuevos de un payload.
+const verificarCambios = () => {
+    // Comprueba si todos los campos relevantes en payload_old y payload son iguales.
+    // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
+    const camposIguales = Object.keys(payload_old).every(key => payload_old[key] === payload[key]);
+
+    // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
+    const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
+
+    // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
+    // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
+    // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
+    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+}
+
+
+
+// Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
+const MostrarValores = (DATA) => {
+
+  // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
+  numeroDocumento.value = (DATA?.documento == null)? '' :DATA?.documento;
+  
+  // Asigna el valor de DATA?.nombres a nombres.value, utilizando '' si DATA?.nombres es null.
+  nombres.value = (DATA?.nombres == null)? '' :DATA?.nombres;
+
+  // Asigna el valor de DATA?.apellidos a apellidos.value, utilizando '' si DATA?.apellidos es null.
+  apellidos.value = (DATA?.apellidos == null)? '' :DATA?.apellidos;
+
+  // Asigna el valor de DATA?.correo a correo.value, utilizando '' si DATA?.correo es null.
+  correo.value = (DATA?.correo == null)? '' :DATA?.correo;
+
+  // Establece el valor de tipoDocumentoSelect.value en 2, indicando un tipo de documento predeterminado.
+  tipoDocumentoSelect.value = 2;
+
+  // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
+  // utilizando '' si DATA?.documento es null.
+  payload_old.documento = DATA?.documento ?? '';
+  payload.documento = DATA?.documento ?? '';
+
+  // Repite el proceso para los demás campos, asignando valores a payload_old y payload,
+  // utilizando '' si los valores correspondientes en DATA son null.
+  payload_old.nombres = DATA?.nombres ?? '';
+  payload.nombres = DATA?.nombres ?? '';
+
+  payload_old.apellidos = DATA?.apellidos ?? '';
+  payload.apellidos = DATA?.apellidos ?? '';
+
+  payload_old.correo = DATA?.correo ?? '';
+  payload.correo = DATA?.correo ?? '';
+}
+
+
 
 const actualizarDataImagen = (evento) => {
   dataImagen.value = evento;
 };
-
-const MostrarValores = (DATA) => {
-  console.log(DATA)
-  numeroDocumento.value = DATA?.documento;
-  nombres.value = DATA?.documento;
-  apellidos.value = DATA?.documento;
-  correo.value = DATA?.documento;
-  tipoDocumentoSelect.value = 2;
-}
-
 
 
 
@@ -267,15 +322,6 @@ const resetForm = () => {
   //si ID es nulo crea un usuario
   let statuspay = Object.values(payload).some((value) => value !== "");
 
-  console.log(statuspay)
-  console.log(payload)
-  console.log(props.EmpleadoID)
-  console.log(props.Informacion)
-
-  if (props.EmpleadoID == null && statuspay == true) {
-    CrearUsuario(payload);
-  }
-
   if (props.EmpleadoID != null && props.EmpleadoID > 0) {
     if (statuspay == true) {
       ActualizarDatosBasicos(ID_USERMASTER, payload, props.EmpleadoID);
@@ -287,6 +333,55 @@ const resetForm = () => {
 
 
 // Comunicación con api:
+
+
+
+const ActualizarDatosBasicos = async (idCreator, Datos, ID_EMpleado) => {
+    // Realiza la solicitud PUT y espera la respuesta.
+    console.log(Datos)
+    await axios.put(`/user/${ID_EMpleado}/update_preuser?user_updater=${idCreator}`, Datos)
+      .then(
+        // Maneja la respuesta exitosa.
+        (res) => {
+          // Verifica si la respuesta tiene un estado HTTP 200 (OK).
+          if (res.status == 200) {
+            // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
+            emit("respuesta", { texto: res.data?.message, valor: true });
+          }
+
+          
+          // Llama a la función si nexmodal data imagen esta vacia o es indefinido NextModal pasando el ID del nuevo usuario.
+          if (mostrarFoto.value == false) {
+            NextModal(props.EmpleadoID);
+          } else {
+            if (dataImagen.value == undefined || dataImagen.value == "") {
+              NextModal(props.EmpleadoID);
+            } else {
+              //console.log(mostrarFoto.value+ "mostrar foto")
+              subirFoto(ID_USERMASTER, dataImagen.value, props.EmpleadoID);
+            } 
+          }
+        }
+      )
+      .catch(
+        // Maneja los errores de la solicitud.
+        (err) => {
+          // Verifica si la respuesta del error contiene un objeto de respuesta.
+          if (err.response) {
+            console.log(err)
+            // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
+            if (err.response.status == 422) {
+              
+              emit("respuesta",{ texto: "no se puede procesar la solcitud", valor: false });
+            }else {
+              // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
+              emit("respuesta", { texto: err.response.data.message, valor: false });
+            }            
+          }
+        }
+      );
+};
+
 
 // Función para actualizar los datos básicos de un usuario preliminar (preuser) en el sistema.
 // Utiliza axios para realizar una solicitud PUT al endpoint '/user/{EmpleadoID}/update_preuser'.
@@ -325,143 +420,11 @@ const subirFoto = async (idCreator, Datos, ID_EMpleado) => {
     );
 };
 
-
-
-
-// Función para crear un usuario preliminar (preuser) en el sistema.
-// Utiliza axios para realizar una solicitud POST al endpoint '/user/create_preuser'.
-// Los datos del usuario a crear se pasan como argumento 'Datos'.
-const CrearUsuario = async (Datos) => {
-  // Realiza la solicitud POST y espera la respuesta.
-  await axios.post("/user/create_preuser", Datos)
-    .then(
-      // Maneja la respuesta exitosa.
-      (res) => {
-        // Verifica si la respuesta tiene un estado HTTP 201 (Creado).
-        if (res.status == 201) {
-          // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
-          emit("respuesta", { texto: res?.data?.message, valor: true });
-
-          const newUserId = res.data.newUserId;
-
-          // Llama a la función si nexmodal data imagen esta vacia o es indefinido NextModal pasando el ID del nuevo usuario.
-          if (dataImagen.value == undefined || dataImagen.value == "") {
-            NextModal(newUserId);
-          } else {
-            subirFoto(ID_USERMASTER, dataImagen.value, newUserId);
-          }
-        }
-      }
-    )
-    .catch(
-      // Maneja los errores de la solicitud.
-      (err) => {
-        // Verifica si la respuesta del error contiene un objeto de respuesta.
-        if (err?.response) {
-          // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
-          if (err.status == 422) {
-            emit("respuesta",{ texto: "no se puede procesar la solcitud", valor: false });
-          } else {
-            // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
-            emit("respuesta", { texto: err.response.data?.message, valor: false });
-          }
-        } else {
-          emit("respuesta", { texto: "no se puede procesar la solcitud", valor: false });
-        }
-      }
-    );
-};
-
-
-
-
-const ActualizarDatosBasicos = async (idCreator, Datos, ID_EMpleado) => {
-  let data = await getData(ID_EMpleado);
-  if (data == false) {
-    CrearUsuario(Datos);
-  } else {
-    // Realiza la solicitud PUT y espera la respuesta.
-    await axios.put(`/user/${ID_EMpleado}/update_preuser?user_updater=${idCreator}`, Datos)
-      .then(
-        // Maneja la respuesta exitosa.
-        (res) => {
-          // Verifica si la respuesta tiene un estado HTTP 200 (OK).
-          if (res.status == 200) {
-            // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
-            emit("respuesta", { texto: res.data?.message, valor: true });
-          }
-
-          
-          // Llama a la función si nexmodal data imagen esta vacia o es indefinido NextModal pasando el ID del nuevo usuario.
-          if (mostrarFoto.value == false) {
-            NextModal(props.EmpleadoID);
-          } else {
-            if (dataImagen.value == undefined || dataImagen.value == "") {
-              NextModal(props.EmpleadoID);
-            } else {
-              //console.log(mostrarFoto.value+ "mostrar foto")
-              subirFoto(ID_USERMASTER, dataImagen.value, props.EmpleadoID);
-            } 
-          }
-        }
-      )
-      .catch(
-        // Maneja los errores de la solicitud.
-        (err) => {
-          // Verifica si la respuesta del error contiene un objeto de respuesta.
-          if (err.response) {
-            // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
-            if (err.response.status == 422) {
-              emit.log("respuesta",{ texto: "no se puede procesar la solcitud", valor: false });
-            }else {
-              // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
-              emit("respuesta", { texto: err.response.data.message, valor: false });
-            }            
-          }
-        }
-      );
-  }
-};
-
-
-/**
-//OPTIENE LA DATA DEL USUARIO indicado retorna verdadero o falso si se encuentra o no
-const getData = (ID_empleado) => {
-  return new Promise((resolve, reject) => {
-    if (ID_empleado == null) {
-      resolve(null);
-    } else if (ID_empleado >= 0) {
-      axios.get(`/user/${ID_empleado}/precarga`)
-        .then((respuesta) => {
-          if (respuesta.data) {
-            resolve(respuesta.data);
-          } else {
-            resolve({}); // Si no hay datos, resuelve con un objeto vacío
-          }
-        })
-        .catch((error) => {
-          if (error.status == 422) {
-            resolve(null); // Problema al pedir los datos, resuelve con null
-          } else if (error.status == 404) {
-            resolve({}); // Si no hay datos, resuelve con un objeto vacío
-          } else {
-            reject(error); // Rechaza la promesa con el error
-          }
-        });
-    } else {
-      resolve(null); // Si ID_empleado es negativo, resuelve con null
-    }
-  });
-};
-*/
-
-
-const ExisteFoto = (IDUsuario) => {
+const ExisteFoto = async (IDUsuario) => {
  //console.log("ejecutando consulta");
- axios.get(`/user/${IDUsuario}/have_pic`)
+  await axios.get(`/user/${IDUsuario}/have_pic`)
     .then((respuesta) => {
       if(respuesta.status == 200){
-       // console.log("consulta true");
 
         mostrarFoto.value = false;
         inputFoto.value.reset();
@@ -469,32 +432,10 @@ const ExisteFoto = (IDUsuario) => {
     })
     .catch((err) => {
       if (err) {
-        //console.log("consulta false");
         mostrarFoto.value = true;
       }
     });
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -512,18 +453,8 @@ defineExpose({
 
 
 onMounted(() => {
-
+  MostrarValores(props.Informacion)
 });
-
-
-
-
-
-
-
-
-
-
 
 
 

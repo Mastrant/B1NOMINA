@@ -13,7 +13,7 @@
                 <template #default>
                 
                     <p class="decripcion-modal">
-                        ESTA ES LA CONTINUACION DEL LLENADO DE INFORMACIÒN DEL EMPLEADO
+                        La información de la persona será utilizada para ayudarte a generar la nómina más rápida que has visto, recuerda que siempre podrás regresar a editar cualquier valor.
                     </p>
                     
                     <NavForm 
@@ -31,10 +31,11 @@
                         ref="Form1" 
                     />
                     
-                    <FormDatosPersonalesVue 
+                    <FormRDatosPersonales 
                         @nextModal="avanzarForm"
                         @respuesta="activarNotificacionModal"
                         :EmpleadoID="ID_Empleado_Selecionado"
+                        :Informacion="Data_Usuario" 
                         :parametros="parametrosDP"
                         v-if="idFormularioActivo == 2"
                         ref="Form2"   
@@ -78,7 +79,7 @@
     import NavForm from '@/components/navs/Nav-form.vue'
     //formularios
     import FormRDatosBasicos from '@/components/formularios/enContratacion/Form-R-datosBasicos.vue';
-    import FormDatosPersonalesVue from '@/components/formularios/Form-datosPersonales.vue';
+    import FormRDatosPersonales from '@/components/formularios/enContratacion/Form-R-datosPersonales.vue';
     import FormDatosLaborales from '@/components/formularios/Form-datosLaborales.vue';
     import FormDatosPago from '@/components/formularios/Form-datosPago.vue';
 
@@ -126,25 +127,12 @@
 
     const PedirInfo = async (ID_Empleado) => {
         console.log(ID_Empleado)
-        //let respuesta = await peticiones_EnContratacion?.PedirDatosProspecto(ID_Empleado)
-        if (true){ //(respuesta.success){
+        let respuesta = await peticiones_EnContratacion?.PedirDatosProspecto(ID_Empleado)
+        console.log(respuesta)
+        if (respuesta.success){ //(respuesta.success){
             ID_Empleado_Selecionado.value = ID_Empleado
-            //Data_Usuario.value = respuesta.data
-            Data_Usuario.value = {
-                'documento': '12345678',
-                'nombres': 'test',
-                'apellidos': 'TEST2',
-                'correo': 'EXAPLE@gmail.com',
-                'nacionalidad': '1',
-                'genero': '1',
-                'fechaNacimiento': '1990-01-01',
-                'estadoCivil': '1',
-                'region': '13',
-                'localidad': '13106',
-                'direccion': 'alguna dirección dos',
-                'telefonoCelular': 'null',
-                'telefonoLocal': 'null'
-            }
+            Data_Usuario.value = respuesta.data
+            
             showModal(1)
         } else {
             ID_Empleado_Selecionado.value = -1;
@@ -176,7 +164,6 @@
         } else {
             idFormularioActivo.value = 0;
         }
-        limpiarFormularios();
     }
 
     const retrocederForm = () => {
@@ -204,6 +191,7 @@
         regiones: [],
         localidad: [],
     });
+
     const parametrosDL = ref({
         tipocontrato: [],//
         terminocontrato: [],//
@@ -216,6 +204,7 @@
         unidadessueldo: [],
 
     });    
+
     const parametrosDPa = ref({
         bancos: [],        
     });

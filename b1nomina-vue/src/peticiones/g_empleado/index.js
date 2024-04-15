@@ -85,6 +85,7 @@ const peticiones_EnContratacion = {
             return { success: false, error: error };
         }
     },  
+
     descartarContrato(idEmpleado, idMaster,){
         try {
             return axios.put(`user/${idEmpleado}/skip_contrato_user?creatorUserId=${idMaster}`)
@@ -98,6 +99,7 @@ const peticiones_EnContratacion = {
             return { success: false, error: error };
         }  
     }, 
+
     RetomarContrato(idEmpleado, idMaster,){
         try {
             return axios.put(`user/${idEmpleado}/activate_contrato_user?creatorUserId=${idMaster}`)
@@ -111,6 +113,7 @@ const peticiones_EnContratacion = {
             return { success: false, error: error };
         }  
     },
+
     ActivarProspecto(idEmpleado, idMaster,){
         return axios.get(`user/${id}/profile`)
             .then(respuesta => {
@@ -120,6 +123,7 @@ const peticiones_EnContratacion = {
                 return { success: false, error: error };
             });
     }, 
+    
     DescarProspecto(idEmpleado, idMaster,){
         return axios.get(`user/${id}/profile`)
             .then(respuesta => {
@@ -129,20 +133,37 @@ const peticiones_EnContratacion = {
                 return { success: false, error: error };
             });
     }, 
-    PedirDatosProspecto(idEmpleado){
-        try {
-            return axios.get(`/user/${idEmpleado}/precarga`)
-            .then(respuesta => {
-                return { success: true, data: (respuesta.data?.data)? respuesta.data?.data : respuesta?.data };
-            })
-            .catch(error => {
-                return { success: false, error: error?.response?.data.message };
-            });
-        } catch (error) {
-            return { success: false, error: error };
-        }           
-    }
+    PedirDatosProspecto(ID_empleado){
+        return new Promise((resolve, reject) => {
+            if (ID_empleado == null) {
 
+                resolve(null);
+
+            } else if (ID_empleado >= 0) {
+
+                axios.get(`/user/${ID_empleado}/precarga`)
+                .then((respuesta) => {
+                    if (respuesta.data?.data) {
+                        resolve({ success: true, data: respuesta.data.data });
+                    } else {
+                        resolve({ success: true, data: respuesta.data }); // Si no hay datos, resuelve con un objeto vacío
+                    }
+                })
+                .catch((error) => {
+                    if (error.status == 422) {
+                        resolve({ success: false, error: error }); // Problema al pedir los datos, resuelve con null
+                    } else if (error.status == 404) {
+                        resolve({ success: false, error: {} }); // Si no hay datos, resuelve con un objeto vacío
+                    } else {
+                        reject({ success: false, error: error }); // Rechaza la promesa con el error
+                    }
+                });
+
+            } else {
+                resolve({ success: false, error: error });
+            }
+        });
+    }
 }
 
 export default peticiones_EnContratacion
