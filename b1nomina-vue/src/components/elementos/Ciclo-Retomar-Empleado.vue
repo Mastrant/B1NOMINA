@@ -126,9 +126,9 @@
     };
 
     const PedirInfo = async (ID_Empleado) => {
-        console.log(ID_Empleado)
+        //console.log(ID_Empleado)
         let respuesta = await peticiones_EnContratacion?.PedirDatosProspecto(ID_Empleado)
-        console.log(respuesta)
+        //console.log(respuesta)
         if (respuesta.success){ //(respuesta.success){
             ID_Empleado_Selecionado.value = ID_Empleado
             Data_Usuario.value = respuesta.data
@@ -142,7 +142,6 @@
     const mostrarModal = ref(false)
 
     const editModal = (idModal) => {
-        console.log(idModal)
         idFormularioActivo.value = idModal
     }
     /**

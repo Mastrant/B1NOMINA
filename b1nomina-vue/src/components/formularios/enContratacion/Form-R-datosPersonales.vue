@@ -65,7 +65,8 @@
                         v-model="region" 
                         :options="parametros.regiones" 
                         :preseleccion="region" 
-                        :requerido="RequiereActualizar"                        
+                        :requerido="RequiereActualizar"        
+                        optionsSelected="Seleccionar"                
                     />
                 </template>
             </LayoutInputLineal>
@@ -76,7 +77,8 @@
                         v-model="localidad" 
                         :options="ListaLocalidad" 
                         :preseleccion="localidad" 
-                        :requerido="RequiereActualizar"                        
+                        :requerido="RequiereActualizar"       
+                        optionsSelected="Seleccionar"                 
                     />
                 </template>
             </LayoutInputLineal>
@@ -305,28 +307,30 @@ watch(() => props.Informacion, (nuevoValor) => {
 
 
 const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
-  await axios.put(`/user/${props.EmpleadoID}/save_preuser?userUpdater=${ID_USERMASTER}`, Datos)
-  .then(
-        res => {
-            if (res?.status == 201 || res?.status == 200 ){
-                emit("respuesta", {'texto':res?.data.message, 'valor':true})
-                NextModal(props.EmpleadoID);
-            }            
-        }
-  )
-  .catch(
-    // Maneja los errores de la solicitud.
+    //console.log(Datos)
+    await axios.put(`/user/${props.EmpleadoID}/save_preuser?userUpdater=${ID_USERMASTER}`, Datos)
+    .then(
+            res => {
+                if (res?.status == 201 || res?.status == 200 ){
+                    emit("respuesta", {'texto':res?.data.message, 'valor':true})
+                    NextModal(props.EmpleadoID);
+                }            
+            }
+    )
+    .catch(
+        // Maneja los errores de la solicitud.
         err => {
+            //console.log(err)
             // Verifica si la respuesta del error contiene un objeto de respuesta.
             if (err.response.status == 500) { 
                 // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
-                //console.log(err)
+                ////console.log(err)
                 emit("respuesta", {'texto':err.response.message, 'valor':false})      
             } else if (err.response.status == 422) {
                 // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
                 emit("respuesta", {'texto':err.response.message, 'valor':false})  
             } else {
-                console.log(err.response.data)
+                //console.log(err.response.data)
                 emit("respuesta", {'texto':err.response.data.message, 'valor':false})
             }
         }
@@ -348,6 +352,8 @@ const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
     } else {
       NextModal(props.EmpleadoID);
     }
+  } else {
+    emit("respuesta", {'texto': "Todavía hay campos en blanco", 'valor':false})
   }
 };
 
@@ -375,7 +381,7 @@ const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
 
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
-    console.log(DATA)
+    //console.log(DATA)
     //datos personales
     nacionalidad.value = (DATA?.nacionalidad == null)? '' :DATA?.nacionalidad;
     genero.value = (DATA?.genero == null)? '' :DATA?.genero;
