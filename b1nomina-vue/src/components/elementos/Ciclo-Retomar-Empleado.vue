@@ -13,47 +13,48 @@
                 <template #default>
                 
                     <p class="decripcion-modal">
-                        La información de la persona será utilizada para ayudarte a generar la nómina más rápida que has visto, 
-                        recuerda que siempre podrás regresar a editar cualquier valor.
+                        ESTA ES LA CONTINUACION DEL LLENADO DE INFORMACIÒN DEL EMPLEADO
                     </p>
                     
                     <NavForm 
-                        :idFormularioActivo="idFormularioActivo" 
+                        :edit="true"
+                        :idFormularioActivo="idFormularioActivo"
+                        @-show-modal="editModal"
                     />
                     
                     <FormRDatosBasicos 
                         @nextModal="avanzarForm"
                         @respuesta="activarNotificacionModal" 
-                        :EmpleadoID="ID_Usuario_Creado"
+                        :EmpleadoID="ID_Empleado_Selecionado"
                         :Informacion="Data_Usuario"                 
-                        v-show="idFormularioActivo == 1"
+                        v-if="idFormularioActivo == 1"
                         ref="Form1" 
                     />
                     
                     <FormDatosPersonalesVue 
                         @nextModal="avanzarForm"
                         @respuesta="activarNotificacionModal"
-                        :EmpleadoID="ID_Usuario_Creado"
+                        :EmpleadoID="ID_Empleado_Selecionado"
                         :parametros="parametrosDP"
-                        v-show="idFormularioActivo == 2"
+                        v-if="idFormularioActivo == 2"
                         ref="Form2"   
                     />
                     
                     <FormDatosLaborales 
                         @nextModal="avanzarForm"
                         @respuesta="activarNotificacionModal"
-                        :EmpleadoID="ID_Usuario_Creado"
+                        :EmpleadoID="ID_Empleado_Selecionado"
                         :parametros="parametrosDL"
-                        v-show="idFormularioActivo == 3"
+                        v-if="idFormularioActivo == 3"
                         ref="Form3"
                     />
 
                     <FormDatosPago
                         @closeModal="showModal"
                         @respuesta="activarNotificacionModal"
-                        :EmpleadoID="ID_Usuario_Creado"
+                        :EmpleadoID="ID_Empleado_Selecionado"
                         :parametros="parametrosDPa"
-                        v-show="idFormularioActivo == 4"
+                        v-if="idFormularioActivo == 4"
                         ref="Form4"
                     />
 
@@ -105,8 +106,8 @@
         dataNotificacion.value = DATA //asigna el valor
     }    
 
-    const ID_Usuario_Creado = ref('');
-    const Data_Usuario = ref(''); // almacena la información de usuario dada por la api
+    const ID_Empleado_Selecionado = ref('');
+    const Data_Usuario = ref({}); // almacena la información de usuario dada por la api
 
     // Crear referencias a los componentes hijos
     const Form1 = ref(null);
@@ -120,20 +121,20 @@
         Form2.value?.resetForm();
         Form3.value?.resetForm();
         Form4.value?.resetForm();
-        ID_Usuario_Creado.value = null;
+        ID_Empleado_Selecionado.value = null;
     };
 
     const PedirInfo = async (ID_Empleado) => {
-        console.log("reanudar")
+        console.log(ID_Empleado)
         //let respuesta = await peticiones_EnContratacion?.PedirDatosProspecto(ID_Empleado)
         if (true){ //(respuesta.success){
-            ID_Usuario_Creado.value = ID_Empleado
+            ID_Empleado_Selecionado.value = ID_Empleado
             //Data_Usuario.value = respuesta.data
             Data_Usuario.value = {
-                'documento': '1',
-                'nombres': 'Admin',
-                'apellidos': 'Root',
-                'correo': 'null',
+                'documento': '12345678',
+                'nombres': 'test',
+                'apellidos': 'TEST2',
+                'correo': 'EXAPLE@gmail.com',
                 'nacionalidad': '1',
                 'genero': '1',
                 'fechaNacimiento': '1990-01-01',
@@ -146,18 +147,22 @@
             }
             showModal(1)
         } else {
-
+            ID_Empleado_Selecionado.value = -1;
         }
     }
 
     const mostrarModal = ref(false)
 
+    const editModal = (idModal) => {
+        console.log(idModal)
+        idFormularioActivo.value = idModal
+    }
     /**
      * Controla el despliegue del modal
      * @param mostrarModal
      */
     const showModal = (Id_modal = 0) => {
-        limpiarFormularios();
+        
         mostrarModal.value = !mostrarModal.value;
         if(Id_modal == 1){
             
@@ -171,6 +176,7 @@
         } else {
             idFormularioActivo.value = 0;
         }
+        limpiarFormularios();
     }
 
     const retrocederForm = () => {
@@ -181,7 +187,7 @@
     };
 
     const avanzarForm = (idEmpleadoCreado) => {
-        ID_Usuario_Creado.value = idEmpleadoCreado;
+        ID_Empleado_Selecionado.value = idEmpleadoCreado;
         if(idFormularioActivo.value < 4){
             idFormularioActivo.value++
         }

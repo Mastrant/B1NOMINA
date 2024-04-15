@@ -105,6 +105,7 @@
         )
         .catch(
             (error) => {
+                console.error(error.data)
                 ListaEmpleados.value = []; // si hay un error asigna un valor vacio
             }
         )

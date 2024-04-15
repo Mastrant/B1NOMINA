@@ -71,7 +71,7 @@ import LayoutInputLineal from "@/components/Layouts/LayoutInputLineal.vue";
 import InputRadioButton from "@/components/botones/Input-Radio-button.vue";
 import inputPicForm from "@/components/inputs/Input-Pic-form.vue";
 
-import { ref, watch, defineEmits, defineProps, reactive, defineExpose, onBeforeMount } from "vue";
+import { ref, watch, defineEmits, defineProps, reactive, defineExpose, onBeforeMount, onMounted } from "vue";
 import axios from "axios";
 
 
@@ -90,9 +90,16 @@ const props = defineProps({
   },
   Informacion: {
     type: Object,
-    default: {}
+    default:{
+      apellidos: "",
+      correo: "",
+      documento: "",
+      nombres: "",
+    }
   }
 });
+
+
 
 
 // inicializacion de variables reactivas
@@ -100,7 +107,7 @@ const props = defineProps({
 const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
 
 //Valores
-const numeroDocumento = ref("123456");
+const numeroDocumento = ref("");
 const nombres = ref("");
 const apellidos = ref("");
 const correo = ref("");
@@ -113,9 +120,6 @@ const dataImagen = ref("");
 const RequiereActualizar = ref(false)
 
 const DatosUserOriginal = {}
-
-
-
 
 //Configuraciones
 const tipoDocumentoSelect = ref("2"); //Documento selecionado
@@ -169,10 +173,12 @@ watch(numeroDocumento, (nuevoValor) => ActualizarPayload("documento", nuevoValor
 watch(nombres, (nuevoValor) => { ActualizarPayload("nombres", nuevoValor.toUpperCase())});
 watch(apellidos, (nuevoValor) => ActualizarPayload("apellidos", nuevoValor.toUpperCase()));
 watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor.toLowerCase()));
+
+
 watch(() => props.EmpleadoID, (nuevoValor) => { (nuevoValor == null) ? mostrarFoto.value = true : ExisteFoto(nuevoValor);});
 
 watch(() => props.Informacion, (nuevoValor) => { 
-  console.log(nuevoValor)
+  MostrarValores(nuevoValor) 
 });
 
 
@@ -207,7 +213,14 @@ const actualizarDataImagen = (evento) => {
   dataImagen.value = evento;
 };
 
-
+const MostrarValores = (DATA) => {
+  console.log(DATA)
+  numeroDocumento.value = DATA?.documento;
+  nombres.value = DATA?.documento;
+  apellidos.value = DATA?.documento;
+  correo.value = DATA?.documento;
+  tipoDocumentoSelect.value = 2;
+}
 
 
 
@@ -411,7 +424,7 @@ const ActualizarDatosBasicos = async (idCreator, Datos, ID_EMpleado) => {
 };
 
 
-
+/**
 //OPTIENE LA DATA DEL USUARIO indicado retorna verdadero o falso si se encuentra o no
 const getData = (ID_empleado) => {
   return new Promise((resolve, reject) => {
@@ -440,8 +453,7 @@ const getData = (ID_empleado) => {
     }
   });
 };
-
-
+*/
 
 
 const ExisteFoto = (IDUsuario) => {
@@ -499,11 +511,8 @@ defineExpose({
 });
 
 
-onBeforeMount(() => {
-  numeroDocumento.value = ref("123456");
-  nombres.value = ref("test");
-  apellidos.value = ref("test2");
-  correo.value = ref("correo");
+onMounted(() => {
+
 });
 
 
