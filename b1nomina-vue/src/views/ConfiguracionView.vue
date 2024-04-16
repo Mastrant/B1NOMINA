@@ -4,11 +4,9 @@
             <Header nombrePagina=" Configuración" />
         </template>
         
-        <template v-slot:panel>
-            <LayoutForm>
-                <router-view />
-            </LayoutForm>
-          </template>
+        <template v-slot:panel>            
+            <router-view />
+        </template>
     </LayoutPanel>
 </template>
 

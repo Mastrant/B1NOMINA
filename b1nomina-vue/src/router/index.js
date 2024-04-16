@@ -40,7 +40,7 @@ const router = createRouter({
     //sociedad selecionada
     {
       path: '/sociedad/:sociedadId',
-      component: () => import('../views/TemplateView.vue'), 
+      component: () => import('@/views/TemplateView.vue'), 
       meta: {
         requiereToken: true, //establece si es requerido autorizacion para acceder
       },
@@ -124,9 +124,71 @@ const router = createRouter({
               path: "",
               component: () => import('@/components/panel/Panel-Configuraciones.vue'),
               name: 'opciones',
-              alias: 'opciones',
-              props: true,
-               //toma los parametros de la url con el mismo nombre que los recibe
+              alias: 'opciones',              
+               
+            },
+            {
+              path: "datos-de-la-empresa",
+              component: () => import('@/components/panel/Panel-EnDesarrollo.vue'),
+              name: 'datos-de-la-empresa',
+              alias: ['datos-de-la-empresa',],              
+               
+            },
+            {
+              path: "datos-previsionales",
+              component: () => import('@/components/panel/Panel-EnDesarrollo.vue'),
+              name: 'datos-previsionales',
+              alias: ['datos-previsionales',],              
+               
+            },
+            {
+              path: "periodos",
+              component: () => import('@/components/panel/Panel-EnDesarrollo.vue'),
+              name: 'periodos',
+              alias: ['periodos',],              
+               
+            },
+            {
+              path: "centralizacion",
+              component: () => import('@/components/panel/Panel-EnDesarrollo.vue'),
+              name: 'centralizacion',
+              alias: ['centralizacion',],              
+               
+            },
+            {
+              path: "gestion-usuarios",
+              component: () => import('@/components/panel/Panel-EnDesarrollo.vue'),
+              name: 'gestion-usuarios',
+              alias: ['gestion-usuarios',],              
+               
+            },
+            {
+              path: "parametros-conexion",
+              component: () => import('@/components/panel/Panel-EnDesarrollo.vue'),
+              name: 'parametros-conexion',
+              alias: ['parametros-conexion',],              
+               
+            },
+            {
+              path: "base-eventos",
+              component: () => import('@/components/panel/Panel-EnDesarrollo.vue'),
+              name: 'base-eventos',
+              alias: ['base-eventos',],              
+               
+            },
+            {
+              path: "historial-acciones",
+              component: () => import('@/components/panel/Panel-EnDesarrollo.vue'),
+              name: 'historial-acciones',
+              alias: ['historial-acciones',],              
+               
+            },
+            {
+              path: "alertas",
+              component: () => import('@/components/panel/Panel-EnDesarrollo.vue'),
+              name: 'alertas',
+              alias: ['alertas',],              
+               
             },
           ]
         },
