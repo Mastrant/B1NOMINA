@@ -112,7 +112,6 @@
                 Titulo="Teléfono Local" 
                 v-model="telefonoLocal"
                 @update:modelValue="telefonoLocal = $event"
-                :requerido="RequiereActualizar"
             />
         </div>
         
@@ -182,13 +181,6 @@ const ListaNacionalidad = [
     },
 
 ];
-
-
-
-
-
-
-
 
 
 const ListaLocalidad = ref({}); //Los datos se asignan segun el idRegion
@@ -308,6 +300,13 @@ watch(() => props.Informacion, (nuevoValor) => {
 
 const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
     //console.log(Datos)
+     //Si la data es diferente de vacio, le añade al 
+    Datos.nombres = DataUser.nombres
+    Datos.apellidos = DataUser.apellidos
+    Datos.documento = DataUser.documento;
+    Datos.correo = DataUser.correo;
+    (Datos.telefonoLocal == '')? 0 : Datos.telefonoLocal;
+
     await axios.put(`/user/${props.EmpleadoID}/save_preuser?userUpdater=${ID_USERMASTER}`, Datos)
     .then(
             res => {

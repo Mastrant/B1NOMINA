@@ -41,7 +41,7 @@
                         ref="Form2"   
                     />
                     
-                    <FormDatosLaborales 
+                    <FormRDatosLaborales 
                         @nextModal="avanzarForm"
                         @respuesta="activarNotificacionModal"
                         :EmpleadoID="ID_Empleado_Selecionado"
@@ -80,7 +80,7 @@
     //formularios
     import FormRDatosBasicos from '@/components/formularios/enContratacion/Form-R-datosBasicos.vue';
     import FormRDatosPersonales from '@/components/formularios/enContratacion/Form-R-datosPersonales.vue';
-    import FormDatosLaborales from '@/components/formularios/Form-datosLaborales.vue';
+    import FormRDatosLaborales from '@/components/formularios/enContratacion/Form-R-datosLaborales.vue';
     import FormDatosPago from '@/components/formularios/Form-datosPago.vue';
 
     //librerias
@@ -126,13 +126,16 @@
     };
 
     const PedirInfo = async (ID_Empleado) => {
-        //console.log(ID_Empleado)
+        
+        //pide los datos básicos
         let respuesta = await peticiones_EnContratacion?.PedirDatosProspecto(ID_Empleado)
-        //console.log(respuesta)
+        let respuesta2 = await peticiones_EnContratacion?.PedirDatosLaboralesProspecto(ID_Empleado)
+        
+        console.log(respuesta2)
         if (respuesta.success){ //(respuesta.success){
             ID_Empleado_Selecionado.value = ID_Empleado
-            Data_Usuario.value = respuesta.data
-            
+            Data_Usuario.value = Object.assign({}, respuesta?.data, respuesta2?.data);
+
             showModal(1)
         } else {
             ID_Empleado_Selecionado.value = -1;

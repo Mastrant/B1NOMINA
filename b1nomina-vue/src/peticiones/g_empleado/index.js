@@ -163,6 +163,68 @@ const peticiones_EnContratacion = {
                 resolve({ success: false, error: error });
             }
         });
+    },
+    PedirDatosContactoProspecto(ID_empleado){
+        return new Promise((resolve, reject) => {
+            if (ID_empleado == null) {
+
+                resolve(null);
+
+            } else if (ID_empleado >= 0) {
+
+                axios.get(`/user/${ID_empleado}/precarga`)
+                .then((respuesta) => {
+                    if (respuesta.data?.data) {
+                        resolve({ success: true, data: respuesta.data.data });
+                    } else {
+                        resolve({ success: true, data: respuesta.data }); // Si no hay datos, resuelve con un objeto vacío
+                    }
+                })
+                .catch((error) => {
+                    if (error.status == 422) {
+                        resolve({ success: false, error: error }); // Problema al pedir los datos, resuelve con null
+                    } else if (error.status == 404) {
+                        resolve({ success: false, error: {} }); // Si no hay datos, resuelve con un objeto vacío
+                    } else {
+                        reject({ success: false, error: error }); // Rechaza la promesa con el error
+                    }
+                });
+
+            } else {
+                resolve({ success: false, error: error });
+            }
+        });
+    },
+    PedirDatosLaboralesProspecto(ID_empleado){
+        return new Promise((resolve, reject) => {
+            if (ID_empleado == null) {
+
+                resolve({ success: false, error: null });
+
+            } else if (ID_empleado >= 0) {
+
+                axios.get(`/user/${ID_empleado}/datos_labores`)
+                .then((respuesta) => {
+                    if (respuesta.data?.data) {
+                        resolve({ success: true, data: respuesta.data.data });
+                    } else {
+                        resolve({ success: true, data: respuesta.data }); // Si no hay datos, resuelve con un objeto vacío
+                    }
+                })
+                .catch((error) => {
+                    if (error.status == 422) {
+                        resolve({ success: false, error: error }); // Problema al pedir los datos, resuelve con null
+                    } else if (error.status == 404) {
+                        resolve({ success: false, error: {} }); // Si no hay datos, resuelve con un objeto vacío
+                    } else {
+                        reject({ success: false, error: error }); // Rechaza la promesa con el error
+                    }
+                });
+
+            } else {
+                resolve({ success: false, error: error });
+            }
+        });
     }
 }
 

@@ -3,34 +3,37 @@
         <h2 class="titulo-form">Datos Laborales</h2>
 
         <div class="row-form">
-            <LayoutInputLineal textLabel="Tipo de contrato" :requerido="formulario1Requerido">
+            <LayoutInputLineal textLabel="Tipo de contrato" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="TipoDeContrato" 
                         :options="parametros.tipocontrato" 
-                        :requerido="formulario1Requerido"
+                        :requerido="RequiereActualizar"
+                        :preseleccion="TipoDeContrato"
                         optionsSelected="Seleccionar"
                     />
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Nivel de Estudio" :requerido="formulario1Requerido">
+            <LayoutInputLineal textLabel="Nivel de Estudio" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="NivelEstudio" 
                         :options="parametros?.nivelestudio" 
-                        :requerido="formulario1Requerido"
+                        :requerido="RequiereActualizar"
+                        :preseleccion="NivelEstudio"
                         optionsSelected="Seleccionar"  
                     />
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Término del contrato" :requerido="formulario1Requerido">
+            <LayoutInputLineal textLabel="Término del contrato" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="TerminoContrato"
                         :options="parametros.terminocontrato" 
-                        :requerido="formulario1Requerido"
+                        :requerido="RequiereActualizar"
+                        :preseleccion="TerminoContrato"
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -43,7 +46,7 @@
                 Titulo="Fecha de Contratacion"
                 v-model="FechaContratacion"
                 @update:modelValue="FechaContratacion = $event"
-                :requerido="formulario1Requerido"
+                :requerido="RequiereActualizar"
             />
             <InputLinealDescripcion 
                 Tipo="date"
@@ -56,23 +59,25 @@
         </div>
 
         <div class="row-form">
-            <LayoutInputLineal textLabel="Salario base" :requerido="formulario1Requerido">
+            <LayoutInputLineal textLabel="Salario base" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="SalarioBase" 
                         :options="parametros.tiposalario" 
-                        :requerido="formulario1Requerido"
+                        :requerido="RequiereActualizar"
+                        :preseleccion="SalarioBase"
                         optionsSelected="Seleccionar"
                     />
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Unidad Sueldo Base" :requerido="formulario1Requerido">
+            <LayoutInputLineal textLabel="Unidad Sueldo Base" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="UnidadSueldo" 
                         :options="parametros.unidadessueldo" 
                         :requerido="false"
+                        :preseleccion="UnidadSueldo"
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -83,7 +88,7 @@
                 Titulo="Valor del salario" 
                 v-model="MontoSalario"
                 @update:modelValue="MontoSalario = $event"
-                :requerido="formulario1Requerido"
+                :requerido="RequiereActualizar"
                 Tipo="Number"
             />
         </div>
@@ -91,23 +96,25 @@
         <h2 class="titulo-form">Puesto de trabajo</h2>
 
         <div class="row-form">
-            <LayoutInputLineal textLabel="Sede de Trabajo" :requerido="formulario1Requerido">
+            <LayoutInputLineal textLabel="Sede de Trabajo" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="SedeDeTrabajo" 
                         :options="parametros.sede" 
-                        :requerido="formulario1Requerido"
+                        :requerido="RequiereActualizar"
+                        :preseleccion="SedeDeTrabajo"
                         optionsSelected="Seleccionar"
                     />
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Departamento" :requerido="formulario1Requerido">
+            <LayoutInputLineal textLabel="Departamento" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Departamento" 
                         :options="parametros.departamento" 
-                        :requerido="formulario1Requerido"
+                        :requerido="RequiereActualizar"
+                        :preseleccion="Departamento"
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -115,29 +122,31 @@
         </div>
 
         <div class="row-form">
-            <LayoutInputLineal textLabel="Cargo" :requerido="formulario1Requerido">
+            <LayoutInputLineal textLabel="Cargo" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Cargo" 
                         :options="parametros.cargos" 
-                        :requerido="formulario1Requerido"
+                        :requerido="RequiereActualizar"
+                        :preseleccion="Cargo"
                         optionsSelected="Seleccionar"
                     />
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Grupo" :requerido="formulario1Requerido">
+            <LayoutInputLineal textLabel="Grupo" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Grupo" 
                         :options="parametros.grupos" 
-                        :requerido="formulario1Requerido"
+                        :requerido="RequiereActualizar"
+                        :preseleccion="Grupo"
                         optionsSelected="Sin Asignar"
                     />
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Modalidad" :requerido="formulario1Requerido">
+            <LayoutInputLineal textLabel="Modalidad" :requerido="RequiereActualizar">
                 <template v-slot>
                     <InterruptorButton 
                         @ValorEstado="verEstado"
@@ -145,7 +154,7 @@
                         Texto="Teletrabajo"
                         Tipo="individual"
                         :Estado="(EstatusModalidad)? true :false"
-                        :requerido="formulario1Requerido"
+                        :requerido="RequiereActualizar"
                     />
                 </template>
             </LayoutInputLineal>
@@ -166,34 +175,36 @@
 </template>
 
 <script setup>
-import InputLinealDescripcion from '../inputs/Input-Lineal-descripcion.vue';
-import ListaTemplateLineal from '../listas/Lista-template-lineal.vue';
-import LayoutInputLineal from '../Layouts/LayoutInputLineal.vue';
-import InterruptorButton from '../inputs/Interruptor-button.vue';
-import InputCheckbox from '../inputs/Input-Checkbox.vue';
+import InputLinealDescripcion from  '@/components/inputs/Input-Lineal-descripcion.vue';
+import ListaTemplateLineal from  '@/components/listas/Lista-template-lineal.vue';
+import LayoutInputLineal from  '@/components/Layouts/LayoutInputLineal.vue';
+import InterruptorButton from  '@/components/inputs/Interruptor-button.vue';
+import InputCheckbox from  '@/components/inputs/Input-Checkbox.vue';
 
 import axios from "axios";
-import { ref, watch, reactive, defineProps, defineEmits, inject} from 'vue';
+import { ref, watch, reactive, defineProps, defineEmits, inject, onMounted} from 'vue';
 
 // Define las propiedades que el componente espera recibir. En este caso, se espera una propiedad llamada EmpleadoID de tipo Number.
 const props = defineProps({
-  EmpleadoID: {
-    type: [Number, String], // Especifica que el tipo de la propiedad es Number
-    default: -1
-  },
-  parametros: {
+    EmpleadoID: {
+       type: [Number, String], // Especifica que el tipo de la propiedad es Number
+       default: null
+    },
+    parametros: {
         type: Object,
         default: {}
-  },
+    },
+    Informacion: {
+        type: Object,
+    }
 });
-
 // Define los eventos que el componente puede emitir. En este caso, se especifica un evento llamado 'nextModal'.
 const emit = defineEmits([
   "nextModal", // Nombre del evento que puede ser emitido por este componente
   "respuesta"
 ]);
 
-const EstatusModalidad = ref(false);
+
 
 const idSociedad = inject('IDsociedad');
 
@@ -204,8 +215,7 @@ const verEstado = (valor) => {
 }
 
 //inicialiacion de las varables
-const formulario1Requerido = ref(false)
-const formulario2Requerido = ref(false)
+const RequiereActualizar = ref(false)
 
 //variables del formaulario 1
 const TipoDeContrato = ref('');
@@ -222,6 +232,7 @@ const Departamento = ref('');
 const Cargo = ref('');
 const Grupo = ref('');
 const Modalidad = ref('');
+const EstatusModalidad = ref(false);
 const ListaDiasLibres = ref([]);
 
 /**
@@ -252,7 +263,7 @@ const DiasLibres = (value) => {
 };
 
 // payload de las peticiones
-const payload = reactive({
+const payload_old = reactive({
 
     tipo_contrato: '',
     nivel_estudio_id: '',
@@ -279,11 +290,54 @@ const payload = reactive({
 
 });
 
-//actualizar datos del payload
+// payload de las peticiones
+const payload = reactive({
+
+tipo_contrato: '',
+nivel_estudio_id: '',
+termino_contrato: '',
+fecha_inicio: "",
+fecha_fin: "",
+periodo_salario: '',
+unidad_sueldo: "",
+salario_base: '',
+hora_ingreso: '',
+hora_egreso: '',
+jefatura: '',
+
+
+sede_id: '',
+departamento_id: '',
+cargo_id: '',    
+grupo_id: '',
+modalidad: '',
+
+user_id: '',
+sociedad_id: '',
+dias_descanso: '',
+
+});
+
+//actualizar datos del payload a enviar
 const ActualizarPayload = (propiedad, valor) => {
     payload[propiedad] = valor;
-    formulario1Requerido.value = Object.values(payload).some(value => value !== "")
+    verificarCambios();
 };
+
+// Define la función verificarCambios que verifica si hay cambios entre los valores antiguos y nuevos de un payload.
+const verificarCambios = () => {
+    // Comprueba si todos los campos relevantes en payload_old y payload son iguales.
+    // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
+    const camposIguales = Object.keys(payload_old).every(key => payload_old[key] === payload[key]);
+
+    // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
+    const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
+
+    // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
+    // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
+    // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
+    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+}
 
 
 // Observar cambios en la variable
@@ -310,6 +364,10 @@ watch(Departamento, (nuevoValor) => ActualizarPayload('departamento_id', Number(
 watch(Cargo, (nuevoValor) => ActualizarPayload('cargo_id', Number(nuevoValor)));
 watch(Grupo, (nuevoValor) => ActualizarPayload('grupo_id', Number(nuevoValor)));
 watch(Modalidad, (nuevoValor) => ActualizarPayload('modalidad', Number(nuevoValor)));
+
+watch(() => props.Informacion, (nuevoValor) => { 
+  MostrarValores(nuevoValor) 
+});
 
 const resetForm = () => {
     TipoDeContrato.value = '';
@@ -340,6 +398,37 @@ defineExpose({
 const NextModal = (idEpleadoCreado) => {
   emit("nextModal", idEpleadoCreado); // Emite el evento 'nextModal' con el idEpleadoCreado como argumento
 };
+
+
+// Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
+const MostrarValores = (DATA) => {
+    //console.log(DATA)
+    // Variables del formulario 1
+    TipoDeContrato.value = (DATA?.TipoDeContrato == null) ? '' : DATA?.TipoDeContrato;
+    NivelEstudio.value = (DATA?.NivelEstudio == null) ? '' : DATA?.NivelEstudio;
+    TerminoContrato.value = (DATA?.TerminoContrato == null) ? '' : DATA?.TerminoContrato;
+    FechaContratacion.value = (DATA?.FechaContratacion == null) ? '' : DATA?.FechaContratacion;
+    FechaFinalizacionContrato.value = (DATA?.FechaFinalizacionContrato == null) ? '' : DATA?.FechaFinalizacionContrato;
+    SalarioBase.value = (DATA?.SalarioBase == null) ? '' : DATA?.SalarioBase;
+    UnidadSueldo.value = (DATA?.UnidadSueldo == null) ? '' : DATA?.UnidadSueldo;
+    MontoSalario.value = (DATA?.MontoSalario == null) ? '' : DATA?.MontoSalario;
+
+    // Variables del formulario 2
+    SedeDeTrabajo.value = (DATA?.SedeDeTrabajo == null) ? '' : DATA?.SedeDeTrabajo;
+    Departamento.value = (DATA?.Departamento == null) ? '' : DATA?.Departamento;
+    Cargo.value = (DATA?.Cargo == null) ? '' : DATA?.Cargo;
+    Grupo.value = (DATA?.Grupo == null) ? '' : DATA?.Grupo;
+    Modalidad.value = (DATA?.Modalidad == null) ? '' : DATA?.Modalidad;
+    EstatusModalidad.value = (DATA?.EstatusModalidad == null) ? false : DATA?.EstatusModalidad;
+}
+
+
+
+
+
+
+
+
 
 const crearDatoslaborales = async (ID_USERMASTER, Data) => {
     await axios.post(`create_datos_laborales?userCreatorId=${ID_USERMASTER}`,Data)
@@ -523,6 +612,12 @@ const getData = async (ID_empleado) => {
         emit("respuesta", {'texto':"Error enviar los datos", 'valor':false})  
     }
 };
+
+
+
+onMounted(() => {
+  MostrarValores(props.Informacion)
+});
 </script>
 
 <style scoped>
