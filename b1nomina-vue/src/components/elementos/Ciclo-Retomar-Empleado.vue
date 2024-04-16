@@ -128,17 +128,22 @@
     const PedirInfo = async (ID_Empleado) => {
         
         //pide los datos básicos
-        let respuesta = await peticiones_EnContratacion?.PedirDatosProspecto(ID_Empleado)
-        let respuesta2 = await peticiones_EnContratacion?.PedirDatosLaboralesProspecto(ID_Empleado)
+        let respuesta = await peticiones_EnContratacion?.PedirDatosProspectoCompleto(ID_Empleado)
+        //let respuesta2 = await peticiones_EnContratacion?.PedirDatosLaboralesProspecto(ID_Empleado)
         
-        console.log(respuesta2)
+        console.log(respuesta)
+
         if (respuesta.success){ //(respuesta.success){
             ID_Empleado_Selecionado.value = ID_Empleado
-            Data_Usuario.value = Object.assign({}, respuesta?.data, respuesta2?.data);
+            Data_Usuario.value = respuesta?.data;
 
             showModal(1)
         } else {
             ID_Empleado_Selecionado.value = -1;
+            showN({
+                    'Titulo': "Información Modificada con exito", 
+                    'Descripcion': "El proceso de actualización del usuario se ha realizazo con éxito"
+                })
         }
     }
 

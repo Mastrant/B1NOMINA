@@ -293,28 +293,28 @@ const payload_old = reactive({
 // payload de las peticiones
 const payload = reactive({
 
-tipo_contrato: '',
-nivel_estudio_id: '',
-termino_contrato: '',
-fecha_inicio: "",
-fecha_fin: "",
-periodo_salario: '',
-unidad_sueldo: "",
-salario_base: '',
-hora_ingreso: '',
-hora_egreso: '',
-jefatura: '',
+    tipo_contrato: '',
+    nivel_estudio_id: '',
+    termino_contrato: '',
+    fecha_inicio: "",
+    fecha_fin: "",
+    periodo_salario: '',
+    unidad_sueldo: "",
+    salario_base: '',
+    hora_ingreso: '',
+    hora_egreso: '',
+    jefatura: '',
 
 
-sede_id: '',
-departamento_id: '',
-cargo_id: '',    
-grupo_id: '',
-modalidad: '',
+    sede_id: '',
+    departamento_id: '',
+    cargo_id: '',    
+    grupo_id: '',
+    modalidad: '',
 
-user_id: '',
-sociedad_id: '',
-dias_descanso: '',
+    user_id: '',
+    sociedad_id: '',
+    dias_descanso: '',
 
 });
 

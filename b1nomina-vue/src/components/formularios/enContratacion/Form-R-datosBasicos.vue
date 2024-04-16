@@ -241,7 +241,7 @@ const verificarCambios = () => {
 const MostrarValores = (DATA) => {
 
   // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
-  numeroDocumento.value = (DATA?.documento == null)? '' :DATA?.documento;
+  numeroDocumento.value = (DATA?.rut == null)? '' :DATA?.rut;
   
   // Asigna el valor de DATA?.nombres a nombres.value, utilizando '' si DATA?.nombres es null.
   nombres.value = (DATA?.nombres == null)? '' :DATA?.nombres;
