@@ -1,12 +1,15 @@
 <template>
     <div class="panel-config">
         panel con las opciones
+        <CardLink />
+
+    <AlertShort />
     </div>
 </template>
 
 <script setup>
 import AlertShort from '@/components/alertas/Alert-short-template.vue';
-
+import CardLink from '@/components/elementos/Card-Link.vue'
 </script>
 
 <style scoped>
