@@ -81,24 +81,26 @@
             <!--Espacio para paginacion-->
             <div class="pagination">
 
-            <!--Boton de Previo-->
-            <PaginateButton @click="previosPage">
-                <template #icono>
-                    <img src="@/components/icons/svg/OneLeft-icon.svg" alt="prev"> 
-                </template>
-            </PaginateButton>
+                <!--Boton de Previo-->
+                <PaginateButton @click="previosPage">
+                    <template #icono>
+                        <img src="@/components/icons/svg/OneLeft-icon.svg" alt="prev"> 
+                    </template>
+                </PaginateButton>
 
-            <!--Listado de opciones-->
-            <PaginateButton  v-for="pagina in totalpaginas()" :key="pagina" :texto="pagina" @click="getDataPorPagina(pagina)" />
+                <!--Listado de opciones-->
+                <PaginateButton  v-for="pagina in totalpaginas()" :key="pagina" :texto="pagina" @click="getDataPorPagina(pagina)" />
 
-            <!--Boton de siguiente-->
-            <PaginateButton @click="nextPage">
-                <template #icono>
-                    <img src='@/components/icons/svg/OneRigth-icon.svg' alt="next">  
-                </template>
-            </PaginateButton>
+                <!--Boton de siguiente-->
+                <PaginateButton @click="nextPage">
+                    <template #icono>
+                        <img src='@/components/icons/svg/OneRigth-icon.svg' alt="next">  
+                    </template>
+                </PaginateButton>
             </div>
         </div>
+
+        <Paginacion :totalPaginas="8"/>
     </div>
    
 </template>
@@ -110,6 +112,7 @@ import PaginateButton from '@/components/botones/Paginate-button.vue';
 import InterruptorButton from '@/components/inputs/Interruptor-modal-button.vue';
 import InputCheckbox from '@/components/inputs/Input-Checkbox.vue';
 import EmpleadosRow from './Empleados-Row.vue';
+import Paginacion from '@/components/elementos/Paginacion.vue';
 
 import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
 

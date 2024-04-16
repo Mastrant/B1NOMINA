@@ -1,5 +1,5 @@
 <template>
-    <button class="page-item">
+    <button class="page-item" :class="{'activate': activate}">
         <!--si la variable texto esta vacia muestra el elemento enviado-->
         <slot name="icono" v-if="texto == ''">
 
@@ -20,6 +20,10 @@ const props = defineProps({
     texto: {
         default: ""
     },
+    activate:{
+        type: Boolean,
+        default: false
+    }
 });
 </script>
 
@@ -39,20 +43,34 @@ button.page-item {
     width: 36px;
     height: 36px;
     box-sizing: border-box;
+    transition: all 0.1s ease;
 }
 
 /**estilo al posicionar el mouse */
 button.page-item:hover {
 
     border: 1px #1A2771 solid; 
-    background: #53597e;
+    background: #333a61;
+}
+
+button.page-item.activate {
+
+border: 1px #1A2771 solid; 
+background: #1A245B;
+}
+
+button.page-item.activate .page-link {
+    color: #F8F8F8;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 26px;
+    word-wrap: break-word;
 }
 
 /**Estilos texto interno */
 .page-link {
     color: #1A245B;
     font-size: 16px;
-    font-family: Poppins;
     font-weight: 400;
     line-height: 26px;
     word-wrap: break-word;
@@ -63,7 +81,6 @@ button.page-item:hover {
 button.page-item:hover .page-link {
     color: #F8F8F8;
     font-size: 16px;
-    font-family: Poppins;
     font-weight: 400;
     line-height: 26px;
     word-wrap: break-word;
