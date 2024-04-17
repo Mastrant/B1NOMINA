@@ -76,31 +76,7 @@
             <!--Final cuerpo-->
         </table>        
         
-        <!--Fin Tabla-->
-        <div class="conted-pagination">
-            <!--Espacio para paginacion-->
-            <div class="pagination">
-
-                <!--Boton de Previo-->
-                <PaginateButton @click="previosPage">
-                    <template #icono>
-                        <img src="@/components/icons/svg/OneLeft-icon.svg" alt="prev"> 
-                    </template>
-                </PaginateButton>
-
-                <!--Listado de opciones-->
-                <PaginateButton  v-for="pagina in totalpaginas()" :key="pagina" :texto="pagina" @click="getDataPorPagina(pagina)" />
-
-                <!--Boton de siguiente-->
-                <PaginateButton @click="nextPage">
-                    <template #icono>
-                        <img src='@/components/icons/svg/OneRigth-icon.svg' alt="next">  
-                    </template>
-                </PaginateButton>
-            </div>
-        </div>
-
-        <Paginacion :totalPaginas="8"/>
+        <Paginacion :totalPaginas="totalpaginas()" @NumeroSelecionado="getDataPorPagina"/>
     </div>
    
 </template>
@@ -108,7 +84,6 @@
 <script setup>
 import OjitoIcon from '@/components/icons/Ojito-icon.vue';
 import DescargaIcon from '@/components/icons/Descarga-icon.vue';
-import PaginateButton from '@/components/botones/Paginate-button.vue';
 import InterruptorButton from '@/components/inputs/Interruptor-modal-button.vue';
 import InputCheckbox from '@/components/inputs/Input-Checkbox.vue';
 import EmpleadosRow from './Empleados-Row.vue';

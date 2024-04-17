@@ -184,28 +184,7 @@
         </div>
         </TemplateModal>
 
-        <div class="conted-pagination">
-            <!--Espacio para paginacion-->
-            <div class="pagination">
-
-            <!--Boton de Previo-->
-            <PaginateButton @click="previosPage">
-                <template #icono>
-                    <img src="@/components/icons/svg/OneLeft-icon.svg" alt="prev"> 
-                </template>
-            </PaginateButton>
-
-            <!--Listado de opciones-->
-            <PaginateButton  v-for="pagina in totalpaginas()" :key="pagina" :texto="pagina" @click="getDataPorPagina(pagina)" />
-
-            <!--Boton de siguiente-->
-            <PaginateButton @click="nextPage">
-                <template #icono>
-                    <img src="@/components/icons/svg/OneRigth-icon.svg" alt="Next"> 
-                </template>
-            </PaginateButton>
-            </div>
-        </div>
+        <Paginacion :totalPaginas="totalpaginas()" @NumeroSelecionado="getDataPorPagina"/>
 
         <CicloRetomarEmpleado ref='CicloCrearEmpleado' />
     </div>
@@ -218,7 +197,6 @@
     import ExitColorIcon from '@/components/icons/Exit-color-icon.vue';
     import WaitButton from '@/components/botones/Wait-button.vue';
     import EBarraProgresoVue from '@/components/elementos/E-BarraProgreso.vue';
-    import PaginateButton from '@/components/botones/Paginate-button.vue';
     import TemplateModal from '@/components/modal/TemplateModal.vue';
     import LayoutForm from '@/components/Layouts/LayoutForm.vue';
     import NavButtonTemplate from '@/components/botones/Nav-button-templateForm.vue';
@@ -226,7 +204,7 @@
     import CorrectButton from '@/components/botones/Correct-button.vue';
     import CicloRetomarEmpleado from '@/components/elementos/Ciclo-Retomar-Empleado.vue';
     import EditIcon from '@/components/icons/Edit-icon.vue';
-
+    import Paginacion from '@/components/elementos/Paginacion.vue';
 
     import { ref, defineProps, watchEffect, onMounted, defineEmits} from 'vue';
 
@@ -600,25 +578,6 @@
         DatosPaginados.value = ListaEmpleados.value.slice(ini, fin)
     };
 
-    //metodo para retroceder pagina
-    const previosPage = () => {
-        //evalua si esta al inicio de la paginacion
-        if(paginaActual.value > 1){
-            paginaActual.value = paginaActual.value - 1; //decrementa la pagina en 1
-        }
-            //ejecuta la actualizaicon del paginado
-        getDataPorPagina(paginaActual.value);
-    };
-
-    //metodo para avanzar pagina
-    const nextPage = () => {
-        //evalua si está al final de la paginacion
-        if(paginaActual.value < totalpaginas()){
-            paginaActual.value = paginaActual.value + 1; //aumenta la pagina en 1
-        }
-        //ejecuta la actualizaicon del paginado
-        getDataPorPagina(paginaActual.value)
-    };
     //al cambiar los datos reinicia el renderizado
     watchEffect(() => {
         ListaEmpleados.value = props.listaEmpleados;
