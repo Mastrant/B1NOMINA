@@ -77,5 +77,6 @@
 <style scoped>
     div.pagination {
         display: flex;
+        width: fit-content;
     }
 </style>

@@ -184,7 +184,10 @@
         </div>
         </TemplateModal>
 
-        <Paginacion :totalPaginas="totalpaginas()" @NumeroSelecionado="getDataPorPagina"/>
+        <div class="espacio-paginacion">
+            <SeleccionarPaginacion @valorSelecionado="asignarValor"/>
+            <Paginacion :totalPaginas="totalpaginas()" @NumeroSelecionado="getDataPorPagina"/>
+        </div>
 
         <CicloRetomarEmpleado ref='CicloCrearEmpleado' />
     </div>
@@ -205,6 +208,7 @@
     import CicloRetomarEmpleado from '@/components/elementos/Ciclo-Retomar-Empleado.vue';
     import EditIcon from '@/components/icons/Edit-icon.vue';
     import Paginacion from '@/components/elementos/Paginacion.vue';
+    import SeleccionarPaginacion from '@/components/elementos/Seleccionar-paginacion.vue'
 
     import { ref, defineProps, watchEffect, onMounted, defineEmits} from 'vue';
 
@@ -551,12 +555,16 @@
     //configuracion del paginado
     const DatosPaginados = ref([]); //arreglo con los datos picados
     const paginaActual = ref(1); //inicializacion de la pagina
-    const elementosPorPagina = 12; //numero de filas por pagina
+    const elementosPorPagina = ref(12); //numero de filas por pagina
+
+    const asignarValor = (Numero) => {
+        elementosPorPagina.value = Numero;
+    }
 
     //total de paginas
     const totalpaginas = () => {
         //devuelve el numero de paginas segun los datos y redondea el resultado
-        return Math.ceil(ListaEmpleados.value.length / elementosPorPagina);
+        return Math.ceil(ListaEmpleados.value.length / elementosPorPagina.value);
     };
 
     //optener data segun la pagina
@@ -571,8 +579,8 @@
         DatosPaginados.value = ([]);
 
         //rango del indice
-        let ini = (numeroPagina * elementosPorPagina) - elementosPorPagina;
-        let fin = (numeroPagina * elementosPorPagina);
+        let ini = (numeroPagina * elementosPorPagina.value) - elementosPorPagina.value;
+        let fin = (numeroPagina * elementosPorPagina.value);
         
         //recorre los datos de lista y los indexa en la paginacion
         DatosPaginados.value = ListaEmpleados.value.slice(ini, fin)
@@ -754,4 +762,16 @@ form.aceptar-descartar li > span {
 form.aceptar-descartar  li::marker {
     text-align: center;
 }
+
+/**
+ * Estilos para la paginación dentro del contenedor
+ * Alinea los botones de paginación al final del contenedor
+ */
+ div.espacio-paginacion {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 </style>

@@ -76,7 +76,11 @@
             <!--Final cuerpo-->
         </table>        
         
-        <Paginacion :totalPaginas="totalpaginas()" @NumeroSelecionado="getDataPorPagina"/>
+        <div class="espacio-paginacion">
+            <SeleccionarPaginacion @valorSelecionado="asignarValor"/>
+            <Paginacion :totalPaginas="totalpaginas()" @NumeroSelecionado="getDataPorPagina"/>
+        </div>
+        
     </div>
    
 </template>
@@ -88,10 +92,10 @@ import InterruptorButton from '@/components/inputs/Interruptor-modal-button.vue'
 import InputCheckbox from '@/components/inputs/Input-Checkbox.vue';
 import EmpleadosRow from './Empleados-Row.vue';
 import Paginacion from '@/components/elementos/Paginacion.vue';
+import SeleccionarPaginacion from '@/components/elementos/Seleccionar-paginacion.vue'
 
 import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
 
-import axios from 'axios';
 import { useRoute } from 'vue-router';
 
 import almacen from '@/store/almacen.js';
@@ -156,12 +160,16 @@ watch(listaEmpleadosSelecionados.value, upData)
 //configuracion del paginado
 const DatosPaginados = ref([]); //arreglo con los datos picados
 const paginaActual = ref(1); //inicializacion de la pagina
-const elementosPorPagina = 12; //numero de filas por pagina
+const elementosPorPagina = ref(12); //numero de filas por pagina
+
+const asignarValor = (Numero) => {
+    elementosPorPagina.value = Numero;
+}
 
 //total de paginas
 const totalpaginas = () => {
     //devuelve el numero de paginas segun los datos y redondea el resultado
-    return Math.ceil(ListaEmpleados.value.length / elementosPorPagina);
+    return Math.ceil(ListaEmpleados.value.length / elementosPorPagina.value);
 };
 
 //optener data segun la pagina
@@ -176,32 +184,13 @@ function getDataPorPagina(numeroPagina){
     DatosPaginados.value = ([]);
 
     //rango del indice
-    let ini = (numeroPagina * elementosPorPagina) - elementosPorPagina;
-    let fin = (numeroPagina * elementosPorPagina);
+    let ini = (numeroPagina * elementosPorPagina.value) - elementosPorPagina.value;
+    let fin = (numeroPagina * elementosPorPagina.value);
     
     //recorre los datos de lista y los indexa en la paginacion
     DatosPaginados.value = ListaEmpleados.value.slice(ini, fin)
 };
 
-//metodo para retroceder pagina
-const previosPage = () => {
-    //evalua si esta al inicio de la paginacion
-    if(paginaActual.value > 1){
-        paginaActual.value = paginaActual.value - 1; //decrementa la pagina en 1
-    }
-        //ejecuta la actualizaicon del paginado
-    getDataPorPagina(paginaActual.value);
-};
-
-//metodo para avanzar pagina
-const nextPage = () => {
-    //evalua si está al final de la paginacion
-    if(paginaActual.value < totalpaginas()){
-        paginaActual.value = paginaActual.value + 1; //aumenta la pagina en 1
-    }
-    //ejecuta la actualizaicon del paginado
-    getDataPorPagina(paginaActual.value)
-};
 
 //al cambiar los datos reinicia el renderizado
 watchEffect(() => {
@@ -238,21 +227,13 @@ onMounted(()=> {
  * Estilos para la paginación dentro del contenedor
  * Alinea los botones de paginación al final del contenedor
  */
-div.contend-pagination {
+div.espacio-paginacion {
     width: 100%;
     display: flex;
-    justify-content: end;
+    justify-content: space-between;
+    align-items: center;
 }
-.pagination {
-    display: flex;
-    width: 100%;
-    gap: 4px; /* Espacio entre botones de paginación */
-    justify-content: end;
-}
-.pagination button {
-    box-sizing: border-box;
-    padding: 4px 12px; /* Espacio interno de los botones de paginación */
-}
+
 
 /**
  * Estilos para el encabezado de la tabla

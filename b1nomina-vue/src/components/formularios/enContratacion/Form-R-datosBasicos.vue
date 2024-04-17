@@ -69,7 +69,6 @@
 import InputLinealDescripcion from "@/components/inputs/Input-Lineal-descripcion.vue";
 import ListaTemplateLineal from "@/components/listas/Lista-template-lineal.vue";
 import LayoutInputLineal from "@/components/Layouts/LayoutInputLineal.vue";
-import InputRadioButton from "@/components/botones/Input-Radio-button.vue";
 import inputPicForm from "@/components/inputs/Input-Pic-form.vue";
 
 import { ref, watch, defineEmits, defineProps, reactive, defineExpose, onBeforeMount, onMounted } from "vue";

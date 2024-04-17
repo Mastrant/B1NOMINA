@@ -24,7 +24,7 @@ const props = defineProps({
     },
     //Titulo de la opcion
     optionsSelected: {
-        type: String ,
+        type: [String, Number] ,
         default: 0,
     }
 });
