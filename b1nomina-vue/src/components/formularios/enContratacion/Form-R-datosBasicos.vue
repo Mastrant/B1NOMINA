@@ -119,8 +119,6 @@ const dataImagen = ref("");
 
 const RequiereActualizar = ref(false)
 
-const DatosUserOriginal = {}
-
 //Configuraciones
 const tipoDocumentoSelect = ref("2"); //Documento selecionado
 const mostrarFoto = ref(true);
@@ -153,21 +151,6 @@ const payload = reactive({
 
 //referencia de objetos:
 const inputFoto = ref(null);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /////////////// Funciones ///////////////////////////
 
@@ -246,10 +229,10 @@ const MostrarValores = (DATA) => {
   nombres.value = (DATA?.nombres == null)? '' :DATA?.nombres;
 
   // Asigna el valor de DATA?.apellidos a apellidos.value, utilizando '' si DATA?.apellidos es null.
-  apellidos.value = (DATA?.apellidos == null)? '' :DATA?.apellidos;
+  apellidos.value = (DATA?.apellido_paterno == null)? '' :DATA?.apellido_paterno;
 
   // Asigna el valor de DATA?.correo a correo.value, utilizando '' si DATA?.correo es null.
-  correo.value = (DATA?.correo == null)? '' :DATA?.correo;
+  correo.value = (DATA?.email == null)? '' :DATA?.email;
 
   // Establece el valor de tipoDocumentoSelect.value en 2, indicando un tipo de documento predeterminado.
   tipoDocumentoSelect.value = 2;

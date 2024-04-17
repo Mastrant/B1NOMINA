@@ -301,11 +301,11 @@ watch(() => props.Informacion, (nuevoValor) => {
 const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
     //console.log(Datos)
      //Si la data es diferente de vacio, le añade al 
-    Datos.nombres = DataUser.nombres
-    Datos.apellidos = DataUser.apellidos
-    Datos.documento = DataUser.documento;
-    Datos.correo = DataUser.correo;
-    (Datos.telefonoLocal == '')? 0 : Datos.telefonoLocal;
+    Datos.nombres = props.Informacion?.nombres;
+    Datos.apellidos = props.Informacion?.apellido_paterno;
+    Datos.documento = props.Informacion?.documento;
+    Datos.correo = props.Informacion?.email;
+    (Datos?.telefonoLocal == '')? 0 : Datos?.telefonoLocal;
 
     await axios.put(`/user/${props.EmpleadoID}/save_preuser?userUpdater=${ID_USERMASTER}`, Datos)
     .then(
@@ -357,43 +357,22 @@ const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
     //console.log(DATA)
     //datos personales
-    nacionalidad.value = (DATA?.nacionalidad == null)? '' :DATA?.nacionalidad;
-    genero.value = (DATA?.genero == null)? '' :DATA?.genero;
-    fechaNacimiento.value = (DATA?.fechaNacimiento == null)? '' :DATA?.fechaNacimiento;
-    estadoCivil.value = (DATA?.estadoCivil == null)? '' :DATA?.estadoCivil;
+    nacionalidad.value = (DATA?.nacionalidad_id == null)? '' :DATA?.nacionalidad_id;
+    genero.value = (DATA?.sexo_id == null)? '' :DATA?.sexo_id;
+    fechaNacimiento.value = (DATA?.fecha_nacimiento == null)? '' :DATA?.fecha_nacimiento;
+    estadoCivil.value = (DATA?.estado_civil_id == null)? '' :DATA?.estado_civil_id;
 
     //datos de contacto
-    region.value = (DATA?.region == null)? '' :DATA?.region;
-    localidad.value = (DATA?.localidad == null)? '' :DATA?.localidad;
+    region.value = (DATA?.region_id == null)? '' :DATA?.region_id;
+    localidad.value = (DATA?.comuna_id == null)? '' :DATA?.comuna_id;
     direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
-    telefonoCelular.value = (DATA?.telefonoCelular == null)? '' :DATA?.telefonoCelular;
-    telefonoLocal.value = (DATA?.telefonoLocal == null)? '' :DATA?.telefonoLocal;
-    filtroRegion(DATA?.region == null)? '' :DATA?.region;
+    telefonoCelular.value = (DATA?.movil == null)? '' :DATA?.movil;
+    telefonoLocal.value = (DATA?.fijo == null)? '' :DATA?.fijo;
+    filtroRegion(DATA?.region_id == null)? '' :DATA?.region_id;
 }
 
 

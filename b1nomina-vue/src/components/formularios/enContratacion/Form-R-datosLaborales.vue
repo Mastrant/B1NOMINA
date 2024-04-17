@@ -356,18 +356,14 @@ watch(FechaContratacion, (nuevoValor) => ActualizarPayload('fecha_inicio', nuevo
 watch(FechaFinalizacionContrato, (nuevoValor) => ActualizarPayload('fecha_fin', nuevoValor));
 watch(SalarioBase, (nuevoValor) => ActualizarPayload('periodo_salario', Number(nuevoValor)));
 watch(UnidadSueldo, (nuevoValor) => ActualizarPayload('unidad_sueldo', String(nuevoValor)));
-watch(MontoSalario, (nuevoValor) => {
-    ActualizarPayload('salario_base', Math.abs(nuevoValor))
-});
+watch(MontoSalario, (nuevoValor) => { ActualizarPayload('salario_base', Math.abs(nuevoValor))});
 watch(SedeDeTrabajo, (nuevoValor) => ActualizarPayload('sede_id', Number(nuevoValor)));
 watch(Departamento, (nuevoValor) => ActualizarPayload('departamento_id', Number(nuevoValor)));
 watch(Cargo, (nuevoValor) => ActualizarPayload('cargo_id', Number(nuevoValor)));
 watch(Grupo, (nuevoValor) => ActualizarPayload('grupo_id', Number(nuevoValor)));
 watch(Modalidad, (nuevoValor) => ActualizarPayload('modalidad', Number(nuevoValor)));
 
-watch(() => props.Informacion, (nuevoValor) => { 
-  MostrarValores(nuevoValor) 
-});
+watch(() => props.Informacion, (nuevoValor) => { MostrarValores(nuevoValor)});
 
 const resetForm = () => {
     TipoDeContrato.value = '';
@@ -404,10 +400,10 @@ const NextModal = (idEpleadoCreado) => {
 const MostrarValores = (DATA) => {
     //console.log(DATA)
     // Variables del formulario 1
-    TipoDeContrato.value = (DATA?.TipoDeContrato == null) ? '' : DATA?.TipoDeContrato;
-    NivelEstudio.value = (DATA?.NivelEstudio == null) ? '' : DATA?.NivelEstudio;
-    TerminoContrato.value = (DATA?.TerminoContrato == null) ? '' : DATA?.TerminoContrato;
-    FechaContratacion.value = (DATA?.FechaContratacion == null) ? '' : DATA?.FechaContratacion;
+    TipoDeContrato.value = (DATA?.termino_contrato_id == null) ? '' : DATA?.termino_contrato_id;
+    NivelEstudio.value = (DATA?.nivel_estudio == null) ? '' : DATA?.nivel_estudio;
+    TerminoContrato.value = (DATA?.termino_contrato_id == null) ? '' : DATA?.termino_contrato_id;
+    FechaContratacion.value = (DATA?.fecha_inicio == null) ? '' : DATA?.fecha_inicio;
     FechaFinalizacionContrato.value = (DATA?.FechaFinalizacionContrato == null) ? '' : DATA?.FechaFinalizacionContrato;
     SalarioBase.value = (DATA?.SalarioBase == null) ? '' : DATA?.SalarioBase;
     UnidadSueldo.value = (DATA?.UnidadSueldo == null) ? '' : DATA?.UnidadSueldo;
