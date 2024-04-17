@@ -1,30 +1,18 @@
 <template>
     <LayoutPanel>
         <template #cabecera>
-            <Header nombrePagina=" Configuración" />
+            <Headervue nombrePagina="Configuraciones" />
         </template>
         
-        <template v-slot:panel>            
+        <template #panel>            
             <router-view />
         </template>
     </LayoutPanel>
 </template>
 
-<script>
-import Header from '@/components/Header.vue';
-import LayoutPanel from '@/components/Layouts/LayoutPanel.vue';
-export default {
-    name: 'configuracion',
-    components: {
-        Header,
-        LayoutPanel
-    },
-    data() {
-        return {
-            
-        }
-    },
-}
+<script setup>
+    import Headervue from '@/components/Header.vue';
+    import LayoutPanel from '@/components/Layouts/LayoutPanel.vue';
 </script>
 
 <style scoped>

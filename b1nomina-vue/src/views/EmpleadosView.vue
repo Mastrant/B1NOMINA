@@ -75,7 +75,7 @@ export default {
     },
     //solicita la cantidad total de elementos para el panel
     async mounted(){
-      await this.pedirDatos()
+         await this.pedirDatos()
      // console.log("empleadosView " + this.sociedadId)
     }
 }

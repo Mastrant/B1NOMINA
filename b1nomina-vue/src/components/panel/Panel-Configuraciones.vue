@@ -52,8 +52,7 @@
 </template>
 
 <script setup>
-import AlertShort from '@/components/alertas/Alert-short-template.vue';
-import CardLink from '@/components/elementos/Card-Link.vue'
+    import CardLink from '@/components/elementos/Card-Link.vue'
 </script>
 
 <style scoped>

@@ -118,13 +118,14 @@ const router = createRouter({
           path: 'configuracion',
           name: 'configuracion',
           component: () => import('@/views/ConfiguracionView.vue'),
-          alias: ['configuracion'],
+          alias: 'configuracion',
           children: [
             {
               path: "",
               component: () => import('@/components/panel/Panel-Configuraciones.vue'),
               name: 'opciones',
               alias: 'opciones',              
+              props: true,
                
             },
             {

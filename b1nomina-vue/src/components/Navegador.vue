@@ -51,7 +51,7 @@
                         <!--Configuración-->
                         <NavButton :class="{'order': !desplegarMenu}">
                             <template #direccion>
-                                <router-link :to="{ name: 'configuracion'}">
+                                <router-link :to="{ path: `/sociedad/${sociedadId}/configuracion` }">
                                     <TuerquitaIcon />
                                     <span :class="{'show': desplegarMenu}">
                                         Configuración
