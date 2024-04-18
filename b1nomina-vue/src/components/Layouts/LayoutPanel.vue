@@ -22,6 +22,8 @@ section.layoutpanel {
 
 div.body-panel {
     padding: 24px;
+    height: 100%;
+    width: 100%;
 }
 
 </style>

@@ -261,16 +261,6 @@ const actualizarDataImagen = (evento) => {
 };
 
 
-
-
-
-
-
-
-
-
-
-
 // Acciones
 
 // Función para manejar el cambio de modal. Recibe un idEpleadoCreado como parámetro y emite el evento 'nextModal' con este id.

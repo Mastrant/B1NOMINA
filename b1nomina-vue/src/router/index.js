@@ -130,7 +130,7 @@ const router = createRouter({
             },
             {
               path: "datos-de-la-empresa",
-              component: () => import('@/components/panel/Panel-EnDesarrollo.vue'),
+              component: () => import('@/components/panel/configuracion/Panel-Datos-Empresa.vue'),
               name: 'datos-de-la-empresa',
               alias: ['datos-de-la-empresa',],              
                
@@ -151,7 +151,7 @@ const router = createRouter({
             },
             {
               path: "centralizacion",
-              component: () => import('@/components/panel/Panel-EnDesarrollo.vue'),
+              component: () => import('@/components/panel/configuracion/Panel-Centralizacion.vue'),
               name: 'centralizacion',
               alias: ['centralizacion',],              
                
@@ -172,7 +172,7 @@ const router = createRouter({
             },
             {
               path: "base-eventos",
-              component: () => import('@/components/panel/Panel-EnDesarrollo.vue'),
+              component: () => import('@/components/panel/configuracion/Panel-Base-Eventos.vue'),
               name: 'base-eventos',
               alias: ['base-eventos',],              
                
