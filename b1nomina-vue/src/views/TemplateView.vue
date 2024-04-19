@@ -1,14 +1,15 @@
 <template>
     <!--Componente de acomodo de datos-->
     <LayoutCore>
+        <template #nav>
+            <NavegadorVue />                 
+        </template>
         <!--Componente que contiene la pagina que se muestra segun la ruta navegada-->
         <template #body>
             <RouterView />
         </template>
         <!--Mantiene el navegador del lado derecho de la vista principal de la ruta-->
-        <template #nav>
-            <NavegadorVue />                 
-        </template>
+        
     </LayoutCore>
 </template>
 

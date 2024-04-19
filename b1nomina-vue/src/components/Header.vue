@@ -24,6 +24,7 @@ border-bottom: 2px #CDE0F1 solid;
 box-sizing: border-box;
 display: flex;
 align-items: center;
+flex-grow: 1;
 
 }
 

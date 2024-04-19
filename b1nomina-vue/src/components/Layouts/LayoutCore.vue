@@ -4,7 +4,7 @@
         <slot name="nav">
         
         </slot>
-        <div class="Contenedor-body">
+        <div class="contenedor-body">
             <slot name="body">
 
             </slot>
@@ -18,11 +18,13 @@ section.layout-section {
     height: 100vh;
     display: flex;
     flex-direction: row;
-    width: 100%;
+    width: 100vw;
+    box-sizing: content-box;
 }
 
-div.Contenedor-body {
-    margin-left: 95px;
+div.contenedor-body {
+    margin-left: 6rem;
+    padding: 0px;
     background: none;
     width: 100%;
     height: 100%;
