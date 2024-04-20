@@ -12,11 +12,12 @@
         </LayoutNavConfig>
         <div class="vista-panel">
             <ListaFormDatosbasicosEmpresa v-if="panelSelecionado == 1" />
-            <div v-if="panelSelecionado == 2">Sedes</div>
-            <div v-if="panelSelecionado == 3">Departamentos</div>
-            <div v-if="panelSelecionado == 4">Grupos</div>
-            <div v-if="panelSelecionado == 5">Cargos</div>
-            <div v-if="panelSelecionado == 6">Campos Adicionales</div>
+            
+            <ListaFormSedes v-if="panelSelecionado == 2" />
+            <ListaDepartamentosConfiguracions v-if="panelSelecionado == 3" />
+            <ListaGruposConfiguracion v-if="panelSelecionado == 4" />
+            <ListaCargosConfiguracion v-if="panelSelecionado == 5" />
+            <ListaCamposAdicionalesConfiguracion v-if="panelSelecionado == 6" />
         </div>
     </div>
 </template>
@@ -24,7 +25,13 @@
 <script setup>
 import NavConfigButton from '@/components/botones/Nav-config-button.vue';
 import LayoutNavConfig from '@/components/Layouts/LayoutNavConfig.vue';
+
 import ListaFormDatosbasicosEmpresa from '@/components/listas/configuracion/Lista-Form-DatosBasicos-Empresa.vue';
+import ListaFormSedes from '@/components/listas/configuracion/Lista-Form-Sedes.vue';
+import ListaDepartamentosConfiguracions from '@/components/listas/configuracion/Lista-Departamentos-Configuracion.vue';
+import ListaCargosConfiguracion from '@/components/listas/configuracion/Lista-Cargos-Configuracion.vue';
+import ListaGruposConfiguracion from '@/components/listas/configuracion/Lista-Grupos-Configuracion.vue';
+import ListaCamposAdicionalesConfiguracion from '@/components/listas/configuracion/Lista-CamposAdicionales-Configuracion.vue';
 
 import { ref, inject } from 'vue';
 

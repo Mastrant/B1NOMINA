@@ -25,6 +25,6 @@ import FormResponsableEmpresa from '@/components/formularios/configuracion/datos
 .contend {
     display:flex;
     flex-direction: column;
-
+    padding: 0 12px;
 }
 </style>
