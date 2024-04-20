@@ -9,7 +9,7 @@
         </LayoutFondoBorder>
         <LayoutFondoBorder>
             <template #default>
-                          
+                <FormResponsableEmpresa />       
             </template>
         </LayoutFondoBorder>
     </div>
@@ -18,6 +18,7 @@
 <script setup>
 import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
 import FormDatosbasicosEmpresa from '@/components/formularios/configuracion/datos-empresa/Form-DatosBasicos-Empresa.vue';
+import FormResponsableEmpresa from '@/components/formularios/configuracion/datos-empresa/Form-Responsable-Empresa.vue';
 </script>
 
 <style scoped>
