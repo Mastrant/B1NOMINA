@@ -17,7 +17,7 @@ section.layoutpanel {
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 100vw;
+    width: 100%;
     box-sizing: border-box;
 }
 

@@ -190,6 +190,7 @@ const CloseModal = () => {
 };
 
 const crearDatosPago = async (ID_USERMASTER,Data) => {
+    console.log(Data)
     await axios.post(`create_datos_pago?userCreatorId=${ID_USERMASTER}`,Data)
     .then(
         // Maneja la respuesta exitosa.
@@ -223,6 +224,7 @@ const crearDatosPago = async (ID_USERMASTER,Data) => {
 }
 
 const editarDatosPago = async (ID_USERMASTER, Data) => {
+    console.log(Data)
     await axios.put(`create_datos_pago?userCreatorId=${ID_USERMASTER}`,Data)
     .then(
         // Maneja la respuesta exitosa.
@@ -296,16 +298,13 @@ const verificarMediodePago = (medio) => {
  * Ejecuta la peticion con axios
  */
  const Enviar = async () => {
-    if (props.EmpleadoID == null) {
-        //console.log("enviar al formulario 1");
-    }
-
-    let statuspay = Object.values(payload).some(value => value !== "");
     //si uno de los payload tiene cambios
-    if (statuspay  == true){
+    if (Object.values(payload).some(value => value !== "")) {
         //verifica que el id pasado sea diferente de nullo y mayor que 0
         if (props.EmpleadoID != null && props.EmpleadoID > 0) {
             //Almacena si hay datos Laboras o no del usuario en el sistema
+
+            console.log(payload)
             let respuestaGetData = await getData(props.EmpleadoID);
 
             // Recuperar el objeto como una cadena de texto y convertirlo de nuevo a un objeto

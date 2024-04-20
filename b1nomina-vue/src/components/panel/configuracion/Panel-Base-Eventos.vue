@@ -2,18 +2,45 @@
     <div class="contend">
         <LayoutNavConfig>
             <template #default>
-                <NavConfigButton :activar=false texto="AFP" />
-                <NavConfigButton :activar=false texto="Previsión Salud" />
-                <NavConfigButton :activar=false texto="Caja Compensación" />
-                <NavConfigButton :activar=false texto="Asignación Familiar" />
-                <NavConfigButton :activar=false texto="Mutual" />
-                <NavConfigButton :activar=false texto="APV" />
+                <NavConfigButton 
+                :activar="panelSelecionado == 1" 
+                texto="AFP" 
+                @click="SelecionarPanel(1)"
+            />
+                <NavConfigButton 
+                :activar="panelSelecionado == 2" 
+                texto="Previsión Salud" 
+                @click="SelecionarPanel(2)"
+            />
+                <NavConfigButton 
+                :activar="panelSelecionado == 3" 
+                texto="Caja Compensación" 
+                @click="SelecionarPanel(3)"
+            />
+                <NavConfigButton 
+                :activar="panelSelecionado == 4" 
+                texto="Asignación Familiar" 
+                @click="SelecionarPanel(4)"
+            />
+                <NavConfigButton 
+                :activar="panelSelecionado == 5" 
+                texto="Mutual" 
+                @click="SelecionarPanel(5)"
+            />
+                <NavConfigButton 
+                :activar="panelSelecionado == 6" 
+                texto="APV" 
+                @click="SelecionarPanel(6)"
+            />
             </template>            
         </LayoutNavConfig>
         <div class="vista-panel">
-            <router-view>
-                Ruta a Navegar
-            </router-view>
+            <div v-if="panelSelecionado == 1">AFP</div>
+            <div v-if="panelSelecionado == 2">Previsión Salud</div>
+            <div v-if="panelSelecionado == 3">Caja Compensación</div>
+            <div v-if="panelSelecionado == 4">Asignación Familiar</div>
+            <div v-if="panelSelecionado == 5">Mutual</div>
+            <div v-if="panelSelecionado == 6">APV</div>
         </div>
     </div>
 </template>
@@ -21,6 +48,15 @@
 <script setup>
 import NavConfigButton from '@/components/botones/Nav-config-button.vue';
 import LayoutNavConfig from '@/components/Layouts/LayoutNavConfig.vue';
+
+import {ref} from 'vue';
+
+const panelSelecionado = ref(1);
+
+const SelecionarPanel = (num) => {
+    panelSelecionado.value = num;
+}
+
 </script>
 
 <style scoped>

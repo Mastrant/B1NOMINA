@@ -541,22 +541,17 @@ const getData = async (ID_empleado) => {
  * @params {payload} Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
- const Enviar = async () => {
-    if (props.EmpleadoID != null && props.EmpleadoID > 0) {    
+ const Enviar = async () => {  
 
-        //verifica si los payloads tienen datos
-        let statuspay = Object.values(payload).some(value => value !== "");
-        //let statuspay2 = Object.values(payload2).some(value => value !== "");
 
         //si uno de los payload tiene cambios
-        if (statuspay  == true){
-            //verifica que el id pasado sea diferente de nullo y mayor que 0
+        if (Object.values(payload).some(value => value !== "")){
+            //verifica que el id pasado sea diferente de nulo y mayor que 0
             if (props.EmpleadoID != null && props.EmpleadoID > 0) {
 
                 //Almacena si hay datos Laboras o no del usuario en el sistema
-                //console.log(props.EmpleadoID)
+                console.log(payload)
                 let respuestaGetData = await getData(props.EmpleadoID);
-
 
                 // Recuperar el objeto como una cadena de texto y convertirlo de nuevo a un objeto
                 let ID_USUARIO = JSON.parse(localStorage.getItem('userId'));
@@ -604,9 +599,6 @@ const getData = async (ID_empleado) => {
         } else {//no hay modificaciones en los payloads
             NextModal(props.EmpleadoID)
         }
-    } else {
-        emit("respuesta", {'texto':"Error enviar los datos", 'valor':false})  
-    }
 };
 
 

@@ -282,22 +282,6 @@ watch(() => props.Informacion, (nuevoValor) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
     //console.log(Datos)
      //Si la data es diferente de vacio, le añade al 
@@ -319,7 +303,7 @@ const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
     .catch(
         // Maneja los errores de la solicitud.
         err => {
-            //console.log(err)
+            console.log(err)
             // Verifica si la respuesta del error contiene un objeto de respuesta.
             if (err.response.status == 500) { 
                 // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
