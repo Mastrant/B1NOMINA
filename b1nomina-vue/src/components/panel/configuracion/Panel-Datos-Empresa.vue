@@ -11,20 +11,7 @@
             </template>            
         </LayoutNavConfig>
         <div class="vista-panel">
-            <LayoutFondoBorder v-if="panelSelecionado == 1">
-                <template #default>
-                    
-                    Datos Básicos
-                    
-                </template>
-            </LayoutFondoBorder>
-            <LayoutFondoBorder v-if="panelSelecionado == 1">
-                <template #default>
-                    
-                    Datos Básicos
-                    
-                </template>
-            </LayoutFondoBorder>
+            <ListaFormDatosbasicosEmpresa v-if="panelSelecionado == 1" />
             <div v-if="panelSelecionado == 2">Sedes</div>
             <div v-if="panelSelecionado == 3">Departamentos</div>
             <div v-if="panelSelecionado == 4">Grupos</div>
@@ -37,14 +24,21 @@
 <script setup>
 import NavConfigButton from '@/components/botones/Nav-config-button.vue';
 import LayoutNavConfig from '@/components/Layouts/LayoutNavConfig.vue';
-import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
-import {ref} from 'vue';
+import ListaFormDatosbasicosEmpresa from '@/components/listas/configuracion/Lista-Form-DatosBasicos-Empresa.vue';
+
+import { ref, inject } from 'vue';
 
 const panelSelecionado = ref(1);
 
 const SelecionarPanel = (num) => {
     panelSelecionado.value = num;
 }
+
+// Accede a la función proporcionada por el componente padre
+const CambiarNombreRuta = inject('CambiarNombreRuta');
+// Llama a la función para enviar información al componente padre
+CambiarNombreRuta('Datos de la Empresa');
+
 </script>
 
 <style scoped>

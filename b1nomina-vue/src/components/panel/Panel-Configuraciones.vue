@@ -53,6 +53,13 @@
 
 <script setup>
     import CardLink from '@/components/elementos/Card-Link.vue'
+    import { inject } from 'vue';
+
+    // Accede a la función proporcionada por el componente padre
+const CambiarNombreRuta = inject('CambiarNombreRuta');
+// Llama a la función para enviar información al componente padre
+CambiarNombreRuta('');
+
 </script>
 
 <style scoped>

@@ -36,13 +36,19 @@
 <script setup>
 import NavConfigButton from '@/components/botones/Nav-config-button.vue';
 import LayoutNavConfig from '@/components/Layouts/LayoutNavConfig.vue';
-import {ref} from 'vue';
+import { ref, inject } from 'vue';
 
 const panelSelecionado = ref(1);
 
 const SelecionarPanel = (num) => {
     panelSelecionado.value = num;
 }
+
+// Accede a la función proporcionada por el componente padre
+const CambiarNombreRuta = inject('CambiarNombreRuta');
+// Llama a la función para enviar información al componente padre
+CambiarNombreRuta('Centralización');
+
 
 </script>
 
