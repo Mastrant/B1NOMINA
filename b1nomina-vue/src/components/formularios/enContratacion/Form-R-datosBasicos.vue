@@ -239,19 +239,19 @@ const MostrarValores = (DATA) => {
 
   // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
   // utilizando '' si DATA?.documento es null.
-  payload_old.documento = DATA?.documento ?? '';
-  payload.documento = DATA?.documento ?? '';
+  payload_old.documento = DATA?.rut ?? '';
+  payload.documento = DATA?.rut ?? '';
 
   // Repite el proceso para los demás campos, asignando valores a payload_old y payload,
   // utilizando '' si los valores correspondientes en DATA son null.
   payload_old.nombres = DATA?.nombres ?? '';
   payload.nombres = DATA?.nombres ?? '';
 
-  payload_old.apellidos = DATA?.apellidos ?? '';
-  payload.apellidos = DATA?.apellidos ?? '';
+  payload_old.apellidos = DATA?.apellido_paterno ?? '';
+  payload.apellidos = DATA?.apellido_paterno ?? '';
 
-  payload_old.correo = DATA?.correo ?? '';
-  payload.correo = DATA?.correo ?? '';
+  payload_old.correo = DATA?.email ?? '';
+  payload.correo = DATA?.email ?? '';
 }
 
 
@@ -310,7 +310,6 @@ const resetForm = () => {
 
 const ActualizarDatosBasicos = async (idCreator, Datos, ID_EMpleado) => {
     // Realiza la solicitud PUT y espera la respuesta.
-    console.log(Datos)
     await axios.put(`/user/${ID_EMpleado}/update_preuser?user_updater=${idCreator}`, Datos)
       .then(
         // Maneja la respuesta exitosa.
@@ -340,7 +339,7 @@ const ActualizarDatosBasicos = async (idCreator, Datos, ID_EMpleado) => {
         (err) => {
           // Verifica si la respuesta del error contiene un objeto de respuesta.
           if (err.response) {
-            console.log(err)
+            console.error(err)
             // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
             if (err.response.status == 422) {
               
@@ -427,8 +426,6 @@ defineExpose({
 onMounted(() => {
   MostrarValores(props.Informacion)
 });
-
-
 
 
 </script>

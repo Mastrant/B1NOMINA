@@ -2,7 +2,7 @@
     <!--contenedor-->
     <div class="Add-user-button">
             <TemplateModal 
-                @closeModal="showModal" 
+                @closeModal="showModal(0)" 
                 :activarModal="mostrarModal"
                 :FormId="'Form'+idFormularioActivo"
                 :DataNotification="dataNotificacion"
@@ -92,6 +92,7 @@
     const emit = defineEmits([
         "Notificacion",
     ])
+    const EmpleadoID = ref(0)
 
     const route = useRoute();
     // idSociedad es un String
@@ -126,12 +127,11 @@
     };
 
     const PedirInfo = async (ID_Empleado) => {
+        EmpleadoID.value = ID_Empleado;
         
         //pide los datos básicos
         let respuesta = await peticiones_EnContratacion?.PedirDatosProspectoCompleto(ID_Empleado)
         //let respuesta2 = await peticiones_EnContratacion?.PedirDatosLaboralesProspecto(ID_Empleado)
-        
-        console.log(respuesta)
 
         if (respuesta.success){ //(respuesta.success){
             ID_Empleado_Selecionado.value = ID_Empleado
@@ -158,7 +158,7 @@
      */
     const showModal = (Id_modal = 0) => {
         
-        mostrarModal.value = !mostrarModal.value;
+        
         if(Id_modal == 1){
             
             if(idFormularioActivo.value != 1 && mostrarModal.value == true){
@@ -168,14 +168,17 @@
                 })
             }
             idFormularioActivo.value = 1;
+            mostrarModal.value = true;
         } else {
             idFormularioActivo.value = 0;
+            mostrarModal.value = !mostrarModal.value;
         }
     }
 
     const retrocederForm = () => {
         if(idFormularioActivo.value > 1){
             idFormularioActivo.value--
+            PedirInfo(EmpleadoID.value)
         }
         
     };

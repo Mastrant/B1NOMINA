@@ -283,11 +283,11 @@ watch(() => props.Informacion, (nuevoValor) => {
 
 
 const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
-    //console.log(Datos)
+    console.log(ID_USERMASTER, Datos)
      //Si la data es diferente de vacio, le añade al 
     Datos.nombres = props.Informacion?.nombres;
     Datos.apellidos = props.Informacion?.apellido_paterno;
-    Datos.documento = props.Informacion?.documento;
+    Datos.documento = props.Informacion?.rut;
     Datos.correo = props.Informacion?.email;
     (Datos?.telefonoLocal == '')? 0 : Datos?.telefonoLocal;
 
@@ -303,7 +303,7 @@ const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
     .catch(
         // Maneja los errores de la solicitud.
         err => {
-            console.log(err)
+            console.error(err)
             // Verifica si la respuesta del error contiene un objeto de respuesta.
             if (err.response.status == 500) { 
                 // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.

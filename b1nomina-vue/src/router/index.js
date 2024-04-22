@@ -179,7 +179,7 @@ const router = createRouter({
             },
             {
               path: "historial-acciones",
-              component: () => import('@/components/panel/Panel-EnDesarrollo.vue'),
+              component: () => import('@/components/panel/configuracion/Panel-HistorialAcciones.vue'),
               name: 'historial-acciones',
               alias: ['historial-acciones',],              
                
