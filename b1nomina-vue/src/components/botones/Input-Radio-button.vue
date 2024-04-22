@@ -5,7 +5,7 @@
             type="radio"
             :id="idRadius"
             :value="valor"
-            :checked="valor === modelValue"
+            :checked="valor == modelValue"
             @change="onChange"
         >
         <label :for="idRadius">{{ texto }}</label>

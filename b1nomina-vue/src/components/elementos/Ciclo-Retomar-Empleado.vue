@@ -46,6 +46,7 @@
                         @respuesta="activarNotificacionModal"
                         :EmpleadoID="ID_Empleado_Selecionado"
                         :parametros="parametrosDL"
+                        :Informacion="Data_Usuario" 
                         v-if="idFormularioActivo == 3"
                         ref="Form3"
                     />
@@ -55,6 +56,7 @@
                         @respuesta="activarNotificacionModal"
                         :EmpleadoID="ID_Empleado_Selecionado"
                         :parametros="parametrosDPa"
+                        :Informacion="Data_Usuario" 
                         v-if="idFormularioActivo == 4"
                         ref="Form4"
                     />
@@ -90,7 +92,7 @@
     import peticiones_EnContratacion from '@/peticiones/g_empleado';
 
     const emit = defineEmits([
-        "Notificacion",
+        "notificacion",
     ])
     const EmpleadoID = ref(0)
 
@@ -131,18 +133,18 @@
         
         //pide los datos básicos
         let respuesta = await peticiones_EnContratacion?.PedirDatosProspectoCompleto(ID_Empleado)
-        //let respuesta2 = await peticiones_EnContratacion?.PedirDatosLaboralesProspecto(ID_Empleado)
+       
 
         if (respuesta.success){ //(respuesta.success){
             ID_Empleado_Selecionado.value = ID_Empleado
             Data_Usuario.value = respuesta?.data;
 
-            showModal(1)
+            showModal(idFormularioActivo.value)
         } else {
             ID_Empleado_Selecionado.value = -1;
             showN({
-                    'Titulo': "Información Modificada con exito", 
-                    'Descripcion': "El proceso de actualización del usuario se ha realizazo con éxito"
+                    'Titulo': "Error al consultar", 
+                    'Descripcion': "En estos momentos no se puede acceder a los datos de este Usuario"
                 })
         }
     }
@@ -156,21 +158,15 @@
      * Controla el despliegue del modal
      * @param mostrarModal
      */
-    const showModal = (Id_modal = 0) => {
-        
-        
-        if(Id_modal == 1){
-            
-            if(idFormularioActivo.value != 1 && mostrarModal.value == true){
-                showN({
+    const showModal = (Id_modal = 0) => {   
+        if(Id_modal >= 1){
+                mostrarModal.value = true;
+        } else {
+            idFormularioActivo.value = 0;
+            showN({
                     'Titulo': "Información Modificada con exito", 
                     'Descripcion': "El proceso de actualización del usuario se ha realizazo con éxito"
                 })
-            }
-            idFormularioActivo.value = 1;
-            mostrarModal.value = true;
-        } else {
-            idFormularioActivo.value = 0;
             mostrarModal.value = !mostrarModal.value;
         }
     }
@@ -178,6 +174,7 @@
     const retrocederForm = () => {
         if(idFormularioActivo.value > 1){
             idFormularioActivo.value--
+
             PedirInfo(EmpleadoID.value)
         }
         
@@ -191,7 +188,8 @@
     };
 
     const showN = (Data) => {
-        emit('Notificacion',Data);
+        emit('notificacion', Data);
+        idFormularioActivo.value = 1
     }
 
     //parametros formularios

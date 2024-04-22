@@ -7,6 +7,7 @@
                                 
             </template>
         </LayoutFondoBorder>
+        
         <LayoutFondoBorder>
             <template #default>
                 <FormResponsableEmpresa />       

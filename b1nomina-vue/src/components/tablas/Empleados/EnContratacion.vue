@@ -189,7 +189,7 @@
             <Paginacion :totalPaginas="totalpaginas()" @NumeroSelecionado="getDataPorPagina"/>
         </div>
 
-        <CicloRetomarEmpleado ref='CicloCrearEmpleado' />
+        <CicloRetomarEmpleado ref='CicloCrearEmpleado' @notificacion="ResultadosRetomar" />
     </div>
 </template>
 
@@ -547,6 +547,11 @@
         }
 
         
+    }
+
+    const ResultadosRetomar = (DataNotification) => {
+        emit('showNotificacion', DataNotification)
+        emit("ActualizarData")
     }
 
 

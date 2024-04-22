@@ -256,7 +256,7 @@ const verificarCambios = () => {
 
 //filtra la lista de regiones segun el id
 const filtroRegion = (id) => {
-    ListaLocalidad.value = props.parametros.localidad.filter(item => item.idregion == id)
+    ListaLocalidad.value = props.parametros.localidad.filter(item => item.idregion == id);
 };
 
 //Escuchar cambio en las entradas
@@ -283,7 +283,6 @@ watch(() => props.Informacion, (nuevoValor) => {
 
 
 const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
-    console.log(ID_USERMASTER, Datos)
      //Si la data es diferente de vacio, le añade al 
     Datos.nombres = props.Informacion?.nombres;
     Datos.apellidos = props.Informacion?.apellido_paterno;
@@ -308,7 +307,7 @@ const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
             if (err.response.status == 500) { 
                 // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
                 ////console.log(err)
-                emit("respuesta", {'texto':err.response.message, 'valor':false})      
+                emit("respuesta", {'texto':err?.response?.data.message, 'valor':false})      
             } else if (err.response.status == 422) {
                 // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
                 emit("respuesta", {'texto':err.response.message, 'valor':false})  
@@ -343,10 +342,13 @@ const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
 
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
-    //console.log(DATA)
+
+    //actualiza el listado de regiones segun la comuna selecionada
+    filtroRegion((DATA?.region_id == null)? '' :DATA?.region_id);
+
     //datos personales
     nacionalidad.value = (DATA?.nacionalidad_id == null)? '' :DATA?.nacionalidad_id;
-    genero.value = (DATA?.sexo_id == null)? '' :DATA?.sexo_id;
+    genero.value = (DATA?.sexo_id == null)? 1 :DATA?.sexo_id;
     fechaNacimiento.value = (DATA?.fecha_nacimiento == null)? '' :DATA?.fecha_nacimiento;
     estadoCivil.value = (DATA?.estado_civil_id == null)? '' :DATA?.estado_civil_id;
 
@@ -356,7 +358,9 @@ const MostrarValores = (DATA) => {
     direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
     telefonoCelular.value = (DATA?.movil == null)? '' :DATA?.movil;
     telefonoLocal.value = (DATA?.fijo == null)? '' :DATA?.fijo;
-    filtroRegion(DATA?.region_id == null)? '' :DATA?.region_id;
+
+    
+
 }
 
 
@@ -377,6 +381,7 @@ defineExpose({
 
 onMounted(() => {
   MostrarValores(props.Informacion)
+  
 });
 
 </script>

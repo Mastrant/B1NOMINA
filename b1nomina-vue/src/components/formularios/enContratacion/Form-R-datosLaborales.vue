@@ -405,26 +405,19 @@ const MostrarValores = (DATA) => {
     TerminoContrato.value = (DATA?.termino_contrato_id == null) ? '' : DATA?.termino_contrato_id;
     FechaContratacion.value = (DATA?.fecha_inicio == null) ? '' : DATA?.fecha_inicio;
     FechaFinalizacionContrato.value = (DATA?.FechaFinalizacionContrato == null) ? '' : DATA?.FechaFinalizacionContrato;
+    
     SalarioBase.value = (DATA?.SalarioBase == null) ? '' : DATA?.SalarioBase;
     UnidadSueldo.value = (DATA?.UnidadSueldo == null) ? '' : DATA?.UnidadSueldo;
-    MontoSalario.value = (DATA?.MontoSalario == null) ? '' : DATA?.MontoSalario;
+    MontoSalario.value = (DATA?.salario_base == null) ? '' : DATA?.salario_base;
 
     // Variables del formulario 2
-    SedeDeTrabajo.value = (DATA?.SedeDeTrabajo == null) ? '' : DATA?.SedeDeTrabajo;
+    SedeDeTrabajo.value = (DATA?.id_sede == null) ? '' : DATA?.id_sede;
     Departamento.value = (DATA?.Departamento == null) ? '' : DATA?.Departamento;
-    Cargo.value = (DATA?.Cargo == null) ? '' : DATA?.Cargo;
-    Grupo.value = (DATA?.Grupo == null) ? '' : DATA?.Grupo;
+    Cargo.value = (DATA?.id_cargo == null) ? '' : DATA?.id_cargo;
+    Grupo.value = (DATA?.id_grupo == null) ? '' : DATA?.id_grupo;
     Modalidad.value = (DATA?.Modalidad == null) ? '' : DATA?.Modalidad;
     EstatusModalidad.value = (DATA?.EstatusModalidad == null) ? false : DATA?.EstatusModalidad;
 }
-
-
-
-
-
-
-
-
 
 const crearDatoslaborales = async (ID_USERMASTER, Data) => {
     await axios.post(`create_datos_laborales?userCreatorId=${ID_USERMASTER}`,Data)
@@ -605,6 +598,7 @@ const getData = async (ID_empleado) => {
 
 onMounted(() => {
   MostrarValores(props.Informacion)
+  console.log(props.Informacion)
 });
 </script>
 
