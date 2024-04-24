@@ -35,12 +35,12 @@
             </template>            
         </LayoutNavConfig>
         <div class="vista-panel">
-            <div v-if="panelSelecionado == 1">AFP</div>
-            <div v-if="panelSelecionado == 2">Previsión Salud</div>
-            <div v-if="panelSelecionado == 3">Caja Compensación</div>
-            <div v-if="panelSelecionado == 4">Asignación Familiar</div>
-            <div v-if="panelSelecionado == 5">Mutual</div>
-            <div v-if="panelSelecionado == 6">APV</div>
+            <ListaAFP v-if="panelSelecionado == 1" />
+            <ListaPrevisionSalud v-if="panelSelecionado == 2" />
+            <ListaCajaCompensaciones v-if="panelSelecionado == 3" />
+            <ListaAsignacionFamiliar v-if="panelSelecionado == 4" />
+            <ListaMutual v-if="panelSelecionado == 5" />
+            <ListaAPV v-if="panelSelecionado == 6" />
         </div>
     </div>
 </template>
@@ -48,6 +48,13 @@
 <script setup>
 import NavConfigButton from '@/components/botones/Nav-config-button.vue';
 import LayoutNavConfig from '@/components/Layouts/LayoutNavConfig.vue';
+import ListaAFP from '@/components/listas/configuracion/base-eventos/Lista-AFP.vue'
+import ListaPrevisionSalud from '@/components/listas/configuracion/base-eventos/Lista-PrevisionSalud.vue'
+import ListaCajaCompensaciones from '@/components/listas/configuracion/base-eventos/Lista-CajaCompensacion.vue'
+import ListaAsignacionFamiliar from '@/components/listas/configuracion/base-eventos/Lista-AsignacionFamiliar.vue'
+import ListaMutual from '@/components/listas/configuracion/base-eventos/Lista-Mutual.vue'
+import ListaAPV from '@/components/listas/configuracion/base-eventos/Lista-APV.vue'
+
 
 import { ref, inject } from 'vue';
 

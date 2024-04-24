@@ -20,8 +20,6 @@
 
 <script setup>
 import InputBorderDescripcion from '@/components/inputs/Input-Border-descripcion.vue';
-import ListaTemplateBorder from "@/components/listas/Lista-template-border.vue";
-import LayoutInputBorder from "@/components/Layouts/LayoutInputBorder.vue";
 import TemplateButton from '@/components/botones/Template-button.vue';
 import trashIcon from '@/components/icons/trash-icon.vue';
 

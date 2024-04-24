@@ -1,0 +1,87 @@
+<template>
+    <form class="formulario">
+        <h4>{{Titulo}}</h4>
+        <div class="row">
+            <InputBorderDescripcion
+                Titulo="Desde"
+                name="CodigoExterno"
+                Tipo="date"
+                v-model="desde"
+                @update:modelValue="desde = $event"
+                :requerido="RequiereActualizar"
+            />
+            <InputBorderDescripcion
+            Titulo="Hasta"
+            name="CodigoExterno"
+            Tipo="date"
+            v-model="hasta"
+            @update:modelValue="hasta = $event"
+            :requerido="RequiereActualizar"
+            />
+            <InputBorderDescripcion
+                Placeholder="Ingresar Valor"
+                Titulo="Valor por carga"
+                name="ValorXcarga"
+                v-model="ValorXcarga"
+                @update:modelValue="ValorXcarga = $event"
+                :requerido="RequiereActualizar"
+                :minimo-caracteres="0"
+                :maximo-caracteres="100"
+                   
+            />
+            <div>
+                <trashIcon Stroke="#1A245B" text="Eliminar"/>
+            </div>
+        </div>
+
+        <div class="espacioBoto" v-if="RequiereActualizar">
+            <TemplateButton text="Actualizar"/>
+        </div>
+    </form>
+</template>
+
+<script setup>
+import InputBorderDescripcion from '@/components/inputs/Input-Border-descripcion.vue';
+import TemplateButton from '@/components/botones/Template-button.vue';
+import trashIcon from '@/components/icons/trash-icon.vue';
+import { defineProps } from 'vue';
+
+const props = defineProps ( {
+    Titulo: {
+        String,
+        default: "titulo A"
+    },
+    Data: {
+        Object,
+    }
+})
+</script>
+
+<style scoped>
+
+form.formulario {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 12px
+}
+
+h4 {
+font-size: 22px;
+font-weight: 500;
+line-height: 30px;
+text-align: left;
+margin: 0;
+}
+
+div.row {
+    display: flex;
+    justify-content: space-between;
+    gap:12px;
+}
+
+div.espacioBoto {
+    width: 100%;
+}
+
+</style>

@@ -13,8 +13,8 @@
                    
             />
             <InputBorderDescripcion
-                Placeholder="Ingresar nombre"
-                Titulo="Nombre"
+                Placeholder="Ingresar nombre de la mutual"
+                Titulo="Nombre completo de mutual"
                 name="Nombre"
                 v-model="Nombre"
                 @update:modelValue="Nombre = $event"
@@ -24,35 +24,11 @@
                    
             />
             <InputBorderDescripcion
-                Placeholder="N° de cotización"
-                Titulo="Cotización"
-                name="nCotizacion"
-                v-model="nCotizacion"
-                @update:modelValue="nCotizacion = $event"
-                :requerido="RequiereActualizar"
-                :minimo-caracteres="0"
-                :maximo-caracteres="100"
-                   
-            />
-
-            <InputBorderDescripcion
-                Placeholder="N° de cuenta AFP"
-                Titulo="Cuenta AFP"
-                name="CuentaAFP"
-                v-model="CuentaAFP"
-                @update:modelValue="CuentaAFP = $event"
-                :requerido="RequiereActualizar"
-                :minimo-caracteres="0"
-                :maximo-caracteres="100"
-                   
-            />
-
-            <InputBorderDescripcion
-                Placeholder="N° de Cotización SIS"
-                Titulo="Cotización SIS"
-                name="cotizacionSIS"
-                v-model="cotizacionSIS"
-                @update:modelValue="cotizacionSIS = $event"
+                Placeholder="Ingresar número de cuenta"
+                Titulo="N° de Cuenta Contable"
+                name="nprevision"
+                v-model="nprevision"
+                @update:modelValue="nprevision = $event"
                 :requerido="RequiereActualizar"
                 :minimo-caracteres="0"
                 :maximo-caracteres="100"

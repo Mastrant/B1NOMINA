@@ -1,10 +1,10 @@
 <template>
     <div class="contend">
-        <h3 class="subtitulo">AFP - Administradoras de fondos de pensiones</h3>
+        <h3 class="subtitulo">Mutual de Seguridad</h3>
 
-        <LayoutFondoBorder v-for="Departamento in ListaDepartamentos" :key="Departamento.id">
+        <LayoutFondoBorder v-for="item in ListaElementos" :key="item.id">
             <template #default>    
-                <FormAFP />
+                <FormMutual/>
             </template>
         </LayoutFondoBorder>
 
@@ -15,11 +15,11 @@
 <script setup>
 import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
 import TemplateBlankButton from '@/components/botones/Template-blank-button.vue';
-import FormAFP from '@/components/formularios/configuracion/base-eventos/Form-AFP.vue';
+import FormMutual from '@/components/formularios/configuracion/base-eventos/Form-Mutual.vue';
 
 import {ref} from 'vue';
 
-const ListaDepartamentos = ref([
+const ListaElementos = ref([
     {
         id: 1
     },

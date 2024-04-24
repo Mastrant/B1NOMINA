@@ -24,35 +24,11 @@
                    
             />
             <InputBorderDescripcion
-                Placeholder="N° de cotización"
-                Titulo="Cotización"
-                name="nCotizacion"
-                v-model="nCotizacion"
-                @update:modelValue="nCotizacion = $event"
-                :requerido="RequiereActualizar"
-                :minimo-caracteres="0"
-                :maximo-caracteres="100"
-                   
-            />
-
-            <InputBorderDescripcion
-                Placeholder="N° de cuenta AFP"
-                Titulo="Cuenta AFP"
-                name="CuentaAFP"
-                v-model="CuentaAFP"
-                @update:modelValue="CuentaAFP = $event"
-                :requerido="RequiereActualizar"
-                :minimo-caracteres="0"
-                :maximo-caracteres="100"
-                   
-            />
-
-            <InputBorderDescripcion
-                Placeholder="N° de Cotización SIS"
-                Titulo="Cotización SIS"
-                name="cotizacionSIS"
-                v-model="cotizacionSIS"
-                @update:modelValue="cotizacionSIS = $event"
+                Placeholder="N° de cuenta"
+                Titulo="Cuenta"
+                name="nCuenta"
+                v-model="nCuenta"
+                @update:modelValue="nCuenta = $event"
                 :requerido="RequiereActualizar"
                 :minimo-caracteres="0"
                 :maximo-caracteres="100"

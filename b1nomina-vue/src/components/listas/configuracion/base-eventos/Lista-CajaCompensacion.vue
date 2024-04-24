@@ -1,10 +1,10 @@
 <template>
     <div class="contend">
-        <h3 class="subtitulo">AFP - Administradoras de fondos de pensiones</h3>
+        <h3 class="subtitulo">Caja Compensación</h3>
 
         <LayoutFondoBorder v-for="Departamento in ListaDepartamentos" :key="Departamento.id">
             <template #default>    
-                <FormAFP />
+                <FormCajaCompensacion />
             </template>
         </LayoutFondoBorder>
 
@@ -15,7 +15,7 @@
 <script setup>
 import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
 import TemplateBlankButton from '@/components/botones/Template-blank-button.vue';
-import FormAFP from '@/components/formularios/configuracion/base-eventos/Form-AFP.vue';
+import FormCajaCompensacion from '@/components/formularios/configuracion/base-eventos/Form-CajaCompensacion.vue';
 
 import {ref} from 'vue';
 
