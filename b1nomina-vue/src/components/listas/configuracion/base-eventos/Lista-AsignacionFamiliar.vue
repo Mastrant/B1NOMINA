@@ -7,24 +7,35 @@
                 <FormAsignacionFamiliar />
             </template>
         </LayoutFondoBorder>
-
-        <TemplateBlankButton text="+ Agregar Nueva"/>
     </div>
 </template>
 
 <script setup>
 import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
-import TemplateBlankButton from '@/components/botones/Template-blank-button.vue';
 import FormAsignacionFamiliar from '@/components/formularios/configuracion/base-eventos/Form-AsignacionFamiliar.vue';
 
 import {ref} from 'vue';
 
 const ListaElementos = ref([
     {
-        id: 1
+        id: 1,
+        Titulo: "Tramo A"
     },
     {
-        id: 2
+        id: 2,
+        Titulo: "Tramo B"
+    },
+    {
+        id: 3,
+        Titulo: "Tramo C"
+    },
+    {
+        id: 4,
+        Titulo: "Tramo D"
+    },
+    {
+        id: 5,
+        Titulo: "Tramo E"
     }
 ]);
 </script>

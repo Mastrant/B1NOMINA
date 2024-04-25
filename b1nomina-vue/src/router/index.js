@@ -137,7 +137,7 @@ const router = createRouter({
             },
             {
               path: "datos-previsionales",
-              component: () => import('@/components/panel/configuracion/Panel-DatosProvisionales.vue'),
+              component: () => import('@/components/panel/configuracion/Panel-DatosPrevisionales.vue'),
               name: 'datos-previsionales',
               alias: ['datos-previsionales',],              
                
@@ -158,7 +158,7 @@ const router = createRouter({
             },
             {
               path: "gestion-usuarios",
-              component: () => import('@/components/panel/Panel-EnDesarrollo.vue'),
+              component: () => import('@/components/panel/configuracion/Panel-GestionUsuarios.vue'),
               name: 'gestion-usuarios',
               alias: ['gestion-usuarios',],              
                

@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import ListaDatosProvisionales from '@/components/listas/configuracion/Lista-DatosProvisionales.vue';
+import ListaDatosProvisionales from '@/components/listas/configuracion/Lista-DatosPrevisionales.vue';
 
 import { ref, inject } from 'vue';
 

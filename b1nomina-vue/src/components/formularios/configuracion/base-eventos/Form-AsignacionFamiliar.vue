@@ -1,11 +1,11 @@
 <template>
     <form class="formulario">
-        <h4>{{Titulo}}</h4>
+        <h4>{{Data?.Titulo}}</h4>
         <div class="row">
             <InputBorderDescripcion
                 Titulo="Desde"
                 name="CodigoExterno"
-                Tipo="date"
+                Placeholder="Ingresar Valor"
                 v-model="desde"
                 @update:modelValue="desde = $event"
                 :requerido="RequiereActualizar"
@@ -13,7 +13,7 @@
             <InputBorderDescripcion
             Titulo="Hasta"
             name="CodigoExterno"
-            Tipo="date"
+            Placeholder="Ingresar Valor"
             v-model="hasta"
             @update:modelValue="hasta = $event"
             :requerido="RequiereActualizar"
@@ -47,10 +47,6 @@ import trashIcon from '@/components/icons/trash-icon.vue';
 import { defineProps } from 'vue';
 
 const props = defineProps ( {
-    Titulo: {
-        String,
-        default: "titulo A"
-    },
     Data: {
         Object,
     }

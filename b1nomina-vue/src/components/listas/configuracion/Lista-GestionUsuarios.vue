@@ -1,25 +1,30 @@
 <template>
     <div class="contend">
-        <h3 class="subtitulo">Campos Adicionales del Empleado</h3>
+        <h3 class="subtitulo">
+            Configuración usuarios
+        </h3>
 
         <p class="descripcion">
-            Crea hasta 5 campos personalizados para completar el perfil de tus empleados, estos campos son una opción pensada para suplir necesidades especificas de información que quieras adicionar a B1 Nómina.        
+            Aquí puedes visualizar los perfiles de ususario que existen y los roles que puedes asignarles.
         </p>
-        <LayoutFondoBorder v-for="Departamento in ListaDepartamentos" :key="Departamento.id">
+
+        <LayoutFondoBorder>
             <template #default>    
-                  <FormCamposAdicionales :Datos="Departamento"/>        
+                <FormMaster /> 
             </template>
         </LayoutFondoBorder>
 
-        <TemplateBlankButton text="+ Agregar Nuevo Campo"/>
+        <LayoutFondoBorder>
+            <template #default>    
+                     
+            </template>
+        </LayoutFondoBorder>
     </div>
 </template>
 
 <script setup>
 import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
-import FormCamposAdicionales from '@/components/formularios/configuracion/datos-empresa/Form-CamposAdicionales.vue'
-import TemplateBlankButton from '@/components/botones/Template-blank-button.vue';
-
+import FormMaster from '@/components/formularios/configuracion/gestion-usuarios/Form-Master.vue';
 import {ref} from 'vue';
 
 const ListaDepartamentos = ref([

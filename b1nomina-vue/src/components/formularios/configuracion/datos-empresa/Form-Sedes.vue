@@ -1,68 +1,72 @@
 <template>
     <form class="formulario">
-        <div class="espacioTrash">
-            <trashIcon Stroke="#1A245B"/>
-        </div>
-
-        <div class="row">
-            <InputBorderDescripcion
-                Placeholder="Ingresar Nombre"
-                Titulo="Nombre"
-                name="Nombre"
-                v-model="NombreSede"
-                @update:modelValue="NombreSede = $event"
-                :requerido="RequiereActualizar"
-            />
-        
-            <InputBorderDescripcion
-                Placeholder="Ciudad"
-                Titulo="Ciudad"
-                name="Ciudad"
-                v-model="CiudadSede"
-                @update:modelValue="CiudadSede = $event"
-                :requerido="RequiereActualizar"
-            />
+        <div class="contend">
+            <div class="row">
+                <InputBorderDescripcion
+                    Placeholder="Ingresar Nombre"
+                    Titulo="Nombre"
+                    name="Nombre"
+                    v-model="NombreSede"
+                    @update:modelValue="NombreSede = $event"
+                    :requerido="RequiereActualizar"
+                />
             
-            <LayoutInputBorder textLabel="Región" :requerido="RequiereActualizar">
-                <template v-slot>
-                  <ListaTemplateBorder
-                    v-model="Region"
-                    :options="ListaRegiones"
-                    :requerido="RequiereActualizar"            
-                    :preseleccion="tipoDocumentoSelect"  
-                    optionsSelected="Seleccionar"
-                  />
-                </template>
-            </LayoutInputBorder>
+                <InputBorderDescripcion
+                    Placeholder="Ciudad"
+                    Titulo="Ciudad"
+                    name="Ciudad"
+                    v-model="CiudadSede"
+                    @update:modelValue="CiudadSede = $event"
+                    :requerido="RequiereActualizar"
+                />
+                
+                <LayoutInputBorder textLabel="Región" :requerido="RequiereActualizar">
+                    <template v-slot>
+                      <ListaTemplateBorder
+                        v-model="Region"
+                        :options="ListaRegiones"
+                        :requerido="RequiereActualizar"            
+                        :preseleccion="tipoDocumentoSelect"  
+                        optionsSelected="Seleccionar"
+                      />
+                    </template>
+                </LayoutInputBorder>
+    
+                  <LayoutInputBorder textLabel="Comuna" :requerido="RequiereActualizar">
+                    <template v-slot>
+                      <ListaTemplateBorder
+                        v-model="Comuna"
+                        :options="ListaComunas"
+                        :requerido="RequiereActualizar"            
+                        :preseleccion="tipoDocumentoSelect"  
+                        optionsSelected="Seleccionar"
+                      />
+                    </template>
+                  </LayoutInputBorder>
+            </div>
+    
+            <div class="row">
+                <InputBorderDescripcion
+                    Placeholder="Ingresar la dirección"
+                    Titulo="Dirección de la Sede"
+                    name="Dirección"
+                    v-model="DireccionSede"
+                    @update:modelValue="DireccionSede = $event"
+                    :requerido="RequiereActualizar"
+                />
+            </div>
 
-              <LayoutInputBorder textLabel="Comuna" :requerido="RequiereActualizar">
-                <template v-slot>
-                  <ListaTemplateBorder
-                    v-model="Comuna"
-                    :options="ListaComunas"
-                    :requerido="RequiereActualizar"            
-                    :preseleccion="tipoDocumentoSelect"  
-                    optionsSelected="Seleccionar"
-                  />
-                </template>
-              </LayoutInputBorder>
+            <div class="espacioBoto">
+                <TemplateButton text="Actualizar"/>
+            </div>
         </div>
-
-        <div class="row">
-            <InputBorderDescripcion
-                Placeholder="Ingresar la dirección"
-                Titulo="Dirección de la Sede"
-                name="Dirección"
-                v-model="DireccionSede"
-                @update:modelValue="DireccionSede = $event"
-                :requerido="RequiereActualizar"
-            />
+        <div class="espacioTrash">
+            <trashIcon Stroke="#1A245B" text="Eliminar"/>
         </div>
+        
 
         
-        <div class="espacioBoto">
-            <TemplateButton text="Actualizar"/>
-        </div>
+        
     </form>
 </template>
 
@@ -88,10 +92,18 @@ const props = defineProps({
 
 form.formulario {
     display: flex;
+    flex-direction: row;
+   box-sizing: border-box;
+   gap: 12px;
+}
+
+div.contend{
+    display: flex;
     flex-direction: column;
     width: 100%;
     gap: 12px;
     box-sizing: border-box;
+    flex-grow: 1;
 }
 
 h4 {
@@ -108,13 +120,19 @@ div.row {
     gap:12px;
 }
 
-div.espacioBoto, div.espacioTrash{
+div.espacioBoto{
     width: 100%;
     display: flex;
 }
 
 div.espacioTrash {
+    display:flex;
+    flex-direction: row;
     justify-content: end;
+    align-items: start;
+    align-self: flex-start;
+    box-sizing: border-box;
+
 }
 
 

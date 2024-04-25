@@ -1,5 +1,5 @@
 <template>
-    <form class="formulario">
+    <form class="formulario" :id="IDFORM" @submit.prevent="Enviar">
         <h4>Datos básicos de tu empresa</h4>
         <div class="row">
             <InputBorderDescripcion
@@ -40,10 +40,9 @@
                 Placeholder="Ingresar nombre de la ciudad"
                 Titulo="Ciudad"
                 name="Ciudad"
-                v-model="NombreEmpresa"
-                @update:modelValue="NombreEmpresa = $event"
+                v-model="CiudadEmpresa"
+                @update:modelValue="CiudadEmpresa = $event"
                 :requerido="RequiereActualizar"
-                :Deshabilitar="tipoDocumentoSelect != 2"
                 :minimo-caracteres="3"
                 :maximo-caracteres="100"
             />
@@ -51,9 +50,9 @@
                 <template v-slot>
                   <ListaTemplateBorder
                     v-model="Region"
-                    :options="ListaRegiones"
+                    :options="parametros.regiones"
                     :requerido="RequiereActualizar"            
-                    :preseleccion="tipoDocumentoSelect"  
+                    :preseleccion="Region"  
                     optionsSelected="Seleccionar"
                   />
                 </template>
@@ -63,9 +62,9 @@
                 <template v-slot>
                   <ListaTemplateBorder
                     v-model="Comuna"
-                    :options="ListaComunas"
+                    :options="ListaLocalidad"
                     :requerido="RequiereActualizar"            
-                    :preseleccion="tipoDocumentoSelect"  
+                    :preseleccion="Comuna"  
                     optionsSelected="Seleccionar"
                   />
                 </template>
@@ -83,8 +82,8 @@
                 :maximo-caracteres="100"
             />
         </div>
-        <div class="espacioBoto">
-            <TemplateButton text="Actualizar"/>
+        <div class="espacioBoto" v-if="RequiereActualizar">
+            <TemplateButton :form="IDFORM" Tipo="submit" text="Actualizar"/>
         </div>
     </form>
 </template>
@@ -94,6 +93,163 @@ import InputBorderDescripcion from '@/components/inputs/Input-Border-descripcion
 import ListaTemplateBorder from "@/components/listas/Lista-template-border.vue";
 import LayoutInputBorder from "@/components/Layouts/LayoutInputBorder.vue";
 import TemplateButton from '@/components/botones/Template-button.vue';
+
+import { defineProps, ref, reactive, watch, defineEmits, onMounted} from 'vue';
+
+const props = defineProps({
+    Informacion: {
+        type: Object,
+        default: {}
+    },
+    parametros: {
+        type: Object,
+        default: {}
+    },
+})
+
+const IDFORM = "DatosBasicosEmpresa"
+
+const emit = defineEmits([
+    "DataNotificacion",
+]);
+
+// Definicion de variables de los inputs
+
+const NombreEmpresa = ref('');
+const numeroDocumento = ref('');
+const correoEmpresa= ref('');
+const CiudadEmpresa = ref('');
+const Region = ref('');
+const Comuna = ref('');
+const Direccion = ref('');
+
+//definicion de vaiables de los parametos
+const ListaLocalidad = ref({}); //Los datos se asignan segun el idRegion
+
+//filtra la lista de regiones segun el id
+const filtroRegion = (id) => {
+    ListaLocalidad.value = props.parametros.localidad?.filter(item => item.idregion == id);
+};
+
+//control para envio de informacion
+const RequiereActualizar = ref(false);
+
+//Contiene la información original
+const payload_old = reactive({
+    NombreEmpresa: "",
+    numeroDocumento: "",
+    correoEmpresa: "",
+    CiudadEmpresa: "",
+    Region: "",
+    Comuna: "",
+    Direccion: "",
+});
+
+//Contiene la información a enviar
+const payload = reactive({
+    NombreEmpresa: "",
+    numeroDocumento: "",
+    correoEmpresa: "",
+    CiudadEmpresa: "",
+    Region: "",
+    Comuna: "",
+    Direccion: "",
+});
+
+//Escuchar cambios en las variables
+watch(NombreEmpresa, (nuevoValor) => ActualizarPayload('NombreEmpresa', nuevoValor));
+watch(numeroDocumento, (nuevoValor) => ActualizarPayload('numeroDocumento', nuevoValor));
+watch(correoEmpresa, (nuevoValor) => ActualizarPayload('correoEmpresa', nuevoValor));
+watch(CiudadEmpresa, (nuevoValor) => ActualizarPayload('CiudadEmpresa', nuevoValor));
+
+watch(Region, (nuevoValor) => {
+        filtroRegion(nuevoValor);
+        ActualizarPayload('Region', nuevoValor);
+    }
+);
+watch(Comuna, (nuevoValor) => ActualizarPayload('Comuna', nuevoValor));
+
+watch(Direccion, (nuevoValor) => ActualizarPayload('Direccion', nuevoValor));
+
+//ve si hay cambios en la informacion y actualiza los campos:
+watch(() => props.Informacion, (nuevoValor) => { 
+  MostrarValores(nuevoValor) 
+});
+
+
+//actualizar datos del payload a enviar
+const ActualizarPayload = (propiedad, valor) => {
+    console.log(propiedad, valor)
+    payload[propiedad] = valor;
+    verificarCambios();
+};
+
+// Define la función verificarCambios que verifica si hay cambios entre los valores antiguos y nuevos de un payload.
+const verificarCambios = () => {
+    // Comprueba si todos los campos relevantes en payload_old y payload son iguales.
+    // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
+    const camposIguales = Object.keys(payload_old).every(key => payload_old[key] === payload[key]);
+
+    // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
+    const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
+
+    // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
+    // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
+    // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
+    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+}
+
+
+// Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
+const MostrarValores = (DATA) => {
+
+//actualiza el listado de regiones segun la comuna selecionada
+filtroRegion((DATA?.region_id == null)? '' :DATA?.region_id);
+
+NombreEmpresa.value = (DATA?.Nombre == null)? '' :DATA?.Nombre;
+numeroDocumento.value = (DATA?.rut == null)? '' :DATA?.rut;
+correoEmpresa.value = (DATA?.correo == null)? '' :DATA?.correo;
+CiudadEmpresa.value = (DATA?.ciudad == null)? '' :DATA?.ciudad;
+
+Region.value = (DATA?.region_id == null)? '' :DATA?.region_id;
+Comuna.value = (DATA?.comuna_id == null)? '' :DATA?.comuna_id;
+Direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
+
+}
+
+/**
+ * Funcion emitida al enviar el formulario
+ * @params payload Contiene los datos que se pasaran
+ * Ejecuta la peticion con axios
+ */
+ const Enviar = () => {
+  //si ID es nulo crea un usuario
+  let statuspay = Object.values(payload).some((value) => value !== "");
+
+  if (statuspay == true){
+    console.log(payload)
+    console.log(payload_old)
+    emit("DataNotificacion", 
+        {
+            'texto': "Informacion actualizada con exito", 
+            'valor': true
+        }
+    )
+  } else {
+    emit("DataNotificacion", 
+        {
+            'texto': "Todavía hay campos en blanco", 
+            'valor':false
+        }
+    )
+  }
+};
+
+onMounted(() => {
+  MostrarValores(props.Informacion)
+  console.log()
+});
+
 </script>
 
 <style scoped>

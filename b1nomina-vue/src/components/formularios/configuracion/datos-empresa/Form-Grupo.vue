@@ -2,14 +2,14 @@
     <form class="formulario">
         <div class="row">
             <InputBorderDescripcion
-                Placeholder="Ejemplo Mercadeo, Operaciones, Comercial, Administrativa, Gerencia, etc."
-                Titulo="Departamento"
-                name="Departamento"
-                v-model="NombreDepartamento"
-                @update:modelValue="NombreDepartamento = $event"
+                Placeholder="Ejemplo vendedores área centro , vendedores área norte, vendedores área sur, Empleados en pasantías, etc."
+                Titulo="Grupo #1"
+                name="Grupo"
+                v-model="Grupo"
+                @update:modelValue="Grupo = $event"
                 :requerido="RequiereActualizar"
             />
-            
+
             <div class="espacioTrash">
                 <trashIcon Stroke="#1A245B" text="Eliminar"/>
             </div>
@@ -37,7 +37,6 @@ const props = defineProps({
 
 const RequiereActualizar = ref(false)
 </script>
-
 
 <style scoped>
 

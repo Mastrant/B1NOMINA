@@ -8,7 +8,7 @@
 
         <LayoutFondoBorder v-for="Departamento in ListaDepartamentos" :key="Departamento.id">
             <template #default>    
-                  <FormDepartamentos :Datos="Departamento"/>        
+                  <FormGrupo :Datos="Departamento"/>        
             </template>
         </LayoutFondoBorder>
 
@@ -18,7 +18,7 @@
 
 <script setup>
 import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
-import FormDepartamentos from '@/components/formularios/configuracion/datos-empresa/Form-Departamentos.vue'
+import FormGrupo from '@/components/formularios/configuracion/datos-empresa/Form-Grupo.vue'
 import TemplateBlankButton from '@/components/botones/Template-blank-button.vue';
 
 import {ref} from 'vue';

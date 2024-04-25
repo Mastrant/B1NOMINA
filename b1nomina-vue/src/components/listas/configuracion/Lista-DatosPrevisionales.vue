@@ -2,7 +2,7 @@
     <div class="contend">
         <LayoutFondoBorder>
             <template #default>    
-                <FormDatosBasicosProvisionales />
+                <FormDatosBasicosPrevisionales />
             </template>
         </LayoutFondoBorder>
         <LayoutFondoBorder>
@@ -16,8 +16,8 @@
 
 <script setup>
 import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
-import FormDatosBasicosProvisionales from '@/components/formularios/configuracion/datos-provisionales/Form-DatosBasicos-provisionales.vue'
-import FormAFC from '@/components/formularios/configuracion/datos-provisionales/Form-AFC.vue';
+import FormDatosBasicosPrevisionales from '@/components/formularios/configuracion/datos-previsionales/Form-DatosBasicos-previsionales.vue'
+import FormAFC from '@/components/formularios/configuracion/datos-previsionales/Form-AFC.vue';
 import {ref} from 'vue';
 
 

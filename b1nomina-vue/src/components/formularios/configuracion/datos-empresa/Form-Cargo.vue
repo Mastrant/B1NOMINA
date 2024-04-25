@@ -2,11 +2,11 @@
     <form class="formulario">
         <div class="row">
             <InputBorderDescripcion
-                Placeholder="Ejemplo Mercadeo, Operaciones, Comercial, Administrativa, Gerencia, etc."
-                Titulo="Departamento"
-                name="Departamento"
-                v-model="NombreDepartamento"
-                @update:modelValue="NombreDepartamento = $event"
+                Placeholder="Ejemplo vendedor, diseñador, ejecutivo de cuenta, director administrativo, gerente de comercialización, etc."
+                Titulo="Cargo #1"
+                name="cargo"
+                v-model="Cargo"
+                @update:modelValue="Cargo = $event"
                 :requerido="RequiereActualizar"
             />
             
@@ -37,7 +37,6 @@ const props = defineProps({
 
 const RequiereActualizar = ref(false)
 </script>
-
 
 <style scoped>
 
@@ -73,5 +72,4 @@ div.espacioTrash {
     align-items: start;
     align-self: flex-start;
 }
-
 </style>
