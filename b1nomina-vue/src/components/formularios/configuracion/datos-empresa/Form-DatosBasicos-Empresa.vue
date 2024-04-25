@@ -157,10 +157,10 @@ const payload = reactive({
 });
 
 //Escuchar cambios en las variables
-watch(NombreEmpresa, (nuevoValor) => ActualizarPayload('NombreEmpresa', nuevoValor));
+watch(NombreEmpresa, (nuevoValor) => ActualizarPayload('NombreEmpresa', nuevoValor?.toLocaleLowerCase()));
 watch(numeroDocumento, (nuevoValor) => ActualizarPayload('numeroDocumento', nuevoValor));
-watch(correoEmpresa, (nuevoValor) => ActualizarPayload('correoEmpresa', nuevoValor));
-watch(CiudadEmpresa, (nuevoValor) => ActualizarPayload('CiudadEmpresa', nuevoValor));
+watch(correoEmpresa, (nuevoValor) => ActualizarPayload('correoEmpresa', nuevoValor?.toLocaleLowerCase()));
+watch(CiudadEmpresa, (nuevoValor) => ActualizarPayload('CiudadEmpresa', nuevoValor?.toLocaleLowerCase()));
 
 watch(Region, (nuevoValor) => {
         filtroRegion(nuevoValor);
@@ -179,7 +179,6 @@ watch(() => props.Informacion, (nuevoValor) => {
 
 //actualizar datos del payload a enviar
 const ActualizarPayload = (propiedad, valor) => {
-    console.log(propiedad, valor)
     payload[propiedad] = valor;
     verificarCambios();
 };
@@ -196,7 +195,7 @@ const verificarCambios = () => {
     // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
-    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+    RequiereActualizar.value = !(camposIguales && alMenosUnValorVacio);
 }
 
 
@@ -215,6 +214,29 @@ Region.value = (DATA?.region_id == null)? '' :DATA?.region_id;
 Comuna.value = (DATA?.comuna_id == null)? '' :DATA?.comuna_id;
 Direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
 
+// Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
+  // utilizando '' si DATA?.documento es null.
+  payload_old.NombreEmpresa = DATA?.Nombre ?? '';
+  payload.NombreEmpresa = DATA?.Nombre ?? '';
+  
+  payload_old.numeroDocumento = DATA?.rut ?? '';
+  payload.numeroDocumento = DATA?.rut ?? '';
+
+  payload_old.correoEmpresa = DATA?.correo ?? '';
+  payload.correoEmpresa = DATA?.correo ?? '';
+
+  payload_old.CiudadEmpresa = DATA?.ciudad ?? '';
+  payload.CiudadEmpresa = DATA?.ciudad ?? '';
+
+  payload_old.Region = DATA?.region_id ?? '';
+  payload.Region = DATA?.region_id ?? '';
+
+  payload_old.Comuna = DATA?.comuna_id ?? '';
+  payload.Comuna = DATA?.comuna_id ?? '';
+
+  payload_old.Direccion = DATA?.direccion ?? '';
+  payload.Direccion = DATA?.direccion ?? '';
+
 }
 
 /**
@@ -227,8 +249,6 @@ Direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
   let statuspay = Object.values(payload).some((value) => value !== "");
 
   if (statuspay == true){
-    console.log(payload)
-    console.log(payload_old)
     emit("DataNotificacion", 
         {
             'texto': "Informacion actualizada con exito", 
@@ -247,7 +267,6 @@ Direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
 
 onMounted(() => {
   MostrarValores(props.Informacion)
-  console.log()
 });
 
 </script>

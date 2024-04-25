@@ -2,17 +2,18 @@
     <div class="contend">
         <LayoutFondoBorder>
             <template #default>
-                
                 <FormDatosbasicosEmpresa 
-                    :Informacion="DatosBasicos" 
-                />
-                                
+                    :Informacion="DatosBasicos"
+                    :parametros="listadoLocalidad"
+                /> 
             </template>
         </LayoutFondoBorder>
         
         <LayoutFondoBorder>
             <template #default>
-                <FormResponsableEmpresa />  
+                <FormResponsableEmpresa
+                    :Informacion="DatosBasicos"
+                />  
             </template>
         </LayoutFondoBorder>
     </div>
@@ -25,9 +26,27 @@ import FormResponsableEmpresa from '@/components/formularios/configuracion/datos
  // 
 import { onMounted, ref } from 'vue';
 
-const DatosBasicos = ref({})
+const DatosBasicos = ref(
+    {
+        Nombre:'',
+        rut: '',
+        correo: '',
+        ciudad: '',
+        region_id: '1',
+        comuna_id: '',
+        direccion: '',
+
+        NombreResponsable: '',
+        RutResponsable: '',
+        emailResponsable: '',
+        telefonoResposnable: ''
+    }
+)
+
+const listadoLocalidad = ref ({})
 
 onMounted(() => {
+    //solicitar los datos de la empresa
     DatosBasicos.value = {
         Nombre:'2call',
         rut: '',
@@ -37,12 +56,16 @@ onMounted(() => {
         comuna_id: '',
         direccion: '',
 
-        NombreResponsable: '',
-        RutResponsable: '',
-        emailResponsable: '',
+        NombreResponsable: 'pepito',
+        RutResponsable: '456789-j',
+        emailResponsable: 'takataka@miau.net',
         telefonoResposnable: ''
+    }
+    //solicitar la lista de regiones y comunas
+    listadoLocalidad.value = {
 
     }
+
 })
 </script>
 
