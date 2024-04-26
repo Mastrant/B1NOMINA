@@ -60,14 +60,14 @@
                     <InterruptorButton 
                         :Objid="item.id" 
                         :Estado="item.activo"
-                        @actualizarListado="() => emit('actualizar_Lista')"
+                        @actualizarListado="resultadoActivacion"
                     />
                     <span v-if="item.activo == true">Activo</span>
                     <span v-else>Inactivo</span>
                 </template>
                 <template v-slot:accionButton>
                     <router-link :to="{ name: 'panel-empleado', params: { sociedadId: almacen.SociedadID, empleadoId: item.id } }">
-                        <OjitoIcon class="icon" />    
+                        <OjitoIcon text="Ver Perfil" Stroke="#1A2771"/>    
                     </router-link>
           
                     <DescargaIcon @click="console.log('descargar info' + item.id)" text="Descargar"/>
@@ -112,9 +112,15 @@ const props = defineProps({
 });
 const emit = defineEmits([
     'upData',
-    'actualizar_Lista'
-
+    'actualizar_Lista',
+    'mostrarNotificacion',
 ]);
+
+const resultadoActivacion = (Data) => {
+    
+    emit('mostrarNotificacion', Data)
+    emit('actualizar_Lista')
+}
 
 // Accede a la lista de empleados desde props
 const ListaEmpleados = ref(props.listaEmpleados);
@@ -332,13 +338,4 @@ th.rowNombre,
     justify-content: center; /* Centrado de iconos */
     white-space: nowrap; /* Evita el salto de línea para iconos */
 }
-
-/**
- * Estilo para los iconos dentro de las acciones
- * Indica que los iconos son interactivos (clickeables)
- */
-.icon { 
-    cursor: pointer; /* Cambia el cursor al pasar sobre el icono */
-}
-
 </style>

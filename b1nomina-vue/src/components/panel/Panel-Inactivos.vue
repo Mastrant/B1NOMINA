@@ -16,22 +16,30 @@
                 No hay datos asociados a los filtros
             </span>
 
-            <EmpleadosGeneral v-else 
+            <EmpleadosGeneral
+                v-else 
                 :listaEmpleados="ListaEmpleados"  
                 @upData="InteraccionListaEmpleadosSelecionados"
                 @actualizar_Lista="pedirEmpleados"
+                @mostrarNotificacion="showNotificacion"
             />
         </div>
+        <AlertShort
+            ref="notificacionStatus"
+        />
     </div>
 </template>
 
 <script setup>
 import InputShearch from '@/components/inputs/Input-shearch.vue';
 import EmpleadosGeneral from '@/components/tablas/Empleados/Empleados-general.vue';
-import CicloCrearEmpleado from '@/components/elementos/Ciclo-Crear-Empleado.vue';
-
+//alertas
+import AlertShort from '@/components/alertas/Alert-short-template.vue';
+    
 import {ref, inject, watch, onMounted} from 'vue';
 import axios from 'axios';
+
+const ActualizarDatosNavegador = inject('ActualizarValoresNavegacion');
 
 // Inyectar el valor proporcionado por la url
 const idSociedad = inject('IDsociedad');
@@ -48,14 +56,24 @@ const InteraccionListaEmpleadosSelecionados = (arreglo) => {
         //console.log(ListaIds.value); // Ahora debería mostrar un array real
 }
 
-    // Arreglo que contiene el arreglo original
-    let listaEmpleadosOriginal = null;
-    /**
-     * aplica un filtro segun el texto ingresado
-     * @param {String} text - entrada del texto del usuario
-    
-    */
-    const filtrar = (text) => {
+//toma la referencia del componente notificacion para utilizar el metodo mostrar
+const notificacionStatus = ref(null);
+
+const showNotificacion = (Data) => {
+    notificacionStatus.value.ActivarNotificacion(
+        Data //Formato: {'Titulo': "empleado especial", 'Descripcion': "esta es la descripcion de la cartica"}   
+    );
+    ActualizarDatosNavegador();
+}
+
+// Arreglo que contiene el arreglo original
+let listaEmpleadosOriginal = null;
+/**
+ * aplica un filtro segun el texto ingresado
+ * @param {String} text - entrada del texto del usuario
+
+*/
+const filtrar = (text) => {
     // Si la lista original no está establecida, guarda la lista actual como la original
     if (listaEmpleadosOriginal === null) {
         listaEmpleadosOriginal = [...ListaEmpleados.value];
@@ -85,32 +103,32 @@ const InteraccionListaEmpleadosSelecionados = (arreglo) => {
 watch(shearch, (valor) => filtrar(valor));
 
 /**
-    * Solicita a la API los datos de los empleados y los almacena en el componente ListaTemplate como props.
-    *
-    * @async
-    * @function pedirEmpleados
-    * @param parametrosPeticionEmpleados Json con los datos de la consulta
-    * @returns {Promise<void>} No devuelve nada, pero actualiza el valor de ListaEmpleados.
-    *
-    * @example
-    * // Llamada a la función para obtener los datos de los empleados
-    * pedirEmpleados();
-    *
-    * @throws {Error} Si ocurre un error durante la solicitud, se asigna un array vacío a ListaEmpleados.
-    */
-    const pedirEmpleados = async () => {
-        await axios.get(`/sociedad/${idSociedad}/list_empleados_inactivos`)
-        .then(
-            (res) => {
-                ListaEmpleados.value = res.data; //almacena los datos devueltos por la api
-            }
-        )
-        .catch(
-            (err) => {
-                ListaEmpleados.value = []; // si hay un error asigna un valor vacio
-            }
-        )
-    };
+* Solicita a la API los datos de los empleados y los almacena en el componente ListaTemplate como props.
+*
+* @async
+* @function pedirEmpleados
+* @param parametrosPeticionEmpleados Json con los datos de la consulta
+* @returns {Promise<void>} No devuelve nada, pero actualiza el valor de ListaEmpleados.
+*
+* @example
+* // Llamada a la función para obtener los datos de los empleados
+* pedirEmpleados();
+*
+* @throws {Error} Si ocurre un error durante la solicitud, se asigna un array vacío a ListaEmpleados.
+*/
+const pedirEmpleados = async () => {
+    await axios.get(`/sociedad/${idSociedad}/list_empleados_inactivos`)
+    .then(
+        (res) => {
+            ListaEmpleados.value = res.data; //almacena los datos devueltos por la api
+        }
+    )
+    .catch(
+        (err) => {
+            ListaEmpleados.value = []; // si hay un error asigna un valor vacio
+        }
+    )
+};
 
 // al montar el componente ejecuta las funciones
 onMounted(async () => {

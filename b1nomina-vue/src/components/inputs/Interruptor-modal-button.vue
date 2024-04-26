@@ -23,7 +23,7 @@
                 :textSubmit="TextoButton"
                 :activarModal="activarModal"
                 :ModalActivo="1"
-                :DataNotification="dataNotificacion"
+                :DataNotification="showNotificacionModal"
             >
                 <template #default>
                     <!-- Formulario para activar usuario -->
@@ -79,10 +79,6 @@ const emit = defineEmits(
     ]
 );
 
-/**
- * Maneja el cambio de estado del checkbox, mostrando el modal correspondiente.
- * @param {Event} evento - Evento de cambio del checkbox.
- */
 const modificarUsuario = (evento) => {
     if (props.Estado == true) {
         showModal(1, props.Objid)
@@ -96,27 +92,25 @@ const modificarUsuario = (evento) => {
  * @param {Number} tipo - Tipo de acción a realizar.
  */
 const accionCorrecta = (tipo) => {
-    if(tipo == 1){
+    if(tipo == 1){ //si se Activo
         showModal()
-        emit('actualizarListado')
-        emit('Notificar',{})
-    } else if(tipo == 2){
+        emit('actualizarListado', {'Titulo': "Activacion Exitosa", 'Descripcion': "Ahora el empleado esta dentro de los empleados activos"})
+    } else if(tipo == 2){ //si se desactivo
         showModal()
-        emit('actualizarListado')
-        emit('Notificar', {})
+        emit('actualizarListado', {'Titulo': "Desactivacion Exitosa", 'Descripcion': "Ahora el empleado esta dentro de los empleados inactivos"})
     } else {
-        console.log("error al activar");
+        console.error("error al activar");
     }
 }
 
 // Referencia para almacenar datos de notificación
-const dataNotificacion = ref({})
+const showNotificacionModal = ref({})
 /**
  * Asigna datos de notificación a la referencia.
  * @param {Object} DATA - Datos de notificación.
  */
 const sendData = (DATA) => {
-    dataNotificacion.value = DATA //asigna el valor
+    showNotificacionModal.value = DATA //asigna el valor
 }
 
 /////////// programacion de los modales de activacion ///////////////

@@ -38,7 +38,7 @@ const Enviar = async () => {
     .catch(
         error => {
             console.log(error)
-            emit('notificacion', {'texto':err?.response.data?.message, 'valor':false})
+            emit('notificacion', {'texto':error?.response, 'valor':false})
         }        
     )
     

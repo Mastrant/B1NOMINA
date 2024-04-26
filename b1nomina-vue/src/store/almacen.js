@@ -19,7 +19,12 @@ const almacen = reactive({
         "5": "Viernes",
         "6": "Sabado",
         "7": "Domingo",
-    }
+    },
+    ValoresPanelNavegacion: null,
+    updatedValoresPanelNavegacion(valores) {
+        this.ValoresPanelNavegacion = valores;
+    },
+
 });
 
 export default almacen

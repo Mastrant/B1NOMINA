@@ -9,7 +9,7 @@
                 <ListaTemplate v-model="filtroGrupo" :options="ListaGrupos" optionsSelected="Grupo"/>
             </div>     
             <CicloCrearEmpleado 
-                @Notificacion="showN"
+                @Notificacion="showNotificacion"
             />            
 
         </div><!--final contenedor acciones-form-->
@@ -30,7 +30,7 @@
                 :listaEmpleados="ListaEmpleados"   
                 @upData="InteraccionListaEmpleadosSelecionados"
                 @actualizar_Lista="pedirEmpleados"
-                @Notificacion="showN"
+                @mostrarNotificacion="showNotificacion"
             />
         </div>
         <AlertShort
@@ -49,11 +49,15 @@
     import AlertShort from '@/components/alertas/Alert-short-template.vue';
 
     //librerias
-    import { ref, onMounted, reactive, toRefs, watch, inject  } from 'vue';
+    import { ref, onMounted, reactive, toRefs, watch, inject} from 'vue';
+    
     import axios from 'axios';
 
     // Inyectar el valor proporcionado por la url
     import { useRoute } from 'vue-router';
+
+    // Inyecta la función proporcionada
+    const ActualizarDatosNavegador = inject('ActualizarValoresNavegacion');
 
     const route = useRoute();
     // idSociedad es un String
@@ -67,12 +71,16 @@
     }
 
     //toma la referencia del componente notificacion para utilizar el metodo mostrar
-    const notificacionStatus = ref(null)
-    const showN = (Data) => {
+    const notificacionStatus = ref(null);
+
+    const showNotificacion = (Data) => {
         notificacionStatus.value.ActivarNotificacion(
             Data //Formato: {'Titulo': "empleado especial", 'Descripcion': "esta es la descripcion de la cartica"}   
         );
+        ActualizarDatosNavegador();
     }
+
+
 
     //fin control del modal
 
@@ -309,7 +317,8 @@
 
     // Arreglo que contiene el arreglo original
     let listaEmpleadosOriginal = null;
-/**
+
+    /**
      * aplica un filtro segun el texto ingresado
      * @param {String} text - entrada del texto del usuario
     
