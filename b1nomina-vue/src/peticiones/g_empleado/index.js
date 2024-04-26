@@ -44,7 +44,7 @@ const peticiones_EnContratacion = {
                 return { success: true, data: respuesta?.data?.data };
             })
             .catch(error => {
-                return { success: false, error: error?.response.data?.message };
+                return { success: false, error: error.response?.data?.message };
             });
         } catch (error) {
             return { success: false, error: error };
