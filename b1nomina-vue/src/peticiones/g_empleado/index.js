@@ -150,7 +150,7 @@ const peticiones_EnContratacion = {
                     }
                 })
                 .catch((error) => {
-                    console.log(error)
+                    console.error(error)
                     if (error.status == 422) {
                         resolve({ success: false, error: error }); // Problema al pedir los datos, resuelve con null
                     } else if (error.status == 404) {
@@ -182,8 +182,8 @@ const peticiones_EnContratacion = {
                     }
                 })
                 .catch((error) => {
-                    console.log(error)
-                    console.log(ID_empleado)
+                    console.error(error)
+
                     if (error.status == 422) {
                         resolve({ success: false, error: error }); // Problema al pedir los datos, resuelve con null
                     } else if (error.status == 404) {

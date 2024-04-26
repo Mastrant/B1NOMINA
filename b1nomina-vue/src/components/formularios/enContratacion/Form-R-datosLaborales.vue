@@ -456,7 +456,7 @@ const crearDatoslaborales = async (ID_USERMASTER, Data) => {
 }
 
 const actualizadDatosLaborales = async (Data) => {
-    console.log(Data)
+    console.log("actualizar datos")
     if(Data){
         await axios.put(`datos_laborales/${props.EmpleadoID}/update`,Data)
         .then(
@@ -535,8 +535,8 @@ const getData = async (ID_empleado) => {
  * Ejecuta la peticion con axios
  */
  const Enviar = async () => {  
-
-
+    console.log(payload)
+/*
         //si uno de los payload tiene cambios
         if (Object.values(payload).some(value => value !== "")){
             //verifica que el id pasado sea diferente de nulo y mayor que 0
@@ -592,12 +592,14 @@ const getData = async (ID_empleado) => {
         } else {//no hay modificaciones en los payloads
             NextModal(props.EmpleadoID)
         }
+
+*/
 };
 
 
 
 onMounted(() => {
-  MostrarValores(props.Informacion)
+  MostrarValores(props.Informacion);
   console.log(props.Informacion)
 });
 </script>
