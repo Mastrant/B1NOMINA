@@ -249,6 +249,7 @@ Direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
   let statuspay = Object.values(payload).some((value) => value !== "");
 
   if (statuspay == true){
+    console.log(payload)
     emit("DataNotificacion", 
         {
             'texto': "Informacion actualizada con exito", 

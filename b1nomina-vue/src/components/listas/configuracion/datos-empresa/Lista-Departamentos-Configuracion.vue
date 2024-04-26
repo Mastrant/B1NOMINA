@@ -8,7 +8,7 @@
 
         <LayoutFondoBorder v-for="Departamento in ListaDepartamentos" :key="Departamento.id">
             <template #default>    
-                  <FormDepartamentos :Datos="Departamento"/>        
+                  <FormDepartamentos :Informacion="Departamento"/>        
             </template>
         </LayoutFondoBorder>
 
@@ -25,10 +25,16 @@ import {ref} from 'vue';
 
 const ListaDepartamentos = ref([
     {
-        id: 1
+        id: 1,
+        Nombre: 'Administracion'
     },
     {
-        id: 2
+        id: 2,
+        Nombre: 'Contabilidad'
+    },
+    {
+        id: 3,
+        Nombre: ''
     }
 ]);
 </script>

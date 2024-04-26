@@ -8,7 +8,7 @@
 
         <LayoutFondoBorder v-for="Sede in ListaSedes" :key="Sede.id">
             <template #default>    
-               <FormSedes :datos="Sede" />                 
+               <FormSedes :Informacion="Sede" />                 
             </template>
         </LayoutFondoBorder>
     </div>
@@ -22,12 +22,34 @@ import {ref} from 'vue';
 
 const ListaSedes = ref([
     {
-        id: 1
+        id: 1,
+        Nombre: 'Sede 1',
+        ciudad: 'ciudad 1',
+        region_id: 1,
+        comuna_id: 9,
+        direccion: '',
+        
     },
     {
-        id: 2
-    }
+        id: 2,
+        Nombre: 'Sede',
+        ciudad: 'ciudad',
+        region_id: 4,
+        comuna_id: 9,
+        direccion: 'algun lugar lejos',
+        
+    },
+    {
+        id: 3,
+        Nombre: 'Sede 3',
+        ciudad: 'ciudad 3',
+        region_id: 1,
+        comuna_id: 5,
+        direccion: 'algun lugar lejos',
+        
+    },
 ]);
+
 </script>
 
 <style scoped>

@@ -167,6 +167,7 @@ telefonoResponsable.value = (DATA?.telefonoResposnable == null)? '' :DATA?.telef
   let statuspay = Object.values(payload).some((value) => value !== "");
 
   if (statuspay == true){
+    console.log(payload)
     emit("DataNotificacion", 
         {
             'texto': "Informacion actualizada con exito", 
