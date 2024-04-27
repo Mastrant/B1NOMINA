@@ -15,18 +15,6 @@
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Nivel de Estudio" :requerido="RequiereActualizar">
-                <template v-slot>
-                    <ListaTemplateLineal  
-                        v-model="NivelEstudio" 
-                        :options="parametros?.nivelestudio" 
-                        :requerido="RequiereActualizar"
-                        :preseleccion="NivelEstudio"
-                        optionsSelected="Seleccionar"  
-                    />
-                </template>
-            </LayoutInputLineal>
-
             <LayoutInputLineal textLabel="Término del contrato" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
@@ -35,6 +23,18 @@
                         :requerido="RequiereActualizar"
                         :preseleccion="TerminoContrato"
                         optionsSelected="Seleccionar"
+                    />
+                </template>
+            </LayoutInputLineal>
+
+            <LayoutInputLineal textLabel="Nivel de Estudio" :requerido="RequiereActualizar">
+                <template v-slot>
+                    <ListaTemplateLineal  
+                        v-model="NivelEstudio" 
+                        :options="parametros?.nivelestudio" 
+                        :requerido="RequiereActualizar"
+                        :preseleccion="NivelEstudio"
+                        optionsSelected="Seleccionar"  
                     />
                 </template>
             </LayoutInputLineal>
@@ -160,6 +160,39 @@
             </LayoutInputLineal>
         </div>
 
+        <div class="row-form">
+            <InputLinealDescripcion 
+                Placeholder="" 
+                Titulo="Hora de Entrada" 
+                v-model="HoraEntrada"
+                @update:modelValue="HoraEntrada = $event"
+                :requerido="RequiereActualizar"
+                Tipo="Time"
+            />
+
+            <InputLinealDescripcion 
+                Placeholder="$..." 
+                Titulo="Hora de salida" 
+                v-model="HoraSalida"
+                @update:modelValue="HoraSalida = $event"
+                :requerido="RequiereActualizar"
+                Tipo="Time"
+            />
+
+            <LayoutInputLineal textLabel="Jefatura" :requerido="RequiereActualizar">
+                <template v-slot>
+                    <InterruptorButton 
+                        @ValorEstado="Activarjefatura"
+                        Objid="Jefatura"
+                        Texto="Jefatura"
+                        Tipo="individual"
+                        :Estado="(EstatusJefatura == 0)? false : true"
+                        :requerido="RequiereActualizar"
+                    />
+                </template>
+            </LayoutInputLineal>
+        </div>
+
         <h2 class="titulo-form">Días de descanso</h2>
 
         <div class="row-form">
@@ -214,6 +247,12 @@ const verEstado = (valor) => {
         : Modalidad.value = 0
 }
 
+const Activarjefatura = (valor) => {
+    (valor == true)
+        ? Jefatura.value = 1
+        : Jefatura.value = 0
+}
+
 //inicialiacion de las varables
 const RequiereActualizar = ref(false)
 
@@ -233,6 +272,10 @@ const Cargo = ref('');
 const Grupo = ref('');
 const Modalidad = ref('');
 const EstatusModalidad = ref(false);
+const Jefatura = ref('');
+const EstatusJefatura = ref(false);
+const HoraEntrada = ref('')
+const HoraSalida = ref('')
 const ListaDiasLibres = ref([]);
 
 /**
@@ -362,6 +405,8 @@ watch(Departamento, (nuevoValor) => ActualizarPayload('departamento_id', Number(
 watch(Cargo, (nuevoValor) => ActualizarPayload('cargo_id', Number(nuevoValor)));
 watch(Grupo, (nuevoValor) => ActualizarPayload('grupo_id', Number(nuevoValor)));
 watch(Modalidad, (nuevoValor) => ActualizarPayload('modalidad', Number(nuevoValor)));
+watch(HoraEntrada, (nuevoValor) => ActualizarPayload('hora_ingreso', Number(nuevoValor)));
+watch(HoraSalida, (nuevoValor) => ActualizarPayload('hora_egreso', Number(nuevoValor)));
 
 watch(() => props.Informacion, (nuevoValor) => { MostrarValores(nuevoValor)});
 
@@ -377,15 +422,16 @@ const resetForm = () => {
     Cargo.value = '';
     Grupo.value = '';
     Modalidad.value = '';
+    HoraEntrada.value = '';
+    HoraSalida.value = '';
     ListaDiasLibres.value = []
     // Reinicia el payload
     Object.keys(payload).forEach(key => {
         payload[key] = '';
     });
-    /*
-    Object.keys(payload2).forEach(key => {
+    Object.keys(payload_old).forEach(key => {
         payload[key] = '';
-    });*/
+    });
 }
 
 defineExpose({
@@ -399,24 +445,82 @@ const NextModal = (idEpleadoCreado) => {
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
     //console.log(DATA)
-    // Variables del formulario 1
-    TipoDeContrato.value = (DATA?.termino_contrato_id == null) ? '' : DATA?.termino_contrato_id;
+    // Variables del apartado 1
+    TipoDeContrato.value = (DATA?.tipo_contrato == null) ? '' : DATA?.tipo_contrato;
     NivelEstudio.value = (DATA?.nivel_estudio == null) ? '' : DATA?.nivel_estudio;
-    TerminoContrato.value = (DATA?.termino_contrato_id == null) ? '' : DATA?.termino_contrato_id;
+    TerminoContrato.value = (DATA?.termino_contrato == null) ? '' : DATA?.termino_contrato;
     FechaContratacion.value = (DATA?.fecha_inicio == null) ? '' : DATA?.fecha_inicio;
     FechaFinalizacionContrato.value = (DATA?.FechaFinalizacionContrato == null) ? '' : DATA?.FechaFinalizacionContrato;
     
-    SalarioBase.value = (DATA?.SalarioBase == null) ? '' : DATA?.SalarioBase;
-    UnidadSueldo.value = (DATA?.UnidadSueldo == null) ? '' : DATA?.UnidadSueldo;
+    SalarioBase.value = (DATA?.salario_base == null) ? '' : DATA?.salario_base;
+    UnidadSueldo.value = (DATA?.unidad_sueldo == 0 || DATA?.unidad_sueldo == 1) ? '' : DATA?.unidad_sueldo;
     MontoSalario.value = (DATA?.salario_base == null) ? '' : DATA?.salario_base;
 
-    // Variables del formulario 2
-    SedeDeTrabajo.value = (DATA?.id_sede == null) ? '' : DATA?.id_sede;
-    Departamento.value = (DATA?.Departamento == null) ? '' : DATA?.Departamento;
-    Cargo.value = (DATA?.id_cargo == null) ? '' : DATA?.id_cargo;
-    Grupo.value = (DATA?.id_grupo == null) ? '' : DATA?.id_grupo;
-    Modalidad.value = (DATA?.Modalidad == null) ? '' : DATA?.Modalidad;
+    // Variables del apartado 2
+    SedeDeTrabajo.value = (DATA?.sede_id == null) ? '' : DATA?.sede_id;
+    Departamento.value = (DATA?.departamento_id == null) ? '' : DATA?.departamento_id;
+    Cargo.value = (DATA?.cargo_id == null) ? '' : DATA?.cargo_id;
+    Grupo.value = (DATA?.grupo_id == null) ? '' : DATA?.grupo_id;
+    Modalidad.value = (DATA?.modalidad == null) ? '' : DATA?.modalidad;
     EstatusModalidad.value = (DATA?.EstatusModalidad == null) ? false : DATA?.EstatusModalidad;
+    HoraEntrada.value = (DATA?.hora_ingreso == null) ? '08:00' : DATA?.hora_ingreso;
+    HoraSalida.value = (DATA?.hora_egreso == null) ? '18:00' : DATA?.hora_egreso;
+
+    payload_old.tipo_contrato = DATA?.rut ?? '';
+    payload.tipo_contrato = DATA?.rut ?? '';
+    
+    payload_old.termino_contrato = DATA?.rut ?? '';
+    payload.termino_contrato = DATA?.rut ?? '';
+    
+    payload_old.nivel_estudio_id = DATA?.rut ?? '';
+    payload.nivel_estudio_id = DATA?.rut ?? '';
+    
+    payload_old.fecha_inicio = DATA?.rut ?? '';
+    payload.fecha_inicio = DATA?.rut ?? '';
+    
+    payload_old.fecha_fin = DATA?.rut ?? '';
+    payload.fecha_fin = DATA?.rut ?? '';
+    
+    payload_old.periodo_salario = DATA?.rut ?? '';
+    payload.periodo_salario = DATA?.rut ?? '';
+    
+    payload_old.unidad_sueldo = DATA?.rut ?? '';
+    payload.unidad_sueldo = DATA?.rut ?? '';
+    
+    payload_old.salario_base = DATA?.rut ?? '';
+    payload.salario_base = DATA?.rut ?? '';
+    
+    payload_old.hora_ingreso = DATA?.rut ?? '';
+    payload.hora_ingreso = DATA?.rut ?? '';
+    
+    payload_old.hora_egreso = DATA?.rut ?? '';
+    payload.hora_egreso = DATA?.rut ?? '';
+    
+    payload_old.sede_id = DATA?.rut ?? '';
+    payload.sede_id = DATA?.rut ?? '';
+    
+    payload_old.departamento_id = DATA?.rut ?? '';
+    payload.departamento_id = DATA?.rut ?? '';
+    
+    payload_old.cargo_id = DATA?.rut ?? '';
+    payload.cargo_id = DATA?.rut ?? '';
+    
+    payload_old.grupo_id = DATA?.rut ?? '';
+    payload.grupo_id = DATA?.rut ?? '';
+    
+    payload_old.modalidad = DATA?.rut ?? '';
+    payload.modalidad = DATA?.rut ?? '';
+    
+    payload_old.user_id = DATA?.user_id ?? '';
+    payload.user_id = DATA?.user_id ?? '';
+
+    payload_old.sociedad_id = DATA?.rut ?? '';
+    payload.sociedad_id = DATA?.rut ?? '';
+    
+    payload_old.dias_descanso = DATA?.rut ?? '';
+    payload.dias_descanso = DATA?.rut ?? '';
+    
+
 }
 
 const crearDatoslaborales = async (ID_USERMASTER, Data) => {
@@ -527,6 +631,8 @@ const getData = async (ID_empleado) => {
     });
 }
 
+
+
  
 /**
  * Funcion emitida al enviar el formulario
@@ -572,7 +678,7 @@ const getData = async (ID_empleado) => {
                             }
 
                             payload.hora_ingreso = "08:00";
-                            payload.hora_egreso = "18:00";
+                            payload.hora_egreso = "08:00";
                             payload.jefatura = 0;
 
                             crearDatoslaborales(ID_USUARIO, payload)

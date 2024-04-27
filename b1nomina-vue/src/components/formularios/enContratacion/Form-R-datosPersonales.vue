@@ -359,8 +359,33 @@ const MostrarValores = (DATA) => {
     telefonoCelular.value = (DATA?.movil == null)? '' :DATA?.movil;
     telefonoLocal.value = (DATA?.fijo == null)? '' :DATA?.fijo;
 
-    
-
+    payload_old.nacionalidad = DATA?.nacionalidad_id ?? '';
+    payload.nacionalidad = DATA?.nacionalidad_id ?? '';
+ 
+    payload_old.genero = DATA?.sexo_id ?? '';
+    payload.genero = DATA?.sexo_id ?? '';
+ 
+    payload_old.fechaNacimiento = DATA?.fecha_nacimiento ?? '';
+    payload.fechaNacimiento = DATA?.fecha_nacimiento ?? '';
+ 
+    payload_old.estadoCivil = DATA?.estado_civil_id ?? '';
+    payload.estadoCivil = DATA?.estado_civil_id ?? '';
+ 
+    payload_old.region = DATA?.region_id ?? '';
+    payload.region = DATA?.region_id ?? '';
+ 
+    payload_old.localidad = DATA?.comuna_id ?? '';
+    payload.localidad = DATA?.comuna_id ?? '';
+ 
+    payload_old.direccion = DATA?.direccion ?? '';
+    payload.direccion = DATA?.direccion ?? '';
+ 
+    payload_old.telefonoCelular = DATA?.movil ?? '';
+    payload.telefonoCelular = DATA?.movil ?? '';
+ 
+    payload_old.telefonoLocal = DATA?.fijo ?? '';
+    payload.telefonoLocal = DATA?.fijo ?? '';
+ 
 }
 
 
