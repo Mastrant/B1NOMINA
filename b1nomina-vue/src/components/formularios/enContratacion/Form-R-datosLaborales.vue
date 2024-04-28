@@ -394,10 +394,18 @@ watch(TerminoContrato,
         }
     }
 );
-watch(FechaContratacion, (nuevoValor) => ActualizarPayload('fecha_inicio', nuevoValor));
-watch(FechaFinalizacionContrato, (nuevoValor) => ActualizarPayload('fecha_fin', nuevoValor));
+watch(FechaContratacion, (nuevoValor) => ActualizarPayload('fecha_inicio', String(nuevoValor)));
+watch(FechaFinalizacionContrato, 
+    (nuevoValor) =>{
+        if(nuevoValor == ''){
+            ActualizarPayload('fecha_fin', '1990-01-01')
+        } else {
+            ActualizarPayload('fecha_fin', nuevoValor)
+        }
+    }
+);
 watch(SalarioBase, (nuevoValor) => ActualizarPayload('periodo_salario', Number(nuevoValor)));
-watch(UnidadSueldo, (nuevoValor) => ActualizarPayload('unidad_sueldo', String(nuevoValor)));
+watch(UnidadSueldo, (nuevoValor) => ActualizarPayload('unidad_sueldo', nuevoValor));
 watch(MontoSalario, (nuevoValor) => { ActualizarPayload('salario_base', Math.abs(nuevoValor))});
 watch(SedeDeTrabajo, (nuevoValor) => ActualizarPayload('sede_id', Number(nuevoValor)));
 watch(Departamento, (nuevoValor) => ActualizarPayload('departamento_id', Number(nuevoValor)));
@@ -447,12 +455,12 @@ const MostrarValores = (DATA) => {
     //console.log(DATA)
     // Variables del apartado 1
     TipoDeContrato.value = (DATA?.tipo_contrato == null) ? '' : DATA?.tipo_contrato;
-    NivelEstudio.value = (DATA?.nivel_estudio == null) ? '' : DATA?.nivel_estudio;
     TerminoContrato.value = (DATA?.termino_contrato == null) ? '' : DATA?.termino_contrato;
+    NivelEstudio.value = (DATA?.nivel_estudio_id == null) ? '' : DATA?.nivel_estudio_id;
     FechaContratacion.value = (DATA?.fecha_inicio == null) ? '' : DATA?.fecha_inicio;
-    FechaFinalizacionContrato.value = (DATA?.FechaFinalizacionContrato == null) ? '' : DATA?.FechaFinalizacionContrato;
+    FechaFinalizacionContrato.value = (DATA?.fecha_fin == null || DATA?.fecha_fin == '') ? '1990-01-01' : DATA?.fecha_fin;
     
-    SalarioBase.value = (DATA?.salario_base == null) ? '' : DATA?.salario_base;
+    SalarioBase.value = (DATA?.periodo_salario == null) ? '' : DATA?.periodo_salario;
     UnidadSueldo.value = (DATA?.unidad_sueldo == 0 || DATA?.unidad_sueldo == 1) ? '' : DATA?.unidad_sueldo;
     MontoSalario.value = (DATA?.salario_base == null) ? '' : DATA?.salario_base;
 
@@ -461,60 +469,60 @@ const MostrarValores = (DATA) => {
     Departamento.value = (DATA?.departamento_id == null) ? '' : DATA?.departamento_id;
     Cargo.value = (DATA?.cargo_id == null) ? '' : DATA?.cargo_id;
     Grupo.value = (DATA?.grupo_id == null) ? '' : DATA?.grupo_id;
-    Modalidad.value = (DATA?.modalidad == null) ? '' : DATA?.modalidad;
+    Modalidad.value = (DATA?.modalidad == 1) ? DATA?.modalidad : '0';
     EstatusModalidad.value = (DATA?.modalidad == 0) ? false : true;
-    Jefatura.value = (DATA?.jefatura == null) ? '0' : DATA?.jefatura;
+    Jefatura.value = (DATA?.jefatura == 1) ? DATA?.jefatura : '0';
     EstatusJefatura.value = (DATA?.jefatura == 0) ? false : true;
-    HoraEntrada.value = (DATA?.hora_ingreso == null) ? '08:00' : DATA?.hora_ingreso;
-    HoraSalida.value = (DATA?.hora_egreso == null) ? '18:00' : DATA?.hora_egreso;
+    HoraEntrada.value = (DATA?.hora_ingreso == null || DATA?.hora_ingreso == '') ? '08:00' : DATA?.hora_ingreso;
+    HoraSalida.value = (DATA?.hora_egreso == null || DATA?.hora_egreso == '') ? '18:00' : DATA?.hora_egreso;
 
-    payload_old.tipo_contrato = DATA?.rut ?? '';
-    payload.tipo_contrato = DATA?.rut ?? '';
+    payload_old.tipo_contrato = DATA?.tipo_contrato ?? '';
+    payload.tipo_contrato = DATA?.tipo_contrato ?? '';
     
-    payload_old.termino_contrato = DATA?.rut ?? '';
-    payload.termino_contrato = DATA?.rut ?? '';
+    payload_old.termino_contrato = DATA?.termino_contrato ?? '';
+    payload.termino_contrato = DATA?.termino_contrato ?? '';
     
-    payload_old.nivel_estudio_id = DATA?.rut ?? '';
-    payload.nivel_estudio_id = DATA?.rut ?? '';
+    payload_old.nivel_estudio_id = DATA?.nivel_estudio_id ?? '';
+    payload.nivel_estudio_id = DATA?.nivel_estudio_id ?? '';
     
-    payload_old.fecha_inicio = DATA?.rut ?? '';
-    payload.fecha_inicio = DATA?.rut ?? '';
+    payload_old.fecha_inicio = DATA?.fecha_inicio ?? '';
+    payload.fecha_inicio = DATA?.fecha_inicio ?? '';
     
-    payload_old.fecha_fin = DATA?.rut ?? '';
-    payload.fecha_fin = DATA?.rut ?? '';
+    payload_old.fecha_fin = (DATA?.fecha_fin == null || DATA?.fecha_fin == '') ? '1990-01-01' : DATA?.fecha_fin;
+    payload.fecha_fin = (DATA?.fecha_fin == null || DATA?.fecha_fin == '') ? '1990-01-01' : DATA?.fecha_fin;
     
-    payload_old.periodo_salario = DATA?.rut ?? '';
-    payload.periodo_salario = DATA?.rut ?? '';
+    payload_old.periodo_salario = DATA?.periodo_salario ?? '';
+    payload.periodo_salario = DATA?.periodo_salario ?? '';
     
-    payload_old.unidad_sueldo = DATA?.rut ?? '';
-    payload.unidad_sueldo = DATA?.rut ?? '';
+    payload_old.unidad_sueldo = DATA?.unidad_sueldo ?? '';
+    payload.unidad_sueldo = DATA?.unidad_sueldo ?? '';
     
-    payload_old.salario_base = DATA?.rut ?? '';
-    payload.salario_base = DATA?.rut ?? '';
+    payload_old.salario_base = DATA?.salario_base ?? '';
+    payload.salario_base = DATA?.salario_base ?? '';
     
-    payload_old.hora_ingreso = DATA?.rut ?? '';
-    payload.hora_ingreso = DATA?.rut ?? '';
+    payload_old.sede_id = DATA?.sede_id ?? '';
+    payload.sede_id = DATA?.sede_id ?? '';
     
-    payload_old.hora_egreso = DATA?.rut ?? '';
-    payload.hora_egreso = DATA?.rut ?? '';
+    payload_old.departamento_id = DATA?.departamento_id ?? '';
+    payload.departamento_id = DATA?.departamento_id ?? '';
     
-    payload_old.sede_id = DATA?.rut ?? '';
-    payload.sede_id = DATA?.rut ?? '';
+    payload_old.cargo_id = DATA?.cargo_id ?? '';
+    payload.cargo_id = DATA?.cargo_id ?? '';
     
-    payload_old.departamento_id = DATA?.rut ?? '';
-    payload.departamento_id = DATA?.rut ?? '';
+    payload_old.grupo_id = DATA?.grupo_id ?? '';
+    payload.grupo_id = DATA?.grupo_id ?? '';
     
-    payload_old.cargo_id = DATA?.rut ?? '';
-    payload.cargo_id = DATA?.rut ?? '';
+    payload_old.modalidad = DATA?.modalidad ?? '0';
+    payload.modalidad = DATA?.modalidad ?? '0';
     
-    payload_old.grupo_id = DATA?.rut ?? '';
-    payload.grupo_id = DATA?.rut ?? '';
+    payload_old.hora_ingreso = DATA?.hora_ingreso ?? '08:00';
+    payload.hora_ingreso = DATA?.hora_ingreso ?? '08:00';
     
-    payload_old.modalidad = DATA?.rut ?? '';
-    payload.modalidad = DATA?.rut ?? '';
+    payload_old.hora_egreso = DATA?.hora_egreso ?? '18:00';
+    payload.hora_egreso = DATA?.hora_egreso ?? '18:00';
     
-    payload_old.jefatura = DATA?.jefatura ?? '';
-    payload.jefatura = DATA?.jefatura ?? '';
+    payload_old.jefatura = DATA?.jefatura ?? '0';
+    payload.jefatura = DATA?.jefatura ?? '0';
     
     payload_old.user_id = DATA?.user_id ?? '';
     payload.user_id = DATA?.user_id ?? '';
@@ -552,22 +560,22 @@ const crearDatoslaborales = async (ID_USERMASTER, Data) => {
                 if (err?.status == 422){
                     emit({'texto': "no se puede procesar la solcitud", 'valor':false});
                 }else if (err.response.status == 521) {
-                    actualizadDatosLaborales(Data)
+                    actualizadDatosLaborales(ID_USERMASTER, Data)
                 }  else {
                     // Imprime el error completo.
                     console.error(err?.response);
                     // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
-                    emit("respuesta", {'texto':err?.response?.data?.message, 'valor':false})                    
+                    emit("respuesta", {'texto':err?.response.data?.message, 'valor':false})                    
                 }                                   
             }
         }
     );
 }
 
-const actualizadDatosLaborales = async (Data) => {
+const actualizadDatosLaborales = async (ID,Data) => {
     console.log("actualizar datos")
     if(Data){
-        await axios.put(`datos_laborales/${props.EmpleadoID}/update`,Data)
+        await axios.put(`datos_laborales/${props.EmpleadoID}/update?user_updater=${ID}`,Data)
         .then(
             // Maneja la respuesta exitosa.
             (res) => {
@@ -578,7 +586,7 @@ const actualizadDatosLaborales = async (Data) => {
                     NextModal(props.EmpleadoID);
                 } else {
                     // Emite un evento 'respuesta' con un objeto que contiene un mensaje y un valor booleano.
-                    emit("respuesta", { texto: res, valor: true });
+                    emit("respuesta", { texto: res?.data, valor: true });
                     NextModal(props.EmpleadoID);
                 }
 
@@ -587,7 +595,7 @@ const actualizadDatosLaborales = async (Data) => {
         .catch(
             // Maneja los errores de la solicitud.
             (err) => {
-                console.log(err)
+                console.error(err)
                 // Verifica si la respuesta del error contiene un objeto de respuesta.
                 if (err.response) {
                     // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
@@ -595,7 +603,7 @@ const actualizadDatosLaborales = async (Data) => {
                         emit("respuesta", {texto: "no se puede procesar la solcitud", valor: false });
                     } else {
                         // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
-                        emit("respuesta", { texto: err.response.data.message, valor: false });
+                        emit("respuesta", { texto: err.response?.data.message, valor: false });
                     }                    
                 }
             }
@@ -649,24 +657,23 @@ const getData = async (ID_empleado) => {
     console.log(payload)
 
     const existeInformacionDelPreempleado = await getData(props.Informacion?.user_id);
+    let ID_USERMASTER = JSON.parse(localStorage.getItem('userId'));
 
     if (existeInformacionDelPreempleado.success){
         //actualizar datos
         if (ListaDiasLibres.value.length >= 1) {
             payload.dias_descanso = ListaDiasLibres.value.join(",")
-        } else {
-            payload.dias_descanso = '6,7';
         }
-        actualizadDatosLaborales(payload)
+
+        actualizadDatosLaborales(ID_USERMASTER,payload)
     } else {
         //creardatos
-        let ID_USUARIO = JSON.parse(localStorage.getItem('userId'));
+        
         if (ListaDiasLibres.value.length >= 1) {
             payload.dias_descanso = ListaDiasLibres.value.join(",")
-        } else {
-            payload.dias_descanso = '6,7';
         }
-        crearDatoslaborales(ID_USUARIO,payload)
+
+        crearDatoslaborales(ID_USERMASTER,payload)
     }
 /*
         //si uno de los payload tiene cambios

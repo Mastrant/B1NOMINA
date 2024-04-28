@@ -184,6 +184,7 @@
         ID_Empleado_Selecionado.value = idEmpleadoCreado;
         if(idFormularioActivo.value < 4){
             idFormularioActivo.value++
+            PedirInfo(EmpleadoID.value)
         }
     };
 

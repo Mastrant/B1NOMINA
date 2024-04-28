@@ -217,8 +217,6 @@ const verificarCambios = () => {
     RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
 }
 
-
-
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
 
@@ -253,7 +251,6 @@ const MostrarValores = (DATA) => {
   payload_old.correo = DATA?.email ?? '';
   payload.correo = DATA?.email ?? '';
 }
-
 
 
 const actualizarDataImagen = (evento) => {
