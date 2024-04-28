@@ -320,7 +320,6 @@ const payload_old = reactive({
     hora_egreso: '',
     jefatura: '',
 
-
     sede_id: '',
     departamento_id: '',
     cargo_id: '',    
@@ -405,8 +404,9 @@ watch(Departamento, (nuevoValor) => ActualizarPayload('departamento_id', Number(
 watch(Cargo, (nuevoValor) => ActualizarPayload('cargo_id', Number(nuevoValor)));
 watch(Grupo, (nuevoValor) => ActualizarPayload('grupo_id', Number(nuevoValor)));
 watch(Modalidad, (nuevoValor) => ActualizarPayload('modalidad', Number(nuevoValor)));
-watch(HoraEntrada, (nuevoValor) => ActualizarPayload('hora_ingreso', Number(nuevoValor)));
-watch(HoraSalida, (nuevoValor) => ActualizarPayload('hora_egreso', Number(nuevoValor)));
+watch(Jefatura, (nuevoValor) => ActualizarPayload('jefatura', Number(nuevoValor)));
+watch(HoraEntrada, (nuevoValor) => ActualizarPayload('hora_ingreso', String(nuevoValor)));
+watch(HoraSalida, (nuevoValor) => ActualizarPayload('hora_egreso', String(nuevoValor)));
 
 watch(() => props.Informacion, (nuevoValor) => { MostrarValores(nuevoValor)});
 
@@ -462,7 +462,9 @@ const MostrarValores = (DATA) => {
     Cargo.value = (DATA?.cargo_id == null) ? '' : DATA?.cargo_id;
     Grupo.value = (DATA?.grupo_id == null) ? '' : DATA?.grupo_id;
     Modalidad.value = (DATA?.modalidad == null) ? '' : DATA?.modalidad;
-    EstatusModalidad.value = (DATA?.EstatusModalidad == null) ? false : DATA?.EstatusModalidad;
+    EstatusModalidad.value = (DATA?.modalidad == 0) ? false : true;
+    Jefatura.value = (DATA?.jefatura == null) ? '0' : DATA?.jefatura;
+    EstatusJefatura.value = (DATA?.jefatura == 0) ? false : true;
     HoraEntrada.value = (DATA?.hora_ingreso == null) ? '08:00' : DATA?.hora_ingreso;
     HoraSalida.value = (DATA?.hora_egreso == null) ? '18:00' : DATA?.hora_egreso;
 
@@ -511,14 +513,17 @@ const MostrarValores = (DATA) => {
     payload_old.modalidad = DATA?.rut ?? '';
     payload.modalidad = DATA?.rut ?? '';
     
+    payload_old.jefatura = DATA?.jefatura ?? '';
+    payload.jefatura = DATA?.jefatura ?? '';
+    
     payload_old.user_id = DATA?.user_id ?? '';
     payload.user_id = DATA?.user_id ?? '';
 
-    payload_old.sociedad_id = DATA?.rut ?? '';
-    payload.sociedad_id = DATA?.rut ?? '';
+    payload_old.sociedad_id = idSociedad ?? '';
+    payload.sociedad_id = idSociedad ?? '';
     
-    payload_old.dias_descanso = DATA?.rut ?? '';
-    payload.dias_descanso = DATA?.rut ?? '';
+    payload_old.dias_descanso = DATA?.dias_descanso ?? '';
+    payload.dias_descanso = DATA?.dias_descanso ?? '';
     
 
 }
@@ -618,10 +623,10 @@ const getData = async (ID_empleado) => {
                 //console.log(error)
                 if (error?.response?.status == 404) {
                     // Resuelve la promesa con false si no hay datos
-                    resolve({ success: false, data: {} });
+                    resolve({ success: false, error: error });
                 } else {
                     // Rechaza la promesa si hay un error distinto de 404
-                    reject(error);
+                    reject({ success: false, error: error });
                 }
             }
         } else {
@@ -642,6 +647,27 @@ const getData = async (ID_empleado) => {
  */
  const Enviar = async () => {  
     console.log(payload)
+
+    const existeInformacionDelPreempleado = await getData(props.Informacion?.user_id);
+
+    if (existeInformacionDelPreempleado.success){
+        //actualizar datos
+        if (ListaDiasLibres.value.length >= 1) {
+            payload.dias_descanso = ListaDiasLibres.value.join(",")
+        } else {
+            payload.dias_descanso = '6,7';
+        }
+        actualizadDatosLaborales(payload)
+    } else {
+        //creardatos
+        let ID_USUARIO = JSON.parse(localStorage.getItem('userId'));
+        if (ListaDiasLibres.value.length >= 1) {
+            payload.dias_descanso = ListaDiasLibres.value.join(",")
+        } else {
+            payload.dias_descanso = '6,7';
+        }
+        crearDatoslaborales(ID_USUARIO,payload)
+    }
 /*
         //si uno de los payload tiene cambios
         if (Object.values(payload).some(value => value !== "")){
