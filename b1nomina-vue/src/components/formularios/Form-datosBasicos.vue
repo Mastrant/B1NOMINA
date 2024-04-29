@@ -239,6 +239,7 @@ const CrearUsuario = async (Datos) => {
           if (dataImagen.value == undefined || dataImagen.value == "") {
             NextModal(newUserId);
           } else {
+            console.log(dataImagen)
             subirFoto(ID_USERMASTER, dataImagen.value, newUserId);
           }
         }
@@ -251,8 +252,10 @@ const CrearUsuario = async (Datos) => {
         if (err?.response) {
           // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
           if (err.status == 422) {
-            emit({ texto: "no se puede procesar la solcitud", valor: false });
+                ActualizarDatosBasicos(ID_USERMASTER, Datos,props.EmpleadoID)
+
           } else {
+            console.log(err)
             // Emite un evento 'respuesta' con un objeto que contiene un mensaje de error y un valor booleano.
             emit("respuesta", { texto: err.response.data?.message, valor: false });
           }

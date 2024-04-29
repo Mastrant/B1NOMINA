@@ -52,7 +52,7 @@
                         Stroke="#1A245B"
                         text="Editar"
                     />
-                    <CiculoCorrectIcon 
+                    <CiculoCorrectIcon v-show="item.avance >= 50"
                         @click="ActionButton(2,1,item.id)"
                         Stroke="#1A245B"
                         text="Contratar"
@@ -74,7 +74,7 @@
             :textSubmit="TextoButton"
             :activarModal="activarModal"
             :ModalActivo="1"
-            :DataNotification="checkfile"
+            :DataNotification="InformacionNotificacionModal"
             
         >
             <template #default><!--Espacio para los formularios -->
@@ -90,7 +90,7 @@
                                     <p>En esta sección puedes cargar el Curriculum Vitae del prospecto y tener un soporte anexado al perfil del mismo. </p>
                                     <h3>Cargar Curriculum Vitae</h3>
                                     <InputDocsForm2
-                                        @respuesta="checkFile"
+                                        @respuesta="ActualizarDataNotificacionModal"
                                         @actualizarDocumento="actualizarValorCV"
                                         ref="InputCV"
                                     />
@@ -125,7 +125,7 @@
                                     <p>Recoge firmas de contratos cómo de una forma rápida y segura, cargando aquí tus documentos y permitiendo que las personas firmen desde su correo electrónico. </p>
                                     <h3>Cargar contrato</h3>
                                     <InputDocsForm2
-                                        @respuesta="checkFile"
+                                        @respuesta="ActualizarDataNotificacionModal"
                                         @actualizarDocumento="actualizarValorContrato"
                                         ref="InputContrato"
                                     />
@@ -159,7 +159,7 @@
             :textSubmit="TextoButton"
             :activarModal="activarModal2"
             :ModalActivo="2"
-            :DataNotification="checkfile"
+            :DataNotification="InformacionNotificacionModal"
             
         >
         <div v-if="formActivo==1" class="contenedorInfo">
@@ -287,6 +287,16 @@
         } 
     }
 
+    const InformacionNotificacionModal = ref({})
+    /**
+     * Cambia el valor de lanotificacion del modal
+     * @param {Objeto} respuesta Recive el diccionario necesario para mostrar la notificacion del modal
+    */
+    const ActualizarDataNotificacionModal = (Informacion) => {
+        InformacionNotificacionModal.value = Informacion;
+    };
+
+
     /**
      * Ejecuta acciones específicas basadas en los botones de la tabla de Encontratación.
      * Controla la visualización de modales y la activación de formularios.
@@ -378,7 +388,7 @@
         
     };
 
-    const AceptarProspecto = () => {
+    const AceptarProspecto = async () => {
         console.log("prospecto aceptado")
         
 
@@ -386,20 +396,23 @@
             sociedad_id: idSociedad,
             user_id: EmpleadoID_Selecionado.value,
         }
-        const respuestaAPI = peticiones_EnContratacion.ActivarProspecto(idCreator, payload_CD)
 
-        if( respuestaAPI.success) {
+        const respuesta = await peticiones_EnContratacion.ActivarProspecto(idCreator, payload_CD)
+
+        if( respuesta.success) {
             showModal(0)
             emit('showNotificacion', 
                 {
                     'Titulo': "Empleado Contratado", 
-                    'Descripcion': respuestaAPI.data
+                    'Descripcion': respuesta?.data
                 }
             );
             emit("ActualizarData")
         } else {
-            checkfile.value = {'texto': respuestaAPI.error, 'valor':false}
+            ActualizarDataNotificacionModal({'texto':respuesta?.error, 'valor':false});
         }
+
+        
 
        
     }
@@ -418,15 +431,6 @@
         );
         emit("ActualizarData")
     }
-
-    const checkfile = ref({})
-    /**
-     * Cambia el valor de lanotificacion del modal
-     * @param {Objeto} respuesta Recive el diccionario necesario para mostrar la notificacion del modal
-    */
-    const checkFile = (respuesta) => {
-        checkfile.value = respuesta
-    };
 
     /**
      * Actualiza el valor del CV con los datos proporcionados.
@@ -471,11 +475,11 @@
                 )
                 emit("ActualizarData")
             } else {
-                checkfile.value = {'texto':respuesta?.error, 'valor':false};
+                ActualizarDataNotificacionModal({'texto':respuesta?.error, 'valor':false});
             }
             
         } else {
-            checkfile.value = {'texto':'El campo esta vacio', 'valor':false};
+            ActualizarDataNotificacionModal({'texto':'El campo esta vacio', 'valor':false});
         }
     }
 
@@ -498,7 +502,7 @@
 
             emit("ActualizarData")
         } else {
-            checkfile.value = {'texto':respuesta?.error, 'valor':false};
+            ActualizarDataNotificacionModal({'texto':respuesta?.error, 'valor':false});
         }
     }
 
@@ -519,7 +523,7 @@
             CV.value = '';
             emit("ActualizarData");
         } else {
-            checkfile.value = {'texto':respuesta?.error, 'valor':false};
+            ActualizarDataNotificacionModal({'texto':respuesta?.error, 'valor':false});
         }
     }
 
@@ -543,11 +547,11 @@
                 )
                 emit("ActualizarData")
             } else {
-                checkfile.value = {'texto':respuesta?.error, 'valor':false};
+                ActualizarDataNotificacionModal({'texto':respuesta?.error, 'valor':false});
             }
             
         } else {
-            checkfile.value = {'texto':'El campo esta vacio', 'valor':false};
+            ActualizarDataNotificacionModal({'texto':'El campo esta vacio', 'valor':false});
         }
     }
 
@@ -569,7 +573,7 @@
 
             emit("ActualizarData")
         } else {
-            checkfile.value = {'texto':respuesta?.error, 'valor':false};
+            ActualizarDataNotificacionModal({'texto':respuesta?.error, 'valor':false});
         }
     }
 
@@ -590,7 +594,7 @@
             Contrato.value = '';
             emit("ActualizarData");
         } else {
-            checkfile.value = {'texto':respuesta?.error, 'valor':false};
+            ActualizarDataNotificacionModal({'texto':respuesta?.error, 'valor':false});
         }
 
         
