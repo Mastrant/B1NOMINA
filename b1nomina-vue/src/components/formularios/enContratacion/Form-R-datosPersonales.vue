@@ -325,18 +325,13 @@ const actualizarDatosPersonales = async (ID_USERMASTER, Datos) => {
  * Ejecuta la peticion con axios
  */
  const Enviar = () => {
-  //si ID es nulo crea un usuario
-  let statuspay = Object.values(payload).some((value) => value !== "");
 
-  if (props.EmpleadoID != null && props.EmpleadoID > 0) {
-    if (statuspay == true) {
-    actualizarDatosPersonales(props.EmpleadoID, payload);
+    if (RequiereActualizar) {
+        actualizarDatosPersonales(props.EmpleadoID, payload);
     } else {
-      NextModal(props.EmpleadoID);
+        NextModal(props.EmpleadoID);
     }
-  } else {
-    emit("respuesta", {'texto': "Todavía hay campos en blanco", 'valor':false})
-  }
+
 };
 
 

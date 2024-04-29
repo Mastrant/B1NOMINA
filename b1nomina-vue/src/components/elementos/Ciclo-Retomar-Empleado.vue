@@ -129,13 +129,16 @@
     };
 
     const PedirInfo = async (ID_Empleado) => {
+       
         EmpleadoID.value = ID_Empleado;
         
         //pide los datos básicos
         let respuesta = await peticiones_EnContratacion?.PedirDatosProspectoCompleto(ID_Empleado)
        
+        console.log(respuesta.data)
 
-        if (respuesta.success){ //(respuesta.success){
+        if (respuesta.success){
+            console.log("//////// Actualizar Informacion /////////////")
             ID_Empleado_Selecionado.value = ID_Empleado
             Data_Usuario.value = respuesta?.data;
 

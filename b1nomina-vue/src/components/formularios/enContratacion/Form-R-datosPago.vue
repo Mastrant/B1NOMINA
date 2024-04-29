@@ -143,6 +143,8 @@ const payload_old = reactive({
     "user_id": '',
 });
 
+const RequiereActualizar = ref(false)
+
 //actualizar datos del payload
 const ActualizarPayload = (propiedad, valor) => {
     payload[propiedad] = valor;
@@ -299,49 +301,39 @@ const verificarMediodePago = (medio) => {
  */
  const Enviar = async () => {
     //si uno de los payload tiene cambios
-    if (Object.values(payload).some(value => value !== "")) {
-        //verifica que el id pasado sea diferente de nullo y mayor que 0
-        if (props.EmpleadoID != null && props.EmpleadoID > 0) {
+    if (RequiereActualizar) {
             //Almacena si hay datos Laboras o no del usuario en el sistema
 
             console.log(payload)
             let respuestaGetData = await getData(props.EmpleadoID);
 
             // Recuperar el objeto como una cadena de texto y convertirlo de nuevo a un objeto
-            let ID_USUARIO = JSON.parse(localStorage.getItem('userId'));
+            let ID_MASTER = JSON.parse(localStorage.getItem('userId'));
 
-            if(respuestaGetData.success != null){
 
                 if(respuestaGetData.success == true){
 
-                    if(ID_USUARIO > 0){
-                        payload.user_id = props.EmpleadoID                      
+                    if(ID_MASTER > 0){                   
                         //Si el medio es diferente de transferencia, se borran los otros campos al enviar
                         verificarMediodePago(payload.medio);
                         //ejecuta la peticion
-                        editarDatosPago(ID_USUARIO, payload)
+                        editarDatosPago(ID_MASTER, payload)
                     } else {
                         emit("respuesta", {"texto":"Usuario no autorizado", "valor": false})
                     } 
                 } else {
                     //console.log("creardata")
-                    if(ID_USUARIO > 0){
-                        payload.user_id = props.EmpleadoID       
-                        
+                    if(ID_MASTER > 0){
                         //Si el medio es diferente de transferencia, se borran los otros campos al enviar
-                        verificarMediodePago;
+                        verificarMediodePago(payload.medio);
                         //ejecuta la peticion
-                        crearDatosPago(ID_USUARIO, payload)
+                        crearDatosPago(ID_MASTER, payload)
                     } else {
                         emit("respuesta", {"texto":"Usuario no autorizado", "valor": false})
                     }                    
                 }
-            } else {
-                emit("respuesta", {"texto":"error al verificar los datos del empleado", "valor": false})
-            }            
-        } else {
-            emit("respuesta", {'texto':"Error al validar el ID del usuario", 'valor':false})  
-        }
+          
+
     } else {//no hay modificaciones en los payloads
         CloseModal();
     }
@@ -351,13 +343,30 @@ const verificarMediodePago = (medio) => {
 const MostrarValores = (DATA) => {
     //console.log(DATA)
     // Variables del formulario 1
-    MedioPago.value = (DATA?.termino_contrato_id == null) ? '' : DATA?.termino_contrato_id;
+    MedioPago.value = (DATA?.medio == null) ? '' : DATA?.medio;
     
     Banco.value = (DATA?.banco_id == null) ? '' : DATA?.banco_id;
-    TCuenta.value =  (DATA?.termino_contrato_id == null) ? '' : DATA?.termino_contrato_id;
+    TCuenta.value =  (DATA?.tipo_cuenta == null) ? '' : DATA?.tipo_cuenta;
 
     NCuenta.value =  (DATA?.numero_cuenta == null) ? '' : DATA?.numero_cuenta;
+
+
+    payload_old.medio = DATA?.medio ?? '';
+    payload.medio = DATA?.medio ?? '';
+
+    payload_old.banco_id = DATA?.banco_id ?? '';
+    payload.banco_id = DATA?.banco_id ?? '';
+
+    payload_old.tipo_cuenta = DATA?.tipo_cuenta ?? '';
+    payload.tipo_cuenta = DATA?.tipo_cuenta ?? '';
+
+    payload_old.numero_cuenta = DATA?.numero_cuenta ?? '';
+    payload.numero_cuenta = DATA?.numero_cuenta ?? '';
+
+    payload_old.user_id = DATA?.user_id ?? '';
+    payload.user_id = DATA?.user_id ?? '';
 }
+
 
 onMounted(() => {
   MostrarValores(props.Informacion)

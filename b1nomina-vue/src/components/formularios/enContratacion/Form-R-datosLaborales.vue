@@ -363,6 +363,7 @@ const payload = reactive({
 //actualizar datos del payload a enviar
 const ActualizarPayload = (propiedad, valor) => {
     payload[propiedad] = valor;
+    console.log(propiedad, valor)
     verificarCambios();
 };
 
@@ -416,7 +417,11 @@ watch(Jefatura, (nuevoValor) => ActualizarPayload('jefatura', Number(nuevoValor)
 watch(HoraEntrada, (nuevoValor) => ActualizarPayload('hora_ingreso', String(nuevoValor)));
 watch(HoraSalida, (nuevoValor) => ActualizarPayload('hora_egreso', String(nuevoValor)));
 
-watch(() => props.Informacion, (nuevoValor) => { MostrarValores(nuevoValor)});
+watch(() => props.Informacion.values, 
+    (nuevoValor) => {
+        MostrarValores(nuevoValor);
+    }
+);
 
 const resetForm = () => {
     TipoDeContrato.value = '';
@@ -452,7 +457,6 @@ const NextModal = (idEpleadoCreado) => {
 
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
-    //console.log(DATA)
     // Variables del apartado 1
     TipoDeContrato.value = (DATA?.tipo_contrato == null) ? '' : DATA?.tipo_contrato;
     TerminoContrato.value = (DATA?.termino_contrato == null) ? '' : DATA?.termino_contrato;
@@ -461,7 +465,7 @@ const MostrarValores = (DATA) => {
     FechaFinalizacionContrato.value = (DATA?.fecha_fin == null || DATA?.fecha_fin == '') ? '1990-01-01' : DATA?.fecha_fin;
     
     SalarioBase.value = (DATA?.periodo_salario == null) ? '' : DATA?.periodo_salario;
-    UnidadSueldo.value = (DATA?.unidad_sueldo == 0 || DATA?.unidad_sueldo == 1) ? '' : DATA?.unidad_sueldo;
+    UnidadSueldo.value = (DATA?.unidad_sueldo == 2 || DATA?.unidad_sueldo == 1) ? DATA?.unidad_sueldo : '';
     MontoSalario.value = (DATA?.salario_base == null) ? '' : DATA?.salario_base;
 
     // Variables del apartado 2
@@ -494,8 +498,8 @@ const MostrarValores = (DATA) => {
     payload_old.periodo_salario = DATA?.periodo_salario ?? '';
     payload.periodo_salario = DATA?.periodo_salario ?? '';
     
-    payload_old.unidad_sueldo = DATA?.unidad_sueldo ?? '';
-    payload.unidad_sueldo = DATA?.unidad_sueldo ?? '';
+    payload_old.unidad_sueldo = (DATA?.unidad_sueldo == 0 || DATA?.unidad_sueldo == 1) ? DATA?.unidad_sueldo : '';
+    payload.unidad_sueldo = (DATA?.unidad_sueldo == 0 || DATA?.unidad_sueldo == 1) ? DATA?.unidad_sueldo : '';
     
     payload_old.salario_base = DATA?.salario_base ?? '';
     payload.salario_base = DATA?.salario_base ?? '';
@@ -509,8 +513,8 @@ const MostrarValores = (DATA) => {
     payload_old.cargo_id = DATA?.cargo_id ?? '';
     payload.cargo_id = DATA?.cargo_id ?? '';
     
-    payload_old.grupo_id = DATA?.grupo_id ?? '';
-    payload.grupo_id = DATA?.grupo_id ?? '';
+    payload_old.grupo_id = (DATA?.grupo_id == null) ? '' : DATA?.grupo_id;
+    payload.grupo_id = (DATA?.grupo_id == null) ? '' : DATA?.grupo_id;
     
     payload_old.modalidad = DATA?.modalidad ?? '0';
     payload.modalidad = DATA?.modalidad ?? '0';
@@ -553,7 +557,6 @@ const crearDatoslaborales = async (ID_USERMASTER, Data) => {
     .catch(
         // Maneja los errores de la solicitud.
         err => {
-            ////console.log(err)
             // Verifica si la respuesta del error contiene un objeto de respuesta.
             if (err) { 
                 // Si el estado HTTP es 422 (Solicitud no procesable), imprime un mensaje de error.
@@ -573,7 +576,6 @@ const crearDatoslaborales = async (ID_USERMASTER, Data) => {
 }
 
 const actualizadDatosLaborales = async (ID,Data) => {
-    console.log("actualizar datos")
     if(Data){
         await axios.put(`datos_laborales/${props.EmpleadoID}/update?user_updater=${ID}`,Data)
         .then(
@@ -617,23 +619,20 @@ const getData = async (ID_empleado) => {
             try {
                 // Solicita los datos personales
                 const respuesta =  await axios.get(`/user/${ID_empleado}/datos_labores`)
-                //console.log(respuesta)
                 if (respuesta) {
-                    //console.log(respuesta)
-                    // Resuelve la promesa con true si hay datos
                     resolve({ success: true, data: respuesta.data });
                 } else {
-                    //console.log(respuesta)
                     // Resuelve la promesa con false si no hay datos
                     resolve({ success: false, data: {} });
                 }
             } catch (error) {
-                //console.log(error)
+
                 if (error?.response?.status == 404) {
                     // Resuelve la promesa con false si no hay datos
                     resolve({ success: false, error: error });
                 } else {
                     // Rechaza la promesa si hay un error distinto de 404
+                    console.error(error)
                     reject({ success: false, error: error });
                 }
             }
@@ -645,8 +644,6 @@ const getData = async (ID_empleado) => {
 }
 
 
-
- 
 /**
  * Funcion emitida al enviar el formulario
  * 
@@ -654,8 +651,6 @@ const getData = async (ID_empleado) => {
  * Ejecuta la peticion con axios
  */
  const Enviar = async () => {  
-    console.log(payload)
-
     const existeInformacionDelPreempleado = await getData(props.Informacion?.user_id);
     let ID_USERMASTER = JSON.parse(localStorage.getItem('userId'));
 
@@ -675,71 +670,14 @@ const getData = async (ID_empleado) => {
 
         crearDatoslaborales(ID_USERMASTER,payload)
     }
-/*
-        //si uno de los payload tiene cambios
-        if (Object.values(payload).some(value => value !== "")){
-            //verifica que el id pasado sea diferente de nulo y mayor que 0
-            if (props.EmpleadoID != null && props.EmpleadoID > 0) {
 
-                //Almacena si hay datos Laboras o no del usuario en el sistema
-                console.log(payload)
-                let respuestaGetData = await getData(props.EmpleadoID);
-
-                // Recuperar el objeto como una cadena de texto y convertirlo de nuevo a un objeto
-                let ID_USUARIO = JSON.parse(localStorage.getItem('userId'));
-                
-                //console.log(respuestaGetData?.success)
-
-                if(respuestaGetData.success != null){
-
-                    if(respuestaGetData.success == true){
-                        let DataLaborales = respuestaGetData.data
-                        //actualizar datos laborales
-                    } else {
-                        if(ID_USUARIO > 0){
-                            payload.user_id = props.EmpleadoID                        
-                            payload.sociedad_id = Number(idSociedad)
-                            
-                            if (ListaDiasLibres.value.length >= 1) {
-                                payload.dias_descanso = ListaDiasLibres.value.join(",")
-                            } else {
-                                payload.dias_descanso = '6,7';
-                            }
-
-                            if (payload.modalidad == ''){
-                                payload.modalidad = 0
-                            }
-
-                            payload.hora_ingreso = "08:00";
-                            payload.hora_egreso = "08:00";
-                            payload.jefatura = 0;
-
-                            crearDatoslaborales(ID_USUARIO, payload)
-
-                        } else {
-                            console.error("usuario no autorizado")
-                        }                    
-                    }
-                } else {
-                    emit("nextModal", {"texto":"error al verificar los datos del empleado", "valor": false})
-                }
-
-                
-            } else {
-                emit("respuesta", {'texto':"Error al validar el ID del usuario", 'valor':false})  
-            }
-        } else {//no hay modificaciones en los payloads
-            NextModal(props.EmpleadoID)
-        }
-
-*/
 };
 
 
 
 onMounted(() => {
   MostrarValores(props.Informacion);
-  console.log(props.Informacion)
+
 });
 </script>
 
