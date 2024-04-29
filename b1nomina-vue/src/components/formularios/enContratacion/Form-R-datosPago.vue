@@ -1,8 +1,8 @@
 <template>
-    <form class="formulario" id="Form4" @submit.prevent="Enviar">
+    <form class="formulario" id="Form4r" @submit.prevent="Enviar()">
         <h2 class="titulo-form">Datos de Pago</h2> 
         <div class="row-form">
-            <LayoutInputLineal textLabel="Medio de pago">
+            <LayoutInputLineal textLabel="Medio de pago" :requerido="RequiereActualizar">
                 <template v-slot>
                     <InputRadioButton 
                         v-model="MedioPago" 
@@ -29,19 +29,20 @@
             </LayoutInputLineal>
         </div>
         <div class="row-form" v-show="MedioPago == 0">
-            <LayoutInputLineal textLabel="Banco" :requerido="RequiereActualizar || MedioPago == 0">
+            <LayoutInputLineal textLabel="Banco" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Banco" 
                         :options="parametros.bancos" 
+                        :requerido="RequiereActualizar"
+                        :preseleccion="Banco"
                         optionsSelected="Seleccionar"
-                        :requerido="RequiereActualizar || MedioPago == 0"
                     />
                 </template>
             </LayoutInputLineal>
 
              <!---->
-            <LayoutInputLineal textLabel="Tipo de cuenta" :requerido="RequiereActualizar || MedioPago == 0">
+            <LayoutInputLineal textLabel="Tipo de cuenta" :requerido="RequiereActualizar">
                 <template v-slot>
                    <InputRadioButton 
                         v-model="TCuenta" 
@@ -49,7 +50,7 @@
                         texto="Corriente" 
                         :valor="0"
                         id-radius="CCorriente"  
-                        :requerido="RequiereActualizar || MedioPago == 0"                      
+                        :requerido="RequiereActualizar"                      
                     />
                    <InputRadioButton 
                         v-model="TCuenta" 
@@ -57,18 +58,20 @@
                         texto="Ahorro"
                         :valor="1"
                         id-radius="CAhorro"  
+                        :requerido="RequiereActualizar"  
                     />
                 </template>
             </LayoutInputLineal>            
         </div>
 
-        <div class="row-form cut" v-show="MedioPago == 0" :requerido="RequiereActualizar || MedioPago == 0">
+        <div class="row-form cut" v-show="MedioPago == 0" :requerido="RequiereActualizar">
             <InputLinealDescripcion 
+                Placeholder="Ingrese Numero de Cuenta" 
                 Titulo="N° Cuenta"
                 v-model="NCuenta"
                 @update:modelValue="NCuenta = $event"
-                :minimo-caracteres="16"
-                :requerido="RequiereActualizar || MedioPago == 0"
+                :minimo-caracteres="8"
+                :requerido="RequiereActualizar"
             />
         </div>  
         
@@ -90,10 +93,10 @@
 </template>
 
 <script setup>
-import InputLinealDescripcion from '../inputs/Input-Lineal-descripcion.vue';
-import ListaTemplateLineal from '../listas/Lista-template-lineal.vue';
-import LayoutInputLineal from '../Layouts/LayoutInputLineal.vue';
-import InputRadioButton from '../botones/Input-Radio-button.vue';
+import InputLinealDescripcion from '@/components/inputs/Input-Lineal-descripcion.vue';
+import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
+import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
+import InputRadioButton from '@/components/botones/Input-Radio-button.vue';
 
 import axios from "axios";
 
@@ -148,7 +151,13 @@ const RequiereActualizar = ref(false)
 //actualizar datos del payload
 const ActualizarPayload = (propiedad, valor) => {
     payload[propiedad] = valor;
-    verificarCambios();
+    if (propiedad == "medio" && (valor == 2 || valor == 1)) {
+        //Si el medio es diferente de transferencia, se borran los otros campos al enviar
+        verificarMediodePago(valor);
+    } else {
+        verificarCambios();
+    }
+
 };
 
 
@@ -164,7 +173,7 @@ const verificarCambios = () => {
     // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
-    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+    RequiereActualizar.value = !(camposIguales && alMenosUnValorVacio);
 }
 
 watch(Banco, (nuevoValor) => ActualizarPayload('banco_id', nuevoValor));
@@ -300,8 +309,10 @@ const verificarMediodePago = (medio) => {
  * Ejecuta la peticion con axios
  */
  const Enviar = async () => {
+    await console.log(payload)
     //si uno de los payload tiene cambios
-    if (RequiereActualizar) {
+    /*
+    if (false) {
             //Almacena si hay datos Laboras o no del usuario en el sistema
 
             console.log(payload)
@@ -312,31 +323,19 @@ const verificarMediodePago = (medio) => {
 
 
                 if(respuestaGetData.success == true){
-
-                    if(ID_MASTER > 0){                   
-                        //Si el medio es diferente de transferencia, se borran los otros campos al enviar
-                        verificarMediodePago(payload.medio);
+          
                         //ejecuta la peticion
-                        editarDatosPago(ID_MASTER, payload)
-                    } else {
-                        emit("respuesta", {"texto":"Usuario no autorizado", "valor": false})
-                    } 
+                        editarDatosPago(ID_MASTER, payload) 
                 } else {
-                    //console.log("creardata")
-                    if(ID_MASTER > 0){
-                        //Si el medio es diferente de transferencia, se borran los otros campos al enviar
-                        verificarMediodePago(payload.medio);
                         //ejecuta la peticion
                         crearDatosPago(ID_MASTER, payload)
-                    } else {
-                        emit("respuesta", {"texto":"Usuario no autorizado", "valor": false})
-                    }                    
+               
                 }
           
-
     } else {//no hay modificaciones en los payloads
         CloseModal();
     }
+    */
 };
 
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.

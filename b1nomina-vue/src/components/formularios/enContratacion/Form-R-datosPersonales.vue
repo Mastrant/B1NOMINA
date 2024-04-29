@@ -1,5 +1,5 @@
 <template>
-    <form class="formulario" id="Form2" @submit.prevent="Enviar">
+    <form class="formulario" id="Form2r" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos personales</h2>
         <div class="row-form">
             <LayoutInputLineal textLabel="Nacionalidad" :requerido="RequiereActualizar">

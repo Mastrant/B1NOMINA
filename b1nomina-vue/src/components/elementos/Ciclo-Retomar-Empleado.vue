@@ -4,7 +4,7 @@
             <TemplateModal 
                 @closeModal="showModal(0)" 
                 :activarModal="mostrarModal"
-                :FormId="'Form'+idFormularioActivo"
+                :FormId="'Form'+idFormularioActivo+'r'"
                 :DataNotification="dataNotificacion"
                 NombreAccion="Retomar Información" 
                 textSubmit="Actualizar"
@@ -51,7 +51,7 @@
                         ref="Form3"
                     />
 
-                    <FormDatosPago
+                    <FormRDatosPago
                         @closeModal="showModal"
                         @respuesta="activarNotificacionModal"
                         :EmpleadoID="ID_Empleado_Selecionado"
@@ -83,7 +83,7 @@
     import FormRDatosBasicos from '@/components/formularios/enContratacion/Form-R-datosBasicos.vue';
     import FormRDatosPersonales from '@/components/formularios/enContratacion/Form-R-datosPersonales.vue';
     import FormRDatosLaborales from '@/components/formularios/enContratacion/Form-R-datosLaborales.vue';
-    import FormDatosPago from '@/components/formularios/Form-datosPago.vue';
+    import FormRDatosPago from '@/components/formularios/enContratacion/Form-R-datosPago.vue';
 
     //librerias
     import { ref, onMounted, defineEmits, reactive} from 'vue';

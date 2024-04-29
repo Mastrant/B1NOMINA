@@ -1,5 +1,5 @@
 <template>
-    <form class="formulario" id="Form3" @submit.prevent="Enviar">
+    <form class="formulario" id="Form3r" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos Laborales</h2>
 
         <div class="row-form">
@@ -363,7 +363,6 @@ const payload = reactive({
 //actualizar datos del payload a enviar
 const ActualizarPayload = (propiedad, valor) => {
     payload[propiedad] = valor;
-    console.log(propiedad, valor)
     verificarCambios();
 };
 
