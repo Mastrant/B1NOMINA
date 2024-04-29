@@ -163,7 +163,7 @@
             
         >
         <div v-if="formActivo==1" class="contenedorInfo">
-            <form class="aceptar-descartar" @submit.prevent="AceptarProspecto">
+            <form class="aceptar-descartar" id="AceptarProspecto" @submit.prevent="AceptarProspecto">
                 <span>Al activar el prospecto debes tener en cuenta que:</span>
                 <ol>
                     <li>Aparecerá en la sección de <span>Gestionar Nómina</span> como empleado.</li>
@@ -173,7 +173,7 @@
             </form>           
         </div>
         <div v-if="formActivo==2" class="contenedorInfo">
-            <form class="aceptar-descartar" @submit.prevent="DescartarProspecto">
+            <form class="aceptar-descartar" id="DescartarProspecto" @submit.prevent="DescartarProspecto">
                 <span>Al descartar el prospecto debes tener en cuenta que:</span>
                 <ol>
                     <li>Sera descartado de la sección de contratación de <span>B1 Nómina.</span></li>
@@ -210,9 +210,11 @@
     import Paginacion from '@/components/elementos/Paginacion.vue';
     import SeleccionarPaginacion from '@/components/elementos/Seleccionar-paginacion.vue'
 
-    import { ref, defineProps, watchEffect, onMounted, defineEmits} from 'vue';
+    import { ref, defineProps, watchEffect, onMounted, defineEmits, inject} from 'vue';
 
     import almacen from '@/store/almacen.js'
+
+    import { useRoute } from 'vue-router';
 
     import peticiones_EnContratacion from '@/peticiones/g_empleado';
 
@@ -232,6 +234,10 @@
     const CicloCrearEmpleado = ref(null)
 
     const idCreator = almacen.userID;
+    
+    const route = useRoute();
+    // idSociedad es un String
+    const idSociedad = Number(route.params.sociedadId);
 
 
     //almacen de los inputs
@@ -371,6 +377,47 @@
         }
         
     };
+
+    const AceptarProspecto = () => {
+        console.log("prospecto aceptado")
+        
+
+        const payload_CD = {
+            sociedad_id: idSociedad,
+            user_id: EmpleadoID_Selecionado.value,
+        }
+        const respuestaAPI = peticiones_EnContratacion.ActivarProspecto(idCreator, payload_CD)
+
+        if( respuestaAPI.success) {
+            showModal(0)
+            emit('showNotificacion', 
+                {
+                    'Titulo': "Empleado Contratado", 
+                    'Descripcion': respuestaAPI.data
+                }
+            );
+            emit("ActualizarData")
+        } else {
+            checkfile.value = {'texto': respuestaAPI.error, 'valor':false}
+        }
+
+       
+    }
+    const DescartarProspecto = () => {
+        console.log("prospecto Descartado")
+        console.log(EmpleadoID_Selecionado.value)
+        console.log(idCreator)
+        console.log(idSociedad)
+
+        showModal(0)
+        emit('showNotificacion', 
+            {
+                'Titulo': "Registro Descartado", 
+                'Descripcion': "Se ha eliminado exitosamente el registro."
+            }
+        );
+        emit("ActualizarData")
+    }
 
     const checkfile = ref({})
     /**

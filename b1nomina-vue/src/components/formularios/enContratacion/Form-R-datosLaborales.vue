@@ -461,7 +461,7 @@ const MostrarValores = (DATA) => {
     TerminoContrato.value = (DATA?.termino_contrato == null) ? '' : DATA?.termino_contrato;
     NivelEstudio.value = (DATA?.nivel_estudio_id == null) ? '' : DATA?.nivel_estudio_id;
     FechaContratacion.value = (DATA?.fecha_inicio == null) ? '' : DATA?.fecha_inicio;
-    FechaFinalizacionContrato.value = (DATA?.fecha_fin == null || DATA?.fecha_fin == '') ? '1990-01-01' : DATA?.fecha_fin;
+    FechaFinalizacionContrato.value = (DATA?.fecha_fin == null || DATA?.fecha_fin == '') ? '' : DATA?.fecha_fin;
     
     SalarioBase.value = (DATA?.periodo_salario == null) ? '' : DATA?.periodo_salario;
     UnidadSueldo.value = (DATA?.unidad_sueldo == 2 || DATA?.unidad_sueldo == 1) ? DATA?.unidad_sueldo : '';
