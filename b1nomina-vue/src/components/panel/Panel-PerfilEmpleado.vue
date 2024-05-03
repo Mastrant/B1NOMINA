@@ -41,7 +41,7 @@
                     Salario mensual
                 </template>
                 <template #Texto>
-                    ${{DatosUsuario?.sueldo >> 0}}
+                    ${{DatosUsuario?.sueldo}}
                 </template>
             </boxInfo>
 
@@ -69,15 +69,15 @@
                 <template v-slot:cabecera>
                     <NavButtonTemplate text="Datos Laborales" :seleccionado="panelShow== 1" @click="showInfo(1)" />
                     <NavButtonTemplate text="Datos Personales" :seleccionado="panelShow== 2" @click="showInfo(2)" />
+                    <NavButtonTemplate text="Datos Previsionales" :seleccionado="panelShow== 5" @click="showInfo(5)" />
                     <NavButtonTemplate text="Eventos Recurrentes" :seleccionado="panelShow== 3" @click="showInfo(3)" />
                     <NavButtonTemplate text="Solicitudes" :seleccionado="panelShow== 4" @click="showInfo(4)" />
-                    
                 </template>
                 <template v-slot:formulario>
-                    <div class="contenedorInfo" v-if="panelShow ==1">                  
+                    <div class="contenedorInfo" v-if="panelShow ==1">            
                         <LayoutTablaEMpleados>
                             <template #boton1>                                                                    
-                                <TemplateBlanckButton @click="() => EditarInfo?.ActionButton(1, EmpleadoID)" text="Editar">
+                                <TemplateBlanckButton @click="EditarInfo?.ActionButton(1, EmpleadoID)" text="Editar">
                                     <template #default>
                                         <EdiIcon Stroke="#000000"/>
                                     </template>
@@ -109,10 +109,16 @@
                                 ${{DatosUsuario?.sueldo >> 0}}
                             </template>
                             <template #st-2>  <!--Salario base-->                                                                 
-                                Salario base
+                                Unidad Sueldo Base
                             </template>
                             <template #text-2>                                                                    
-                                Mensual                            
+                                {{DatosUsuario?.unidad_sueldo}}
+                            </template>
+                            <template #st-3>  <!--Salario base-->                                                                 
+                                Salario base
+                            </template>
+                            <template #text-3>                                                                    
+                                {{DatosUsuario?.perio}}                    
                             </template>
                             
                             <!--segundo apartado-->
@@ -384,7 +390,7 @@ import ExitColorIcon from '@/components/icons/Exit-color-icon.vue'
 import EdiIcon from '@/components/icons/Edit-icon.vue';
 
 //Librerias y acciones
-import {ref, defineProps} from 'vue';
+import {ref, defineProps, onMounted} from 'vue';
 import {useRoute}  from 'vue-router';
 import almacen from '@/store/almacen';
 
@@ -418,6 +424,11 @@ const lista_dias = props.DatosUsuario?.dias_descanso.split(',');
 // Luego, utiliza el método 'join(', ')' para unir todos los elementos del arreglo resultante en una cadena de texto,
 // separada por comas y espacios.
 const Dias_descanso = lista_dias?.map(dia => almacen?.diasLaborales[dia]).join(', ');
+
+onMounted(async () => {
+    await console.log(props.DatosUsuario)
+})
+
 
 </script>
 
