@@ -1,6 +1,5 @@
 <template>
     <div class="panel-config">
-
         <CardLink 
             Titulo="Datos de la Empresa"
             -descripcion="Acá puedes editar la información básica de la empresa."
@@ -46,8 +45,6 @@
             -descripcion="Configura una alerta global para hacer énfasis en ciertos eventos"
             -ruta-name="alertas"
         />
-
-        
     </div>
 </template>
 

@@ -8,13 +8,13 @@
             Crea los cargos de tu empresa, para poder asociar a los empleados y poder tener así más información y control.
         </p>
 
-        <LayoutFondoBorder v-for="Departamento in ListaDepartamentos" :key="Departamento.id">
+        <LayoutFondoBorder v-for="cargo in ListaCargos" :key="cargo.id">
             <template #default>    
-                  <FormCargos :Datos="Departamento"/>        
+                  <FormCargos :Informacion="cargo"/>        
             </template>
         </LayoutFondoBorder>
 
-        <TemplateBlankButton text="+ Agregar Nuevo Cargo"/>
+        <TemplateBlankButton text="+ Agregar Nuevo Cargo" @click="console.log('añadir Cargo')"/>
     </div>
 </template>
 
@@ -23,16 +23,22 @@ import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
 import FormCargos from '@/components/formularios/configuracion/datos-empresa/Form-Cargo.vue'
 import TemplateBlankButton from '@/components/botones/Template-blank-button.vue';
 
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 
-const ListaDepartamentos = ref([
+const ListaCargos = ref([
     {
-        id: 1
+        id: 1,
+        Nombre: "Cargo 1"
     },
     {
-        id: 2
+        id: 2,
+        Nombre: "Cargo 2"
     }
 ]);
+
+onMounted(() => {
+
+})
 </script>
 
 <style scoped>

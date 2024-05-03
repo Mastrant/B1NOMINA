@@ -105,7 +105,7 @@ const Comuna = ref('')
 const DireccionSede = ref('')
 
 //definicion de vaiables de los parametos
-const ListaLocalidad = ref({}); //Los datos se asignan segun el idRegion
+const ListaLocalidad = ref(''); //Los datos se asignan segun el idRegion
 
 //filtra la lista de regiones segun el id
 const filtroRegion = (id) => {
@@ -213,11 +213,8 @@ const eliminarElemento = () => {
  */
  const Enviar = () => {
   //si ID es nulo crea un usuario
-  let statuspay = Object.values(payload).some((value) => value !== "");
-
-  if (statuspay == true){
+  if (RequiereActualizar){
     console.log(payload)
-    console.log(payload_old)
     emit("DataNotificacion", 
         {
             'texto': "Informacion actualizada con exito", 
@@ -228,7 +225,7 @@ const eliminarElemento = () => {
     emit("DataNotificacion", 
         {
             'texto': "Todavía hay campos en blanco", 
-            'valor':false
+            'valor': false
         }
     )
   }

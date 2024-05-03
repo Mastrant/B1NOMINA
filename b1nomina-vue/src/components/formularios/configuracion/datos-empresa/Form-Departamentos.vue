@@ -55,12 +55,15 @@ const NombreDepartamento = ref('');
 
 //Contiene la información original
 const payload_old = reactive({
+    id: '',
     NombreDepartamento: "",
 
 });
 
 //Contiene la información a enviar
 const payload = reactive({
+
+    id: '',
     NombreDepartamento: "",
 
 });
@@ -101,6 +104,8 @@ NombreDepartamento.value = (DATA?.Nombre == null)? '' :DATA?.Nombre;
 
 // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
   // utilizando '' si DATA?.documento es null.
+  payload_old.id = DATA?.id ?? '';
+  payload.id = DATA?.id ?? '';
   payload_old.NombreDepartamento = DATA?.Nombre ?? '';
   payload.NombreDepartamento = DATA?.Nombre ?? '';
   
@@ -117,9 +122,8 @@ NombreDepartamento.value = (DATA?.Nombre == null)? '' :DATA?.Nombre;
  */
  const Enviar = () => {
 
-  let statuspay = Object.values(payload).some((value) => value !== "");
-
-  if (statuspay == true){
+  if (RequiereActualizar){
+    console.log(payload)
     emit("DataNotificacion", 
         {
             'texto': "Informacion actualizada con exito", 

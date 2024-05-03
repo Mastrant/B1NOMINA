@@ -75,20 +75,6 @@
             />
         </div>  
         
-        <h2 class="titulo-form">Información Adicional</h2> 
-
-        <div class="row-form">
-            <LayoutInputLineal textLabel="Modificar Campo">
-                <template v-slot>
-                    
-                </template>
-            </LayoutInputLineal>
-            <LayoutInputLineal textLabel="Modificar Campo">
-                <template v-slot>
-                    
-                </template>
-            </LayoutInputLineal>
-        </div>
     </form>
 </template>
 
@@ -101,6 +87,8 @@ import InputRadioButton from '@/components/botones/Input-Radio-button.vue';
 import axios from "axios";
 
 import { ref, watch, reactive, defineProps, defineEmits, onMounted} from 'vue';
+
+import almacen from '@/store/almacen';
 
 const props = defineProps({
     EmpleadoID: {
@@ -115,6 +103,8 @@ const props = defineProps({
         type: Object,
     }
 });
+
+const ID_MASTER = ref(almacen?.userID)
 
 // Define los eventos que el componente puede emitir
 const emit = defineEmits([
@@ -146,10 +136,15 @@ const payload_old = reactive({
     "user_id": '',
 });
 
+//verifica los campos
 const RequiereActualizar = ref(false)
+
+//control de envio
+const Hay_cambios = ref(false)
 
 //actualizar datos del payload
 const ActualizarPayload = (propiedad, valor) => {
+    console.log(propiedad, valor)
     payload[propiedad] = valor;
     if (propiedad == "medio" && (valor == 2 || valor == 1)) {
         //Si el medio es diferente de transferencia, se borran los otros campos al enviar
@@ -173,7 +168,9 @@ const verificarCambios = () => {
     // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
-    RequiereActualizar.value = !(camposIguales && alMenosUnValorVacio);
+    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+    Hay_cambios.value = !(camposIguales && !alMenosUnValorVacio)
+
 }
 
 watch(Banco, (nuevoValor) => ActualizarPayload('banco_id', nuevoValor));
@@ -277,15 +274,15 @@ const getData = async (ID_empleado) => {
                     resolve({ success: true, data: respuesta.data });
                 } else {
                     // Resuelve la promesa con false si no hay datos
-                    resolve({ success: false, data: {} });
+                    resolve({ success: false, data: respuesta.data });
                 }
             } catch (error) {
                 if (error.response && error.response.status == 404) {
                     // Resuelve la promesa con false si no hay datos
-                    resolve({ success: false, data: {} });
+                    resolve({ success: false, error: error.response });
                 } else {
                     // Rechaza la promesa si hay un error distinto de 404
-                    reject(error);
+                    reject({ success: false, error: error.response });
                 }
             }
         } else {
@@ -300,6 +297,7 @@ const verificarMediodePago = (medio) => {
         payload.NumeroCuenta = '';
         payload.banco_id = 0;
         payload.tipo_cuenta = 0; 
+        RequiereActualizar.value = false;
     }
 }
 
@@ -310,6 +308,24 @@ const verificarMediodePago = (medio) => {
  */
  const Enviar = async () => {
     await console.log(payload)
+
+    if (Hay_cambios) {
+        let respuesta = await getData(props.EmpleadoID);
+
+if (respuesta.success) {
+    //existen datos de pago
+    editarDatosPago(ID_MASTER, payload) 
+} else {
+    //no existen datos de pago
+    crearDatosPago(ID_MASTER, payload)
+}
+    } else {
+        CloseModal();
+    }
+
+
+
+
     //si uno de los payload tiene cambios
     /*
     if (false) {
@@ -342,7 +358,7 @@ const verificarMediodePago = (medio) => {
 const MostrarValores = (DATA) => {
     //console.log(DATA)
     // Variables del formulario 1
-    MedioPago.value = (DATA?.medio == null) ? '' : DATA?.medio;
+    MedioPago.value = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 0 : DATA?.medio_pago;
     
     Banco.value = (DATA?.banco_id == null) ? '' : DATA?.banco_id;
     TCuenta.value =  (DATA?.tipo_cuenta == null) ? '' : DATA?.tipo_cuenta;
@@ -350,8 +366,8 @@ const MostrarValores = (DATA) => {
     NCuenta.value =  (DATA?.numero_cuenta == null) ? '' : DATA?.numero_cuenta;
 
 
-    payload_old.medio = DATA?.medio ?? '';
-    payload.medio = DATA?.medio ?? '';
+    payload_old.medio = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 0 : DATA?.medio_pago;
+    payload.medio = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 0 : DATA?.medio_pago;
 
     payload_old.banco_id = DATA?.banco_id ?? '';
     payload.banco_id = DATA?.banco_id ?? '';

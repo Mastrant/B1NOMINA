@@ -6,9 +6,9 @@
             Si deseas tener un control más detallado de tu nómina puedes agrupar a tus empleados y asi pode asignar con mayor facilidad ciertos eventos o configuraciones.
         </p>
 
-        <LayoutFondoBorder v-for="Departamento in ListaDepartamentos" :key="Departamento.id">
+        <LayoutFondoBorder v-for="Grupo in ListaGrupos" :key="Grupo.id">
             <template #default>    
-                  <FormGrupo :Datos="Departamento"/>        
+                  <FormGrupo :Informacion="Grupo"/>        
             </template>
         </LayoutFondoBorder>
 
@@ -23,12 +23,14 @@ import TemplateBlankButton from '@/components/botones/Template-blank-button.vue'
 
 import {ref} from 'vue';
 
-const ListaDepartamentos = ref([
+const ListaGrupos = ref([
     {
-        id: 1
+        id: 1,
+        Nombre: "Grupo1"
     },
     {
-        id: 2
+        id: 2,
+        Nombre: "Grupo1"
     }
 ]);
 </script>

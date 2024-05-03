@@ -65,7 +65,16 @@ const peticiones = {
                 }
             });
         });
-    }
+    },
+    async ListadoRegiones(){
+        return  await axios.get(`parametros_regionales`)
+            .then(respuesta => {
+                return { success: true, data: respuesta?.data.parametros };
+            })
+            .catch(error => {
+                return { success: false, error: error };
+            });
+    },
 }
 
 export default peticiones

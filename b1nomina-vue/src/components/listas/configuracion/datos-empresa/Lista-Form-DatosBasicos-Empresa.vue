@@ -26,6 +26,8 @@ import FormResponsableEmpresa from '@/components/formularios/configuracion/datos
  // 
 import { onMounted, ref } from 'vue';
 
+import peticiones from '@/peticiones/p_empleado';
+
 const DatosBasicos = ref(
     {
         Nombre:'',
@@ -45,6 +47,15 @@ const DatosBasicos = ref(
 
 const listadoLocalidad = ref ({})
 
+const pedirListadoLocalidad = async () => {
+    const respuesta = await peticiones.ListadoRegiones();
+    if (respuesta.success) {
+        listadoLocalidad.value = respuesta.data;
+    } else {
+        console.error(respuesta.error)
+    }
+}
+
 onMounted(() => {
     //solicitar los datos de la empresa
     DatosBasicos.value = {
@@ -62,9 +73,7 @@ onMounted(() => {
         telefonoResposnable: ''
     }
     //solicitar la lista de regiones y comunas
-    listadoLocalidad.value = {
-
-    }
+    pedirListadoLocalidad();
 
 })
 </script>

@@ -8,17 +8,28 @@
 
         <LayoutFondoBorder v-for="Sede in ListaSedes" :key="Sede.id">
             <template #default>    
-               <FormSedes :Informacion="Sede" />                 
+               <FormSedes 
+                    :Informacion="Sede"
+                    :parametros="listadoLocalidad"
+               />                 
             </template>
         </LayoutFondoBorder>
+
+        
+        <TemplateBlankButton text="+ Agregar Nueva Sede" @click="AddCampo"/>
     </div>
 </template>
 
 <script setup>
 import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
-import FormSedes from '@/components/formularios/configuracion/datos-empresa/Form-Sedes.vue'
+import FormSedes from '@/components/formularios/configuracion/datos-empresa/Form-Sedes.vue';
+import TemplateBlankButton from '@/components/botones/Template-blank-button.vue';
 
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
+
+import peticiones from '@/peticiones/p_empleado'
+
+const listadoLocalidad = ref ({})
 
 const ListaSedes = ref([
     {
@@ -49,6 +60,24 @@ const ListaSedes = ref([
         
     },
 ]);
+
+
+const AddCampo = () => {
+    console.log("añadir Sede")
+}
+
+const pedirListadoLocalidad = async () => {
+    const respuesta = await peticiones.ListadoRegiones()
+    if (respuesta.success) {
+        listadoLocalidad.value = respuesta.data;
+    } else {
+        console.error(respuesta.error)
+    }
+}
+
+onMounted( async () => {
+    pedirListadoLocalidad();
+});
 
 </script>
 

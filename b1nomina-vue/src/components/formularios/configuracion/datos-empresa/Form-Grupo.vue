@@ -3,7 +3,7 @@
         <div class="row">
             <InputBorderDescripcion
                 Placeholder="Ejemplo vendedores área centro , vendedores área norte, vendedores área sur, Empleados en pasantías, etc."
-                Titulo="Grupo #1"
+                :Titulo="`Grupo # ${Informacion.id}`"
                 name="Grupo"
                 v-model="nombreGrupo"
                 @update:modelValue="nombreGrupo = $event"
@@ -54,12 +54,14 @@ const nombreGrupo = ref('');
 
 //Contiene la información original
 const payload_old = reactive({
+    id: '',
     nombreGrupo: "",
 
 });
 
 //Contiene la información a enviar
 const payload = reactive({
+    id: '',
     nombreGrupo: "",
 
 });
@@ -100,6 +102,9 @@ nombreGrupo.value = (DATA?.Nombre == null)? '' :DATA?.Nombre;
 
 // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
   // utilizando '' si DATA?.documento es null.
+  payload_old.id = DATA?.id ?? '';
+  payload.id = DATA?.id ?? '';
+
   payload_old.nombreGrupo = DATA?.Nombre ?? '';
   payload.nombreGrupo = DATA?.Nombre ?? '';
   
@@ -110,25 +115,29 @@ nombreGrupo.value = (DATA?.Nombre == null)? '' :DATA?.Nombre;
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
+/**
+ * Funcion emitida al enviar el formulario
+ * @params payload Contiene los datos que se pasaran
+ * Ejecuta la peticion con axios
+ */
  const Enviar = () => {
 
-  let statuspay = Object.values(payload).some((value) => value !== "");
-
-  if (statuspay == true){
-    emit("DataNotificacion", 
-        {
-            'texto': "Informacion actualizada con exito", 
-            'valor': true
-        }
-    )
-  } else {
-    emit("DataNotificacion", 
-        {
-            'texto': "Todavía hay campos en blanco", 
-            'valor':false
-        }
-    )
-  }
+if (RequiereActualizar){
+  console.log(payload)
+  emit("DataNotificacion", 
+      {
+          'texto': "Informacion actualizada con exito", 
+          'valor': true
+      }
+  )
+} else {
+  emit("DataNotificacion", 
+      {
+          'texto': "Todavía hay campos en blanco", 
+          'valor':false
+      }
+  )
+}
 };
 
 const eliminarElemento = () => {

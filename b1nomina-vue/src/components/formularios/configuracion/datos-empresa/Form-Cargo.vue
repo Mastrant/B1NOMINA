@@ -3,7 +3,7 @@
         <div class="row">
             <InputBorderDescripcion
                 Placeholder="Ejemplo vendedor, diseñador, ejecutivo de cuenta, director administrativo, gerente de comercialización, etc."
-                Titulo="Cargo #1"
+                :Titulo="`Cargo # ${Informacion.id}`"
                 name="cargo"
                 v-model="nombreCargo"
                 @update:modelValue="nombreCargo = $event"
@@ -54,12 +54,14 @@ const nombreCargo = ref('');
 
 //Contiene la información original
 const payload_old = reactive({
+    id:'',
     nombreCargo: "",
 
 });
 
 //Contiene la información a enviar
 const payload = reactive({
+    id:'',
     nombreCargo: "",
 
 });
@@ -100,6 +102,9 @@ nombreCargo.value = (DATA?.Nombre == null)? '' :DATA?.Nombre;
 
 // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
   // utilizando '' si DATA?.documento es null.
+  payload_old.id = DATA?.id ?? '';
+  payload.id = DATA?.id ?? '';
+
   payload_old.nombreCargo = DATA?.Nombre ?? '';
   payload.nombreCargo = DATA?.Nombre ?? '';
   
@@ -116,9 +121,7 @@ const eliminarElemento = () => {
  */
  const Enviar = () => {
 
-  let statuspay = Object.values(payload).some((value) => value !== "");
-
-  if (statuspay == true){
+  if (RequiereActualizar){
     console.log(payload)
     emit("DataNotificacion", 
         {
