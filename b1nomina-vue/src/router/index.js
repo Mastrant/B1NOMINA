@@ -144,7 +144,7 @@ const router = createRouter({
             },
             {
               path: "periodos",
-              component: () => import('@/components/panel/Panel-EnDesarrollo.vue'),
+              component: () => import('@/components/panel/configuracion/Panel-Periodos.vue'),
               name: 'periodos',
               alias: ['periodos',],              
                

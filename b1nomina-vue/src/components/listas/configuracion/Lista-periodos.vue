@@ -1,36 +1,46 @@
 <template>
     <div class="contend">
-        <h3 class="subtitulo">Grupos Centralización</h3>
+        <h3 class="subtitulo"></h3>
 
-        <p class="descripcion">
-            En esta sección puede configurar las cuentas contables de tu grupo de empleados.
-        </p>
 
-        <LayoutFondoBorder v-for="Grupo in ListaGruposCentralizacion" :key="Grupo.id">
+        <LayoutFondoBorder v-for="Campo in ListaCamposAdicionales" :key="Campo.id">
             <template #default>    
-                  Formulario para los grupos    
+                      
             </template>
         </LayoutFondoBorder>
-
-        <TemplateBlankButton text="+ Agregar Nuevo"/>
     </div>
 </template>
 
 <script setup>
 import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
-
 import TemplateBlankButton from '@/components/botones/Template-blank-button.vue';
 
-import {ref} from 'vue';
+import {onMounted, ref, defineProps} from 'vue';
 
-const ListaGruposCentralizacion = ref([
+const props = defineProps({
+    InformacionPeriodo: {
+        type: Object,
+        default: {}
+    }
+});
+
+const ListaCamposAdicionales = ref([
     {
-        id: 1
+        id: 1,
+        Nombre: 'Color Favorito',
+        estado: false
     },
     {
-        id: 2
+        id: 2,
+        Nombre: 'Nombre Mascota',
+        estado: false
     }
 ]);
+
+
+onMounted( () => {
+
+})
 </script>
 
 <style scoped>
