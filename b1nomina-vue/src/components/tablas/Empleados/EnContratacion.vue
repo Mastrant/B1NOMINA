@@ -164,7 +164,7 @@
                                         En esta sección puedes cargar el Curriculum Vitae del prospecto y tener un soporte anexado al perfil del mismo.
                                     </p>
 
-                                    <h3>Cargar Curriculum Vitae</h3>
+                                    <h3>Descargar Curriculum Vitae</h3>
 
                                     <div class="row-form">
                                         <TemplateButton2 
