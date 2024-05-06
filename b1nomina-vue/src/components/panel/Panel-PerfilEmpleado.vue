@@ -76,6 +76,7 @@
                 <template v-slot:formulario>
                     <div class="contenedorInfo" v-if="panelShow ==1">            
                         <LayoutTablaEMpleados>
+                            <!--Formulario Salario-->
                             <template #boton1>                                                                    
                                 <TemplateBlanckButton @click="EditarInfo?.ActionButton(1, EmpleadoID)" text="Editar">
                                     <template #default>
@@ -83,15 +84,25 @@
                                     </template>
                                 </TemplateBlanckButton>
                             </template>
-                            <template #boton3>                                                                    
+                            <!--Formulario Datos Contrato-->
+                            <template #boton2>                                                                    
                                 <TemplateBlanckButton @click="EditarInfo?.ActionButton(2,EmpleadoID)" text="Editar">
                                     <template #default>
                                         <EdiIcon Stroke="#000000"/>
                                     </template>
                                 </TemplateBlanckButton>
                             </template>
-                            <template #boton5>                                                                    
+                            <!--Formulario Puesto Trabajo-->
+                            <template #boton4>                                                                    
                                 <TemplateBlanckButton @click="EditarInfo?.ActionButton(3,EmpleadoID)" text="Editar">
+                                    <template #default>
+                                        <EdiIcon Stroke="#000000"/>
+                                    </template>
+                                </TemplateBlanckButton>
+                            </template>
+                            <!--Formulario-->
+                            <template #boton6>                                                                    
+                                <TemplateBlanckButton @click="EditarInfo?.ActionButton(4,EmpleadoID)" text="Editar">
                                     <template #default>
                                         <EdiIcon Stroke="#000000"/>
                                     </template>
@@ -123,75 +134,121 @@
                             
                             <!--segundo apartado-->
 
-                            <template #titulo3>                                                                    
+                            <template #titulo2>                                                                    
                                 Datos de contrato
                             </template>                            
-                            <template #st-9> <!--Tipo de contrato-->                                                         
+                            <template #st-5> <!--Tipo de contrato-->                                                         
                                 Tipo de contrato
                             </template>
-                            <template #text-9>                                                                    
+                            <template #text-5>                                                                    
                                 {{DatosUsuario?.tipo_contrato}}
                             </template>
-                            <template #st-10> <!--Término de contrato-->                                                                 
+                            <template #st-6> <!--Término de contrato-->                                                                 
                                 Término de contrato
                             </template>
-                            <template #text-10>                                                                    
+                            <template #text-6>                                                                    
                                 {{DatosUsuario?.termino_contrato}}
                             </template>
-                            <template #st-11>  <!--Fecha de contratación-->                                                                            
+                            <template #st-7>  <!--Fecha de contratación-->                                                                            
                                 Fecha de contratación
                             </template>
-                            <template #text-11>                                                                    
+                            <template #text-7>                                                                    
                                 {{DatosUsuario?.fecha_inicio}}
                             </template>
-                            <template #st-12> <!--Fecha terminación del contrato-->                                                                     
+                            <template #st-8> <!--Fecha terminación del contrato-->                                                                     
                                 Fecha terminación del contrato
                             </template>
-                            <template #text-12>                                                                    
+                            <template #text-8>                                                                    
                                 {{DatosUsuario?.fecha_fin}}
                             </template>
-                            <template #st-13> <!--Nivel de estudio-->                                                                      
+                            <template #st-9> <!--Nivel de estudio-->                                                                      
                                 Nivel de estudio
                             </template>
-                            <template #text-13>                                                                    
+                            <template #text-9>                                                                    
                                 {{DatosUsuario?.nivel_estudio}}
                             </template>
-                            <template #st-14> <!--Días de descanso-->    
+                            <template #st-10> <!--Días de descanso-->    
                                 Días de descanso
                             </template>
-                            <template #text-14>                                                                    
+                            <template #text-10>                                                                    
                                 {{Dias_descanso}}
                             </template>
 
                              <!--segundo apartado-->
 
-                            <template #titulo5>                                                                    
+                            <template #titulo4>                                                                    
                                 Puesto de trabajo
                             </template>                                                        
-                            <template #st-17>  <!--Sede de Trabajo-->                                                                            
+                            <template #st-13>  <!--Sede de Trabajo-->                                                                            
                                 Sede de Trabajo
                             </template>
-                            <template #text-17>                                                                    
+                            <template #text-13>                                                                    
                                 {{DatosUsuario?.nombre_sede}}
                             </template>
-                            <template #st-18> <!--Departamento-->                                                                     
+                            <template #st-14> <!--Departamento-->                                                                     
                                 Departamento
                             </template>
-                            <template #text-18>                                                                    
+                            <template #text-14>                                                                    
                                 {{DatosUsuario?.nomdepartamento}}
                             </template>
-                            <template #st-19> <!--Cargo-->                                                                      
+                            <template #st-15> <!--Cargo-->                                                                      
                                 Cargo
                             </template>
-                            <template #text-19>                                                                    
+                            <template #text-15>                                                                    
                                 {{DatosUsuario?.cargo}}
                             </template>
-                            <template #st-20> <!--Modalidad-->    
+                            <template #st-16> <!--Modalidad-->    
+                                Grupo
+                            </template>
+                            <template #text-16>                                                                    
+                                {{DatosUsuario?.grupo}}
+                            </template>                            
+                            <template #st-17> <!--Modalidad-->    
                                 Modalidad
                             </template>
-                            <template #text-20>                                                                    
+                            <template #text-17>                                                                    
                                 <InterruptorButton Tipo="individual" Texto="Teletrabajo" :Estado="(DatosUsuario?.modalidad)?false :true" />
-                            </template>                            
+                            </template>
+
+                            <template #titulo6>                                                                    
+                                Centralización y Datos Adicionales
+                            </template>                                                        
+                            <template #st-21>  <!-- Grupo Centralización-->
+                                Grupo de Centralización
+                            </template>
+                            <template #text-21>                                                                    
+                                {{DatosUsuario?.Centralizacion}}
+                            </template>                     
+                            <template #st-22>  <!-- Campo adicional-->
+                                Campo 1
+                            </template>
+                            <template #text-22>                                                                    
+                                {{DatosUsuario?.Centralizacion}}
+                            </template>                     
+                            <template #st-23>  <!-- Campo adicional-->
+                                Campo 2
+                            </template>
+                            <template #text-23>                                                                    
+                                {{DatosUsuario?.Centralizacion}}
+                            </template>                     
+                            <template #st-24>  <!-- Campo adicional-->
+                                Campo 3
+                            </template>
+                            <template #text-24>                                                                    
+                                {{DatosUsuario?.Centralizacion}}
+                            </template>                     
+                            <template #st-25>  <!-- Campo adicional-->
+                                Campo 4
+                            </template>
+                            <template #text-25>                                                                    
+                                {{DatosUsuario?.Centralizacion}}
+                            </template>                     
+                            <template #st-26>  <!-- Campo adicional-->
+                                Campo 5
+                            </template>
+                            <template #text-26>                                                                    
+                                {{DatosUsuario?.Centralizacion}}
+                            </template>  
 
                         </LayoutTablaEMpleados>
                     </div>

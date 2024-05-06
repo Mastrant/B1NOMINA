@@ -135,7 +135,7 @@ const cargarDocumentoDAtaMasiva = async (idCreator, Datos) => {
   } else {
     emit("respuesta", {'texto':'El campo esta vacio', 'valor':false})
   }
-}
+};
 
 </script>
 

@@ -35,13 +35,13 @@
                 </template>
                 <template v-slot:CV>
                     <WaitButton v-if="item?.cv_estatus == 1" @click="ActionButton(1,1,item.id)"/>
+                    <CorrectButton v-if="item?.cv_estatus == 2" @click="ActionButton(1,5,item.id)"/>
                     <DescartarButton v-if="item?.cv_estatus == 3" @click="ActionButton(1,2,item.id)"/>
-                    <CorrectButton v-if="item?.cv_estatus == 2" />
                 </template>
                 <template v-slot:Contrato>
                     <WaitButton v-if="item?.contrato_estatus == 1" @click="ActionButton(1,3,item.id)"/>
+                    <CorrectButton v-if="item?.contrato_estatus == 2" @click="ActionButton(1,6,item.id)"/>
                     <DescartarButton v-if="item?.contrato_estatus == 3" @click="ActionButton(1,4,item.id)"/>
-                    <CorrectButton v-if="item?.contrato_estatus == 2" />
                 </template>
                 <template v-slot:Completado>
                     <EBarraProgresoVue class="icon" :porcentaje="item.avance"/>
@@ -78,7 +78,7 @@
             
         >
             <template #default><!--Espacio para los formularios -->
-                <div v-if="formActivo==1"> <!--Cargar Curriculum-->
+                <div v-if="formActivo == 1"> <!--Cargar Curriculum-->
                     <LayoutForm>
                         <template v-slot:cabecera>
                             <NavButtonTemplate text="Cargar Curriculum Vitae" :seleccionado="panelShow== 1" @click="showInfo(1)" />
@@ -149,6 +149,52 @@
                         </form>
                     </div>
                 </div>
+                <div v-if="formActivo == 5"> <!--Cargar Curriculum-->
+                    <LayoutForm>
+                        <template v-slot:cabecera>
+                            <NavButtonTemplate text="Cargar Curriculum Vitae" :seleccionado="panelShow== 1" @click="showInfo(1)" />
+                            <NavButtonTemplate text="Descartar esta acción" :seleccionado="panelShow== 2" @click="showInfo(2)" />  
+                        </template>
+                        <template v-slot:formulario>
+                            <div class="contenedorInfo" v-if="panelShow == 1">
+                                <form @submit.prevent="cargarCV" id="CargarDescartarCV" >
+                                    
+                                    
+                                    <p>
+                                        En esta sección puedes cargar el Curriculum Vitae del prospecto y tener un soporte anexado al perfil del mismo.
+                                    </p>
+
+                                    <h3>Cargar Curriculum Vitae</h3>
+
+                                    <div class="row-form">
+                                        <TemplateButton2 
+                                            text="Descargar CV" 
+                                            @click="descargarCV" 
+                                        >
+                                            <template #post>
+                                                <DonwloadIconVue />
+                                            </template>            
+                                        </TemplateButton2>  
+                                    </div>
+                                    
+                                    <h3>Cargar Curriculum Vitae</h3>
+                                    <InputDocsForm2
+                                        @respuesta="ActualizarDataNotificacionModal"
+                                        @actualizarDocumento="actualizarValorCV"
+                                        ref="InputCV"
+                                    />
+                                </form>
+                            </div>
+                            <div class="contenedorInfo"  v-if="panelShow == 2">
+                                <form @submit.prevent="descartarCV" id="CargarDescartarCV">
+                                    <p>
+                                        Descarta esta acción si no quieres realizar el proceso de <span> Cargar Curriculum Vitae</span> al prospecto. Una acción descartada cuenta como un proceso "Completado".
+                                    </p>
+                                </form>
+                            </div>
+                        </template>
+                    </LayoutForm>
+                </div>
             </template>
         </TemplateModal>
 
@@ -209,6 +255,8 @@
     import EditIcon from '@/components/icons/Edit-icon.vue';
     import Paginacion from '@/components/elementos/Paginacion.vue';
     import SeleccionarPaginacion from '@/components/elementos/Seleccionar-paginacion.vue'
+    import DonwloadIconVue from '@/components/icons/Donwload-icon.vue';
+    import TemplateButton2 from '@/components/botones/Template-button2.vue';
 
     import { ref, defineProps, watchEffect, onMounted, defineEmits, inject} from 'vue';
 
@@ -358,10 +406,24 @@
                 showModal(IdModal)
                 break;
                 
-                break;        
+            case 5:                                           
+                formActivo.value = 5;
+                panelShow.value = 1;
+                EmpleadoID_Selecionado.value = item_ID;
+
+                TituloModal.value = 'Modificar Carga Curriculum Vitae / Hoja de vida';
+                TextoButton.value = 'Guardar Modificación';
+                IDFormModal.value = 'CargarDescartarCV';
+                InputCV.value?.reset();
+                CV.value = ''
+
+                showModal(IdModal)
+                break;
+                                
             default:
                 // código a ejecutar si la expresión no coincide con ninguno de los valores anteriores
             }
+
         } else if(IdModal == 2) {
             switch (TipoAccion) {
             case 1:                
@@ -441,6 +503,7 @@
      * actualizarValorCV(datosCV);
      */
     const actualizarValorCV = (Datos) => {
+        console.log(Datos)
         CV.value = Datos.value;
     }
 
@@ -525,6 +588,23 @@
         } else {
             ActualizarDataNotificacionModal({'texto':respuesta?.error, 'valor':false});
         }
+    }
+
+    const descargarCV = async () => {
+        //abre una ventana para descargar un recurso dado por el servidor
+        const BaseURL = (window.location);
+        
+        await axios.get(`sociedad/${idSociedad}/dowload_file_bulk_user`)
+        .then(response => {
+            const direccion = response?.data
+        
+            //console.log('http://' + BaseURL.hostname + '/' + direccion.data, "_blank", "width=500,height=500")
+            window.open('http://' + BaseURL.hostname + '/' + direccion.data, "_blank", "width=500,height=500");
+            //InputDocsMasive.value?.reset();
+        })
+        .catch(error => {
+            ActualizarDataNotificacionModal({'texto':error.data?.message, 'valor':false});
+        })
     }
 
     const cargarContrato = async () => {        
@@ -829,5 +909,14 @@ form.aceptar-descartar  li::marker {
     justify-content: space-between;
     align-items: center;
 }
+
+div.row-form {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
 
 </style>

@@ -124,9 +124,13 @@
             <h3><slot name="titulo6"></slot></h3>
             <div class="row-elementos">
                 <div class="box">
+                    <span><slot name="st-21"></slot></span>
+                    <h4><slot name="text-21"></slot></h4>
+                </div>           
+                <div class="box">
                     <span><slot name="st-22"></slot></span>
                     <h4><slot name="text-22"></slot></h4>
-                </div>           
+                </div>
                 <div class="box">
                     <span><slot name="st-23"></slot></span>
                     <h4><slot name="text-23"></slot></h4>
@@ -135,9 +139,28 @@
                     <span><slot name="st-24"></slot></span>
                     <h4><slot name="text-24"></slot></h4>
                 </div>
+            </div>
+
+            <div class="boton-position">
+                <slot name="boton7"></slot>
+            </div>
+            <h3><slot name="titulo7"></slot></h3>
+            <div class="row-elementos">
                 <div class="box">
                     <span><slot name="st-25"></slot></span>
                     <h4><slot name="text-25"></slot></h4>
+                </div>           
+                <div class="box">
+                    <span><slot name="st-26"></slot></span>
+                    <h4><slot name="text-26"></slot></h4>
+                </div>
+                <div class="box">
+                    <span><slot name="st-27"></slot></span>
+                    <h4><slot name="text-27"></slot></h4>
+                </div>
+                <div class="box">
+                    <span><slot name="st-28"></slot></span>
+                    <h4><slot name="text-28"></slot></h4>
                 </div>
             </div>
 
@@ -146,13 +169,15 @@
 </template>
 
 <style scoped>
+/* Contenedor principal del componente, aplicando estilos flexbox para organizar sus hijos en una fila en orden inverso. */
 div.contend {
     display: flex;
-    flex-direction:row-reverse;
+    flex-direction: row-reverse;
     padding-left: 24px;
     box-sizing: border-box;
 }
 
+/* Contenedor para posicionar un botón personalizado, utilizando flexbox para alinear el botón a la derecha. */
 div.boton-position {
     display: flex;
     width: 100%;
@@ -160,6 +185,7 @@ div.boton-position {
     box-sizing: border-box;
 }
 
+/* Sección de elementos, organizada en una columna con flexbox, asegurando un espacio entre los elementos. */
 div.elementos {
     display: flex;
     flex-direction: column;
@@ -167,6 +193,7 @@ div.elementos {
     width: 100%;
 }
 
+/* Fila de elementos, utilizando CSS Grid para organizar los elementos en una cuadrícula con 4 columnas de igual tamaño. */
 div.row-elementos {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr; 
@@ -175,12 +202,13 @@ div.row-elementos {
     justify-content: space-between;
 }
 
+/* Cada "box" dentro de la fila de elementos, configurado para crecer y ocupar el espacio disponible. */
 div.row-elementos > div.box {
-
     width: max-content;
     flex-grow: 1;
 }
 
+/* Estilos para el texto dentro de cada "box", especificando color, tamaño de fuente, familia de fuente, peso de fuente, altura de línea y ajuste de palabras. */
 div.row-elementos > div.box > span {
     color: #363855;
     font-size: 14px;
@@ -190,6 +218,7 @@ div.row-elementos > div.box > span {
     word-wrap: break-word;
 }
 
+/* Estilos para los títulos h3, especificando color, tamaño de fuente, peso de fuente, altura de línea y ajuste de palabras. */
 h3 {
     color: #1A2771;
     font-size: 18px;
@@ -199,6 +228,7 @@ h3 {
     margin: 0;
 }
 
+/* Estilos para los subtítulos h4 dentro de cada "box", especificando margen, color, tamaño de fuente, peso de fuente y ajuste de palabras. */
 div.row-elementos > div.box > h4 {
     margin: 0;
     color: #000842;

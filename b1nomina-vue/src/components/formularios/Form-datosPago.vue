@@ -90,10 +90,10 @@
 </template>
 
 <script setup>
-import InputLinealDescripcion from '../inputs/Input-Lineal-descripcion.vue';
-import ListaTemplateLineal from '../listas/Lista-template-lineal.vue';
-import LayoutInputLineal from '../Layouts/LayoutInputLineal.vue';
-import InputRadioButton from '../botones/Input-Radio-button.vue';
+import InputLinealDescripcion from '@/components/inputs/Input-Lineal-descripcion.vue';
+import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
+import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
+import InputRadioButton from '@/components/botones/Input-Radio-button.vue';
 
 import axios from "axios";
 
