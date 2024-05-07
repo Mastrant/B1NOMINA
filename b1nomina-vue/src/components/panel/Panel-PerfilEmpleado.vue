@@ -293,28 +293,34 @@
                                 {{DatosUsuario?.apellido_paterno}} {{DatosUsuario?.apellido_materno}}
                             </template>
                             <template #st-3>                                                                    
-                                Fecha de Nacimiento
-                            </template>
-                            <template #text-3>                                                                    
-                                {{DatosUsuario?.fecha_nacimiento}}
-                            </template>
-                            <template #st-4>                                                                    
                                 N° de Rut
                             </template>
-                            <template #text-4>                                                                    
+                            <template #text-3>                                                                    
                                 {{DatosUsuario?.rut}}
                             </template>
+                            <template #st-4>                                                                    
+                                Fecha de Nacimiento
+                            </template>
+                            <template #text-4>                                                                    
+                                {{DatosUsuario?.fecha_nacimiento}}
+                            </template>                                                    
                             <template #st-5>                                                                    
-                                Sexo
+                                Nacionalidad
                             </template>
                             <template #text-5>                                                                    
-                                {{(DatosUsuario?.sexo == 0)? "Femenino" : "Masculino"}}
+                                {{DatosUsuario?.Nacionalidad}}
                             </template>
                             <template #st-6>                                                                    
                                Estado Civil
                             </template>
                             <template #text-6>                                                                    
                                 {{DatosUsuario?.estado_civil_id}}
+                            </template>
+                            <template #st-7>                                                                    
+                                Sexo
+                            </template>
+                            <template #text-7>                                                                    
+                                {{(DatosUsuario?.sexo == 0)? "Femenino" : "Masculino"}}
                             </template>
                             
                         <!--segundo apartado-->
@@ -451,7 +457,7 @@ import {ref, defineProps, onMounted, inject } from 'vue';
 import {useRoute}  from 'vue-router';
 import almacen from '@/store/almacen';
 
-const DatosUsuario = ref(inject('dataEmpleado'))
+const DatosUsuario = inject('dataEmpleado')
 
 const route = useRoute();  
 const EmpleadoID = route.params.empleadoId
@@ -468,7 +474,7 @@ const EditarInfo = ref(null);
 // Si 'DatosUsuario' es nulo o indefinido, 'lista_dias' será nulo.
 // Luego, utiliza el método 'split(',')' para dividir la cadena 'dias_descanso' en un arreglo,
 // donde cada elemento del arreglo es un día de descanso.
-const lista_dias = DatosUsuario?.dias_descanso?.split(',');
+const lista_dias = DatosUsuario.value?.dias_descanso?.split(',');
 
 // Declara una constante 'Dias_descanso' que almacena una cadena de texto con los días de descanso.
 // Utiliza el método 'map()' para iterar sobre cada elemento en 'lista_dias'.
@@ -476,10 +482,10 @@ const lista_dias = DatosUsuario?.dias_descanso?.split(',');
 // Esto asume que 'almacen' es un objeto que contiene un diccionario 'diasLaborales' con claves numéricas.
 // Luego, utiliza el método 'join(', ')' para unir todos los elementos del arreglo resultante en una cadena de texto,
 // separada por comas y espacios.
-const Dias_descanso = lista_dias?.map(dia => almacen?.diasLaborales[dia]).join(', ');
+const Dias_descanso = lista_dias?.map(dia => almacen?.diasLaborales[dia])?.join(', ');
 
 onMounted(async () => {
-    await console.log(DatosUsuario)
+    await console.log(DatosUsuario.value)
 })
 
 

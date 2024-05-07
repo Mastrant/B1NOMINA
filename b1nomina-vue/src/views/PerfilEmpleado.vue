@@ -40,7 +40,6 @@ const Informacion = ref('')
 watch(Informacion, (nuevo) => {
     estado.value = nuevo.success;
     dataEmpleado.value = nuevo;
-    console.log(nuevo)
 });
 
 provide('dataEmpleado', dataEmpleado)
@@ -49,7 +48,6 @@ const pedirDatos = async () => {
     try {
         if (empleadoId) {
             const resultado = await peticiones.datosDelEmpleado(empleadoId);
-            console.log(resultado)
             if (resultado.success){
                 Informacion.value = resultado?.data;
             } else {
@@ -58,7 +56,21 @@ const pedirDatos = async () => {
         }
     } catch (error) {
         console.error("Error al solicitar datos del empleado:", error);
-        error.value = error; // Actualiza el estado de error
+    }
+}
+
+const pedirParametros = async () => {
+    try {
+        if (empleadoId) {
+            const resultado = await peticiones.pedirParametros();
+            if (resultado.success){
+                Informacion.value = resultado?.data;
+            } else {
+                console.error(resultado.error);
+            }
+        }
+    } catch (error) {
+        console.error("Error al solicitar datos del empleado:", error);
     }
 }
 

@@ -75,6 +75,16 @@ const peticiones = {
                 return { success: false, error: error };
             });
     },
+
+    async pedirParametros(idSociedad){
+        return  await axios.get(`/sociedad/${idSociedad}/parametros_crear_usuario`)
+            .then(respuesta => {
+                return { success: true, data: respuesta?.data.parametros };
+            })
+            .catch(error => {
+                return { success: false, error: error };
+            });
+    },
 }
 
 export default peticiones
