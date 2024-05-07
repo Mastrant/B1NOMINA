@@ -82,7 +82,7 @@ const props = defineProps({
     });
 
 const variable = ref('')
-const formularioRequerido = ref(false)
+const formularioRequerido = ref(false);
 </script>
 
 <style scoped>

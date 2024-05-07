@@ -8,9 +8,7 @@
         </template>
         
         <template #panel>
-            <PanelPerfilEmpleado 
-                :DatosUsuario="dataEmpleado"
-            />
+            <PanelPerfilEmpleado/>
         </template>
     </LayoutPanel>
 
@@ -35,27 +33,37 @@ const route = useRoute();
 const estado = ref(false)
 const dataEmpleado = ref(null)
 const empleadoId = route.params?.empleadoId;
-const error = ref(null); // Estado para manejar errores
 
-const resultado = ref('')
+const Informacion = ref('')
 
 // Observa cambios en 'estado' y 'dataEmpleado'
-watch(resultado, (nuevo) => {
+watch(Informacion, (nuevo) => {
     estado.value = nuevo.success;
-    dataEmpleado.value = nuevo.data;
+    dataEmpleado.value = nuevo;
+    console.log(nuevo)
 });
 
 provide('dataEmpleado', dataEmpleado)
 
-// Al montar el componente, ejecuta las funciones
-onMounted(async () => {
+const pedirDatos = async () => {
     try {
         if (empleadoId) {
-            resultado.value = await peticiones.datosDelEmpleado(empleadoId);            
+            const resultado = await peticiones.datosDelEmpleado(empleadoId);
+            console.log(resultado)
+            if (resultado.success){
+                Informacion.value = resultado?.data;
+            } else {
+                console.error(resultado.error);
+            }
         }
     } catch (error) {
         console.error("Error al solicitar datos del empleado:", error);
         error.value = error; // Actualiza el estado de error
     }
+}
+
+// Al montar el componente, ejecuta las funciones
+onMounted(async () => {
+   await pedirDatos();
 });
 </script>

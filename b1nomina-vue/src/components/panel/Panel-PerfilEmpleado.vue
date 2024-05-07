@@ -447,18 +447,14 @@ import ExitColorIcon from '@/components/icons/Exit-color-icon.vue'
 import EdiIcon from '@/components/icons/Edit-icon.vue';
 
 //Librerias y acciones
-import {ref, defineProps, onMounted} from 'vue';
+import {ref, defineProps, onMounted, inject } from 'vue';
 import {useRoute}  from 'vue-router';
 import almacen from '@/store/almacen';
 
+const DatosUsuario = ref(inject('dataEmpleado'))
+
 const route = useRoute();  
 const EmpleadoID = route.params.empleadoId
-
-const props = defineProps({
-    DatosUsuario: {
-        default: {}
-    }
-})
 
 const panelShow = ref(1)
 const showInfo = (id_apartado) => {
@@ -468,11 +464,11 @@ const showInfo = (id_apartado) => {
 const EditarInfo = ref(null);
 
 // Declara una constante 'lista_dias' que almacena un arreglo de días de descanso tomado de los datos del usuario.
-// Utiliza el operador de encadenamiento opcional (?.) para acceder a 'dias_descanso' dentro de 'props.DatosUsuario'.
-// Si 'props.DatosUsuario' es nulo o indefinido, 'lista_dias' será nulo.
+// Utiliza el operador de encadenamiento opcional (?.) para acceder a 'dias_descanso' dentro de 'DatosUsuario'.
+// Si 'DatosUsuario' es nulo o indefinido, 'lista_dias' será nulo.
 // Luego, utiliza el método 'split(',')' para dividir la cadena 'dias_descanso' en un arreglo,
 // donde cada elemento del arreglo es un día de descanso.
-const lista_dias = props.DatosUsuario?.dias_descanso.split(',');
+const lista_dias = DatosUsuario?.dias_descanso?.split(',');
 
 // Declara una constante 'Dias_descanso' que almacena una cadena de texto con los días de descanso.
 // Utiliza el método 'map()' para iterar sobre cada elemento en 'lista_dias'.
@@ -483,7 +479,7 @@ const lista_dias = props.DatosUsuario?.dias_descanso.split(',');
 const Dias_descanso = lista_dias?.map(dia => almacen?.diasLaborales[dia]).join(', ');
 
 onMounted(async () => {
-    await console.log(props.DatosUsuario)
+    await console.log(DatosUsuario)
 })
 
 
