@@ -484,10 +484,12 @@ const lista_dias = DatosUsuario.value?.dias_descanso?.split(',');
 // separada por comas y espacios.
 const Dias_descanso = lista_dias?.map(dia => almacen?.diasLaborales[dia])?.join(', ');
 
+/*
 onMounted(async () => {
     await console.log(DatosUsuario.value)
 })
 
+*/
 
 </script>
 

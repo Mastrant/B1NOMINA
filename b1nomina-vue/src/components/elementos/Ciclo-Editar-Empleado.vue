@@ -48,12 +48,11 @@
     import FormDatosPago from '@/components/formularios/perfilEmpleado/Form-DatosPago.vue';
     
     //librerias
-    import { ref, onMounted, reactive, inject, defineExpose } from 'vue';
+    import { ref, onMounted, defineExpose } from 'vue';
     import axios from 'axios';
     import { useRoute } from 'vue-router';
 
-   
-    const DatosUsuario = reactive(inject('dataEmpleado'))
+    
 
     const route = useRoute();
     // idSociedad es un String

@@ -1,23 +1,25 @@
 <template>    
-    <form class="formulario" id="" @submit.prevent="">
+    <form class="formulario" id="" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos Laborales</h2>
         <div class="row-form">
-            <LayoutInputLineal textLabel="Tipo de contrato" :requerido="formularioRequerido">
+            <LayoutInputLineal textLabel="Salario Base" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="SalarioBase" 
                         :options="{}" 
-                        :requerido="false"
+                        :requerido="RequiereActualizar"            
+                        :preseleccion="tipoDocumentoSelect" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
             </LayoutInputLineal>
-            <LayoutInputLineal textLabel="Tipo de contrato" :requerido="formularioRequerido">
+            <LayoutInputLineal textLabel="Unidad Sueldo Base" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="UnidadSueldo" 
                         :options="{}" 
-                        :requerido="false"
+                        :requerido="RequiereActualizar"            
+                        :preseleccion="tipoDocumentoSelect" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -27,7 +29,7 @@
                 Titulo="Valor del salario" 
                 v-model="MontoSalario"
                 @update:modelValue="MontoSalario = $event"
-                :requerido="formularioRequerido"
+                :requerido="RequiereActualizar"
                 Tipo="Number"
             />
         </div>
@@ -39,23 +41,24 @@
     import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
     import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
 
-    import {reactive, ref, defineProps, watch} from 'vue'
+    import {reactive, ref, watch, inject, onMounted} from 'vue';
 
-    const props = defineProps({
-        ID_Empleado: {
-            type: [String, Number],
-            default: 0
-        },
-        parametos: {
-            type: Object,
-            default: {}
-        }
-    });
+    const DatosUsuario = reactive(inject('dataEmpleado'))
+    const parametros = reactive(inject('parametros'))
+    const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
 
-    const formularioRequerido = ref(false)
+
+    const RequiereActualizar = ref(false)
 
     // payload de las peticiones
     const payload = reactive({        
+        periodo_salario: '',
+        unidad_sueldo: '',
+        salario_base: '',
+    });
+    
+    // payload de las peticiones
+    const payload_old = reactive({        
         periodo_salario: '',
         unidad_sueldo: '',
         salario_base: '',
@@ -70,12 +73,88 @@
     const MontoSalario = ref('');
     watch(MontoSalario, (nuevoValor) =>  ActualizarPayload('salario_base', Math.abs(nuevoValor)));
 
+    const MostrarValores = (DATA) => {
+        // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
+        SalarioBase.value = (DATA?.salario_base == null)? '' :DATA?.salario_base;
+        payload_old.documento = DATA?.salario_base ?? '';
+        payload.documento = DATA?.salario_base ?? '';
+        
+        UnidadSueldo.value = (DATA?.rut == null)? '' :DATA?.rut;
+        payload_old.documento = DATA?.rut ?? '';
+        payload.documento = DATA?.rut ?? '';
+        
+        MontoSalario.value = (DATA?.salario_base == null)? '' :DATA?.rut;
+        payload_old.documento = DATA?.salario_base ?? '';
+        payload.documento = DATA?.salario_base ?? '';
 
-    //actualizar datos del payload
-    const ActualizarPayload = (propiedad, valor) => {
-        payload[propiedad] = valor;
-        formularioRequerido.value = Object.values(payload).some(value => value !== "")
-    };
+    }
+
+/**
+ * Actualiza el valor de una propiedad específica dentro del objeto 'payload'.
+ *
+ * @param {string} propiedad - El nombre de la propiedad a actualizar en el objeto 'payload'.
+ * @param {any} valor - El nuevo valor que se asignará a la propiedad especificada.
+ *
+ * @example
+ * // 'payload' es un objeto con una estructura predefinida.
+ * const payload = {
+ *   nombre: '',
+ *   edad: 0
+ * };
+ *
+ * // Llamando a ActualizarPayload para cambiar el nombre.
+ * ActualizarPayload('nombre', variable);
+ *
+ * // Ahora, 'payload' se verá así:
+ * // {
+ * //   nombre: 'Pedro',
+ * //   edad: 30
+ * // }
+ */
+ const ActualizarPayload = (propiedad, valor) => {
+  // Asigna el nuevo valor a la propiedad especificada dentro del objeto 'payload'.
+  payload[propiedad] = valor;
+  
+  verificarCambios();
+
+};
+
+// Define la función verificarCambios que verifica si hay cambios entre los valores antiguos y nuevos de un payload.
+const verificarCambios = () => {
+    // Comprueba si todos los campos relevantes en payload_old y payload son iguales.
+    // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
+    const camposIguales = Object.keys(payload_old).every(key => payload_old[key] === payload[key]);
+
+    // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
+    const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
+
+    // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
+    // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
+    // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
+    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+}
+
+    onMounted(() => {
+        console.log(DatosUsuario.value);
+        console.log(parametros);
+    })
+
+    /**
+ * Funcion emitida al enviar el formulario
+ * @params payload Contiene los datos que se pasaran
+ * Ejecuta la peticion con axios
+ */
+ const Enviar = () => {
+  //si ID es nulo crea un usuario
+ 
+  if (RequiereActualizar) {
+
+  }
+};
+
+onMounted(() => {
+  MostrarValores(DatosUsuario.value)
+});
 </script>
 
 <style scoped>

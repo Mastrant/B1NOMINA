@@ -26,13 +26,15 @@ import peticiones from '@/peticiones/p_empleado';
 
 import { useRoute } from 'vue-router';
 
-import {onMounted, ref, watch, provide, defineAsyncComponent } from 'vue'
+import {onMounted, ref, watch, provide } from 'vue'
 
 const route = useRoute();
 
 const estado = ref(false)
 const dataEmpleado = ref(null)
-const empleadoId = route.params?.empleadoId;
+const parametros = ref({})
+const empleadoId = Number(route.params?.empleadoId);
+const SociedadId = Number(route.params?.sociedadId);
 
 const Informacion = ref('')
 
@@ -42,7 +44,8 @@ watch(Informacion, (nuevo) => {
     dataEmpleado.value = nuevo;
 });
 
-provide('dataEmpleado', dataEmpleado)
+provide('dataEmpleado', dataEmpleado);
+provide('parametros', parametros);
 
 const pedirDatos = async () => {
     try {
@@ -62,20 +65,21 @@ const pedirDatos = async () => {
 const pedirParametros = async () => {
     try {
         if (empleadoId) {
-            const resultado = await peticiones.pedirParametros();
+            const resultado = await peticiones.pedirParametros(SociedadId);
             if (resultado.success){
-                Informacion.value = resultado?.data;
+                parametros.value = resultado?.data;
             } else {
                 console.error(resultado.error);
             }
         }
     } catch (error) {
-        console.error("Error al solicitar datos del empleado:", error);
+        console.error("Error al solicitar los parametros de los formularios", error);
     }
 }
 
 // Al montar el componente, ejecuta las funciones
 onMounted(async () => {
    await pedirDatos();
+   await pedirParametros();
 });
 </script>
