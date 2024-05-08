@@ -15,6 +15,20 @@ async nombreFuncion(parametro){
         }
     )
 }
+
+async nombreFuncion(parametro,){
+        try {
+            return await axios.METODO(`RUTA`)
+            .then(respuesta => {
+                return { success: true, data: respuesta?.data.data };
+            })
+            .catch(error => {
+                return { success: false, error: error?.response.data.message };
+            });
+        } catch (error) {
+            return { success: false, error: error };
+        }  
+    },
 */
 
 const peticiones = {
@@ -79,11 +93,56 @@ const peticiones = {
     async pedirParametros(idSociedad){
         return  await axios.get(`/sociedad/${idSociedad}/parametros_crear_usuario`)
             .then(respuesta => {
-                return { success: true, data: respuesta?.data.parametros };
+                return { success: true, data: respuesta?.data?.parametros };
             })
             .catch(error => {
                 return { success: false, error: error };
             });
+    },
+
+    async ActualizarSalario(idEmpleado, idMaster, payload){
+        try {
+            console.log(idEmpleado, idMaster, payload)
+            return await axios.put(`user/${idEmpleado}/update_datos_laborales_salario?user_updater=${idMaster}`, payload)
+            .then(
+                respuesta => {
+                    return { success: true, data: respuesta?.data};
+                }
+            )
+            .catch(
+                error => {
+                    return { success: false, error: error};
+                }
+            );
+        } catch (error) {
+            return { success: false, error: error };
+        }  
+    },
+    async ActualizarContrato(idEmpleado, idMaster, payload){
+        try {
+            return await axios.put(`user/${idEmpleado}/update_datos_laborales_contrato?user_updater=${idMaster}`, payload)
+            .then(respuesta => {
+                return { success: true, data: respuesta?.data.data };
+            })
+            .catch(error => {
+                return { success: false, error: error?.response.data.message };
+            });
+        } catch (error) {
+            return { success: false, error: error };
+        }  
+    },
+    async ActualizarPuesto(idEmpleado, idMaster, payload){
+        try {
+            return await axios.put(`user/${idEmpleado}/update_datos_laborales_puesto?user_updater=${idMaster}`, payload)
+            .then(respuesta => {
+                return { success: true, data: respuesta?.data.data };
+            })
+            .catch(error => {
+                return { success: false, error: error?.response.data.message };
+            });
+        } catch (error) {
+            return { success: false, error: error };
+        }  
     },
 }
 

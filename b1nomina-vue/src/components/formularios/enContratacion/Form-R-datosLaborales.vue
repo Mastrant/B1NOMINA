@@ -171,7 +171,7 @@
             />
 
             <InputLinealDescripcion 
-                Placeholder="$..." 
+                Placeholder="" 
                 Titulo="Hora de salida" 
                 v-model="HoraSalida"
                 @update:modelValue="HoraSalida = $event"

@@ -1,39 +1,39 @@
 <template>
-     <!--Modales-->
-     <TemplateModal 
-            @closeModal="showModal" 
-            :FormId="IDFormModal"
-            :NombreAccion="TituloModal" 
-            :textSubmit="TextoButton"
-            :activarModal="activarModal"
-            :ModalActivo="1"
-            :DataNotification="NotificacionModal"
-            
-        >
-            <template #default><!--Espacio para los formularios -->
-                <div v-if=" formActivo == 1"> <!--retomar contrato-->                    
-                    <FormSalario />
-                </div>
-                <div v-if=" formActivo == 2"> <!--retomar contrato-->                    
-                    <FormDatosContrato />
-                </div>
-                <div v-if=" formActivo == 3"> <!--retomar contrato-->                    
-                   <FormPuesto />
-                </div>
-                <div v-if=" formActivo == 4"> <!--retomar contrato-->                    
-                    formulario Centralizacion
-                </div>
-                <div v-if=" formActivo == 5"> <!--retomar contrato-->     
-                    <FormDatosPrincipales />                                
-                </div>
-                <div v-if=" formActivo == 6"> <!--retomar contrato-->                    
-                    <FormDatosContacto />
-                </div>
-                <div v-if=" formActivo == 7"> <!--retomar contrato-->                    
-                    <FormDatosPago />
-                </div>
-            </template>
-        </TemplateModal>
+    <!--Modales-->
+    <TemplateModal 
+        @closeModal="showModal" 
+        :FormId="IDFormModal"
+        :NombreAccion="TituloModal" 
+        :textSubmit="TextoButton"
+        :activarModal="activarModal"
+        :ModalActivo="1"
+        :DataNotification="NotificacionModal"
+        
+    >
+        <template #default><!--Espacio para los formularios -->
+            <div v-if=" formActivo == 1"> <!--retomar contrato-->                    
+                <FormSalario />
+            </div>
+            <div v-if=" formActivo == 2"> <!--retomar contrato-->                    
+                <FormDatosContrato />
+            </div>
+            <div v-if=" formActivo == 3"> <!--retomar contrato-->                    
+                <FormPuesto />
+            </div>
+            <div v-if=" formActivo == 4"> <!--retomar contrato-->                    
+                formulario Centralizacion
+            </div>
+            <div v-if=" formActivo == 5"> <!--retomar contrato-->     
+                <FormDatosPrincipales />                                
+            </div>
+            <div v-if=" formActivo == 6"> <!--retomar contrato-->                    
+                <FormDatosContacto />
+            </div>
+            <div v-if=" formActivo == 7"> <!--retomar contrato-->                    
+                <FormDatosPago />
+            </div>
+        </template>
+    </TemplateModal>
 </template>
 
 <script setup>
@@ -95,7 +95,6 @@
      * ActionButton(1, 1, 123); // Muestra el modal para cargar CV con el ID 123.
      */
     const ActionButton = (TipoAccion, item_ID) => {
-        console.log(TipoAccion, item_ID)
         switch (TipoAccion) {
             case 1:                
                 formActivo.value = TipoAccion;

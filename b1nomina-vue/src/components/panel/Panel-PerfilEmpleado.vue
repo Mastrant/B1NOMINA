@@ -117,13 +117,13 @@
                                 Cantidad
                             </template>
                             <template #text-1>                                                                    
-                                ${{DatosUsuario?.sueldo >> 0}}
+                                {{DatosUsuario?.unidad_sueldo_caracter}} {{DatosUsuario?.salario_base >> 0}}
                             </template>
                             <template #st-2>  <!--Salario base-->                                                                 
                                 Unidad Sueldo Base
                             </template>
                             <template #text-2>                                                                    
-                                {{DatosUsuario?.unidad_sueldo}}
+                                {{DatosUsuario?.unidad_sueldo_caracter}} 
                             </template>
                             <template #st-3>  <!--Salario base-->                                                                 
                                 Salario base
@@ -197,11 +197,11 @@
                             <template #text-15>                                                                    
                                 {{DatosUsuario?.cargo}}
                             </template>
-                            <template #st-16> <!--Modalidad-->    
+                            <template #st-16> <!--GRUPO-->    
                                 Grupo
                             </template>
                             <template #text-16>                                                                    
-                                {{DatosUsuario?.grupo}}
+                                {{DatosUsuario?.nombre_grupo}}
                             </template>                            
                             <template #st-17> <!--Modalidad-->    
                                 Modalidad
@@ -381,7 +381,7 @@
                                 Banco
                             </template>
                             <template #text-18>                                                                    
-                                Banco de Chile
+                                {{DatosUsuario?.nombre_banco}}
                             </template>
                             <template #st-19> <!--Tipo de cuenta-->                                                                      
                                 Tipo de cuenta

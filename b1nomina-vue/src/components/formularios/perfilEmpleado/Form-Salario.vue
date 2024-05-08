@@ -1,14 +1,14 @@
 <template>    
-    <form class="formulario" id="" @submit.prevent="Enviar">
+    <form class="formulario" id="ActualizarSalario" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos Laborales</h2>
         <div class="row-form">
             <LayoutInputLineal textLabel="Salario Base" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
-                        v-model="SalarioBase" 
-                        :options="{}" 
+                        v-model="PeriodoSalario" 
+                        :options="parametros?.tiposalario" 
                         :requerido="RequiereActualizar"            
-                        :preseleccion="tipoDocumentoSelect" 
+                        :preseleccion="PeriodoSalario" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -17,9 +17,9 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="UnidadSueldo" 
-                        :options="{}" 
+                        :options="parametros?.unidadessueldo" 
                         :requerido="RequiereActualizar"            
-                        :preseleccion="tipoDocumentoSelect" 
+                        :preseleccion="UnidadSueldo" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -27,8 +27,8 @@
             <InputLinealDescripcion 
                 Placeholder="$..." 
                 Titulo="Valor del salario" 
-                v-model="MontoSalario"
-                @update:modelValue="MontoSalario = $event"
+                v-model="SalarioBase"
+                @update:modelValue="SalarioBase = $event"
                 :requerido="RequiereActualizar"
                 Tipo="Number"
             />
@@ -43,6 +43,8 @@
 
     import {reactive, ref, watch, inject, onMounted} from 'vue';
 
+    import peticiones from '@/peticiones/p_empleado';
+
     const DatosUsuario = reactive(inject('dataEmpleado'))
     const parametros = reactive(inject('parametros'))
     const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
@@ -52,41 +54,40 @@
 
     // payload de las peticiones
     const payload = reactive({        
-        periodo_salario: '',
-        unidad_sueldo: '',
         salario_base: '',
+        unidad_sueldo: '',
+        monto_sueldo: '',
     });
     
     // payload de las peticiones
     const payload_old = reactive({        
-        periodo_salario: '',
-        unidad_sueldo: '',
         salario_base: '',
+        unidad_sueldo: '',
+        monto_sueldo: '',
     });
 
-    const SalarioBase = ref('');
-    watch(SalarioBase, (nuevoValor) => ActualizarPayload('periodo_salario', Number(nuevoValor)));
+    const PeriodoSalario = ref('');
+    watch(PeriodoSalario, (nuevoValor) => ActualizarPayload('salario_base', Number(nuevoValor)));
     
     const UnidadSueldo = ref('')
     watch(UnidadSueldo, (nuevoValor) => ActualizarPayload('unidad_sueldo', String(nuevoValor)));
 
-    const MontoSalario = ref('');
-    watch(MontoSalario, (nuevoValor) =>  ActualizarPayload('salario_base', Math.abs(nuevoValor)));
+    const SalarioBase = ref('');
+    watch(SalarioBase, (nuevoValor) =>  ActualizarPayload('monto_sueldo', Math.abs(nuevoValor)));
 
     const MostrarValores = (DATA) => {
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
+        PeriodoSalario.value = (DATA?.periodo_sueldo == null)? '' :DATA?.periodo_sueldo;
+        payload_old.salario_base = DATA?.periodo_sueldo ?? '';
+        payload.salario_base = DATA?.periodo_sueldo ?? '';
+        
+        UnidadSueldo.value = (DATA?.unidad_sueldo == null)? '' :DATA?.unidad_sueldo;
+        payload_old.unidad_sueldo = DATA?.unidad_sueldo ?? '';
+        payload.unidad_sueldo = DATA?.unidad_sueldo ?? '';
+        
         SalarioBase.value = (DATA?.salario_base == null)? '' :DATA?.salario_base;
-        payload_old.documento = DATA?.salario_base ?? '';
-        payload.documento = DATA?.salario_base ?? '';
-        
-        UnidadSueldo.value = (DATA?.rut == null)? '' :DATA?.rut;
-        payload_old.documento = DATA?.rut ?? '';
-        payload.documento = DATA?.rut ?? '';
-        
-        MontoSalario.value = (DATA?.salario_base == null)? '' :DATA?.rut;
-        payload_old.documento = DATA?.salario_base ?? '';
-        payload.documento = DATA?.salario_base ?? '';
-
+        payload_old.monto_sueldo = DATA?.salario_base ?? '';
+        payload.monto_sueldo = DATA?.salario_base ?? '';
     }
 
 /**
@@ -123,8 +124,8 @@
 const verificarCambios = () => {
     // Comprueba si todos los campos relevantes en payload_old y payload son iguales.
     // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
-    const camposIguales = Object.keys(payload_old).every(key => payload_old[key] === payload[key]);
-
+    const camposIguales = Object.keys(payload_old).every( key => payload_old[key] == payload[key]);
+    
     // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
     const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
 
@@ -135,8 +136,7 @@ const verificarCambios = () => {
 }
 
     onMounted(() => {
-        console.log(DatosUsuario.value);
-        console.log(parametros);
+        MostrarValores(DatosUsuario.value)
     })
 
     /**
@@ -144,17 +144,23 @@ const verificarCambios = () => {
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
- const Enviar = () => {
+ const Enviar = async () => {
   //si ID es nulo crea un usuario
  
-  if (RequiereActualizar) {
+  if (RequiereActualizar.value) {
+    console.log(payload)
+    const respuesta = await peticiones.ActualizarSalario(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+    if(respuesta.success == true){
+        console.log(respuesta)
+    } else {
+        console.log(respuesta)
+    }
 
+  } else {
+    console.log("no se requiere actualizar");
   }
 };
 
-onMounted(() => {
-  MostrarValores(DatosUsuario.value)
-});
 </script>
 
 <style scoped>

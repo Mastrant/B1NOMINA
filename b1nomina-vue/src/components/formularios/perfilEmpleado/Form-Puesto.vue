@@ -1,26 +1,28 @@
 <template>
     
-    <form class="formulario" id="" @submit.prevent="">
+    <form class="formulario" id="ActualizarPuesto" @submit.prevent="Enviar">
         <h2 class="titulo-form">Puesto de trabajo</h2>
 
         <div class="row-form">
-            <LayoutInputLineal textLabel="Sede de Trabajo" :requerido="formularioRequerido">
+            <LayoutInputLineal textLabel="Sede de Trabajo" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="SedeDeTrabajo" 
                         :options="parametros?.sede" 
-                        :requerido="formularioRequerido"
+                        :requerido="RequiereActualizar"
+                        :preseleccion="SedeDeTrabajo"
                         optionsSelected="Seleccionar"
                     />
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Departamento" :requerido="formularioRequerido">
+            <LayoutInputLineal textLabel="Departamento" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Departamento" 
-                        :options="parametros?.departamento" 
-                        :requerido="formularioRequerido"
+                        :options="parametros?.departamentos" 
+                        :requerido="RequiereActualizar"
+                        :preseleccion="Departamento"
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -28,29 +30,31 @@
         </div>
 
         <div class="row-form">
-            <LayoutInputLineal textLabel="Cargo" :requerido="formularioRequerido">
+            <LayoutInputLineal textLabel="Cargo" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Cargo" 
                         :options="parametros?.cargos" 
-                        :requerido="formularioRequerido"
+                        :requerido="RequiereActualizar"
+                        :preseleccion="Cargo"
                         optionsSelected="Seleccionar"
                     />
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Grupo" :requerido="formularioRequerido">
+            <LayoutInputLineal textLabel="Grupo" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Grupo" 
                         :options="parametros?.grupos" 
-                        :requerido="formularioRequerido"
+                        :requerido="RequiereActualizar"
+                        :preseleccion="Grupo"
                         optionsSelected="Sin Asignar"
                     />
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Modalidad" :requerido="formularioRequerido">
+            <LayoutInputLineal textLabel="Modalidad" :requerido="RequiereActualizar">
                 <template v-slot>
                     <InterruptorButton 
                         @ValorEstado="verEstado"
@@ -58,7 +62,7 @@
                         Texto="Teletrabajo"
                         Tipo="individual"
                         :Estado="(EstatusModalidad)? true :false"
-                        :requerido="formularioRequerido"
+                        :requerido="RequiereActualizar"
                     />
                 </template>
             </LayoutInputLineal>
@@ -70,20 +74,14 @@
     import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
     import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
     import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
-    import {reactive, ref, defineProps, watch} from 'vue'
+    import {reactive, ref, watch, inject, onMounted} from 'vue';
 
-    const props = defineProps({
-        ID_Empleado: {
-            type: [String, Number],
-            default: 0
-        },
-        parametros: {
-            type: Object,
-            default: {}
-        }
-    });
+    
+    const DatosUsuario = reactive(inject('dataEmpleado'))
+    const parametros = reactive(inject('parametros'))
+    const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
 
-    const formularioRequerido = ref(false);
+    const RequiereActualizar = ref(false);
 
     const SedeDeTrabajo = ref('');
     const Departamento = ref('');
@@ -100,10 +98,15 @@
         cargo_id: '',    
         grupo_id: '',
         modalidad: '',
+    });
 
-        user_id: '',
-        sociedad_id: '',
-        dias_descanso: '',
+    // payload de las peticiones
+    const payload_old = reactive({
+        sede_id: '',
+        departamento_id: '',
+        cargo_id: '',    
+        grupo_id: '',
+        modalidad: '',
     });
 
     const verEstado = (valor) => {
@@ -112,19 +115,102 @@
         : Modalidad.value = 0
 }
 
-    //actualizar datos del payload
-    const ActualizarPayload = (propiedad, valor) => {
-        payload[propiedad] = valor;
-        formularioRequerido.value = Object.values(payload).some(value => value !== "")
-    };
+/**
+ * Actualiza el valor de una propiedad específica dentro del objeto 'payload'.
+ *
+ * @param {string} propiedad - El nombre de la propiedad a actualizar en el objeto 'payload'.
+ * @param {any} valor - El nuevo valor que se asignará a la propiedad especificada.
+ *
+ * @example
+ * // 'payload' es un objeto con una estructura predefinida.
+ * const payload = {
+ *   nombre: '',
+ *   edad: 0
+ * };
+ *
+ * // Llamando a ActualizarPayload para cambiar el nombre.
+ * ActualizarPayload('nombre', variable);
+ *
+ * // Ahora, 'payload' se verá así:
+ * // {
+ * //   nombre: 'Pedro',
+ * //   edad: 30
+ * // }
+ */
+ const ActualizarPayload = (propiedad, valor) => {
+  // Asigna el nuevo valor a la propiedad especificada dentro del objeto 'payload'.
+  payload[propiedad] = valor;
+  
+  verificarCambios();
+
+};
+
+// Define la función verificarCambios que verifica si hay cambios entre los valores antiguos y nuevos de un payload.
+const verificarCambios = () => {
+    // Comprueba si todos los campos relevantes en payload_old y payload son iguales.
+    // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
+    const camposIguales = Object.keys(payload_old).every( key => payload_old[key] == payload[key]);
+    
+    
+    // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
+    const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
+
+    // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
+    // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
+    // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
+    RequiereActualizar.value = !(camposIguales && alMenosUnValorVacio);
+}
 
     
     watch(SedeDeTrabajo, (nuevoValor) => ActualizarPayload('sede_id', Number(nuevoValor)));
-    watch(Departamento, (nuevoValor) => ActualizarPayload('departamento_id', Number(nuevoValor)));
+    watch(Departamento, (nuevoValor) => ActualizarPayload('departamento_id', nuevoValor));
     watch(Cargo, (nuevoValor) => ActualizarPayload('cargo_id', Number(nuevoValor)));
     watch(Grupo, (nuevoValor) => ActualizarPayload('grupo_id', Number(nuevoValor)));
     watch(Modalidad, (nuevoValor) => ActualizarPayload('modalidad', Number(nuevoValor)));
 
+    
+    const MostrarValores = (DATA) => {
+        // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
+
+        SedeDeTrabajo.value = (DATA?.sede_id == null)? '' : Number(DATA?.sede_id);
+        payload_old.sede_id = Number(DATA?.sede_id) ?? '';
+        payload.sede_id = Number(DATA?.sede_id) ?? '';
+
+        Departamento.value = (DATA?.departamento_id == null)? '' :DATA?.departamento_id;
+        payload_old.departamento_id = DATA?.departamento_id ?? '';
+        payload.departamento_id = DATA?.departamento_id ?? '';
+
+        Cargo.value = (DATA?.cargo_id == null)? '' :Number(DATA?.cargo_id);
+        payload_old.cargo_id = Number(DATA?.cargo_id) ?? '';
+        payload.cargo_id = Number(DATA?.cargo_id) ?? '';
+
+        Grupo.value = (DATA?.grupo_id == null)? '' :DATA?.grupo_id;
+        payload_old.grupo_id = DATA?.grupo_id ?? '';
+        payload.grupo_id = DATA?.grupo_id ?? '';
+
+        Modalidad.value = (DATA?.modalidad == null)? '' : Number(DATA?.modalidad);
+        payload_old.modalidad = Number(DATA?.modalidad) ?? '0';
+        payload.modalidad = Number(DATA?.modalidad) ?? '0';
+
+        EstatusModalidad.value = (DATA?.modalidad == 0) ? false : true;
+    }
+
+    onMounted(() => {
+        MostrarValores(DatosUsuario.value)
+    })
+
+    /**
+ * Funcion emitida al enviar el formulario
+ * @params payload Contiene los datos que se pasaran
+ * Ejecuta la peticion con axios
+ */
+const Enviar = () => {
+    if (RequiereActualizar.value) {
+        console.log(payload)
+    } else {
+        console.log("no se requiere actualizar");
+    }
+};
 
 </script>
 

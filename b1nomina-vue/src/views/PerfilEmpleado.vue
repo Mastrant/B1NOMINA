@@ -53,6 +53,7 @@ const pedirDatos = async () => {
             const resultado = await peticiones.datosDelEmpleado(empleadoId);
             if (resultado.success){
                 Informacion.value = resultado?.data;
+                console.log(Informacion.value)
             } else {
                 console.error(resultado.error);
             }
@@ -68,6 +69,7 @@ const pedirParametros = async () => {
             const resultado = await peticiones.pedirParametros(SociedadId);
             if (resultado.success){
                 parametros.value = resultado?.data;
+                console.log(parametros.value)
             } else {
                 console.error(resultado.error);
             }

@@ -1,33 +1,36 @@
 <template>
   <div class="conted-Input">
-    <input type="checkbox" :value="Objid" :id="'checkbox'+Objid" @change="updateValue">    
-    <label :for="'checkbox'+Objid"></label>
-    <span>{{texto}}</span>
+     <input type="checkbox" :value="Objid" :id="'checkbox'+Objid" :checked="checked" @change="updateValue">    
+     <label :for="'checkbox'+Objid"></label>
+     <span>{{texto}}</span>
   </div>
-</template>
-
-<script setup>
-
-//uso <InputCheckbox :Objid="" @update="" texto="" />
-import { defineProps, defineEmits } from 'vue';
-
-const props = defineProps({
-    texto: {
-        type: String,
-        default: ''
-    },
-    Objid: {
-        type: [String, Number],
-        default: ''
-    }
-});
-
-const emit = defineEmits(['update']);
-
-const updateValue = (event) => {
-    emit('update', event.target.checked ? props.Objid : props.Objid);
-};
-</script>
+ </template>
+ 
+ <script setup>
+ import { defineProps, defineEmits } from 'vue';
+ 
+ const props = defineProps({
+     texto: {
+         type: String,
+         default: ''
+     },
+     Objid: {
+         type: [String, Number],
+         default: ''
+     },
+     checked: {
+         type: Boolean,
+         default: false
+     }
+ });
+ 
+ const emit = defineEmits(['update']);
+ 
+ const updateValue = (event) => {
+     emit('update', event.target.checked ? props.Objid : props.Objid);
+ };
+ </script>
+ 
 
 
 <style scoped> 
