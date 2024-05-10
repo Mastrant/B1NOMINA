@@ -41,13 +41,17 @@
     import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
     import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
 
-    import {reactive, ref, watch, inject, onMounted} from 'vue';
+    import {reactive, ref, watch, inject, onMounted, defineEmits} from 'vue';
 
     import peticiones from '@/peticiones/p_empleado';
 
     const DatosUsuario = reactive(inject('dataEmpleado'))
     const parametros = reactive(inject('parametros'))
     const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
+
+    const emit = defineEmits([
+        'respuestaServidor',
+    ])
 
 
     const RequiereActualizar = ref(false)
@@ -67,10 +71,10 @@
     });
 
     const PeriodoSalario = ref('');
-    watch(PeriodoSalario, (nuevoValor) => ActualizarPayload('salario_base', Number(nuevoValor)));
+    watch(PeriodoSalario, (nuevoValor) => ActualizarPayload('salario_base', nuevoValor));
     
     const UnidadSueldo = ref('')
-    watch(UnidadSueldo, (nuevoValor) => ActualizarPayload('unidad_sueldo', String(nuevoValor)));
+    watch(UnidadSueldo, (nuevoValor) => ActualizarPayload('unidad_sueldo', nuevoValor));
 
     const SalarioBase = ref('');
     watch(SalarioBase, (nuevoValor) =>  ActualizarPayload('monto_sueldo', Math.abs(nuevoValor)));
@@ -151,13 +155,14 @@ const verificarCambios = () => {
     console.log(payload)
     const respuesta = await peticiones.ActualizarSalario(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
     if(respuesta.success == true){
-        console.log(respuesta)
+       emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
     } else {
-        console.log(respuesta)
+        console.log(respuesta?.error)
+        emit('respuestaServidor', {'texto':respuesta?.error?.message, 'valor':false})
     }
 
   } else {
-    console.log("no se requiere actualizar");
+    emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor':true});
   }
 };
 

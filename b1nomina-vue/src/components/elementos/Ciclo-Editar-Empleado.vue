@@ -12,25 +12,37 @@
     >
         <template #default><!--Espacio para los formularios -->
             <div v-if=" formActivo == 1"> <!--retomar contrato-->                    
-                <FormSalario />
+                <FormSalario 
+                   @respuestaServidor="notificacionModal"
+                />
             </div>
             <div v-if=" formActivo == 2"> <!--retomar contrato-->                    
-                <FormDatosContrato />
+                <FormDatosContrato 
+                    @respuestaServidor="notificacionModal"
+                />
             </div>
             <div v-if=" formActivo == 3"> <!--retomar contrato-->                    
-                <FormPuesto />
+                <FormPuesto 
+                    @respuestaServidor="notificacionModal"
+                />
             </div>
             <div v-if=" formActivo == 4"> <!--retomar contrato-->                    
                 formulario Centralizacion
             </div>
             <div v-if=" formActivo == 5"> <!--retomar contrato-->     
-                <FormDatosPrincipales />                                
+                <FormDatosPrincipales 
+                    @respuestaServidor="notificacionModal"
+                />                         
             </div>
             <div v-if=" formActivo == 6"> <!--retomar contrato-->                    
-                <FormDatosContacto />
+                <FormDatosContacto 
+                    @respuestaServidor="notificacionModal"
+                />
             </div>
             <div v-if=" formActivo == 7"> <!--retomar contrato-->                    
-                <FormDatosPago />
+                <FormDatosPago 
+                    @respuestaServidor="notificacionModal"
+                />
             </div>
         </template>
     </TemplateModal>
@@ -48,11 +60,10 @@
     import FormDatosPago from '@/components/formularios/perfilEmpleado/Form-DatosPago.vue';
     
     //librerias
-    import { ref, onMounted, defineExpose } from 'vue';
-    import axios from 'axios';
+    import { ref, onMounted, defineExpose, inject } from 'vue';
     import { useRoute } from 'vue-router';
 
-    
+    const actualizar = inject('actualizarData')
 
     const route = useRoute();
     // idSociedad es un String
@@ -162,6 +173,10 @@
      * @param {Objeto} respuesta Recive el diccionario necesario para mostrar la notificacion del modal
     */
     const notificacionModal = (respuesta) => {
+        console.log(respuesta)
+        if (respuesta?.valor == true){
+            actualizar();
+        }
         NotificacionModal.value = respuesta
     };
 
@@ -171,52 +186,9 @@
     })
 
 
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // Realiza una solicitud GET a la API para obtener parámetros
-    const pedirParametros = async () => {
-        axios.get(`/sociedad/${idSociedad}/parametros_crear_usuario`)
-        .then(
-            (respuesta) => {              
-                // Verifica y procesa los parámetros recibidos para cada categoría
-                // Asegúrate de que las propiedades existan dentro de 'respuesta.data.parametros'
-
-                console.log(respuesta)
-            }
-        )
-        .catch(
-            err => {
-                // Maneja errores de la solicitud
-                console.log(err)
-            }
-        )
-    }
-
 // al montar el componente ejecuta las funciones
 onMounted(async () => {
-    //await pedirParametros(); //solicita los parametros para crear usuarios
+
 });
 </script>
 

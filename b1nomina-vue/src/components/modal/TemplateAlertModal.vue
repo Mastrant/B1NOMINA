@@ -49,7 +49,7 @@ watch(() => props.activarNotifiacion, (newVal) => {
     if (newVal) {
         setTimeout(() => {
             close();
-        }, 10000); // Espera 8 segundos antes de cerrar automáticamente
+        }, 8000); // Espera 8 segundos antes de cerrar automáticamente
     }
 });
 </script>
@@ -126,7 +126,7 @@ span {
 
 /* Animación de entrada (fade-in) */
 .Notificacion-enter-active, .Notificacion-leave-active {
- transition: opacity 0.5s;
+ transition: opacity 0.4s;
 }
 
 /* Estado inicial de la animación de entrada */

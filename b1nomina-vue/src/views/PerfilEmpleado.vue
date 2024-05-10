@@ -44,9 +44,6 @@ watch(Informacion, (nuevo) => {
     dataEmpleado.value = nuevo;
 });
 
-provide('dataEmpleado', dataEmpleado);
-provide('parametros', parametros);
-
 const pedirDatos = async () => {
     try {
         if (empleadoId) {
@@ -78,6 +75,10 @@ const pedirParametros = async () => {
         console.error("Error al solicitar los parametros de los formularios", error);
     }
 }
+
+provide('dataEmpleado', dataEmpleado);
+provide('parametros', parametros);
+provide('actualizarData', pedirDatos)
 
 // Al montar el componente, ejecuta las funciones
 onMounted(async () => {

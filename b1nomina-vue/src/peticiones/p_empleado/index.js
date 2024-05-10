@@ -102,7 +102,6 @@ const peticiones = {
 
     async ActualizarSalario(idEmpleado, idMaster, payload){
         try {
-            console.log(idEmpleado, idMaster, payload)
             return await axios.put(`user/${idEmpleado}/update_datos_laborales_salario?user_updater=${idMaster}`, payload)
             .then(
                 respuesta => {

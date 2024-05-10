@@ -41,7 +41,7 @@
                     Salario mensual
                 </template>
                 <template #Texto>
-                    ${{DatosUsuario?.sueldo}}
+                    <span>{{DatosUsuario?.unidad_sueldo}} {{DatosUsuario?.salario_base >> 0}}</span>
                 </template>
             </boxInfo>
 
@@ -117,13 +117,13 @@
                                 Cantidad
                             </template>
                             <template #text-1>                                                                    
-                                {{DatosUsuario?.unidad_sueldo_caracter}} {{DatosUsuario?.salario_base >> 0}}
+                                {{DatosUsuario?.salario_base >> 0}}
                             </template>
                             <template #st-2>  <!--Salario base-->                                                                 
                                 Unidad Sueldo Base
                             </template>
                             <template #text-2>                                                                    
-                                {{DatosUsuario?.unidad_sueldo_caracter}} 
+                                {{DatosUsuario?.unidad_sueldo}} 
                             </template>
                             <template #st-3>  <!--Salario base-->                                                                 
                                 Salario base
