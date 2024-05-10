@@ -1,6 +1,6 @@
 <template>    
     <form class="formulario" id="ActualizarSalario" @submit.prevent="Enviar">
-        <h2 class="titulo-form">Datos Laborales</h2>
+        <h2 class="titulo-form">Salario</h2>
         <div class="row-form">
             <LayoutInputLineal textLabel="Salario Base" :requerido="RequiereActualizar">
                 <template v-slot>
@@ -48,11 +48,6 @@
     const DatosUsuario = reactive(inject('dataEmpleado'))
     const parametros = reactive(inject('parametros'))
     const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
-
-    const emit = defineEmits([
-        'respuestaServidor',
-    ])
-
 
     const RequiereActualizar = ref(false)
 
@@ -143,7 +138,11 @@ const verificarCambios = () => {
         MostrarValores(DatosUsuario.value)
     })
 
-    /**
+    const emit = defineEmits([
+        'respuestaServidor',
+    ])
+
+/**
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios

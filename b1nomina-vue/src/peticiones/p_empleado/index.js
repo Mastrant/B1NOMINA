@@ -121,10 +121,10 @@ const peticiones = {
         try {
             return await axios.put(`user/${idEmpleado}/update_datos_laborales_contrato?user_updater=${idMaster}`, payload)
             .then(respuesta => {
-                return { success: true, data: respuesta?.data.data };
+                return { success: true, data: respuesta?.data };
             })
             .catch(error => {
-                return { success: false, error: error?.response.data.message };
+                return { success: false, error: error.response};
             });
         } catch (error) {
             return { success: false, error: error };

@@ -100,8 +100,11 @@ import InputLinealDescripcion from '@/components/inputs/Input-Lineal-descripcion
 import InputCheckbox from '@/components/inputs/Input-Checkbox.vue';
 import {reactive, ref, watch, inject, onMounted} from 'vue';
 
-const DatosUsuario = reactive(inject('dataEmpleado'))
-const parametros = reactive(inject('parametros'))
+
+import peticiones from '@/peticiones/p_empleado';
+
+const DatosUsuario = reactive(inject('dataEmpleado'));
+const parametros = reactive(inject('parametros'));
 const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
 
 const RequiereActualizar = ref(false);
@@ -204,7 +207,6 @@ const verificarCambios = () => {
     RequiereActualizar.value = !(camposIguales && alMenosUnValorVacio);
 }
 
-
 const DiasLibres = (value) => {
     // Verifica si el valor no es null
     if (value !== null) {
@@ -243,23 +245,32 @@ watch(FechaFinalizacionContrato, (nuevoValor) => ActualizarPayload('fecha_fin', 
 watch(HoraEntrada, (nuevoValor) => ActualizarPayload('hora_ingreso', String(nuevoValor)));
 watch(HoraSalida, (nuevoValor) => ActualizarPayload('hora_egreso', String(nuevoValor)));
 
-
+watch(DatosUsuario, (nuevaInfo) =>     MostrarValores(nuevaInfo.value))
+const emit = defineEmits([
+        'respuestaServidor',
+    ])
 
 /**
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
- const Enviar = () => {
+ const Enviar = async () => {
   //si ID es nulo crea un usuario
  
   if (RequiereActualizar.value) {
-    console.log(payload)
+    const respuesta = await peticiones.ActualizarContrato(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+    if(respuesta.success == true){
+       emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
+    } else {
+        console.log(respuesta)
+        emit('respuestaServidor', {'texto':respuesta?.error?.message, 'valor':false})
+    }
+
   } else {
-    console.log("no se requiere actualizar");
+    emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor':true});
   }
 };
-
 onMounted(() => {
     MostrarValores(DatosUsuario.value)
 });
