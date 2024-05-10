@@ -100,7 +100,7 @@ const emit = defineEmits([
 ]);
 
 // inicializacion de variables reactivas
-const MedioPago = ref(1);
+const MedioPago = ref('');
 const Banco = ref('');
 const TCuenta = ref('');
 const NCuenta = ref('');
@@ -133,7 +133,7 @@ const Hay_cambios = ref(false)
 const ActualizarPayload = (propiedad, valor) => {
     console.log(propiedad, valor)
     payload[propiedad] = valor;
-    if (propiedad == "medio" && (valor == 2 || valor == 1)) {
+    if (propiedad == "medio" && (valor == 2 || valor == 3)) {
         //Si el medio es diferente de transferencia, se borran los otros campos al enviar
         verificarMediodePago(valor);
     } else {
@@ -166,8 +166,8 @@ watch(TCuenta, (nuevoValor) => ActualizarPayload('tipo_cuenta', Number( nuevoVal
 watch(NCuenta, (nuevoValor) => ActualizarPayload('numero_cuenta', nuevoValor));
 
 const verificarMediodePago = (medio) => {
-    if(medio != 0){
-        payload.NumeroCuenta = '';
+    if(medio != 1){
+        payload.numero_cuenta = '';
         payload.banco_id = 0;
         payload.tipo_cuenta = 0; 
         RequiereActualizar.value = false;
@@ -197,8 +197,8 @@ const MostrarValores = (DATA) => {
     NCuenta.value =  (DATA?.numero_cuenta == null) ? '' : DATA?.numero_cuenta;
 
 
-    payload_old.medio = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 0 : DATA?.medio_pago;
-    payload.medio = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 0 : DATA?.medio_pago;
+    payload_old.medio = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 1 : DATA?.medio_pago;
+    payload.medio = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 1 : DATA?.medio_pago;
 
     payload_old.banco_id = DATA?.banco_id ?? '';
     payload.banco_id = DATA?.banco_id ?? '';

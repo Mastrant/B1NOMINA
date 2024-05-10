@@ -1,6 +1,7 @@
 <template>
     <div class="conted">
         <span>En Desarrollo, gracias por su paciencia.</span>
+        
     </div>
 </template>
 

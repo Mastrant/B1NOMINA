@@ -202,12 +202,12 @@
         payload.rut = DATA?.apellido_paterno ?? '';
 
         nacionalidad.value = (DATA?.unidad_sueldo == null)? '' :DATA?.unidad_sueldo;
-        payload_old.rut = DATA?.rut ?? '';
-        payload.rut = DATA?.rut ?? '';
+        payload_old.rut = DATA?.unidad_sueldo ?? '';
+        payload.rut = DATA?.unidad_sueldo ?? '';
 
-        genero.value = (DATA?.salario_base == null)? '' :DATA?.sexo_id;
-        payload_old.rut = DATA?.rut ?? '';
-        payload.rut = DATA?.rut ?? '';
+        genero.value = (DATA?.sexo_id == null || DATA?.sexo_id == '')? 1 : Number(DATA?.sexo_id);
+        payload_old.rut = DATA?.sexo_id ?? '';
+        payload.rut = DATA?.sexo_id ?? '';
 
         fechaNacimiento.value = (DATA?.fecha_nacimiento == null)? '' :DATA?.fecha_nacimiento;
         payload_old.rut = DATA?.fecha_nacimiento ?? '';

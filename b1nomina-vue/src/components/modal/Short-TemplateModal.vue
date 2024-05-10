@@ -2,68 +2,58 @@
     <!-- Utiliza el componente Teleport para "teletransportar" el modal fuera de la jerarquía del DOM del componente padre.
          Esto es útil para modales, popups y notificaciones que necesitan ser renderizados en un lugar específico del DOM.
          El atributo :disabled controla si el teleport está activo o no, basado en la propiedad activarModal. -->
-    <Teleport :disabled="activarModal" to="#modal-container">
-        <!-- Utiliza el componente Transition para aplicar animaciones al modal cuando este se muestra u oculta.
-             El nombre de la animación es "Animacion-Modal". -->
-        <transition name="Animacion-Modal">
-            <!-- El div con la clase "modal" es el contenedor principal del modal.
-                 El atributo v-show controla si el modal se muestra u oculta basado en la propiedad activarModal. -->
-            <div v-show="activarModal" class="modal">
-                <!-- Componente TemplateAlertModal para mostrar notificaciones dentro del modal.
-                     Las propiedades :activarNotifiacion, :Mensaje, :Status controlan la visualización y contenido de la notificación.
-                     El evento @closeNotificacion se dispara cuando se cierra la notificación.
-                     El estilo inline asegura que el modal tenga un z-index alto para asegurar que se muestre por encima de otros elementos. -->
-                <TemplateAlertModal 
-                    class="Notificacion"
-                    :activarNotifiacion="mostrarNotificacion"
-                    :Mensaje="mensajeNotificacion"
-                    :Status="tipoNotificacion"
-                    @closeNotificacion="cerrarNotificacion"
-                    :style="{ zIndex: 1000 }"
-                />
-                <!-- Transición interna para animar el contenido del modal. -->
-                <transition name="Animacion-Modal-inner">
-                    <div v-show="activarModal" class="modal-inner">
-                        <!-- Cabecera del modal con el nombre de la acción y un icono para cerrar el modal. -->
-                        <div class="header-modal">
-                            <span class="NombreAccion">{{NombreAccion}}</span>
-                            <CloseIconVue class="icon" @click="close" />
-                        </div>
+         <Teleport :disabled="activarModal" to="#modal-container">
+            <transition name="Animacion-Modal">
+                <div v-show="activarModal" class="modal">
+                    <TemplateAlertModal 
+                        class="Notificacion"
+                        :activarNotifiacion="mostrarNotificacion"
+                        :Mensaje="mensajeNotificacion"
+                        :Status="tipoNotificacion"
+                        @closeNotificacion="cerrarNotificacion"
+                        :style="{ zIndex: 1000 }"
+                    />
+                     <!-- Transición interna para animar el contenido del modal. -->
+                    <transition name="Animacion-Modal-inner">
+                        <div v-show="activarModal" class="modal-inner">
+                            <!-- Cabecera del modal con el nombre de la acción y un icono para cerrar el modal. -->
+                            <div class="header-modal">
+                                <span class="NombreAccion">{{NombreAccion}}</span>
+                                <CloseIconVue class="icon" @click="close" />
+                            </div>
 
-                        <!-- Slot para el contenido principal del modal. -->
-                        <slot>
-
-                        </slot>
-
-                        <!-- Contenedor para los botones del modal.
-                             Se muestra basado en si FormId es distinto de null. -->
-                        <div class="contend-button-modal" v-if="FormId != null">
-                            <!-- Botón de envío del formulario. -->
-                            <TemplateButton :form="FormId" Tipo="submit" :text="textSubmit"/>
-                            <!-- Slot para botones adicionales. -->
-                            <slot name="boton">
+                            <!-- Slot para el contenido principal del modal. -->
+                            <slot>
 
                             </slot>
-                            <!-- Botón para cancelar la acción. -->
-                            <TemplateButton2 text="Cancelar" @click="close" />
+
+                            <!-- Contenedor para los botones del modal.
+                                Se muestra basado en si FormId es distinto de null. -->
+                            <div class="contend-button-modal" v-if="FormId != null">
+                                <!-- Botón de envío del formulario. -->
+                                <TemplateButton :form="FormId" Tipo="submit" :text="textSubmit"/>
+                                <!-- Slot para botones adicionales. -->
+                                <slot name="boton">
+
+                                </slot>
+                                <!-- Botón para cancelar la acción. -->
+                                <TemplateButton2 text="Cancelar" @click="close" />
+                            </div>
+                            <!-- Contenedor para los botones del modal cuando FormId es null. -->
+                            <div class="contend-button-modal" v-else>
+                                <!-- Botón de envío del formulario. -->
+                                <TemplateButton :form="FormId" Tipo="submit" :text="textSubmit"/>
+                                <!-- Botón para cancelar la acción. -->
+                                <TemplateButton2 text="Cancelar" @click="close" />
+                            </div>
                         </div>
-                        <!-- Contenedor para los botones del modal cuando FormId es null. -->
-                        <div class="contend-button-modal" v-else>
-                            <!-- Botón de envío del formulario. -->
-                            <TemplateButton :form="FormID" Tipo="submit" :text="textSubmit"/>
-                            <!-- Botón para cancelar la acción. -->
-                            <TemplateButton2 text="Cancelar" @click="close" />
-                        </div>
-                    </div>
-                </transition>                
-            </div>
-        </transition>
-    </teleport>
+                    </transition>       
+                </div>
+            </transition>
+        </Teleport>        
 </template>
 
 <script setup>
-// Uso del componente: <TemplateModal @closeModal="" :activarModal="" NombreAccion="">
-
 import {defineProps, defineEmits, ref, watch} from 'vue';
 
 // Importa los componentes necesarios para el modal.
@@ -75,9 +65,6 @@ import TemplateAlertModal from '@/components/modal/TemplateAlertModal.vue';
 // Define las props del componente.
 const props = defineProps({
     // Propiedad para controlar la visibilidad del modal.
-    activarModal: {
-        type: Boolean,
-    },
     // Propiedad para el nombre de la acción que se muestra en el modal.
     NombreAccion: {
         type: String,
@@ -85,7 +72,7 @@ const props = defineProps({
     // Propiedad para el texto del botón de envío.
     textSubmit: {
         type: String,
-        default: 'Siguiente'
+        default: 'Nombre Campo'
     },
     // Propiedad para el ID del formulario asociado al modal.
     FormId:{
@@ -100,21 +87,18 @@ const props = defineProps({
             valor: null
         }), // Proporciona un objeto vacío como valor predeterminado
     },
-    // Propiedad para controlar el estado activo del modal.
-    ModalActivo: {
-        type: Number,
-        default: null
-    }
 });
+
+const activarModal = ref(false)
 
 // Define los eventos que el componente puede emitir.
 const emit = defineEmits([
-    'closeModal'
+    'close',
 ]);
 
 // Función para cerrar el modal.
 const close = () => {
-    emit('closeModal', props.ModalActivo);
+    activarModal.value = false;
 }; 
 
 // Inicializa las variables reactivas para controlar la notificación.
@@ -136,8 +120,9 @@ const mostrarNotificacionPersonalizada = (mensaje, tipo) => {
 
 // Observa cambios en la propiedad DataNotification para mostrar notificaciones personalizadas.
 watch(() => props.DataNotification, (ValorNuevo) => mostrarNotificacionPersonalizada(ValorNuevo.texto,ValorNuevo.valor));
-</script>
 
+
+</script>
 
 <style scoped>
 
@@ -162,7 +147,7 @@ div.modal-inner {
     display:flex; /* Utiliza Flexbox para organizar el contenido */
     flex-direction: column; /* Organiza los elementos hijos en columna */
     position: relative; /* Posiciona el contenido interno del modal en relación al modal */
-    max-width:  810px; /* Establece un ancho máximo para el modal */
+    max-width:  540px; /* Establece un ancho máximo para el modal */
     width:  80%; /* Ajusta el ancho al  80% del ancho del contenedor modal */
 
     box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el tamaño total del elemento */
@@ -199,15 +184,11 @@ div.header-modal > span.NombreAccion {
   white-space: nowrap; /* Evita que el texto se ajuste a una nueva línea */
 }
 
-/* Estilos para el icono dentro del modal, permitiendo interacciones del cursor */
-.icon {
-    cursor: pointer; /* Cambia el cursor a un puntero cuando se pasa sobre el icono */
-}
-
 /* Estilos para el contenedor de botones dentro del modal, alineando los botones al inicio */
 div.contend-button-modal {
     display: flex; /* Utiliza Flexbox para organizar los botones */
-    justify-content: start; /* Alinea los botones al inicio del contenedor */
+    justify-content: center; /* Alinea los botones al inicio del contenedor */
+    align-items: center;
 }
 
 .Animacion-Modal-enter-active, .Animacion-Modal-leave-active {

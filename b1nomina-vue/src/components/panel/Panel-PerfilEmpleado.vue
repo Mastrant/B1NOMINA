@@ -429,6 +429,25 @@
         </LayoutForm>
         <!--Modales Editar información-->
         <CicloEditarEmpleado ref="EditarInfo" />
+
+        <ShortTemplateModal
+            NombreAccion="Foto de Perfil"
+            textSubmit="Cambiar"
+            FormId="a"
+            ref="ShortTemplateModal"
+            :DataNotification="{}"
+        >
+            <template #default>
+            
+                <p>ACA VA EL FORMULARIO</p>        
+                
+            </template>
+            <template #boton>
+                <div>
+                    BOTON
+                </div>
+            </template>
+        </ShortTemplateModal>
     </div>
 </template>
 
@@ -444,6 +463,7 @@ import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
 import TemplateBlanckButton from '@/components/botones/Template-blank-button.vue';
 import LayoutEmpy from '@/components/Layouts/LayoutEmpy.vue'
 import CicloEditarEmpleado from '@/components/elementos/Ciclo-Editar-Empleado.vue';
+import ShortTemplateModal from '@/components/modal/Short-TemplateModal.vue';
 //iconos
 import DolarIcon from '@/components/icons/Dolar-icon-blanco.vue';
 import InfoIcon from '@/components/icons/Info-icon.vue';
