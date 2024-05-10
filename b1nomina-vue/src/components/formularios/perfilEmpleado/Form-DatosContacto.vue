@@ -1,5 +1,5 @@
 <template>    
-    <form class="formulario" id="" @submit.prevent="">
+    <form class="formulario" id="ActualizarContacto" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos de Contacto</h2>
         <div class="row-form">
             <InputLinealDescripcion
@@ -22,7 +22,7 @@
                 @update:modelValue="telefonoCelular = $event"
                 :minimo-caracteres="8"
                 :maximo-caracteres="12"
-                :requerido="formularioRequerido"
+                :requerido="RequiereActualizar"
             />
 
             <InputLinealDescripcion 
@@ -30,30 +30,32 @@
                 Titulo="Teléfono Local" 
                 v-model="telefonoLocal"
                 @update:modelValue="telefonoLocal = $event"
-                :requerido="formularioRequerido"
+                :requerido="RequiereActualizar"
             />
         </div>
 
         <h4 class="titulo-form">Dirección</h4>
         <div class="row-form">
-            <LayoutInputLineal textLabel="Region" :requerido="formularioRequerido">
+            <LayoutInputLineal textLabel="Region" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal 
                         v-model="region" 
                         :options="parametros.regiones" 
+                        :preseleccion="region" 
                         optionsSelected="Seleccionar"
-                        :requerido="formularioRequerido"
+                        :requerido="RequiereActualizar"
                     />
                 </template>
             </LayoutInputLineal>
 
-            <LayoutInputLineal textLabel="Localidad" :requerido="formularioRequerido">
+            <LayoutInputLineal textLabel="Localidad" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal 
                         v-model="localidad" 
                         :options="ListaLocalidad" 
+                        :preseleccion="localidad"
                         optionsSelected="Seleccionar"
-                        :requerido="formularioRequerido"
+                        :requerido="RequiereActualizar"
                     />
                 </template>
             </LayoutInputLineal>
@@ -65,7 +67,7 @@
                 Titulo="Direccion" 
                 v-model="direccion"
                 @update:modelValue="direccion = $event"
-                :requerido="formularioRequerido"
+                :requerido="RequiereActualizar"
             />
         </div>
 
@@ -77,39 +79,37 @@
     import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
     import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
     import InputLinealDescripcion from '@/components/inputs/Input-Lineal-descripcion.vue';
-    import InputCheckbox from '@/components/inputs/Input-Checkbox.vue';
 
-    import { ref, watch, defineEmits, defineProps, reactive, defineExpose } from "vue";
-    import axios from "axios";
+    import {reactive, ref, watch, inject, onMounted} from 'vue';
 
-    const props = defineProps({
-        EmpleadoID: {
-        type: [Number, String], // Especifica que el tipo de la propiedad es Number
-        default: null
-        },
-        parametros: {
-            type: Object,
-            default: {}
-        },
-    });
+    import peticiones from '@/peticiones/p_empleado';
+
+    const DatosUsuario = reactive(inject('dataEmpleado'))
+    const parametros = reactive(inject('parametros'))
+    const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
 
 
-    const payload = reactive({
-        "correo": "",
-        "region": "",
-        "localidad": "",
-        "direccion": "",
-        "telefonoCelular": "",
-        "telefonoLocal": '',
+    const RequiereActualizar = ref(false)
 
-    });
+
+const payload = reactive({
+    correo: "",
+    region: "",
+    localidad: "",
+    direccion: "",
+    telefonoCelular: "",
+    telefonoLocal: '',
+});
+const payload_old = reactive({
+    correo: "",
+    region: "",
+    localidad: "",
+    direccion: "",
+    telefonoCelular: "",
+    telefonoLocal: '',
+});
 
     const ListaLocalidad = ref(''); //Los datos se asignan segun el idRegion
-
-
-    const formularioRequerido = ref(false)
-
-
 
     const correo = ref("");
     const region = ref('');
@@ -117,10 +117,11 @@
     const direccion = ref('');
     const telefonoCelular = ref('');
     const telefonoLocal = ref('');
-
+    
+    watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor?.toLowerCase()));
     watch(region, (nuevoValor) => {
             filtroRegion(nuevoValor);
-            ActualizarPayload1('region', nuevoValor);
+            ActualizarPayload('region', nuevoValor);
         }
     );
     watch(localidad, (nuevoValor) => ActualizarPayload('localidad', nuevoValor));
@@ -128,18 +129,106 @@
     watch(telefonoCelular, (nuevoValor) => ActualizarPayload('telefonoCelular', nuevoValor));
     watch(telefonoLocal, (nuevoValor) => ActualizarPayload('telefonoLocal', nuevoValor));
 
-    watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor?.toLowerCase()));
+/**
+ * Actualiza el valor de una propiedad específica dentro del objeto 'payload'.
+ *
+ * @param {string} propiedad - El nombre de la propiedad a actualizar en el objeto 'payload'.
+ * @param {any} valor - El nuevo valor que se asignará a la propiedad especificada.
+ *
+ * @example
+ * // 'payload' es un objeto con una estructura predefinida.
+ * const payload = {
+ *   nombre: '',
+ *   edad: 0
+ * };
+ *
+ * // Llamando a ActualizarPayload para cambiar el nombre.
+ * ActualizarPayload('nombre', variable);
+ *
+ * // Ahora, 'payload' se verá así:
+ * // {
+ * //   nombre: 'Pedro',
+ * //   edad: 30
+ * // }
+ */
+ const ActualizarPayload = (propiedad, valor) => {
+  // Asigna el nuevo valor a la propiedad especificada dentro del objeto 'payload'.
+  payload[propiedad] = valor;
+  
+  verificarCambios();
 
-    //actualizar datos del payload a enviar
-    const ActualizarPayload = (propiedad, valor) => {
-        payload[propiedad] = valor;
-        formularioRequerido.value = Object.values(payload).some(value => value !== "")
-    };
+};
+
+// Define la función verificarCambios que verifica si hay cambios entre los valores antiguos y nuevos de un payload.
+const verificarCambios = () => {
+    // Comprueba si todos los campos relevantes en payload_old y payload son iguales.
+    // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
+    const camposIguales = Object.keys(payload_old).every( key => payload_old[key] == payload[key]);
+    
+    // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
+    const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
+
+    // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
+    // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
+    // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
+    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+}
+
+const MostrarValores = (DATA) => {
+        // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
+        correo.value = (DATA?.email == null)? '' :DATA?.email;
+        payload_old.correo = DATA?.email ?? '';
+        payload.correo = DATA?.email ?? '';
+
+        region.value = (DATA?.region_id == null)? '' :DATA?.region_id;
+        payload_old.region = DATA?.region_id ?? '';
+        payload.region = DATA?.region_id ?? '';
+
+        localidad.value = (DATA?.comuna_id == null)? '' :DATA?.comuna_id;
+        payload_old.localidad = DATA?.comuna_id ?? '';
+        payload.localidad = DATA?.comuna_id ?? '';
+
+        direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
+        payload_old.direccion = DATA?.direccion ?? '';
+        payload.direccion = DATA?.direccion ?? '';
+
+        telefonoCelular.value = (DATA?.movil == null)? '' :DATA?.movil;
+        payload_old.telefonoCelular = DATA?.movil ?? '';
+        payload.telefonoCelular = DATA?.movil ?? '';
+
+        telefonoLocal.value = (DATA?.fijo == null)? '' :DATA?.fijo;
+        payload_old.telefonoLocal = DATA?.fijo ?? '';
+        payload.telefonoLocal = DATA?.fijo ?? '';
+
+}
+
+    onMounted(() => {
+        MostrarValores(DatosUsuario.value)
+    })
 
     //filtra la lista de regiones segun el id
     const filtroRegion = (id) => {
-        ListaLocalidad.value = props.parametros.localidad.filter(item => item.idregion == id)
+        ListaLocalidad.value = parametros.value?.localidad.filter(item => item.idregion == id)
     };
+
+    const Enviar = async () => {
+  //si ID es nulo crea un usuario
+ 
+  if (RequiereActualizar.value) {
+    console.log(payload)
+    /*
+    const respuesta = await peticiones.ActualizarSalario(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+    if(respuesta.success == true){
+        console.log(respuesta)
+    } else {
+        console.log(respuesta)
+    }
+    */
+  } else {
+    console.log("no se requiere actualizar");
+  }
+};
+
 
 </script>
 
