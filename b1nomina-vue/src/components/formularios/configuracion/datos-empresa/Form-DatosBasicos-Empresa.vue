@@ -161,7 +161,6 @@ watch(NombreEmpresa, (nuevoValor) => ActualizarPayload('NombreEmpresa', nuevoVal
 watch(numeroDocumento, (nuevoValor) => ActualizarPayload('numeroDocumento', nuevoValor));
 watch(correoEmpresa, (nuevoValor) => ActualizarPayload('correoEmpresa', nuevoValor?.toLocaleLowerCase()));
 watch(CiudadEmpresa, (nuevoValor) => ActualizarPayload('CiudadEmpresa', nuevoValor?.toLocaleLowerCase()));
-
 watch(Region, (nuevoValor) => {
         filtroRegion(nuevoValor);
         ActualizarPayload('Region', nuevoValor);

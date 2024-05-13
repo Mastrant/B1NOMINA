@@ -3,7 +3,7 @@
         <LayoutFondoBorder>
             <template #default>
                 <FormDatosbasicosEmpresa 
-                    :Informacion="DatosBasicos"
+                    :Informacion="DatosBasicosEmpresa"
                     :parametros="listadoLocalidad"
                 /> 
             </template>
@@ -12,7 +12,7 @@
         <LayoutFondoBorder>
             <template #default>
                 <FormResponsableEmpresa
-                    :Informacion="DatosBasicos"
+                    :Informacion="DatosResponsableEmpresa"
                 />  
             </template>
         </LayoutFondoBorder>
@@ -27,30 +27,36 @@ import FormResponsableEmpresa from '@/components/formularios/configuracion/datos
 import { onMounted, ref } from 'vue';
 
 import peticiones from '@/peticiones/p_empleado';
+import peticiones_Configuracion from '@/peticiones/configuracion/datos_empresa.js'
 
-const DatosBasicos = ref(
-    {
-        Nombre:'',
-        rut: '',
-        correo: '',
-        ciudad: '',
-        region_id: '1',
-        comuna_id: '',
-        direccion: '',
-
-        NombreResponsable: '',
-        RutResponsable: '',
-        emailResponsable: '',
-        telefonoResposnable: ''
-    }
-)
+const ID_Sociedad = ref(1);
 
 const listadoLocalidad = ref ({})
+
+const DatosBasicosEmpresa = ref([])
+const DatosResponsableEmpresa = ref([])
 
 const pedirListadoLocalidad = async () => {
     const respuesta = await peticiones.ListadoRegiones();
     if (respuesta.success) {
-        listadoLocalidad.value = respuesta.data;
+        DatosBasicosEmpresa.value = respuesta.data;
+    } else {
+        console.error(respuesta.error)
+    }
+}
+
+const SolicitarDatosBasicosEmpresa = async (ID_Sociedad = Number) => {
+    const respuesta = await peticiones_Configuracion.getDatosBasicosEmpresa(ID_Sociedad);
+    if (respuesta.success) {
+        DatosResponsableEmpresa.value = respuesta.data;
+    } else {
+        console.error(respuesta.error)
+    }
+}
+const SolicitarResponsableEmpresa = async (ID_Sociedad = Number) => {
+    const respuesta = await peticiones_Configuracion.getDatosBasicosEmpresa(ID_Sociedad);
+    if (respuesta.success) {
+        DatosResponsableEmpresa.value = respuesta.data;
     } else {
         console.error(respuesta.error)
     }
@@ -58,20 +64,8 @@ const pedirListadoLocalidad = async () => {
 
 onMounted(() => {
     //solicitar los datos de la empresa
-    DatosBasicos.value = {
-        Nombre:'2call',
-        rut: '',
-        correo: '',
-        ciudad: 'malave',
-        region_id: '1',
-        comuna_id: '',
-        direccion: '',
-
-        NombreResponsable: 'pepito',
-        RutResponsable: '456789-j',
-        emailResponsable: 'takataka@miau.net',
-        telefonoResposnable: ''
-    }
+    SolicitarDatosBasicosEmpresa(ID_Sociedad.value)
+    SolicitarResponsableEmpresa(ID_Sociedad.value)
     //solicitar la lista de regiones y comunas
     pedirListadoLocalidad();
 

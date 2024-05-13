@@ -134,22 +134,23 @@
     ];
 
     const payload = reactive({
-        nacionalidad_id: "",
-        sexo_id: "",
-        fecha_nacimiento: "",
-        estado_civil_id: "",
-        apellido_paterno: "",
         rut: "",
+        estado_civil_id: "",
+        nacionalidad_id: "",
         nombres: "",
+        apellido_paterno: "",
+        fecha_nacimiento: "",
+        sexo_id: "",
     });
+    
     const payload_old = reactive({
-        nacionalidad_id: "",
-        sexo_id: "",
-        fecha_nacimiento: "",
-        estado_civil_id: "",
-        apellido_paterno: "",
         rut: "",
+        estado_civil_id: "",
+        nacionalidad_id: "",
         nombres: "",
+        apellido_paterno: "",
+        fecha_nacimiento: "",
+        sexo_id: "",
     });
 
 
@@ -160,7 +161,7 @@
     const apellidos = ref("");
     const tipoDocumentoSelect = ref(""); //Documento selecionado
     const nacionalidad = ref('');
-    const genero = ref('');
+    const genero = ref(1);
     const fechaNacimiento = ref('');
     const estadoCivil = ref(''); 
 
@@ -172,6 +173,11 @@
     watch(genero, (nuevoValor) => ActualizarPayload('sexo_id', nuevoValor));
     watch(fechaNacimiento, (nuevoValor) => ActualizarPayload('fecha_nacimiento', nuevoValor));
     watch(estadoCivil, (nuevoValor) => ActualizarPayload('estado_civil_id', nuevoValor));
+
+    const cambiargenero = () => {
+        console.log(genero.value)
+        genero.value = 2;
+    }
 
     const MostrarValores = (DATA) => {
 
@@ -199,7 +205,7 @@
         payload_old.rut = DATA?.nacionalidad_id ?? '';
         payload.rut = DATA?.nacionalidad_id ?? '';
 
-        genero.value = (DATA?.sexo_id == null || DATA?.sexo_id == '')? console.log(1) : console.log(Number(DATA?.sexo_id));
+        genero.value = (DATA?.sexo_id == null || DATA?.sexo_id == '')? 1 : DATA?.sexo_id;
         payload_old.rut = DATA?.sexo_id ?? '';
         payload.rut = DATA?.sexo_id ?? '';
 
@@ -274,17 +280,15 @@ const verificarCambios = () => {
   //si ID es nulo crea un usuario
  
   if (RequiereActualizar.value == true) {
-    console.log(payload)
-    const respuesta = await peticiones.ActualizarDatosBasicos(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+    const respuesta = await peticiones.ActualizarDatosPrincipales(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
     if(respuesta.success == true){
-       emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
+       emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor': true})
     } else {
-        console.log(respuesta?.error)
-        emit('respuestaServidor', {'texto':respuesta?.error?.message, 'valor':false})
+        console.error(respuesta?.error)
+        emit('respuestaServidor', {'texto': respuesta?.error?.message, 'valor': false})
     }
-
   } else {
-    emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor':true});
+    emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor': true});
   }
 };
 </script>

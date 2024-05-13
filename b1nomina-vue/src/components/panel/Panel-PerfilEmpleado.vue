@@ -69,7 +69,6 @@
                 <template v-slot:cabecera>
                     <NavButtonTemplate text="Datos Laborales" :seleccionado="panelShow== 1" @click="showInfo(1)" />
                     <NavButtonTemplate text="Datos Personales" :seleccionado="panelShow== 2" @click="showInfo(2)" />
-                    <NavButtonTemplate text="Datos Previsionales" :seleccionado="panelShow== 5" @click="showInfo(5)" />
                     <NavButtonTemplate text="Eventos Recurrentes" :seleccionado="panelShow== 3" @click="showInfo(3)" />
                     <NavButtonTemplate text="Solicitudes" :seleccionado="panelShow== 4" @click="showInfo(4)" />
                 </template>
@@ -114,10 +113,10 @@
                                 Salario
                             </template>                            
                             <template #st-1> <!--Cantidad-->                                                                    
-                                Cantidad
+                                Periodo
                             </template>
                             <template #text-1>                                                                    
-                                {{DatosUsuario?.salario_base >> 0}}
+                                {{DatosUsuario?.periodo_sueldo_caracter}}
                             </template>
                             <template #st-2>  <!--Salario base-->                                                                 
                                 Unidad Sueldo Base
@@ -129,7 +128,7 @@
                                 Salario base
                             </template>
                             <template #text-3>                                                                    
-                                {{DatosUsuario?.perio}}                    
+                                {{DatosUsuario?.salario_base << 0}}                    
                             </template>
                             
                             <!--segundo apartado-->
@@ -318,7 +317,7 @@
                                Estado Civil
                             </template>
                             <template #text-6>                                                                    
-                                {{DatosUsuario?.estado_civil_id}}
+                                {{DatosUsuario?.descripcion_estado_civil}}
                             </template>
                             <template #st-7>                                                                    
                                 Sexo

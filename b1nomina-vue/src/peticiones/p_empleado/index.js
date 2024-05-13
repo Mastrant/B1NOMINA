@@ -133,9 +133,23 @@ const peticiones = {
             return { success: false, error: error };
         }  
     },
+    async ActualizarDatosPrincipales(idEmpleado, idMaster, payload){
+        try {
+            return await axios.put(`user/${idEmpleado}/update_datos_personales?user_updater=${idMaster}`, payload)
+            .then(respuesta => {
+                return { success: true, data: respuesta?.data };
+            })
+            .catch(error => {
+                console.error(error);
+                return { success: false, error: error?.response};
+            });
+        } catch (error) {
+            return { success: false, error: error };
+        }  
+    },
     async ActualizarContacto(idEmpleado, idMaster, payload){
         try {
-            return await axios.put(`user/${idEmpleado}/?user_updater=${idMaster}`, payload)
+            return await axios.put(`user/${idEmpleado}/update_datos_contacto_ubicacion?user_updater=${idMaster}`, payload)
             .then(respuesta => {
                 return { success: true, data: respuesta?.data };
             })
@@ -147,21 +161,7 @@ const peticiones = {
             return { success: false, error: error };
         }  
     },
-    async ActualizarDatosBasicos(idEmpleado, idMaster, payload){
-        try {
-            return await axios.put(`user/${idEmpleado}/update_datos_basicos?user_updater=${idMaster}`, payload)
-            .then(respuesta => {
-                return { success: true, data: respuesta?.data };
-            })
-            .catch(error => {
-                console.error(error);
-                return { success: false, error: error?.response};
-            });
-        } catch (error) {
-            return { success: false, error: error };
-        }  
-    },
-    async ActualizarDatosBasicos(idEmpleado, idMaster, payload){
+    async ActualizarDatosPago(idEmpleado, idMaster, payload){
         try {
             return await axios.put(`user/${idEmpleado}/update_datos_basicos?user_updater=${idMaster}`, payload)
             .then(respuesta => {

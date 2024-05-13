@@ -5,8 +5,8 @@
             <InputLinealDescripcion
                 Placeholder="Ejemplo@gmail.com"
                 Titulo="Correo electrónico"
-                v-model="correo"
-                @update:modelValue="correo = $event"
+                v-model="email"
+                @update:modelValue="email = $event"
                 Tipo="email"
                 :requerido="true"
                 name="CorreoElectronico"
@@ -39,9 +39,9 @@
             <LayoutInputLineal textLabel="Region" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal 
-                        v-model="region" 
+                        v-model="region_id" 
                         :options="parametros.regiones" 
-                        :preseleccion="region" 
+                        :preseleccion="region_id" 
                         optionsSelected="Seleccionar"
                         :requerido="RequiereActualizar"
                     />
@@ -51,9 +51,9 @@
             <LayoutInputLineal textLabel="Localidad" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal 
-                        v-model="localidad" 
+                        v-model="comuna_id" 
                         :options="ListaLocalidad" 
-                        :preseleccion="localidad"
+                        :preseleccion="comuna_id"
                         optionsSelected="Seleccionar"
                         :requerido="RequiereActualizar"
                     />
@@ -93,41 +93,45 @@
 
 
 const payload = reactive({
-    correo: "",
-    region: "",
-    localidad: "",
+    email: "",
+    region_id: "",
+    comuna_id: "",
     direccion: "",
-    telefonoCelular: "",
-    telefonoLocal: '',
+    movil: "",
+    fijo: '',
 });
+
 const payload_old = reactive({
-    correo: "",
-    region: "",
-    localidad: "",
+    email: "",
+    region_id: "",
+    comuna_id: "",
     direccion: "",
-    telefonoCelular: "",
-    telefonoLocal: '',
+    movil: "",
+    fijo: '',
 });
+
+
+
 
     const ListaLocalidad = ref(''); //Los datos se asignan segun el idRegion
 
-    const correo = ref("");
-    const region = ref('');
-    const localidad = ref('');
+    const email = ref("");
+    const region_id = ref('');
+    const comuna_id = ref('');
     const direccion = ref('');
     const telefonoCelular = ref('');
     const telefonoLocal = ref('');
     
-    watch(correo, (nuevoValor) => ActualizarPayload("correo", nuevoValor?.toLowerCase()));
-    watch(region, (nuevoValor) => {
+    watch(email, (nuevoValor) => ActualizarPayload("email", nuevoValor?.toLowerCase()));
+    watch(region_id, (nuevoValor) => {
             filtroRegion(nuevoValor);
-            ActualizarPayload('region', nuevoValor);
+            ActualizarPayload('region_id', nuevoValor);
         }
     );
-    watch(localidad, (nuevoValor) => ActualizarPayload('localidad', nuevoValor));
+    watch(comuna_id, (nuevoValor) => ActualizarPayload('comuna_id', nuevoValor));
     watch(direccion, (nuevoValor) => ActualizarPayload('direccion', nuevoValor));
-    watch(telefonoCelular, (nuevoValor) => ActualizarPayload('telefonoCelular', nuevoValor));
-    watch(telefonoLocal, (nuevoValor) => ActualizarPayload('telefonoLocal', nuevoValor));
+    watch(telefonoCelular, (nuevoValor) => ActualizarPayload('movil', nuevoValor));
+    watch(telefonoLocal, (nuevoValor) => ActualizarPayload('fijo', nuevoValor));
 
 /**
  * Actualiza el valor de una propiedad específica dentro del objeto 'payload'.
@@ -178,29 +182,29 @@ const MostrarValores = (DATA) => {
 
     RequiereActualizar.value = false;
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
-        correo.value = (DATA?.email == null)? '' :DATA?.email;
-        payload_old.correo = DATA?.email ?? '';
-        payload.correo = DATA?.email ?? '';
+        email.value = (DATA?.email == null)? '' :DATA?.email;
+        payload_old.email = DATA?.email ?? '';
+        payload.email = DATA?.email ?? '';
 
-        region.value = (DATA?.region_id == null)? '' :DATA?.region_id;
-        payload_old.region = DATA?.region_id ?? '';
-        payload.region = DATA?.region_id ?? '';
+        region_id.value = (DATA?.region_id == null)? '' :DATA?.region_id;
+        payload_old.region_id = DATA?.region_id ?? '';
+        payload.region_id = DATA?.region_id ?? '';
 
-        localidad.value = (DATA?.comuna_id == null)? '' :DATA?.comuna_id;
-        payload_old.localidad = DATA?.comuna_id ?? '';
-        payload.localidad = DATA?.comuna_id ?? '';
+        comuna_id.value = (DATA?.comuna_id == null)? '' :DATA?.comuna_id;
+        payload_old.comuna_id = DATA?.comuna_id ?? '';
+        payload.comuna_id = DATA?.comuna_id ?? '';
 
         direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
         payload_old.direccion = DATA?.direccion ?? '';
         payload.direccion = DATA?.direccion ?? '';
 
-        telefonoCelular.value = (DATA?.movil == null)? '' :DATA?.movil;
-        payload_old.telefonoCelular = DATA?.movil ?? '';
-        payload.telefonoCelular = DATA?.movil ?? '';
+        movil.value = (DATA?.movil == null)? '' :DATA?.movil;
+        payload_old.movil = DATA?.movil ?? '';
+        payload.movil = DATA?.movil ?? '';
 
         telefonoLocal.value = (DATA?.fijo == null)? '' :DATA?.fijo;
-        payload_old.telefonoLocal = DATA?.fijo ?? '';
-        payload.telefonoLocal = DATA?.fijo ?? '';
+        payload_old.fijo = DATA?.fijo ?? '';
+        payload.fijo = DATA?.fijo ?? '';
 
 }
 
