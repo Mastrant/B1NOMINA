@@ -2,19 +2,6 @@ import axios from "axios";
 import almacen from "@/store/almacen";
 
 /*
-async nombreFuncion(parametro){
-    await axios.get()
-    .then(
-        respuesta => {
-            return respuesta?.data, respuesta.status
-        }
-    )
-    .catch(
-        error => {
-
-        }
-    )
-}
 
 async nombreFuncion(parametro,){
         try {
@@ -110,7 +97,8 @@ const peticiones = {
             )
             .catch(
                 error => {
-                    return { success: false, error: error};
+                    console.error(error);
+                    return { success: false, error: error?.response};
                 }
             );
         } catch (error) {
@@ -124,7 +112,8 @@ const peticiones = {
                 return { success: true, data: respuesta?.data };
             })
             .catch(error => {
-                return { success: false, error: error.response};
+                console.error(error);
+                return { success: false, error: error?.response};
             });
         } catch (error) {
             return { success: false, error: error };
@@ -134,10 +123,11 @@ const peticiones = {
         try {
             return await axios.put(`user/${idEmpleado}/update_datos_laborales_puesto?user_updater=${idMaster}`, payload)
             .then(respuesta => {
-                return { success: true, data: respuesta?.data.data };
+                return { success: true, data: respuesta?.data };
             })
             .catch(error => {
-                return { success: false, error: error?.response.data.message };
+                console.error(error);
+                return { success: false, error: error?.response};
             });
         } catch (error) {
             return { success: false, error: error };

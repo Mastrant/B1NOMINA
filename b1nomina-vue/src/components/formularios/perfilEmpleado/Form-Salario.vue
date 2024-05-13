@@ -74,7 +74,12 @@
     const SalarioBase = ref('');
     watch(SalarioBase, (nuevoValor) =>  ActualizarPayload('monto_sueldo', Math.abs(nuevoValor)));
 
+    watch(DatosUsuario, (nuevaInfo) => {
+        MostrarValores(nuevaInfo)        
+    })
+
     const MostrarValores = (DATA) => {
+        RequiereActualizar.value = false;
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
         PeriodoSalario.value = (DATA?.periodo_sueldo == null)? '' :DATA?.periodo_sueldo;
         payload_old.salario_base = DATA?.periodo_sueldo ?? '';
@@ -150,7 +155,7 @@ const verificarCambios = () => {
  const Enviar = async () => {
   //si ID es nulo crea un usuario
  
-  if (RequiereActualizar.value) {
+  if (RequiereActualizar.value == true) {
     console.log(payload)
     const respuesta = await peticiones.ActualizarSalario(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
     if(respuesta.success == true){

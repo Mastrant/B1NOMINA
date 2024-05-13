@@ -147,7 +147,8 @@ const payload_old = reactive({
 
 const MostrarValores = (DATA) => {
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
-
+        RequiereActualizar.value = false;
+        
         TipoDeContrato.value = (DATA?.tipo_contrato == null)? '' :DATA?.tipo_contrato;
         payload_old.tipo_contrato = DATA?.tipo_contrato ?? '';
         payload.tipo_contrato = DATA?.tipo_contrato ?? '';
@@ -245,7 +246,14 @@ watch(FechaFinalizacionContrato, (nuevoValor) => ActualizarPayload('fecha_fin', 
 watch(HoraEntrada, (nuevoValor) => ActualizarPayload('hora_ingreso', String(nuevoValor)));
 watch(HoraSalida, (nuevoValor) => ActualizarPayload('hora_egreso', String(nuevoValor)));
 
-watch(DatosUsuario, (nuevaInfo) =>     MostrarValores(nuevaInfo.value))
+watch(DatosUsuario, (nuevaInfo) => {
+        MostrarValores(nuevaInfo)
+        console.log("datos actualizados")
+        console.log(payload)
+        console.log(payload_old)
+        
+    })
+
 const emit = defineEmits([
         'respuestaServidor',
     ])

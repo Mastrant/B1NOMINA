@@ -41,7 +41,7 @@
                     Salario mensual
                 </template>
                 <template #Texto>
-                    <span>{{DatosUsuario?.unidad_sueldo}} {{DatosUsuario?.salario_base >> 0}}</span>
+                    <span>{{DatosUsuario?.unidad_sueldo_caracater}} {{DatosUsuario?.salario_base >> 0}}</span>
                 </template>
             </boxInfo>
 
@@ -123,7 +123,7 @@
                                 Unidad Sueldo Base
                             </template>
                             <template #text-2>                                                                    
-                                {{DatosUsuario?.unidad_sueldo}} 
+                                {{DatosUsuario?.unidad_sueldo_caracater}} 
                             </template>
                             <template #st-3>  <!--Salario base-->                                                                 
                                 Salario base
@@ -207,7 +207,11 @@
                                 Modalidad
                             </template>
                             <template #text-17>                                                                    
-                                <InterruptorButton Tipo="individual" Texto="Teletrabajo" :Estado="(DatosUsuario?.modalidad)?false :true" />
+                                <InterruptorButton
+                                    Tipo="individual"
+                                    Texto="Teletrabajo" 
+                                    :Estado="(DatosUsuario?.modalidad == 0)?false :true"
+                                />
                             </template>
 
                             <template #titulo6>                                                                    

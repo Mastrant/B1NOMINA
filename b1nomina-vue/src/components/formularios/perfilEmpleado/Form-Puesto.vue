@@ -74,8 +74,11 @@
     import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
     import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
     import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
-    import {reactive, ref, watch, inject, onMounted} from 'vue';
+   
+    
+    import {reactive, ref, watch, inject, onMounted, defineEmits} from 'vue';
 
+    import peticiones from '@/peticiones/p_empleado';
     
     const DatosUsuario = reactive(inject('dataEmpleado'))
     const parametros = reactive(inject('parametros'))
@@ -162,12 +165,15 @@ const verificarCambios = () => {
 }
 
     
-    watch(SedeDeTrabajo, (nuevoValor) => ActualizarPayload('sede_id', Number(nuevoValor)));
+    watch(SedeDeTrabajo, (nuevoValor) => ActualizarPayload('sede_id', nuevoValor));
     watch(Departamento, (nuevoValor) => ActualizarPayload('departamento_id', nuevoValor));
-    watch(Cargo, (nuevoValor) => ActualizarPayload('cargo_id', Number(nuevoValor)));
-    watch(Grupo, (nuevoValor) => ActualizarPayload('grupo_id', Number(nuevoValor)));
-    watch(Modalidad, (nuevoValor) => ActualizarPayload('modalidad', Number(nuevoValor)));
-
+    watch(Cargo, (nuevoValor) => ActualizarPayload('cargo_id', nuevoValor));
+    watch(Grupo, (nuevoValor) => ActualizarPayload('grupo_id', nuevoValor));
+    watch(Modalidad, (nuevoValor) => ActualizarPayload('modalidad', nuevoValor));
+    
+    watch(DatosUsuario, (nuevaInfo) => {
+        MostrarValores(nuevaInfo)
+    })
     
     const MostrarValores = (DATA) => {
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
@@ -199,17 +205,31 @@ const verificarCambios = () => {
         MostrarValores(DatosUsuario.value)
     })
 
-    /**
+    const emit = defineEmits([
+        'respuestaServidor',
+    ])
+
+/**
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
-const Enviar = () => {
-    if (RequiereActualizar.value) {
-        console.log(payload)
+ const Enviar = async () => {
+  //si ID es nulo crea un usuario
+ 
+
+  if (RequiereActualizar.value == true) {
+    const respuesta = await peticiones.ActualizarPuesto(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+    if(respuesta.success == true){
+       emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
     } else {
-        console.log("no se requiere actualizar");
+        emit('respuestaServidor', {'texto':respuesta?.error?.message, 'valor':false})
     }
+
+  } else {
+
+    emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor':true});
+  }
 };
 
 </script>
