@@ -74,6 +74,10 @@
                 :requerido="RequiereActualizar"
             />
         </div>  
+
+        <div>
+            apartado cuenta terceros
+        </div>
         
     </form>
 </template>
@@ -86,6 +90,9 @@ import InputRadioButton from '@/components/botones/Input-Radio-button.vue';
 
 import { ref, watch, reactive, inject , defineEmits, onMounted} from 'vue';
 
+    import peticiones from '@/peticiones/p_empleado';
+
+
 import almacen from '@/store/almacen';
 
 const DatosUsuario = reactive(inject('dataEmpleado'))
@@ -95,8 +102,7 @@ const ID_MASTER = ref(almacen?.userID)
 
 // Define los eventos que el componente puede emitir
 const emit = defineEmits([
-    'closeModal',
-    'respuesta',
+    "respuestaServidor",
 ]);
 
 // inicializacion de variables reactivas
@@ -131,7 +137,6 @@ const Hay_cambios = ref(false)
 
 //actualizar datos del payload
 const ActualizarPayload = (propiedad, valor) => {
-    console.log(propiedad, valor)
     payload[propiedad] = valor;
     if (propiedad == "medio" && (valor == 2 || valor == 3)) {
         //Si el medio es diferente de transferencia, se borran los otros campos al enviar
@@ -174,15 +179,23 @@ const verificarMediodePago = (medio) => {
     }
 }
 
-/**
- * Funcion emitida al enviar el formulario
- * @params payload Contiene los datos que se pasaran
- * Ejecuta la peticion con axios
- */
- const Enviar = async () => {
-    if (Hay_cambios) {
-        await console.log(payload)
+
+const Enviar = async () => {
+  //si ID es nulo crea un usuario
+ 
+  if (Hay_cambios.value == true) {
+    console.log(payload)
+    const respuesta = await peticiones.ActualizarSalario(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+    if(respuesta.success == true){
+       emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
+    } else {
+        console.log(respuesta?.error)
+        emit('respuestaServidor', {'texto':respuesta?.error?.message, 'valor':false})
     }
+
+  } else {
+    emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor':true});
+  }
 };
 
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.

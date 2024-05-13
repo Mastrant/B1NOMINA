@@ -83,7 +83,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="nacionalidad" 
-                        :options="ListaNacionalidad" 
+                        :options="parametros?.nacionalidad" 
                         :requerido="RequiereActualizar"    
                         :preseleccion="nacionalidad" 
                         optionsSelected="Seleccionar"                    
@@ -113,7 +113,7 @@
     import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
     import InputRadioButton from '@/components/botones/Input-Radio-button.vue';
 
-    import {reactive, ref, watch, inject, onMounted} from 'vue';
+    import {reactive, ref, watch, inject, onMounted, defineEmits} from 'vue';
 
     import peticiones from '@/peticiones/p_empleado';
 
@@ -132,18 +132,6 @@
         nombre: "RUT",
     },
     ];
-
-    //lista de nacionalidades
-    const ListaNacionalidad = [
-        {
-            id: 1,
-            nombre: "Nacional"
-        },
-        {
-            id: 2,
-            nombre: "Extrangero"
-        },
-    ]
 
     const payload = reactive({
         nacionalidad_id: "",
@@ -189,6 +177,12 @@
 
         console.log(DATA)
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
+        
+        tipoDocumentoSelect.value = (DATA?.nacionalidad_id == 1)? 2 : 1;
+
+        payload_old.rut = DATA?.rut ?? '';
+        payload.rut = DATA?.rut ?? '';
+        
         numeroDocumento.value = (DATA?.rut == null)? '' :DATA?.rut;
         payload_old.rut = DATA?.rut ?? '';
         payload.rut = DATA?.rut ?? '';
@@ -201,11 +195,11 @@
         payload_old.rut = DATA?.apellido_paterno ?? '';
         payload.rut = DATA?.apellido_paterno ?? '';
 
-        nacionalidad.value = (DATA?.unidad_sueldo == null)? '' :DATA?.unidad_sueldo;
-        payload_old.rut = DATA?.unidad_sueldo ?? '';
-        payload.rut = DATA?.unidad_sueldo ?? '';
+        nacionalidad.value = (DATA?.nacionalidad_id == null)? 1 :DATA?.nacionalidad_id;
+        payload_old.rut = DATA?.nacionalidad_id ?? '';
+        payload.rut = DATA?.nacionalidad_id ?? '';
 
-        genero.value = (DATA?.sexo_id == null || DATA?.sexo_id == '')? 1 : Number(DATA?.sexo_id);
+        genero.value = (DATA?.sexo_id == null || DATA?.sexo_id == '')? console.log(1) : console.log(Number(DATA?.sexo_id));
         payload_old.rut = DATA?.sexo_id ?? '';
         payload.rut = DATA?.sexo_id ?? '';
 
@@ -264,12 +258,35 @@ const verificarCambios = () => {
 
     onMounted(() => {
         MostrarValores(DatosUsuario.value)
-    })
+    });
+
+    const emit = defineEmits([
+        'respuestaServidor',
+    ]);
 
 
-    const Enviar = () => {
-        console.log(payload)
+/**
+ * Funcion emitida al enviar el formulario
+ * @params payload Contiene los datos que se pasaran
+ * Ejecuta la peticion con axios
+ */
+ const Enviar = async () => {
+  //si ID es nulo crea un usuario
+ 
+  if (RequiereActualizar.value == true) {
+    console.log(payload)
+    const respuesta = await peticiones.ActualizarDatosBasicos(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+    if(respuesta.success == true){
+       emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
+    } else {
+        console.log(respuesta?.error)
+        emit('respuestaServidor', {'texto':respuesta?.error?.message, 'valor':false})
     }
+
+  } else {
+    emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor':true});
+  }
+};
 </script>
 
 

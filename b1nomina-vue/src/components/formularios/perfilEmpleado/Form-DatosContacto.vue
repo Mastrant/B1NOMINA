@@ -80,7 +80,7 @@
     import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
     import InputLinealDescripcion from '@/components/inputs/Input-Lineal-descripcion.vue';
 
-    import {reactive, ref, watch, inject, onMounted} from 'vue';
+    import {reactive, ref, watch, inject, onMounted, defineEmits} from 'vue';
 
     import peticiones from '@/peticiones/p_empleado';
 
@@ -175,6 +175,8 @@ const verificarCambios = () => {
 }
 
 const MostrarValores = (DATA) => {
+
+    RequiereActualizar.value = false;
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
         correo.value = (DATA?.email == null)? '' :DATA?.email;
         payload_old.correo = DATA?.email ?? '';
@@ -205,6 +207,10 @@ const MostrarValores = (DATA) => {
     onMounted(() => {
         MostrarValores(DatosUsuario.value)
     })
+    
+    const emit = defineEmits([
+        'respuestaServidor',
+    ]);
 
     //filtra la lista de regiones segun el id
     const filtroRegion = (id) => {
@@ -214,21 +220,20 @@ const MostrarValores = (DATA) => {
     const Enviar = async () => {
   //si ID es nulo crea un usuario
  
-  if (RequiereActualizar.value) {
+  if (RequiereActualizar.value == true) {
     console.log(payload)
-    /*
-    const respuesta = await peticiones.ActualizarSalario(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+    const respuesta = await peticiones.ActualizarContacto(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
     if(respuesta.success == true){
-        console.log(respuesta)
+       emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
     } else {
-        console.log(respuesta)
+        console.log(respuesta?.error)
+        emit('respuestaServidor', {'texto':respuesta?.error?.message, 'valor':false})
     }
-    */
+
   } else {
-    console.log("no se requiere actualizar");
+    emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor':true});
   }
 };
-
 
 </script>
 

@@ -141,11 +141,11 @@ const verificarCambios = () => {
 
     onMounted(() => {
         MostrarValores(DatosUsuario.value)
-    })
+    });
 
     const emit = defineEmits([
         'respuestaServidor',
-    ])
+    ]);
 
 /**
  * Funcion emitida al enviar el formulario

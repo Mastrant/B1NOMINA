@@ -177,6 +177,7 @@ const verificarCambios = () => {
     
     const MostrarValores = (DATA) => {
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
+        RequiereActualizar.value = false;
 
         SedeDeTrabajo.value = (DATA?.sede_id == null)? '' : Number(DATA?.sede_id);
         payload_old.sede_id = Number(DATA?.sede_id) ?? '';
@@ -202,12 +203,12 @@ const verificarCambios = () => {
     }
 
     onMounted(() => {
-        MostrarValores(DatosUsuario.value)
+        MostrarValores(DatosUsuario.value);
     })
 
     const emit = defineEmits([
         'respuestaServidor',
-    ])
+    ]);
 
 /**
  * Funcion emitida al enviar el formulario

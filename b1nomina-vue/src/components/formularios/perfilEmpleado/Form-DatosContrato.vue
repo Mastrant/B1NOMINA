@@ -245,13 +245,10 @@ watch(FechaContratacion, (nuevoValor) => ActualizarPayload('fecha_inicio', nuevo
 watch(FechaFinalizacionContrato, (nuevoValor) => ActualizarPayload('fecha_fin', nuevoValor));
 watch(HoraEntrada, (nuevoValor) => ActualizarPayload('hora_ingreso', String(nuevoValor)));
 watch(HoraSalida, (nuevoValor) => ActualizarPayload('hora_egreso', String(nuevoValor)));
+watch(ListaDiasLibres, (nuevoValor) => ActualizarPayload('dias_descanso', String(nuevoValor?.join(','))));
 
 watch(DatosUsuario, (nuevaInfo) => {
         MostrarValores(nuevaInfo)
-        console.log("datos actualizados")
-        console.log(payload)
-        console.log(payload_old)
-        
     })
 
 const emit = defineEmits([
@@ -271,7 +268,6 @@ const emit = defineEmits([
     if(respuesta.success == true){
        emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
     } else {
-        console.log(respuesta)
         emit('respuestaServidor', {'texto':respuesta?.error?.message, 'valor':false})
     }
 

@@ -133,6 +133,48 @@ const peticiones = {
             return { success: false, error: error };
         }  
     },
+    async ActualizarContacto(idEmpleado, idMaster, payload){
+        try {
+            return await axios.put(`user/${idEmpleado}/?user_updater=${idMaster}`, payload)
+            .then(respuesta => {
+                return { success: true, data: respuesta?.data };
+            })
+            .catch(error => {
+                console.error(error);
+                return { success: false, error: error?.response};
+            });
+        } catch (error) {
+            return { success: false, error: error };
+        }  
+    },
+    async ActualizarDatosBasicos(idEmpleado, idMaster, payload){
+        try {
+            return await axios.put(`user/${idEmpleado}/update_datos_basicos?user_updater=${idMaster}`, payload)
+            .then(respuesta => {
+                return { success: true, data: respuesta?.data };
+            })
+            .catch(error => {
+                console.error(error);
+                return { success: false, error: error?.response};
+            });
+        } catch (error) {
+            return { success: false, error: error };
+        }  
+    },
+    async ActualizarDatosBasicos(idEmpleado, idMaster, payload){
+        try {
+            return await axios.put(`user/${idEmpleado}/update_datos_basicos?user_updater=${idMaster}`, payload)
+            .then(respuesta => {
+                return { success: true, data: respuesta?.data };
+            })
+            .catch(error => {
+                console.error(error);
+                return { success: false, error: error?.response};
+            });
+        } catch (error) {
+            return { success: false, error: error };
+        }  
+    },
 }
 
 export default peticiones
