@@ -1,5 +1,5 @@
 <template>
-    <form class="formulario" id="Form4r" @submit.prevent="Enviar()">
+    <form class="formulario" id="ActualizarDatosPago" @submit.prevent="Enviar()">
         <h2 class="titulo-form">Datos de Pago</h2> 
         <div class="row-form">
             <LayoutInputLineal textLabel="Medio de pago" :requerido="RequiereActualizar">
@@ -9,6 +9,7 @@
                         grupo="MedioPago" 
                         texto="Transferencia" 
                         :valor="1"
+                        :class="{ selected: MedioPago == 1 }"
                         id-radius="Transferencia"
                     />
                    <InputRadioButton 
@@ -16,6 +17,7 @@
                         grupo="MedioPago" 
                         texto="Cheque" 
                         :valor="2"
+                        :class="{ selected: MedioPago == 2 }"
                         id-radius="Cheque"
                     />
                     <InputRadioButton 
@@ -23,6 +25,7 @@
                         grupo="MedioPago" 
                         texto="Al contado" 
                         :valor="3"
+                        :class="{ selected: MedioPago == 3 }"
                         id-radius="Alcontado"
                     />
                 </template>
@@ -64,7 +67,7 @@
             </LayoutInputLineal>            
         </div>
 
-        <div class="row-form cut" v-show="MedioPago == 1" :requerido="RequiereActualizar">
+        <div class="row-form " v-show="MedioPago == 1" :requerido="RequiereActualizar">
             <InputLinealDescripcion 
                 Placeholder="Ingrese Numero de Cuenta" 
                 Titulo="N° Cuenta"
@@ -73,11 +76,55 @@
                 :minimo-caracteres="8"
                 :requerido="RequiereActualizar"
             />
+            <LayoutInputLineal textLabel="Tercero" :requerido="RequiereActualizar">
+                <template v-slot>
+                    <InterruptorButton 
+                        @ValorEstado="verEstado"
+                        Objid="CuentaTercero"
+                        :Texto="(EstatusTercero)? 'Activo': 'Inactivo'"
+                        Tipo="individual"
+                        :Estado="(EstatusTercero == true)? true :false"
+                        :requerido="RequiereActualizar"
+                    />
+                </template>
+            </LayoutInputLineal>
+
         </div>  
 
-        <div>
-            apartado cuenta terceros
+        <h2 v-show="Tercero == 1 && MedioPago == 1" class="titulo-form">Datos de Pago</h2> 
+
+        <p v-show="Tercero == 1 && MedioPago == 1">
+            A continuación introduce los datos de terceros para ser validados a través de su correo electrónico y poder autorizar el pago a esta cuenta.
+        </p>
+
+        <div class="row-form" v-show="Tercero == 1 && MedioPago == 1">
+            <InputLinealDescripcion 
+                Placeholder="Nombre y Apellido" 
+                Titulo="Nombre y Apellido"
+                v-model="NombreTercero"
+                @update:modelValue="NombreTercero = $event"
+                :minimo-caracteres="2"
+                :requerido="Tercero == 1 && MedioPago == 1"
+            />
+            <InputLinealDescripcion 
+                Placeholder="Ingrese Rut" 
+                Titulo="RUT"
+                v-model="RutTercero"
+                @update:modelValue="RutTercero = $event"
+                :minimo-caracteres="3"
+                :requerido="Tercero == 1 && MedioPago == 1"
+            />
+            <InputLinealDescripcion 
+                Placeholder="Correo Electrónico" 
+                Titulo="Correo Electrónico"
+                v-model="emailTercero"
+                @update:modelValue="emailTercero = $event"
+                :minimo-caracteres="2"
+                :requerido="Tercero == 1 && MedioPago == 1"
+                -tipo="email"
+            />
         </div>
+
         
     </form>
 </template>
@@ -87,6 +134,9 @@ import InputLinealDescripcion from '@/components/inputs/Input-Lineal-descripcion
 import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
 import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
 import InputRadioButton from '@/components/botones/Input-Radio-button.vue';
+import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
+
+
 
 import { ref, watch, reactive, inject , defineEmits, onMounted} from 'vue';
 
@@ -98,7 +148,7 @@ import almacen from '@/store/almacen';
 const DatosUsuario = reactive(inject('dataEmpleado'))
     const parametros = reactive(inject('parametros'))
 
-const ID_MASTER = ref(almacen?.userID)
+const ID_USERMASTER  = ref(almacen?.userID)
 
 // Define los eventos que el componente puede emitir
 const emit = defineEmits([
@@ -110,6 +160,12 @@ const MedioPago = ref('');
 const Banco = ref('');
 const TCuenta = ref('');
 const NCuenta = ref('');
+
+const Tercero = ref('');
+const EstatusTercero = ref(false);
+const NombreTercero = ref('');
+const RutTercero = ref('');
+const emailTercero = ref('');
 
 
 // payload de la peticion
@@ -179,13 +235,18 @@ const verificarMediodePago = (medio) => {
     }
 }
 
+const verEstado = (valor) => {
+    (valor == true)
+        ? Tercero.value = 1
+        : Tercero.value = 0
+}
+
 
 const Enviar = async () => {
   //si ID es nulo crea un usuario
  
   if (Hay_cambios.value == true) {
-    console.log(payload)
-    const respuesta = await peticiones.ActualizarSalario(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+    const respuesta = await peticiones?.ActualizarDatosPago(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
     if(respuesta.success == true){
        emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
     } else {
@@ -205,11 +266,13 @@ const MostrarValores = (DATA) => {
     MedioPago.value = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 1 : DATA?.medio_pago;
     
     Banco.value = (DATA?.banco_id == null) ? '' : DATA?.banco_id;
+    
     TCuenta.value =  (DATA?.tipo_cuenta == null) ? '' : DATA?.tipo_cuenta;
 
     NCuenta.value =  (DATA?.numero_cuenta == null) ? '' : DATA?.numero_cuenta;
 
-
+    Tercero.value = (DATA?.Tercero == null)? '' : Number(DATA?.Tercero);
+    
     payload_old.medio = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 1 : DATA?.medio_pago;
     payload.medio = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 1 : DATA?.medio_pago;
 

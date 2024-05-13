@@ -163,7 +163,7 @@ const peticiones = {
     },
     async ActualizarDatosPago(idEmpleado, idMaster, payload){
         try {
-            return await axios.put(`user/${idEmpleado}/update_datos_basicos?user_updater=${idMaster}`, payload)
+            return await axios.put(`user/${idEmpleado}/update_bancarios?user_updater=${idMaster}`, payload)
             .then(respuesta => {
                 return { success: true, data: respuesta?.data };
             })
