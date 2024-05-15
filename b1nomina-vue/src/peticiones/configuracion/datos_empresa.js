@@ -10,7 +10,7 @@ import axios from "axios";
                 return { success: false, error: error?.response.data.message };
             });
         } catch (error) {
-            return { success: false, error: error };
+            return { success: false, error: error }
         }  
     }, 
  * 
