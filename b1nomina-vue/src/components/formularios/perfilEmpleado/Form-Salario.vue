@@ -156,13 +156,12 @@ const verificarCambios = () => {
   //si ID es nulo crea un usuario
  
   if (RequiereActualizar.value == true) {
-    console.log(payload)
     const respuesta = await peticiones.ActualizarSalario(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
     if(respuesta.success == true){
        emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
     } else {
-        console.log(respuesta?.error)
-        emit('respuestaServidor', {'texto':respuesta?.error?.message, 'valor':false})
+        console.error(respuesta?.error)
+        emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false})
     }
 
   } else {

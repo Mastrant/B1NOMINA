@@ -11,16 +11,19 @@
                 {{ DatosUsuario?.cargo }}           
             </template>
             <template #Botones>
+
                 <TemplateButton2 text="Ver último combrobante de pago">
                     <template #post>                                        
                         <OjitoIcon Stroke="#002E99"/>
                     </template>
                 </TemplateButton2>
+
                 <TemplateButton2 text="Liquidar">
                     <template #post>                                        
                         <DolarIcon color="#002E99" />
                     </template>
                 </TemplateButton2>
+
                 <TemplateButton2 text="Desactivar" v-if="DatosUsuario?.activo == 1">
                     <template #post>                                        
                         <ExitColorIcon Stroke="#002E99" />
@@ -31,6 +34,7 @@
                         <ExitColorIcon Stroke="#002E99" />
                     </template>
                 </TemplateButton2>
+
             </template>
         </LayoutCabeceraEmpleado>     
         <!--Descripciones Generales-->  
@@ -170,7 +174,7 @@
                                 Días de descanso
                             </template>
                             <template #text-10>                                                                    
-                                {{Dias_descanso}}
+                                {{DatosUsuario?.dias_descanso?.split(',').map(dia => almacen?.diasLaborales[dia])?.join(', ')}}
                             </template>
 
                              <!--segundo apartado-->
@@ -226,31 +230,31 @@
                                 Campo 1
                             </template>
                             <template #text-22>                                                                    
-                                {{DatosUsuario?.Centralizacion}}
+                                {{DatosUsuario?.campo1}}
                             </template>                     
                             <template #st-23>  <!-- Campo adicional-->
                                 Campo 2
                             </template>
                             <template #text-23>                                                                    
-                                {{DatosUsuario?.Centralizacion}}
+                                {{DatosUsuario?.campo2}}
                             </template>                     
                             <template #st-24>  <!-- Campo adicional-->
                                 Campo 3
                             </template>
                             <template #text-24>                                                                    
-                                {{DatosUsuario?.Centralizacion}}
+                                {{DatosUsuario?.campo3}}
                             </template>                     
                             <template #st-25>  <!-- Campo adicional-->
                                 Campo 4
                             </template>
                             <template #text-25>                                                                    
-                                {{DatosUsuario?.Centralizacion}}
+                                {{DatosUsuario?.campo4}}
                             </template>                     
                             <template #st-26>  <!-- Campo adicional-->
                                 Campo 5
                             </template>
                             <template #text-26>                                                                    
-                                {{DatosUsuario?.Centralizacion}}
+                                {{DatosUsuario?.campo5}}
                             </template>  
 
                         </LayoutTablaEMpleados>
@@ -437,7 +441,7 @@
             NombreAccion="Foto de Perfil"
             textSubmit="Cambiar"
             FormId="a"
-            ref="ShortTemplateModal"
+            ref="shortTemplateModal"
             :DataNotification="{}"
         >
             <template #default>
@@ -491,11 +495,7 @@ const showInfo = (id_apartado) => {
 };
 //referencia del ciclo editar info
 const EditarInfo = ref(null);
-
-
-
-const Dias_descanso = ref(DatosUsuario.value?.dias_descanso?.split(',').map(dia => almacen?.diasLaborales[dia])?.join(', '));
-
+const shortTemplateModal = ref(null)
 
 /*
 onMounted(async () => {

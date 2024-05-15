@@ -161,7 +161,7 @@
     const apellidos = ref("");
     const tipoDocumentoSelect = ref(""); //Documento selecionado
     const nacionalidad = ref('');
-    const genero = ref(1);
+    const genero = ref('');
     const fechaNacimiento = ref('');
     const estadoCivil = ref(''); 
 
@@ -175,15 +175,14 @@
     watch(estadoCivil, (nuevoValor) => ActualizarPayload('estado_civil_id', nuevoValor));
 
     const cambiargenero = () => {
-        console.log(genero.value)
         genero.value = 2;
     }
 
     const MostrarValores = (DATA) => {
 
-        console.log(DATA)
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
-        
+        RequiereActualizar.value = false
+
         tipoDocumentoSelect.value = (DATA?.nacionalidad_id == 1)? 2 : 1;
 
         payload_old.rut = DATA?.rut ?? '';

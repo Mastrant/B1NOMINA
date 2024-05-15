@@ -257,7 +257,7 @@ const Enviar = async () => {
     if(respuesta.success == true){
        emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
     } else {
-        console.log(respuesta?.error)
+        console.error(respuesta?.error)
         emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false})
     }
 
@@ -268,8 +268,7 @@ const Enviar = async () => {
 
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
-    //console.log(DATA)
-    // Variables del formulario 1    
+ 
 
     MedioPago.value = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 1 : DATA?.medio_pago;
     payload_old.medio = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 1 : DATA?.medio_pago;
