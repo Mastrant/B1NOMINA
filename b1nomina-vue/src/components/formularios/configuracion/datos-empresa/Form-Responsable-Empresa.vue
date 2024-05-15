@@ -162,11 +162,9 @@ telefonoResponsable.value = (DATA?.telefonoResposnable == null)? '' :DATA?.telef
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
- */
- const Enviar = () => {
-  let statuspay = Object.values(payload).some((value) => value !== "");
-
-  if (statuspay == true){
+ */const Enviar = () => {
+  
+  if (RequiereActualizar.value == true){
     console.log(payload)
     emit("DataNotificacion", 
         {
@@ -184,8 +182,10 @@ telefonoResponsable.value = (DATA?.telefonoResposnable == null)? '' :DATA?.telef
   }
 };
 
+
 onMounted(() => {
   MostrarValores(props.Informacion)
+  console.log(props.Informacion)
 });
 
 
