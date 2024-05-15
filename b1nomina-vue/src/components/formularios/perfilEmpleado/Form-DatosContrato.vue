@@ -34,7 +34,7 @@
                         v-model="TerminoContrato"
                         :options="parametros?.terminocontrato" 
                         :requerido="RequiereActualizar"
-                        :preseleccion="TipoDeContrato" 
+                        :preseleccion="TerminoContrato" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -82,13 +82,13 @@
         <h2 class="titulo-form">Días de descanso</h2>
 
         <div class="row-form">
-            <InputCheckbox :Objid="1" :checked="ListaDiasLibres.includes(1)" @update="DiasLibres" texto="Lunes" />
-            <InputCheckbox Objid="2" @update="DiasLibres" texto="Martes" />
-            <InputCheckbox Objid="3" @update="DiasLibres" texto="Miércoles" />
-            <InputCheckbox Objid="4" @update="DiasLibres" texto="Jueves" />
-            <InputCheckbox Objid="5" @update="DiasLibres" texto="Viernes" />
-            <InputCheckbox Objid="6" @update="DiasLibres" texto="Sábado" />
-            <InputCheckbox Objid="7" @update="DiasLibres" texto="Domingo" />
+            <InputCheckbox :Objid="1" :checked="ListaDiasLibres.includes('1')" @update="DiasLibres" texto="Lunes" />
+            <InputCheckbox :Objid="2" :checked="ListaDiasLibres.includes('2')" @update="DiasLibres" texto="Martes" />
+            <InputCheckbox :Objid="3" :checked="ListaDiasLibres.includes('3')" @update="DiasLibres" texto="Miércoles" />
+            <InputCheckbox :Objid="4" :checked="ListaDiasLibres.includes('4')" @update="DiasLibres" texto="Jueves" />
+            <InputCheckbox :Objid="5" :checked="ListaDiasLibres.includes('5')" @update="DiasLibres" texto="Viernes" />
+            <InputCheckbox :Objid="6" :checked="ListaDiasLibres.includes('6')" @update="DiasLibres" texto="Sábado" />
+            <InputCheckbox :Objid="7" :checked="ListaDiasLibres.includes('7')" @update="DiasLibres" texto="Domingo" />
         </div>
     </form>
 </template>
@@ -149,25 +149,26 @@ const MostrarValores = (DATA) => {
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
         RequiereActualizar.value = false;
         
-        TipoDeContrato.value = (DATA?.tipo_contrato == null)? '' :DATA?.tipo_contrato;
-        payload_old.tipo_contrato = DATA?.tipo_contrato ?? '';
-        payload.tipo_contrato = DATA?.tipo_contrato ?? '';
+        TipoDeContrato.value = (DATA?.tipo_contrato_id == null)? '' :DATA?.tipo_contrato_id;
+        payload_old.tipo_contrato = DATA?.tipo_contrato_id ?? '';
+        payload.tipo_contrato = DATA?.tipo_contrato_id ?? '';
 
         NivelEstudio.value = (DATA?.nivel_estudio_id == null)? '' :DATA?.nivel_estudio_id;
         payload_old.nivel_estudio_id = DATA?.nivel_estudio_id ?? '';
         payload.nivel_estudio_id = DATA?.nivel_estudio_id ?? '';
 
-        TerminoContrato.value = (DATA?.termino_contrato == null)? '' :DATA?.termino_contrato;
-        payload_old.termino_contrato = DATA?.termino_contrato ?? '';
-        payload.termino_contrato = DATA?.termino_contrato ?? '';
+        TerminoContrato.value = (DATA?.termino_contrato_id == null)? '' : DATA?.termino_contrato_id;
+        payload_old.termino_contrato = DATA?.termino_contrato_id ?? '';
+        payload.termino_contrato = DATA?.termino_contrato_id ?? '';
 
         FechaContratacion.value = (DATA?.fecha_inicio == null)? '' :DATA?.fecha_inicio;
         payload_old.fecha_inicio = DATA?.fecha_inicio ?? '';
         payload.fecha_inicio = DATA?.fecha_inicio ?? '';
 
-        FechaFinalizacionContrato.value = (DATA?.fecha_fin == null)? '' :DATA?.fecha_fin;
-        payload_old.fecha_fin = DATA?.fecha_fin ?? '';
-        payload.fecha_fin = DATA?.fecha_fin ?? '';
+
+        FechaFinalizacionContrato.value = (DATA?.fecha_fin == null | DATA?.fecha_fin.toLowerCase() == 'no asignado')? '' :DATA?.fecha_fin;
+        payload_old.fecha_fin = (DATA?.fecha_fin == null | DATA?.fecha_fin.toLowerCase() == 'no asignado')? '1990-01-01' :DATA?.fecha_fin;
+        payload.fecha_fin = (DATA?.fecha_fin == null | DATA?.fecha_fin.toLowerCase() == 'no asignado')? '1990-01-01' :DATA?.fecha_fin;
 
         HoraEntrada.value = (DATA?.hora_ingreso == null || DATA?.hora_ingreso == '') ? '08:00' : DATA?.hora_ingreso;
         payload_old.hora_ingreso = DATA?.hora_ingreso ?? '08:00';
@@ -176,7 +177,8 @@ const MostrarValores = (DATA) => {
         HoraSalida.value = (DATA?.hora_egreso == null || DATA?.hora_egreso == '') ? '18:00' : DATA?.hora_egreso;
         payload_old.hora_egreso = DATA?.hora_egreso ?? '18:00';
         payload.hora_egreso = DATA?.hora_egreso ?? '18:00';
-
+        
+        ListaDiasLibres.value = DATA?.dias_descanso?.split(',')
         payload_old.dias_descanso = DATA?.dias_descanso ?? '';
         payload.dias_descanso = DATA?.dias_descanso ?? '';
 
@@ -209,35 +211,26 @@ const verificarCambios = () => {
 }
 
 const DiasLibres = (value) => {
-    // Verifica si el valor no es null
-    if (value !== null) {
-        // Verifica si el valor ya está en la lista
-        if (ListaDiasLibres.value.includes(value)) {
-            // Si el valor ya está en la lista, lo remueve
-            // Encuentra el índice del valor en la lista
-            const index = ListaDiasLibres.value.indexOf(value);
-            // Verifica si el índice es válido (mayor que -1)
-            if (index > -1) {
-            // Remueve el valor de la lista usando splice
-            ListaDiasLibres.value.splice(index, 1);
-            }
-        } else {
-            // Si el valor no está en la lista, lo agrega
-            // Agrega el valor al final de la lista
-            ListaDiasLibres.value.push(value);
-        }
+    const indice = ListaDiasLibres.value.indexOf(value)
+    
+    if (indice!== -1) {
+        // Si el número está en el arreglo, lo elimina
+        ListaDiasLibres.value.splice(indice, 1);
+    } else {
+        // Si el número no está en el arreglo, lo agrega
+        ListaDiasLibres.value.push(value);
     }
+    ActualizarPayload('dias_descanso', ListaDiasLibres.value.join(','))
 };
     
 // Observar cambios en la variable
-watch(TipoDeContrato, (nuevoValor) => ActualizarPayload('tipo_contrato', Number(nuevoValor)));
+watch(TipoDeContrato, (nuevoValor) => ActualizarPayload('tipo_contrato', nuevoValor));
 watch(NivelEstudio, (nuevoValor) => ActualizarPayload('nivel_estudio_id', nuevoValor));
 watch(TerminoContrato, 
     (nuevoValor) => {
-        ActualizarPayload('termino_contrato', Number(nuevoValor));
+        ActualizarPayload('termino_contrato', nuevoValor);
         if(nuevoValor == 0) {
             ActualizarPayload('fecha_fin', '1990-01-01')
-        
         }
     }
 );
@@ -245,13 +238,6 @@ watch(FechaContratacion, (nuevoValor) => ActualizarPayload('fecha_inicio', nuevo
 watch(FechaFinalizacionContrato, (nuevoValor) => ActualizarPayload('fecha_fin', nuevoValor));
 watch(HoraEntrada, (nuevoValor) => ActualizarPayload('hora_ingreso', String(nuevoValor)));
 watch(HoraSalida, (nuevoValor) => ActualizarPayload('hora_egreso', String(nuevoValor)));
-watch(ListaDiasLibres, (nuevoValor) => 
-        ActualizarPayload(
-            'dias_descanso', 
-            String(nuevoValor?.join(',')
-        )
-    )
-);
 
 watch(DatosUsuario, (nuevaInfo) => {
         MostrarValores(nuevaInfo)
@@ -267,19 +253,20 @@ const emit = defineEmits([
  * Ejecuta la peticion con axios
  */
  const Enviar = async () => {
-  //si ID es nulo crea un usuario
+    //si ID es nulo crea un usuario
  
-  if (RequiereActualizar.value) {
-    const respuesta = await peticiones.ActualizarContrato(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
-    if(respuesta.success == true){
-       emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
-    } else {
-        emit('respuestaServidor', {'texto':respuesta?.error?.message, 'valor':false})
-    }
+    if (RequiereActualizar.value == true) {
+        const respuesta = await peticiones.ActualizarContrato(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+        if(respuesta.success == true){
+            emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
+        } else {
+            console.error(respuesta?.error)
+            emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false})
+        }
 
-  } else {
-    emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor':true});
-  }
+    } else {
+        emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor':true});
+    }
 };
 onMounted(() => {
     MostrarValores(DatosUsuario.value)

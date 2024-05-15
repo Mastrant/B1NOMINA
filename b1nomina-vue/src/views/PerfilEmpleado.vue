@@ -43,8 +43,18 @@
     const estado = ref(false)
     const dataEmpleado = ref(null)
     const parametros = ref({})
-    const empleadoId = Number(route.params?.empleadoId);
-    const SociedadId = Number(route.params?.sociedadId);
+
+    const props = defineProps({
+        sociedadId: {
+            type: String,
+            required: true
+        },
+        empleadoId: {
+            type: String,
+            required: true
+        }
+    });
+
 
     // Variable reactiva para almacenar información temporal
     const Informacion = ref('')
@@ -58,11 +68,10 @@
     // Función para solicitar datos del empleado
     const pedirDatos = async () => {
         try {
-            if (empleadoId) {
-                const resultado = await peticiones.datosDelEmpleado(empleadoId);
+            if (props.empleadoId) {
+                const resultado = await peticiones.datosDelEmpleado(props.empleadoId);
                 if (resultado.success){
                     Informacion.value = resultado?.data;
-                    console.log(Informacion.value)
                 } else {
                     console.error(resultado.error);
                 }
@@ -73,13 +82,12 @@
     }
 
     // Función para solicitar parámetros de los formularios
-    const pedirParametros = async () => {
+    const pedirParametros = async (id) => {
         try {
-            if (empleadoId) {
-                const resultado = await peticiones.pedirParametros(SociedadId);
+            if (id != null) {
+                const resultado = await peticiones.pedirParametros(id);
                 if (resultado.success){
                     parametros.value = resultado?.data;
-                    console.log(parametros.value)
                 } else {
                     console.error(resultado.error);
                 }
@@ -97,6 +105,6 @@
     // Ejecuta las funciones al montar el componente
     onMounted(async () => {
        await pedirDatos();
-       await pedirParametros();
+       await pedirParametros(props.sociedadId);
     });
 </script>

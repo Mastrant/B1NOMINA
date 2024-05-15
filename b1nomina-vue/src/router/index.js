@@ -20,7 +20,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'Login',
-      component: () => import('../views/LoginView.vue'),
+      component: () => import('@/views/LoginView.vue'),
       meta: {
         requiereToken: false, // No se requiere autenticación para acceder a esta ruta
       },
@@ -29,7 +29,7 @@ const router = createRouter({
     {
       path: '/sociedad',
       name: 'sociedad',
-      component: () => import('../views/SociedadView.vue'),
+      component: () => import('@/views/SociedadView.vue'),
       meta: {
         requiereToken: true, // Se requiere autenticación para acceder a esta ruta
       },

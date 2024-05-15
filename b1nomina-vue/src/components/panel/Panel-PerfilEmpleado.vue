@@ -11,16 +11,19 @@
                 {{ DatosUsuario?.cargo }}           
             </template>
             <template #Botones>
+
                 <TemplateButton2 text="Ver último combrobante de pago">
                     <template #post>                                        
                         <OjitoIcon Stroke="#002E99"/>
                     </template>
                 </TemplateButton2>
+
                 <TemplateButton2 text="Liquidar">
                     <template #post>                                        
                         <DolarIcon color="#002E99" />
                     </template>
                 </TemplateButton2>
+
                 <TemplateButton2 text="Desactivar" v-if="DatosUsuario?.activo == 1">
                     <template #post>                                        
                         <ExitColorIcon Stroke="#002E99" />
@@ -31,6 +34,7 @@
                         <ExitColorIcon Stroke="#002E99" />
                     </template>
                 </TemplateButton2>
+
             </template>
         </LayoutCabeceraEmpleado>     
         <!--Descripciones Generales-->  
@@ -170,7 +174,7 @@
                                 Días de descanso
                             </template>
                             <template #text-10>                                                                    
-                                {{Dias_descanso}}
+                                {{DatosUsuario?.dias_descanso?.split(',').map(dia => almacen?.diasLaborales[dia])?.join(', ')}}
                             </template>
 
                              <!--segundo apartado-->
@@ -226,31 +230,31 @@
                                 Campo 1
                             </template>
                             <template #text-22>                                                                    
-                                {{DatosUsuario?.Centralizacion}}
+                                {{DatosUsuario?.campo1}}
                             </template>                     
                             <template #st-23>  <!-- Campo adicional-->
                                 Campo 2
                             </template>
                             <template #text-23>                                                                    
-                                {{DatosUsuario?.Centralizacion}}
+                                {{DatosUsuario?.campo2}}
                             </template>                     
                             <template #st-24>  <!-- Campo adicional-->
                                 Campo 3
                             </template>
                             <template #text-24>                                                                    
-                                {{DatosUsuario?.Centralizacion}}
+                                {{DatosUsuario?.campo3}}
                             </template>                     
                             <template #st-25>  <!-- Campo adicional-->
                                 Campo 4
                             </template>
                             <template #text-25>                                                                    
-                                {{DatosUsuario?.Centralizacion}}
+                                {{DatosUsuario?.campo4}}
                             </template>                     
                             <template #st-26>  <!-- Campo adicional-->
                                 Campo 5
                             </template>
                             <template #text-26>                                                                    
-                                {{DatosUsuario?.Centralizacion}}
+                                {{DatosUsuario?.campo5}}
                             </template>  
 
                         </LayoutTablaEMpleados>
@@ -437,7 +441,7 @@
             NombreAccion="Foto de Perfil"
             textSubmit="Cambiar"
             FormId="a"
-            ref="ShortTemplateModal"
+            ref="shortTemplateModal"
             :DataNotification="{}"
         >
             <template #default>
@@ -476,11 +480,11 @@ import ExitColorIcon from '@/components/icons/Exit-color-icon.vue'
 import EdiIcon from '@/components/icons/Edit-icon.vue';
 
 //Librerias y acciones
-import {ref, defineProps, onMounted, inject } from 'vue';
+import {ref, inject } from 'vue';
 import {useRoute}  from 'vue-router';
 import almacen from '@/store/almacen';
 
-const DatosUsuario = inject('dataEmpleado')
+const DatosUsuario = ref(inject('dataEmpleado'))
 
 const route = useRoute();  
 const EmpleadoID = route.params.empleadoId
@@ -491,21 +495,7 @@ const showInfo = (id_apartado) => {
 };
 //referencia del ciclo editar info
 const EditarInfo = ref(null);
-
-// Declara una constante 'lista_dias' que almacena un arreglo de días de descanso tomado de los datos del usuario.
-// Utiliza el operador de encadenamiento opcional (?.) para acceder a 'dias_descanso' dentro de 'DatosUsuario'.
-// Si 'DatosUsuario' es nulo o indefinido, 'lista_dias' será nulo.
-// Luego, utiliza el método 'split(',')' para dividir la cadena 'dias_descanso' en un arreglo,
-// donde cada elemento del arreglo es un día de descanso.
-const lista_dias = DatosUsuario.value?.dias_descanso?.split(',');
-
-// Declara una constante 'Dias_descanso' que almacena una cadena de texto con los días de descanso.
-// Utiliza el método 'map()' para iterar sobre cada elemento en 'lista_dias'.
-// Para cada 'dia' en 'lista_dias', accede al valor correspondiente en 'almacen.diasLaborales[dia]'.
-// Esto asume que 'almacen' es un objeto que contiene un diccionario 'diasLaborales' con claves numéricas.
-// Luego, utiliza el método 'join(', ')' para unir todos los elementos del arreglo resultante en una cadena de texto,
-// separada por comas y espacios.
-const Dias_descanso = lista_dias?.map(dia => almacen?.diasLaborales[dia])?.join(', ');
+const shortTemplateModal = ref(null)
 
 /*
 onMounted(async () => {
