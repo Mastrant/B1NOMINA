@@ -1,109 +1,105 @@
-import { createRouter, createWebHashHistory } from 'vue-router'; //importa librerias de vue router
+// Importa las bibliotecas necesarias para crear el router de Vue.js
+import { createRouter, createWebHashHistory } from 'vue-router';
 
-//creacion del router
+// Creación del router con la historia de navegación basada en hash y la URL base
 const router = createRouter({
-  //creacion del historial de navegacion
   history: createWebHashHistory(import.meta.env.BASE_URL),
-  
-  // Lista de las Rutas
+
+  // Definición de las rutas disponibles en la aplicación
   routes: [
-    //Redirige al logIn
+    // Redirección inicial a la página de Login
     {
       path: '/',
       redirect: '/Login',
       meta: {
-        requiereToken: false, //establece si es requerido autorizacion para acceder
+        requiereToken: false, // Indica que no se requiere autenticación para acceder a esta ruta
       },
-      children: [
-
-      ]
-
+      children: [], // No tiene sub-rutas directamente asociadas
     },
-    //Pagina de logIn
+    // Ruta para la página de inicio de sesión
     {
-        path: '/login',
-        name: 'Login',
-        component: () => import('../views/LoginView.vue'),
-        meta: {
-          requiereToken: false, //establece si es requerido autorizacion para acceder
-        }
+      path: '/login',
+      name: 'Login',
+      component: () => import('../views/LoginView.vue'),
+      meta: {
+        requiereToken: false, // No se requiere autenticación para acceder a esta ruta
+      },
     },
-    //Selecionar la sociedad posterior al logIn
+    // Ruta principal para seleccionar la sociedad después de iniciar sesión
     {
       path: '/sociedad',
       name: 'sociedad',
       component: () => import('../views/SociedadView.vue'),
       meta: {
-        requiereToken: true, //establece si es requerido autorizacion para acceder
+        requiereToken: true, // Se requiere autenticación para acceder a esta ruta
       },
     },
-    //sociedad selecionada
+    // Ruta para mostrar detalles de una sociedad específica
     {
       path: '/sociedad/:sociedadId',
-      component: () => import('@/views/TemplateView.vue'), 
+      component: () => import('@/views/TemplateView.vue'),
       meta: {
-        requiereToken: true, //establece si es requerido autorizacion para acceder
+        requiereToken: true, // Se requiere autenticación para acceder a esta ruta
       },
-      
-      // rutas derivadas de la seleccion de la sociedad
+      // Sub-rutas derivadas de la selección de una sociedad
       children: [
-        //panel Dashboard
+        // Panel de dashboard
         {
           path: '',
           name: 'dashboard',
           component: () => import('@/views/DashboardView.vue'),
-          alias: ['dashboard']
+          alias: ['dashboard'], // Alias alternativo para la ruta
         },
-        //panel gestion de nomina
+        // Panel de gestión de nómina
         {
           path: 'gestionNomina',
           component: () => import('@/views/GestionNominaView.vue'),
-          alias: ['gestiosNomina', 'nomina']
+          alias: ['gestiosNomina', 'nomina'], // Alias alternativos para la ruta
         },
-        //panel empleados
+        // Panel de empleados
         {
           path: 'empleados',
           name: 'empleados',
           alias: ['empleados'],
           component: () => import('@/views/EmpleadosView.vue'),
-          props: true,
-         
-          //componentes hijos de la ruta empleados
-          children:[
+          props: true, // Permite pasar props a los componentes hijos
+          // Componentes hijos de la ruta empleados
+          children: [
+            // Lista de empleados
             {
               path: "",
               component: () => import('@/components/panel/Panel-empleados.vue'),
               name: 'listar',
               alias: 'listar',
-              props: true,
-               //toma los parametros de la url con el mismo nombre que los recibe
+              props: true, // Permite pasar props a los componentes hijos
             },
+            // Empleados en contratación
             {
               path: 'enContratacion',
               name: 'enContratacion',
-              component: () => import('@/components/panel/Panel-EnContratacion.vue'),   
-              alias: 'enContratacion'         
+              component: () => import('@/components/panel/Panel-EnContratacion.vue'),
+              alias: 'enContratacion',
             },
+            // Empleados inactivos
             {
               path: 'inactivos',
               name: 'inactivos',
-              component: () => import('@/components/panel/Panel-Inactivos.vue'),   
-              alias: 'inactivos'         
+              component: () => import('@/components/panel/Panel-Inactivos.vue'),
+              alias: 'inactivos',
             },
-          ]
+          ],
         },
-       // Asegúrate de que el alias para 'panelEmpleado/:empleadoId' esté correctamente definido
+        // Ruta para panel de empleado individual
         {
           path: 'panelEmpleado/:empleadoId',
           name: 'panel-empleado',
           component: () => import('@/views/PerfilEmpleado.vue'),
-          props: true,
-          // Asegúrate de que el alias coincida con la estructura de rutas esperada
-          alias: ['/sociedad/:sociedadId/panelEmpleado/:empleadoId'],
+          props: true, // Permite pasar props a los componentes hijos
+          alias: ['/sociedad/:sociedadId/panelEmpleado/:empleadoId'], // Alias para la ruta
           beforeEnter: (to, from, next) => {
-            // Aquí puedes definir la lógica para redirigir a una ruta específica
-            next();
-          }
+            // Lógica personalizada antes de entrar en la ruta
+            next(); // Continúa con la navegación
+          },
         },
          
         //panel informes

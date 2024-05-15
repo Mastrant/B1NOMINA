@@ -1,26 +1,30 @@
+<!-- Plantilla del componente que utiliza un botón con slots para contenido dinámico y un elemento span para texto fijo -->
 <template>
     <button type="button">
-        <slot name="default">
-
-        </slot>
+        <!-- Slot llamado 'default' donde se puede insertar contenido dinámico antes del texto fijo -->
+        <slot name="default"></slot>
+        <!-- Elemento span que muestra el texto definido por la propiedad 'text' -->
         <span>
             {{ text }}
         </span>
-        <slot name="post">
-
-        </slot>
+        <!-- Slot llamado 'post' donde se puede insertar contenido dinámico después del texto fijo -->
+        <slot name="post"></slot>
     </button>    
 </template>
 
 <script setup>
+// Importar funciones necesarias de Vue para trabajar con reactividad y definición de props
 import { ref, defineProps } from 'vue';
 
+// Definir las propiedades que el componente aceptará
 const props = defineProps({
-    text: ref('')
+    // Texto que se mostrará dentro del botón
+    text: ref(''),
 });
 </script>
 
 <style scoped>
+/* Estilos aplicados al botón */
 button {
     box-sizing: border-box;
     padding-left: 15.39px;
@@ -39,16 +43,16 @@ button {
     justify-content: space-between;
     cursor: pointer;
     width: fit-content;
-
 }
 
+/* Cambio de fondo cuando el mouse pasa sobre el botón */
 button:hover {
     background: #ebedf1;
 }
 
+/* Estilos aplicados al texto dentro del botón */
 span {
-    /*estilos de fuente*/
-
+    /* Estilos de fuente para el texto */
     color: #002E99;
     font-size: 16px;
     font-family: Poppins;
