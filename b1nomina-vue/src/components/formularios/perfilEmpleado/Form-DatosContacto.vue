@@ -198,7 +198,7 @@ const MostrarValores = (DATA) => {
         payload_old.direccion = DATA?.direccion ?? '';
         payload.direccion = DATA?.direccion ?? '';
 
-        movil.value = (DATA?.movil == null)? '' :DATA?.movil;
+        telefonoCelular.value = (DATA?.movil == null)? '' :DATA?.movil;
         payload_old.movil = DATA?.movil ?? '';
         payload.movil = DATA?.movil ?? '';
 

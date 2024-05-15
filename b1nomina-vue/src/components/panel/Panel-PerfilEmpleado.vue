@@ -476,11 +476,11 @@ import ExitColorIcon from '@/components/icons/Exit-color-icon.vue'
 import EdiIcon from '@/components/icons/Edit-icon.vue';
 
 //Librerias y acciones
-import {ref, defineProps, onMounted, inject } from 'vue';
+import {ref, inject } from 'vue';
 import {useRoute}  from 'vue-router';
 import almacen from '@/store/almacen';
 
-const DatosUsuario = inject('dataEmpleado')
+const DatosUsuario = ref(inject('dataEmpleado'))
 
 const route = useRoute();  
 const EmpleadoID = route.params.empleadoId
@@ -492,20 +492,10 @@ const showInfo = (id_apartado) => {
 //referencia del ciclo editar info
 const EditarInfo = ref(null);
 
-// Declara una constante 'lista_dias' que almacena un arreglo de días de descanso tomado de los datos del usuario.
-// Utiliza el operador de encadenamiento opcional (?.) para acceder a 'dias_descanso' dentro de 'DatosUsuario'.
-// Si 'DatosUsuario' es nulo o indefinido, 'lista_dias' será nulo.
-// Luego, utiliza el método 'split(',')' para dividir la cadena 'dias_descanso' en un arreglo,
-// donde cada elemento del arreglo es un día de descanso.
-const lista_dias = DatosUsuario.value?.dias_descanso?.split(',');
 
-// Declara una constante 'Dias_descanso' que almacena una cadena de texto con los días de descanso.
-// Utiliza el método 'map()' para iterar sobre cada elemento en 'lista_dias'.
-// Para cada 'dia' en 'lista_dias', accede al valor correspondiente en 'almacen.diasLaborales[dia]'.
-// Esto asume que 'almacen' es un objeto que contiene un diccionario 'diasLaborales' con claves numéricas.
-// Luego, utiliza el método 'join(', ')' para unir todos los elementos del arreglo resultante en una cadena de texto,
-// separada por comas y espacios.
-const Dias_descanso = lista_dias?.map(dia => almacen?.diasLaborales[dia])?.join(', ');
+
+const Dias_descanso = ref(DatosUsuario.value?.dias_descanso?.split(',').map(dia => almacen?.diasLaborales[dia])?.join(', '));
+
 
 /*
 onMounted(async () => {

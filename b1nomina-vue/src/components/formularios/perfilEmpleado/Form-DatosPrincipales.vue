@@ -194,28 +194,28 @@
         payload.rut = DATA?.rut ?? '';
 
         nombres.value = (DATA?.nombres == null)? '' :DATA?.nombres;
-        payload_old.rut = DATA?.nombres ?? '';
-        payload.rut = DATA?.nombres ?? '';
+        payload_old.nombres = DATA?.nombres ?? '';
+        payload.nombres = DATA?.nombres ?? '';
 
         apellidos.value = (DATA?.apellido_paterno == null)? '' :DATA?.apellido_paterno;
-        payload_old.rut = DATA?.apellido_paterno ?? '';
-        payload.rut = DATA?.apellido_paterno ?? '';
+        payload_old.apellido_paterno = DATA?.apellido_paterno ?? '';
+        payload.apellido_paterno = DATA?.apellido_paterno ?? '';
 
-        nacionalidad.value = (DATA?.nacionalidad_id == null)? 1 :DATA?.nacionalidad_id;
-        payload_old.rut = DATA?.nacionalidad_id ?? '';
-        payload.rut = DATA?.nacionalidad_id ?? '';
+        nacionalidad.value = (DATA?.nacionalidad_id == null)? 1 : DATA?.nacionalidad_id;
+        payload_old.nacionalidad_id = Number(DATA?.nacionalidad_id) ?? '';
+        payload.nacionalidad_id = Number(DATA?.nacionalidad_id) ?? '';
 
         genero.value = (DATA?.sexo_id == null || DATA?.sexo_id == '')? 1 : DATA?.sexo_id;
-        payload_old.rut = DATA?.sexo_id ?? '';
-        payload.rut = DATA?.sexo_id ?? '';
+        payload_old.sexo_id = DATA?.sexo_id ?? '';
+        payload.sexo_id = DATA?.sexo_id ?? '';
 
         fechaNacimiento.value = (DATA?.fecha_nacimiento == null)? '' :DATA?.fecha_nacimiento;
-        payload_old.rut = DATA?.fecha_nacimiento ?? '';
-        payload.rut = DATA?.fecha_nacimiento ?? '';
+        payload_old.fecha_nacimiento = DATA?.fecha_nacimiento ?? '';
+        payload.fecha_nacimiento = DATA?.fecha_nacimiento ?? '';
 
         estadoCivil.value = (DATA?.estado_civil_id == null)? '' :DATA?.estado_civil_id;
-        payload_old.rut = DATA?.estado_civil_id ?? '';
-        payload.rut = DATA?.estado_civil_id ?? '';
+        payload_old.estado_civil_id = DATA?.estado_civil_id ?? '';
+        payload.estado_civil_id = DATA?.estado_civil_id ?? '';
     }
 
 /**
@@ -285,7 +285,7 @@ const verificarCambios = () => {
        emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor': true})
     } else {
         console.error(respuesta?.error)
-        emit('respuestaServidor', {'texto': respuesta?.error?.message, 'valor': false})
+        emit('respuestaServidor', {'texto': respuesta?.error, 'valor': false})
     }
   } else {
     emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor': true});
