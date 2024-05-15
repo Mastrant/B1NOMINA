@@ -55,12 +55,20 @@
                         id-radius="CCorriente"  
                         :requerido="RequiereActualizar"                      
                     />
-                   <InputRadioButton 
+                    <InputRadioButton 
                         v-model="TCuenta" 
                         grupo="TCuenta"
                         texto="Ahorro"
                         :valor="1"
                         id-radius="CAhorro"  
+                        :requerido="RequiereActualizar"  
+                    />
+                    <InputRadioButton 
+                        v-model="TCuenta" 
+                        grupo="TCuenta"
+                        texto="Vista"
+                        :valor="2"
+                        id-radius="CVista"  
                         :requerido="RequiereActualizar"  
                     />
                 </template>
@@ -103,7 +111,6 @@
                 Titulo="Nombre y Apellido"
                 v-model="NombreTercero"
                 @update:modelValue="NombreTercero = $event"
-                :minimo-caracteres="2"
                 :requerido="Tercero == 1 && MedioPago == 1"
             />
             <InputLinealDescripcion 
@@ -246,12 +253,12 @@ const Enviar = async () => {
   //si ID es nulo crea un usuario
  
   if (Hay_cambios.value == true) {
-    const respuesta = await peticiones?.ActualizarDatosPago(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+    const respuesta = await peticiones?.ActualizarDatosPago(DatosUsuario.value?.user_id, ID_USERMASTER.value, payload);
     if(respuesta.success == true){
        emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
     } else {
         console.log(respuesta?.error)
-        emit('respuestaServidor', {'texto':respuesta?.error?.message, 'valor':false})
+        emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false})
     }
 
   } else {
@@ -262,29 +269,25 @@ const Enviar = async () => {
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
     //console.log(DATA)
-    // Variables del formulario 1
+    // Variables del formulario 1    
+
     MedioPago.value = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 1 : DATA?.medio_pago;
-    
-    Banco.value = (DATA?.banco_id == null) ? '' : DATA?.banco_id;
-    
-    TCuenta.value =  (DATA?.tipo_cuenta == null) ? '' : DATA?.tipo_cuenta;
-
-    NCuenta.value =  (DATA?.numero_cuenta == null) ? '' : DATA?.numero_cuenta;
-
-    Tercero.value = (DATA?.Tercero == null)? '' : Number(DATA?.Tercero);
-    
     payload_old.medio = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 1 : DATA?.medio_pago;
     payload.medio = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 1 : DATA?.medio_pago;
 
-    payload_old.banco_id = DATA?.banco_id ?? '';
-    payload.banco_id = DATA?.banco_id ?? '';
+    Banco.value = (DATA?.banco_id == null) ? '' : DATA?.banco_id;
+    payload_old.banco_id = Number(DATA?.banco_id) ?? '';
+    payload.banco_id = Number(DATA?.banco_id) ?? '';
 
+    TCuenta.value =  (DATA?.tipo_cuenta == null) ? '' : DATA?.tipo_cuenta;
     payload_old.tipo_cuenta = DATA?.tipo_cuenta ?? '';
     payload.tipo_cuenta = DATA?.tipo_cuenta ?? '';
 
+    NCuenta.value =  (DATA?.numero_cuenta == null) ? '' : DATA?.numero_cuenta;
     payload_old.numero_cuenta = DATA?.numero_cuenta ?? '';
     payload.numero_cuenta = DATA?.numero_cuenta ?? '';
 
+    Tercero.value = (DATA?.Tercero == null)? '' : Number(DATA?.Tercero);
     payload_old.user_id = DATA?.user_id ?? '';
     payload.user_id = DATA?.user_id ?? '';
 }
