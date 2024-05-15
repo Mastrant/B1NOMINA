@@ -209,24 +209,17 @@ const verificarCambios = () => {
 }
 
 const DiasLibres = (value) => {
-    // Verifica si el valor no es null
-    if (value !== null) {
-        // Verifica si el valor ya está en la lista
-        if (ListaDiasLibres.value.includes(value)) {
-            // Si el valor ya está en la lista, lo remueve
-            // Encuentra el índice del valor en la lista
-            const index = ListaDiasLibres.value.indexOf(value);
-            // Verifica si el índice es válido (mayor que -1)
-            if (index > -1) {
-            // Remueve el valor de la lista usando splice
-            ListaDiasLibres.value.splice(index, 1);
-            }
-        } else {
-            // Si el valor no está en la lista, lo agrega
-            // Agrega el valor al final de la lista
-            ListaDiasLibres.value.push(value);
-        }
+    console.log(ListaDiasLibres)
+    const indice = ListaDiasLibres.value.indexOf(value)
+    console.log(indice)
+    if (indice!== -1) {
+        // Si el número está en el arreglo, lo elimina
+        ListaDiasLibres.value.splice(indice);
+    } else {
+        // Si el número no está en el arreglo, lo agrega
+        ListaDiasLibres.value.push(value);
     }
+    console.log(ListaDiasLibres.value)
 };
     
 // Observar cambios en la variable
@@ -269,17 +262,17 @@ const emit = defineEmits([
  const Enviar = async () => {
   //si ID es nulo crea un usuario
  
-  if (RequiereActualizar.value) {
-    const respuesta = await peticiones.ActualizarContrato(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
-    if(respuesta.success == true){
-       emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
-    } else {
-        emit('respuestaServidor', {'texto':respuesta?.error?.message, 'valor':false})
-    }
+  if (RequiereActualizar == true) {
+        const respuesta = await peticiones.ActualizarContrato(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+        if(respuesta.success == true){
+            emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
+        } else {
+            emit('respuestaServidor', {'texto':respuesta?.error?.message, 'valor':false})
+        }
 
-  } else {
-    emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor':true});
-  }
+    } else {
+        emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor':true});
+    }
 };
 onMounted(() => {
     MostrarValores(DatosUsuario.value)
