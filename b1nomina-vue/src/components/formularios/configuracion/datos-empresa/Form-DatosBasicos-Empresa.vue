@@ -4,8 +4,8 @@
         <div class="row">
             <InputBorderDescripcion
                 Placeholder="Ingresar Nombre"
-                Titulo="Nombre de la empresa"
-                name="Nombre"
+                Titulo="nombre de la empresa"
+                name="nombre"
                 v-model="NombreEmpresa"
                 @update:modelValue="NombreEmpresa = $event"
                 :requerido="RequiereActualizar"
@@ -204,7 +204,7 @@ const MostrarValores = (DATA) => {
 //actualiza el listado de regiones segun la comuna selecionada
 filtroRegion((DATA?.region_id == null)? '' :DATA?.region_id);
 
-NombreEmpresa.value = (DATA?.Nombre == null)? '' :DATA?.Nombre;
+NombreEmpresa.value = (DATA?.nombre == null)? '' :DATA?.nombre;
 numeroDocumento.value = (DATA?.rut == null)? '' :DATA?.rut;
 correoEmpresa.value = (DATA?.correo == null)? '' :DATA?.correo;
 CiudadEmpresa.value = (DATA?.ciudad == null)? '' :DATA?.ciudad;
@@ -215,8 +215,8 @@ Direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
 
 // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
   // utilizando '' si DATA?.documento es null.
-  payload_old.NombreEmpresa = DATA?.Nombre ?? '';
-  payload.NombreEmpresa = DATA?.Nombre ?? '';
+  payload_old.NombreEmpresa = DATA?.nombre ?? '';
+  payload.NombreEmpresa = DATA?.nombre ?? '';
   
   payload_old.numeroDocumento = DATA?.rut ?? '';
   payload.numeroDocumento = DATA?.rut ?? '';
@@ -244,10 +244,8 @@ Direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
  * Ejecuta la peticion con axios
  */
  const Enviar = () => {
-  //si ID es nulo crea un usuario
-  let statuspay = Object.values(payload).some((value) => value !== "");
-
-  if (statuspay == true){
+  
+  if (RequiereActualizar.value == true){
     console.log(payload)
     emit("DataNotificacion", 
         {
@@ -266,7 +264,8 @@ Direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
 };
 
 onMounted(() => {
-  MostrarValores(props.Informacion)
+  MostrarValores(props.Informacion.Sociedad)
+  console.log(props.Informacion)
 });
 
 </script>
