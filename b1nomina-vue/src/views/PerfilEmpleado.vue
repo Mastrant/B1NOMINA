@@ -82,10 +82,10 @@
     }
 
     // Función para solicitar parámetros de los formularios
-    const pedirParametros = async (id) => {
+    const pedirParametros = async () => {
         try {
-            if (id != null) {
-                const resultado = await peticiones.pedirParametros(id);
+            if (props.sociedadId != null) {
+                const resultado = await peticiones.pedirParametros(props.sociedadId);
                 if (resultado.success){
                     parametros.value = resultado?.data;
                 } else {
@@ -105,6 +105,6 @@
     // Ejecuta las funciones al montar el componente
     onMounted(async () => {
        await pedirDatos();
-       await pedirParametros(props.sociedadId);
+       await pedirParametros();
     });
 </script>
