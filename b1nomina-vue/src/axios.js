@@ -4,9 +4,9 @@ import axios from 'axios';
 
 //base de la URL
 
-//axios.defaults.baseURL = 'http://192.168.3.54:8000/V1.0';
+axios.defaults.baseURL = 'http://192.168.3.54:8000/V1.0';
 
-axios.defaults.baseURL = 'http://10.0.2.3:8000/V1.0';
+//axios.defaults.baseURL = 'http://10.0.2.3:8000/V1.0';
 
 //tiempo de espera predeterminado
 axios.defaults.timeout = 300000; //30s
@@ -28,7 +28,7 @@ axios.interceptors.response.use(
     response => response,
     error => {
       // Verifica si el error es un error  422 internal server
-      if (error.response && error.response.status ===  423 ) {
+      if (error.response && error.response.status ==  423 ) {
         // Elimina el token del almacenamiento local
         localStorage.clear();
   
@@ -37,7 +37,7 @@ axios.interceptors.response.use(
       }
       
       //error de autorizacion
-      if (error.response && error.response.status ===  403 ) {
+      if (error.response && error.response.status ==  403 ) {
   
         // Utiliza Vue Router para redirigir al usuario a la página de inicio de sesión
         router.replace('/seccion');
