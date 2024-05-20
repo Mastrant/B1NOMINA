@@ -94,10 +94,11 @@ import ListaTemplateBorder from "@/components/listas/Lista-template-border.vue";
 import LayoutInputBorder from "@/components/Layouts/LayoutInputBorder.vue";
 import TemplateButton from '@/components/botones/Template-button.vue';
 
-import { defineProps, ref, reactive, watch, defineEmits, onMounted} from 'vue';
+import { defineProps, ref, reactive, watch, defineEmits, onMounted, inject} from 'vue';
 
 import peticiones_configuracion_datosEmpresa from '@/peticiones/configuracion/datos_empresa.js';
 
+const ID_Sociedad = ref(inject('SociedadID'))
 const ID_USERMASTER = ref(localStorage.getItem('userId'))
 
 const props = defineProps({
@@ -140,39 +141,39 @@ const RequiereActualizar = ref(false);
 
 //Contiene la información original
 const payload_old = reactive({
-    NombreEmpresa: "",
-    numeroDocumento: "",
-    correoEmpresa: "",
-    CiudadEmpresa: "",
-    Region: "",
-    Comuna: "",
-    Direccion: "",
+    nombre: "",
+    rut: "",
+    email: "",
+    ciudad: "",
+    region_id: "",
+    comuna_id: "",
+    direccion: "",
 });
 
 //Contiene la información a enviar
 const payload = reactive({
-    NombreEmpresa: "",
-    numeroDocumento: "",
-    correoEmpresa: "",
-    CiudadEmpresa: "",
-    Region: "",
-    Comuna: "",
-    Direccion: "",
+    nombre: "",
+    rut: "",
+    email: "",
+    ciudad: "",
+    region_id: "",
+    comuna_id: "",
+    direccion: "",
 });
 
 //Escuchar cambios en las variables
-watch(NombreEmpresa, (nuevoValor) => ActualizarPayload('NombreEmpresa', nuevoValor?.toUpperCase()));
-watch(numeroDocumento, (nuevoValor) => ActualizarPayload('numeroDocumento', nuevoValor));
-watch(correoEmpresa, (nuevoValor) => ActualizarPayload('correoEmpresa', nuevoValor?.toUpperCase()));
-watch(CiudadEmpresa, (nuevoValor) => ActualizarPayload('CiudadEmpresa', nuevoValor?.toUpperCase()));
+watch(NombreEmpresa, (nuevoValor) => ActualizarPayload('nombre', nuevoValor?.toUpperCase()));
+watch(numeroDocumento, (nuevoValor) => ActualizarPayload('rut', nuevoValor));
+watch(correoEmpresa, (nuevoValor) => ActualizarPayload('email', nuevoValor?.toUpperCase()));
+watch(CiudadEmpresa, (nuevoValor) => ActualizarPayload('ciudad', nuevoValor?.toUpperCase()));
 watch(Region, (nuevoValor) => {
         filtroRegion(nuevoValor);
-        ActualizarPayload('Region', nuevoValor);
+        ActualizarPayload('region_id', nuevoValor);
     }
 );
-watch(Comuna, (nuevoValor) => ActualizarPayload('Comuna', nuevoValor));
+watch(Comuna, (nuevoValor) => ActualizarPayload('comuna_id', nuevoValor));
 
-watch(Direccion, (nuevoValor) => ActualizarPayload('Direccion', nuevoValor));
+watch(Direccion, (nuevoValor) => ActualizarPayload('direccion', nuevoValor));
 
 //ve si hay cambios en la informacion y actualiza los campos:
 watch(() => props.Informacion.Sociedad, (nuevoValor) => { 
@@ -205,9 +206,6 @@ const verificarCambios = () => {
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
 
-    //actualiza el listado de regiones segun la comuna selecionada
-    filtroRegion((DATA?.comuna_id == null)? '' :DATA?.comuna_id);
-
     NombreEmpresa.value = (DATA?.nombre == null)? '' :DATA?.nombre;
     numeroDocumento.value = (DATA?.rut == null)? '' :DATA?.rut;
     correoEmpresa.value = (DATA?.correo == null)? '' :DATA?.correo;
@@ -220,26 +218,32 @@ const MostrarValores = (DATA) => {
 
     // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
     // utilizando '' si DATA?.documento es null.
-    payload_old.NombreEmpresa = DATA?.nombre ?? '';
-    payload.NombreEmpresa = DATA?.nombre ?? '';
+    payload_old.nombre = DATA?.nombre ?? '';
+    payload.nombre = DATA?.nombre ?? '';
     
-    payload_old.numeroDocumento = DATA?.rut ?? '';
-    payload.numeroDocumento = DATA?.rut ?? '';
+    payload_old.rut = DATA?.rut ?? '';
+    payload.rut = DATA?.rut ?? '';
 
-    payload_old.correoEmpresa = DATA?.correo ?? '';
-    payload.correoEmpresa = DATA?.correo ?? '';
+    payload_old.email = DATA?.correo ?? '';
+    payload.email = DATA?.correo ?? '';
 
-    payload_old.CiudadEmpresa = DATA?.ciudad ?? '';
-    payload.CiudadEmpresa = DATA?.ciudad ?? '';
+    payload_old.ciudad = DATA?.ciudad ?? '';
+    payload.ciudad = DATA?.ciudad ?? '';
 
-    payload_old.Region = DATA?.region_id ?? '';
-    payload.Region = DATA?.region_id ?? '';
+    payload_old.region_id = DATA?.region_id ?? '';
+    payload.region_id = DATA?.region_id ?? '';
 
-    payload_old.Comuna = DATA?.comuna_id ?? '';
-    payload.Comuna = DATA?.comuna_id ?? '';
+    payload_old.comuna_id = DATA?.comuna_id ?? '';
+    payload.comuna_id = DATA?.comuna_id ?? '';
 
-    payload_old.Direccion = DATA?.direccion ?? '';
-    payload.Direccion = DATA?.direccion ?? '';
+    payload_old.direccion = DATA?.direccion ?? '';
+    payload.direccion = DATA?.direccion ?? '';
+
+    payload_old.sociedad_id = DATA?.id ?? '';
+    payload.sociedad_id = DATA?.id ?? '';
+    
+    payload_old.sociedad_id = DATA?.id ?? '';
+    payload.sociedad_id = DATA?.id ?? '';
 
 }
 
@@ -251,20 +255,24 @@ const MostrarValores = (DATA) => {
  const Enviar = async () => {
   //si ID es nulo crea un usuario
  
-  if (RequiereActualizar.value == true) {
-    const respuesta = await peticiones_configuracion_datosEmpresa.ActualizarDatosBasicosEmpresa(ID_USERMASTER, payload);
-    if(respuesta.success == true){
-       emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
+    if (RequiereActualizar.value == true) {
+        const respuesta = await peticiones_configuracion_datosEmpresa.ActualizarDepartamento(
+                ID_USERMASTER.value , ID_Sociedad, payload
+            );
+        if(respuesta.success == true){
+        emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
+        } else {
+            console.error(respuesta?.error)
+            emit('DataNotificacion', {'texto': respuesta?.error, 'valor': false})
+        }
     } else {
-        console.error(respuesta?.error)
-        emit('DataNotificacion', {'texto': respuesta?.error, 'valor': false})
+        emit('DataNotificacion', {'texto': "No se requiere actualizar", 'valor': true});
     }
-  } else {
-    emit('DataNotificacion', {'texto': "No se requiere actualizar", 'valor': true});
-  }
 };
+
 onMounted(() => {
-  MostrarValores(props.Informacion.Sociedad)
+    MostrarValores(props.Informacion.Sociedad)
+    console.log(props.Informacion.Sociedad)
 });
 
 </script>

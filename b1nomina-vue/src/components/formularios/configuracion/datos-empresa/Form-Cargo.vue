@@ -30,7 +30,11 @@ import InputBorderDescripcion from '@/components/inputs/Input-Border-descripcion
 import TemplateButton from '@/components/botones/Template-button.vue';
 import trashIcon from '@/components/icons/trash-icon.vue';
 
+import peticiones_configuracion_datosEmpresa from '@/peticiones/configuracion/datos_empresa.js';
+
 import { defineProps, ref, reactive, watch, defineEmits, onMounted} from 'vue';
+
+const ID_USERMASTER = ref(localStorage.getItem('userId'))
 
 const props = defineProps({
     Informacion: {
@@ -45,7 +49,6 @@ const IDFORM = "ActualizarCargo" + props.Informacion?.id;
 
 const emit = defineEmits([
     "DataNotificacion",
-    "ActualizarInformacion"
 ]);
 
 // Definicion de variables de los inputs
@@ -55,19 +58,19 @@ const nombreCargo = ref('');
 //Contiene la información original
 const payload_old = reactive({
     id:'',
-    nombreCargo: "",
+    nombre: "",
 
 });
 
 //Contiene la información a enviar
 const payload = reactive({
     id:'',
-    nombreCargo: "",
+    nombre: "",
 
 });
 
 //Escuchar cambios en las variables
-watch(nombreCargo, (nuevoValor) => ActualizarPayload('nombreCargo', nuevoValor));
+watch(nombreCargo, (nuevoValor) => ActualizarPayload('nombre', nuevoValor));
 
 //ve si hay cambios en la informacion y actualiza los campos:
 watch(() => props.Informacion, (nuevoValor) => { 
@@ -85,8 +88,8 @@ const ActualizarPayload = (propiedad, valor) => {
 const verificarCambios = () => {
     // Comprueba si todos los campos relevantes en payload_old y payload son iguales.
     // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
-    const camposIguales = (payload_old?.nombreCargo ===  payload?.nombreCargo)
-    const campoVacio = payload?.nombreCargo == ''
+    const camposIguales = (payload_old?.nombre ==  payload?.nombre)
+    const campoVacio = payload?.nombre == ''
     // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
@@ -101,13 +104,19 @@ const MostrarValores = (DATA) => {
 nombreCargo.value = (DATA?.nombre == null)? '' :DATA?.nombre;
 
 // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
-  // utilizando '' si DATA?.documento es null.
-  payload_old.id = DATA?.id ?? '';
-  payload.id = DATA?.id ?? '';
+    // utilizando '' si DATA?.documento es null.
+    payload_old.id = DATA?.id ?? '';
+    payload.id = DATA?.id ?? '';
 
-  payload_old.nombreCargo = DATA?.nombre ?? '';
-  payload.nombreCargo = DATA?.nombre ?? '';
+    payload_old.nombre = DATA?.nombre ?? '';
+    payload.nombre = DATA?.nombre ?? '';
   
+    payload.sociedad_id = DATA?.sociedad_id ?? '';
+    payload_old.sociedad_id = DATA?.sociedad_id ?? '';
+    
+    payload.sede_id = DATA?.sede_id ?? '';
+    payload_old.sede_id = DATA?.sede_id ?? '';
+
 };
 
 const eliminarElemento = () => {
@@ -119,23 +128,23 @@ const eliminarElemento = () => {
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
- const Enviar = () => {
+ const Enviar = async () => {
+  //si ID es nulo crea un usuario
+ 
+  if (RequiereActualizar.value == true) {
+        const respuesta = await peticiones_configuracion_datosEmpresa.ActualizarCargo(
+            ID_USERMASTER.value , props.Informacion?.id, payload
+        );
 
-  if (RequiereActualizar){
-    emit("DataNotificacion", 
-        {
-            'texto': "Informacion actualizada con exito", 
-            'valor': true
+        if(respuesta.success == true){
+        emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
+        } else {
+            console.error(respuesta?.error)
+            emit('DataNotificacion', {'texto': respuesta?.error, 'valor': false})
         }
-    )
-  } else {
-    emit("DataNotificacion", 
-        {
-            'texto': "Todavía hay campos en blanco", 
-            'valor':false
-        }
-    )
-  }
+    } else {
+        emit('DataNotificacion', {'texto': "No se requiere actualizar", 'valor': true});
+    }
 };
 
 onMounted(() => {

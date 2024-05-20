@@ -7,7 +7,10 @@
         </p>
         <LayoutFondoBorder v-for="Campo in ListaCamposAdicionales" :key="Campo.id">
             <template #default>    
-                  <FormCamposAdicionales :Informacion="Campo"/>        
+                <FormCamposAdicionales 
+                    :Informacion="Campo"
+                    @DataNotificacion="RefrescarDatos()"
+                />        
             </template>
         </LayoutFondoBorder>
 
@@ -20,17 +23,28 @@ import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
 import FormCamposAdicionales from '@/components/formularios/configuracion/datos-empresa/Form-CamposAdicionales.vue'
 import TemplateBlankButton from '@/components/botones/Template-blank-button.vue';
 
-import {onMounted, ref} from 'vue';
+
+import {onMounted, ref, inject} from 'vue';
 
 import peticiones_Configuracion from '@/peticiones/configuracion/datos_empresa.js'
 
+const ID_Sociedad = ref(inject('SociedadID'))
+const UserID = ref(localStorage.getItem('userId'));
 
-const ID_Sociedad = ref(localStorage.getItem('userId'));
+// Accede a la función proporcionada por el componente padre
+const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función del componente padre
+// Llama a la función para enviar información al componente padre
 
 const ListaCamposAdicionales = ref([]);
 
-const AddCampo = () => {
-    console.log("añadir Campo")
+const AddCampo = async () => {
+    const respuesta = await peticiones_Configuracion.CreateCampoAdicional(Number(UserID.value));
+    if (respuesta.success) {
+        RefrescarDatos();
+    } else {
+        console.error(respuesta.error)
+        MostrarMensaje({Titulo:'Error al añadir',Descripcion: respuesta.error.data.message});
+    }
 }
 
 const SolicitarlistaCamposAdicionales = async (ID_Sociedad = Number) => {
@@ -43,10 +57,14 @@ const SolicitarlistaCamposAdicionales = async (ID_Sociedad = Number) => {
     }
 }
 
+const RefrescarDatos = () => {
+    SolicitarlistaCamposAdicionales(ID_Sociedad.value);
+    MostrarMensaje({Titulo:'Datos Actualizados',Descripcion:'Se han actualizado los datos correctamente.'});
+}
 
 onMounted( () => {
     SolicitarlistaCamposAdicionales(ID_Sociedad.value);
-})
+});
 </script>
 
 <style scoped>

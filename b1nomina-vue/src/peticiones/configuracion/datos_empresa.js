@@ -72,7 +72,8 @@ const peticiones_configuracion_datosEmpresa = {
             // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
             return { success: false, error: error };
         }  
-    }, 
+    },
+
     // Función para obtener los datos del representante de una empresa mediante su ID.
     getListadoSedes(sociedadID){
         try {
@@ -195,6 +196,41 @@ const peticiones_configuracion_datosEmpresa = {
             return { success: false, error: error };
         }  
     }, 
+    CreateGrupo(idCreador){
+        try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
+            return axios.post(`create_grupo_empleado?userCreatorId=${idCreador}`)
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+           .then(respuesta => {
+                return { success: true, data: respuesta?.data };
+            })
+            // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+           .catch(error => {
+                return { success: false, error: error?.response };
+            });
+        } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
+            return { success: false, error: error };
+        }  
+    }, 
+    ActualizarGrupo(idMaster, id, payload){
+        try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
+            return axios.put(`grupo_empleados/${id}/update?user_updater=${idMaster}`,payload)
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+           .then(respuesta => {
+                return { success: true, data: respuesta?.data };
+            })
+            // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+           .catch(error => {
+                return { success: false, error: error?.response };
+            });
+        } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
+            return { success: false, error: error };
+        }  
+    },
+
     getListadoCargos(sociedadID){
         try {
             // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
@@ -212,6 +248,41 @@ const peticiones_configuracion_datosEmpresa = {
             return { success: false, error: error };
         }  
     }, 
+    CreateCargo(idCreador){
+        try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
+            return axios.post(`create_cargos?userCreatorId=${idCreador}`)
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+           .then(respuesta => {
+                return { success: true, data: respuesta?.data };
+            })
+            // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+           .catch(error => {
+                return { success: false, error: error?.response };
+            });
+        } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
+            return { success: false, error: error };
+        }  
+    }, 
+    ActualizarCargo(idMaster, id, payload){
+        try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
+            return axios.put(`cargos/${id}/update?user_updater=${idMaster}`,payload)
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+           .then(respuesta => {
+                return { success: true, data: respuesta?.data };
+            })
+            // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+           .catch(error => {
+                return { success: false, error: error?.response };
+            });
+        } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
+            return { success: false, error: error };
+        }  
+    },
+
     getListadoCamposAdicionales(sociedadID){
         try {
             // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
@@ -229,6 +300,41 @@ const peticiones_configuracion_datosEmpresa = {
             return { success: false, error: error };
         }  
     }, 
+    CreateCampoAdicional(idCreador){
+        try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
+            return axios.post(`create_campos_adicionales?userCreatorId=${idCreador}`)
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+           .then(respuesta => {
+                return { success: true, data: respuesta?.data };
+            })
+            // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+           .catch(error => {
+                return { success: false, error: error?.response };
+            });
+        } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
+            return { success: false, error: error };
+        }  
+    }, 
+    ActualizarCampoAdicional(idMaster, id, payload){
+        try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
+            return axios.put(`cargos/${id}/update?user_updater=${idMaster}`,payload)
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+           .then(respuesta => {
+                return { success: true, data: respuesta?.data };
+            })
+            // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+           .catch(error => {
+                return { success: false, error: error?.response };
+            });
+        } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
+            return { success: false, error: error };
+        }  
+    },
+
     getDatosPrevisionalesBasicos(sociedadID){
         try {
             // Realiza una petición GET a la API para obtener los datos del representante de la empresa.

@@ -59,7 +59,7 @@ const NombreDepartamento = ref('');
 //Contiene la información original
 const payload_old = reactive({
     id: '',
-    NombreDepartamento: "",
+    nombre: "",
 
 });
 
@@ -76,7 +76,7 @@ watch(NombreDepartamento, (nuevoValor) => ActualizarPayload('nombre', nuevoValor
 
 //ve si hay cambios en la informacion y actualiza los campos:
 watch(() => props.Informacion, (nuevoValor) => { 
-  MostrarValores(nuevoValor) 
+    MostrarValores(nuevoValor);
 });
 
 
@@ -98,10 +98,8 @@ const verificarCambios = () => {
     RequiereActualizar.value = !(camposIguales && !campoVacio );
 }
 
-
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
-
 
 NombreDepartamento.value = (DATA?.nombre == null)? '' :DATA?.nombre;
 

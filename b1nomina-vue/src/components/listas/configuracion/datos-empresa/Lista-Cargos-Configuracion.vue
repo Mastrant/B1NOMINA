@@ -14,7 +14,7 @@
             </template>
         </LayoutFondoBorder>
 
-        <TemplateBlankButton text="+ Agregar Nuevo Cargo" @click="console.log('añadir Cargo')"/>
+        <TemplateBlankButton text="+ Agregar Nuevo Cargo"  @click="AddCampo"/>
     </div>
 </template>
 
@@ -23,24 +23,42 @@ import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
 import FormCargos from '@/components/formularios/configuracion/datos-empresa/Form-Cargo.vue'
 import TemplateBlankButton from '@/components/botones/Template-blank-button.vue';
 
-import {onMounted, ref} from 'vue';
+import {onMounted, ref, inject} from 'vue';
 
 
 import peticiones_Configuracion from '@/peticiones/configuracion/datos_empresa.js'
 
+const ID_Sociedad = ref(inject('SociedadID'))
+const UserID = ref(localStorage.getItem('userId'));
 
-const ID_Sociedad = ref(localStorage.getItem('userId'));
+// Accede a la función proporcionada por el componente padre
+const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función del componente padre
+// Llama a la función para enviar información al componente padre
 
 const ListaCargos = ref([]);
 
 const SolicitarListadoCargos = async (ID_Sociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getListadoCargos(ID_Sociedad);
-    console.log(respuesta)
     if (respuesta.success) {
         ListaCargos.value = respuesta.data;
     } else {
         console.error(respuesta.error)
     }
+}
+
+const AddCampo = async () => {
+    const respuesta = await peticiones_Configuracion.CreateCargo(Number(UserID.value));
+    if (respuesta.success) {
+        RefrescarDatos();
+    } else {
+        console.error(respuesta.error)
+        MostrarMensaje({Titulo:'Error al añadir',Descripcion: respuesta.error.data.message});
+    }
+}
+
+const RefrescarDatos = () => {
+    SolicitarListadoCargos(ID_Sociedad.value);
+    MostrarMensaje({Titulo:'Datos Actualizados',Descripcion:'Se han actualizado los datos correctamente.'});
 }
 
 onMounted(() => {

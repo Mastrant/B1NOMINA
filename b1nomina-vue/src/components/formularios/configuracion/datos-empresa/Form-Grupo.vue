@@ -30,7 +30,10 @@ import InputBorderDescripcion from '@/components/inputs/Input-Border-descripcion
 import TemplateButton from '@/components/botones/Template-button.vue';
 import trashIcon from '@/components/icons/trash-icon.vue';
 
+import peticiones_configuracion_datosEmpresa from '@/peticiones/configuracion/datos_empresa.js';
+
 import { defineProps, ref, reactive, watch, defineEmits, onMounted} from 'vue';
+const ID_USERMASTER = ref(localStorage.getItem('userId'))
 
 const props = defineProps({
     Informacion: {
@@ -45,7 +48,6 @@ const IDFORM = "ActualizarGrupo" + props.Informacion?.id;
 
 const emit = defineEmits([
     "DataNotificacion",
-    "ActualizarInformacion"
 ]);
 
 // Definicion de variables de los inputs
@@ -55,23 +57,23 @@ const nombreGrupo = ref('');
 //Contiene la información original
 const payload_old = reactive({
     id: '',
-    nombreGrupo: "",
+    nombre: "",
 
 });
 
 //Contiene la información a enviar
 const payload = reactive({
     id: '',
-    nombreGrupo: "",
+    nombre: "",
 
 });
 
 //Escuchar cambios en las variables
-watch(nombreGrupo, (nuevoValor) => ActualizarPayload('nombreGrupo', nuevoValor));
+watch(nombreGrupo, (nuevoValor) => ActualizarPayload('nombre', nuevoValor));
 
 //ve si hay cambios en la informacion y actualiza los campos:
 watch(() => props.Informacion, (nuevoValor) => { 
-  MostrarValores(nuevoValor) 
+    MostrarValores(nuevoValor);
 });
 
 
@@ -85,8 +87,8 @@ const ActualizarPayload = (propiedad, valor) => {
 const verificarCambios = () => {
     // Comprueba si todos los campos relevantes en payload_old y payload son iguales.
     // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
-    const camposIguales = (payload_old?.nombreGrupo ===  payload?.nombreGrupo)
-    const campoVacio = payload?.nombreGrupo == ''
+    const camposIguales = (payload_old.nombre ==  payload.nombre)
+    const campoVacio = payload.nombre == ''
     // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
@@ -97,17 +99,25 @@ const verificarCambios = () => {
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
 
+    nombreGrupo.value = (DATA?.nombre == null)? '' :DATA?.nombre;
 
-nombreGrupo.value = (DATA?.nombre == null)? '' :DATA?.nombre;
+    // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
+    // utilizando '' si DATA?.documento es null.
+    payload_old.id = DATA?.id ?? '';
+    payload.id = DATA?.id ?? '';
 
-// Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
-  // utilizando '' si DATA?.documento es null.
-  payload_old.id = DATA?.id ?? '';
-  payload.id = DATA?.id ?? '';
+    payload_old.nombre = DATA?.nombre ?? '';
+    payload.nombre = DATA?.nombre ?? '';
 
-  payload_old.nombreGrupo = DATA?.nombre ?? '';
-  payload.nombreGrupo = DATA?.nombre ?? '';
-  
+    payload.sociedad_id = DATA?.sociedad_id ?? '';
+    payload_old.sociedad_id = DATA?.sociedad_id ?? '';
+
+    payload.sede_id = DATA?.sede_id ?? '';
+    payload_old.sede_id = DATA?.sede_id ?? '';
+
+    payload.es_honorario = DATA?.es_honorario ?? 0;
+    payload_old.es_honorario = DATA?.es_honorario ?? 0;
+    
 }
 
 /**
@@ -115,29 +125,23 @@ nombreGrupo.value = (DATA?.nombre == null)? '' :DATA?.nombre;
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
-/**
- * Funcion emitida al enviar el formulario
- * @params payload Contiene los datos que se pasaran
- * Ejecuta la peticion con axios
- */
- const Enviar = () => {
+ const Enviar = async () => {
+  //si ID es nulo crea un usuario
+ 
+  if (RequiereActualizar.value == true) {
+        const respuesta = await peticiones_configuracion_datosEmpresa.ActualizarGrupo(
+            ID_USERMASTER.value , props.Informacion?.id, payload
+        );
 
-if (RequiereActualizar){
-  console.log(payload)
-  emit("DataNotificacion", 
-      {
-          'texto': "Informacion actualizada con exito", 
-          'valor': true
-      }
-  )
-} else {
-  emit("DataNotificacion", 
-      {
-          'texto': "Todavía hay campos en blanco", 
-          'valor':false
-      }
-  )
-}
+        if(respuesta.success == true){
+        emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
+        } else {
+            console.error(respuesta?.error)
+            emit('DataNotificacion', {'texto': respuesta?.error, 'valor': false})
+        }
+    } else {
+        emit('DataNotificacion', {'texto': "No se requiere actualizar", 'valor': true});
+    }
 };
 
 const eliminarElemento = () => {

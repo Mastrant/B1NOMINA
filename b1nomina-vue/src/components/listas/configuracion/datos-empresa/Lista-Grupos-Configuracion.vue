@@ -8,11 +8,14 @@
 
         <LayoutFondoBorder v-for="Grupo in ListaGrupos" :key="Grupo.id">
             <template #default>    
-                  <FormGrupo :Informacion="Grupo"/>        
+                 <FormGrupo 
+                    :Informacion="Grupo"
+                    @DataNotificacion="RefrescarDatos()"
+                />        
             </template>
         </LayoutFondoBorder>
 
-        <TemplateBlankButton text="+ Agregar Nuevo Grupo"/>
+        <TemplateBlankButton text="+ Agregar Nuevo Grupo" @click="AddCampo"/>
     </div>
 </template>
 
@@ -21,14 +24,18 @@ import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
 import FormGrupo from '@/components/formularios/configuracion/datos-empresa/Form-Grupo.vue'
 import TemplateBlankButton from '@/components/botones/Template-blank-button.vue';
 
-import {onMounted, ref} from 'vue';
+import {onMounted, ref, inject} from 'vue'; 
 
 import peticiones_Configuracion from '@/peticiones/configuracion/datos_empresa.js'
 
-const ID_Sociedad = ref(localStorage.getItem('userId'));
+const ID_Sociedad = ref(inject('SociedadID'))
+const UserID = ref(localStorage.getItem('userId'));
+
+// Accede a la función proporcionada por el componente padre
+const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función del componente padre
+// Llama a la función para enviar información al componente padre
 
 const ListaGrupos = ref([]);
-
 
 const SolicitarListadoGrupos = async (ID_Sociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getListadoGrupos(ID_Sociedad);
@@ -37,6 +44,21 @@ const SolicitarListadoGrupos = async (ID_Sociedad = Number) => {
     } else {
         console.error(respuesta.error)
     }
+}
+
+const AddCampo = async () => {
+    const respuesta = await peticiones_Configuracion.CreateGrupo(Number(UserID.value));
+    if (respuesta.success) {
+        RefrescarDatos();
+    } else {
+        console.error(respuesta.error)
+        MostrarMensaje({Titulo:'Error al añadir',Descripcion: respuesta.error.data.message});
+    }
+}
+
+const RefrescarDatos = () => {
+    SolicitarListadoGrupos(ID_Sociedad.value);
+    MostrarMensaje({Titulo:'Datos Actualizados',Descripcion:'Se han actualizado los datos correctamente.'});
 }
 
 onMounted( async () => {

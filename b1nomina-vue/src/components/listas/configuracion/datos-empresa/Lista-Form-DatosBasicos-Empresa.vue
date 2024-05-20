@@ -5,6 +5,7 @@
                 <FormDatosbasicosEmpresa 
                     :Informacion="DatosBasicosEmpresa"
                     :parametros="listadoLocalidad"
+                    @DataNotificacion="RefrescarDatos()"
                     
                 /> 
             </template>
@@ -14,6 +15,7 @@
             <template #default>
                 <FormResponsableEmpresa
                     :Informacion="DatosResponsableEmpresa"
+                    @DataNotificacion="RefrescarDatos()"
                 />  
             </template>
         </LayoutFondoBorder>
@@ -25,12 +27,18 @@ import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
 import FormDatosbasicosEmpresa from '@/components/formularios/configuracion/datos-empresa/Form-DatosBasicos-Empresa.vue';
 import FormResponsableEmpresa from '@/components/formularios/configuracion/datos-empresa/Form-Responsable-Empresa.vue';
  // 
-import { onMounted, ref } from 'vue';
+ import {onMounted, ref, inject} from 'vue';
 
 import peticiones from '@/peticiones/p_empleado';
 import peticiones_Configuracion from '@/peticiones/configuracion/datos_empresa.js'
 
-const ID_Sociedad = ref(1);
+
+const ID_Sociedad = ref(inject('SociedadID'))
+const UserID = ref(localStorage.getItem('userId'));
+
+// Accede a la función proporcionada por el componente padre
+const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función del componente padre
+// Llama a la función para enviar información al componente padre
 
 const listadoLocalidad = ref ({})
 
@@ -63,6 +71,15 @@ const SolicitarResponsableEmpresa = async (ID_Sociedad = Number) => {
     } else {
         console.error(respuesta.error)
     }
+}
+
+const RefrescarDatos = () => {
+    //solicitar los datos de la empresa
+    SolicitarDatosBasicosEmpresa(ID_Sociedad.value)
+    SolicitarResponsableEmpresa(ID_Sociedad.value)
+    //solicitar la lista de regiones y comunas
+    pedirListadoLocalidad();
+    MostrarMensaje({Titulo:'Datos Actualizados',Descripcion:'Se han actualizado los datos correctamente.'});
 }
 
 onMounted(() => {
