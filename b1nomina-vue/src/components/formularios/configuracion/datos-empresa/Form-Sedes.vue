@@ -95,11 +95,10 @@ const props = defineProps({
     },
 });
 
-const IDFORM = "ActualizarSede" + props.Informacion?.id+ "fomr";
+const IDFORM = "ActualizarSede" + props.Informacion?.id;
 
 const emit = defineEmits([
     "DataNotificacion",
-    "ActualizarInformacion"
 ]);
 
 const nombre = ref('')

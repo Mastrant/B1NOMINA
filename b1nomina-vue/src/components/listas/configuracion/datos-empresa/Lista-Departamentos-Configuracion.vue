@@ -8,11 +8,14 @@
 
         <LayoutFondoBorder v-for="Departamento in ListaDepartamentos" :key="Departamento.id">
             <template #default>    
-                  <FormDepartamentos :Informacion="Departamento"/>        
+                <FormDepartamentos 
+                    :Informacion="Departamento"
+                    @DataNotificacion="RefrescarDatos()"
+                />        
             </template>
         </LayoutFondoBorder>
 
-        <TemplateBlankButton text="+ Agregar Nuevo Departamento"/>
+        <TemplateBlankButton text="+ Agregar Nuevo Departamento" @click="AddCampo"/>
     </div>
 </template>
 
@@ -21,12 +24,17 @@ import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
 import FormDepartamentos from '@/components/formularios/configuracion/datos-empresa/Form-Departamentos.vue'
 import TemplateBlankButton from '@/components/botones/Template-blank-button.vue';
 
-import {onMounted, ref} from 'vue';
+import {onMounted, ref, inject} from 'vue';
 
 import peticiones_Configuracion from '@/peticiones/configuracion/datos_empresa.js'
 
 
-const ID_Sociedad = ref(localStorage.getItem('userId'));
+const ID_Sociedad = ref(inject('SociedadID'))
+const UserID = ref(localStorage.getItem('userId'));
+
+// Accede a la función proporcionada por el componente padre
+const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función del componente padre
+// Llama a la función para enviar información al componente padre
 
 const ListaDepartamentos = ref([]);
 
@@ -38,6 +46,22 @@ const SolicitarListadoDepartamentos = async (ID_Sociedad = Number) => {
         console.error(respuesta.error)
     }
 }
+
+const AddCampo = async () => {
+    const respuesta = await peticiones_Configuracion.CreateDepartamento(Number(UserID.value));
+    if (respuesta.success) {
+        RefrescarDatos();
+    } else {
+        console.error(respuesta.error)
+        MostrarMensaje({Titulo:'Error al añadir',Descripcion: respuesta.error.data.message});
+    }
+}
+
+const RefrescarDatos = () => {
+    SolicitarListadoDepartamentos(ID_Sociedad.value);
+    MostrarMensaje({Titulo:'Datos Actualizados',Descripcion:'Se han actualizado los datos correctamente.'});
+}
+
 
 onMounted( async () => {
     SolicitarListadoDepartamentos(ID_Sociedad.value);
