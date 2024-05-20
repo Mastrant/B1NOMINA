@@ -10,7 +10,10 @@
 
         <LayoutFondoBorder v-for="cargo in ListaCargos" :key="cargo.id">
             <template #default>    
-                  <FormCargos :Informacion="cargo"/>        
+                <FormCargos 
+                    :Informacion="cargo"
+                    @DataNotificacion="RefrescarDatos()"
+                />        
             </template>
         </LayoutFondoBorder>
 
@@ -63,7 +66,7 @@ const RefrescarDatos = () => {
 
 onMounted(() => {
     SolicitarListadoCargos(ID_Sociedad.value);
-})
+});
 </script>
 
 <style scoped>

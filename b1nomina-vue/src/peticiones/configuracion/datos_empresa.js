@@ -147,7 +147,7 @@ const peticiones_configuracion_datosEmpresa = {
     CreateDepartamento(idCreador){
         try {
             // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
-            return axios.post(`create_departamento?userCreatorId=${idCreador}`)
+            return axios.post(`precreate_departamento?userCreatorId=${idCreador}`)
             // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
            .then(respuesta => {
                 return { success: true, data: respuesta?.data };
@@ -251,7 +251,7 @@ const peticiones_configuracion_datosEmpresa = {
     CreateCargo(idCreador){
         try {
             // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
-            return axios.post(`create_cargos?userCreatorId=${idCreador}`)
+            return axios.post(`precreate_cargos?userCreatorId=${idCreador}`)
             // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
            .then(respuesta => {
                 return { success: true, data: respuesta?.data };

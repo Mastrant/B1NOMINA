@@ -105,6 +105,7 @@ nombreCargo.value = (DATA?.nombre == null)? '' :DATA?.nombre;
 
 // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
     // utilizando '' si DATA?.documento es null.
+    RequiereActualizar.value = false;
     payload_old.id = DATA?.id ?? '';
     payload.id = DATA?.id ?? '';
 
@@ -116,6 +117,9 @@ nombreCargo.value = (DATA?.nombre == null)? '' :DATA?.nombre;
     
     payload.sede_id = DATA?.sede_id ?? '';
     payload_old.sede_id = DATA?.sede_id ?? '';
+
+    payload.nivel_cargo = DATA?.nivel_cargo ?? '';
+    payload_old.nivel_cargo = DATA?.nivel_cargo ?? '';
 
 };
 

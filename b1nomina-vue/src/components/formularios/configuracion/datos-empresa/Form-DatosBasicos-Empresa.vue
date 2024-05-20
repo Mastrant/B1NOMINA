@@ -242,7 +242,7 @@ const MostrarValores = (DATA) => {
     payload_old.sociedad_id = DATA?.id ?? '';
     payload.sociedad_id = DATA?.id ?? '';
     
-    payload_old.sociedad_id = DATA?.id ?? '';
+    payload_old.sede_id = DATA?.id ?? '';
     payload.sociedad_id = DATA?.id ?? '';
 
 }
