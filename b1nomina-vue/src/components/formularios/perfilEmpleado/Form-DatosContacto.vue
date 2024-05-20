@@ -76,20 +76,19 @@
 </template>
 
 <script setup>
-    import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
-    import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
-    import InputLinealDescripcion from '@/components/inputs/Input-Lineal-descripcion.vue';
+import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
+import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
+import InputLinealDescripcion from '@/components/inputs/Input-Lineal-descripcion.vue';
 
-    import {reactive, ref, watch, inject, onMounted, defineEmits} from 'vue';
+import {reactive, ref, watch, inject, onMounted, defineEmits} from 'vue';
 
-    import peticiones from '@/peticiones/p_empleado';
+import peticiones from '@/peticiones/p_empleado';
 
-    const DatosUsuario = reactive(inject('dataEmpleado'))
-    const parametros = reactive(inject('parametros'))
-    const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
+const DatosUsuario = reactive(inject('dataEmpleado'))
+const parametros = reactive(inject('parametros'))
+const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
 
-
-    const RequiereActualizar = ref(false)
+const RequiereActualizar = ref(false)
 
 
 const payload = reactive({
@@ -110,28 +109,25 @@ const payload_old = reactive({
     fijo: '',
 });
 
+const ListaLocalidad = ref(''); //Los datos se asignan segun el idRegion
 
+const email = ref("");
+const region_id = ref('');
+const comuna_id = ref('');
+const direccion = ref('');
+const telefonoCelular = ref('');
+const telefonoLocal = ref('');
 
-
-    const ListaLocalidad = ref(''); //Los datos se asignan segun el idRegion
-
-    const email = ref("");
-    const region_id = ref('');
-    const comuna_id = ref('');
-    const direccion = ref('');
-    const telefonoCelular = ref('');
-    const telefonoLocal = ref('');
-    
-    watch(email, (nuevoValor) => ActualizarPayload("email", nuevoValor?.toLowerCase()));
-    watch(region_id, (nuevoValor) => {
-            filtroRegion(nuevoValor);
-            ActualizarPayload('region_id', nuevoValor);
-        }
-    );
-    watch(comuna_id, (nuevoValor) => ActualizarPayload('comuna_id', nuevoValor));
-    watch(direccion, (nuevoValor) => ActualizarPayload('direccion', nuevoValor));
-    watch(telefonoCelular, (nuevoValor) => ActualizarPayload('movil', nuevoValor));
-    watch(telefonoLocal, (nuevoValor) => ActualizarPayload('fijo', nuevoValor));
+watch(email, (nuevoValor) => ActualizarPayload("email", nuevoValor));
+watch(region_id, (nuevoValor) => {
+        filtroRegion(nuevoValor);
+        ActualizarPayload('region_id', nuevoValor);
+    }
+);
+watch(comuna_id, (nuevoValor) => ActualizarPayload('comuna_id', nuevoValor));
+watch(direccion, (nuevoValor) => ActualizarPayload('direccion', nuevoValor));
+watch(telefonoCelular, (nuevoValor) => ActualizarPayload('movil', nuevoValor));
+watch(telefonoLocal, (nuevoValor) => ActualizarPayload('fijo', nuevoValor));
 
 /**
  * Actualiza el valor de una propiedad específica dentro del objeto 'payload'.
@@ -156,10 +152,10 @@ const payload_old = reactive({
  * // }
  */
  const ActualizarPayload = (propiedad, valor) => {
-  // Asigna el nuevo valor a la propiedad especificada dentro del objeto 'payload'.
-  payload[propiedad] = valor;
-  
-  verificarCambios();
+    // Asigna el nuevo valor a la propiedad especificada dentro del objeto 'payload'.
+    payload[propiedad] = valor;
+    
+    verificarCambios();
 
 };
 
@@ -181,30 +177,30 @@ const verificarCambios = () => {
 const MostrarValores = (DATA) => {
 
     RequiereActualizar.value = false;
-        // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
-        email.value = (DATA?.email == null)? '' :DATA?.email;
-        payload_old.email = DATA?.email ?? '';
-        payload.email = DATA?.email ?? '';
+    // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
+    email.value = (DATA?.email == null)? '' :DATA?.email;
+    payload_old.email = DATA?.email ?? '';
+    payload.email = DATA?.email ?? '';
 
-        region_id.value = (DATA?.region_id == null)? '' :DATA?.region_id;
-        payload_old.region_id = DATA?.region_id ?? '';
-        payload.region_id = DATA?.region_id ?? '';
+    region_id.value = (DATA?.region_id == null)? '' :DATA?.region_id;
+    payload_old.region_id = DATA?.region_id ?? '';
+    payload.region_id = DATA?.region_id ?? '';
 
-        comuna_id.value = (DATA?.comuna_id == null)? '' :DATA?.comuna_id;
-        payload_old.comuna_id = DATA?.comuna_id ?? '';
-        payload.comuna_id = DATA?.comuna_id ?? '';
+    comuna_id.value = (DATA?.comuna_id == null)? '' :DATA?.comuna_id;
+    payload_old.comuna_id = DATA?.comuna_id ?? '';
+    payload.comuna_id = DATA?.comuna_id ?? '';
 
-        direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
-        payload_old.direccion = DATA?.direccion ?? '';
-        payload.direccion = DATA?.direccion ?? '';
+    direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
+    payload_old.direccion = DATA?.direccion ?? '';
+    payload.direccion = DATA?.direccion ?? '';
 
-        telefonoCelular.value = (DATA?.movil == null)? '' :DATA?.movil;
-        payload_old.movil = DATA?.movil ?? '';
-        payload.movil = DATA?.movil ?? '';
+    telefonoCelular.value = (DATA?.movil == null)? '' :DATA?.movil;
+    payload_old.movil = DATA?.movil ?? '';
+    payload.movil = DATA?.movil ?? '';
 
-        telefonoLocal.value = (DATA?.fijo == null)? '' :DATA?.fijo;
-        payload_old.fijo = DATA?.fijo ?? '';
-        payload.fijo = DATA?.fijo ?? '';
+    telefonoLocal.value = (DATA?.fijo == null)? '' :DATA?.fijo;
+    payload_old.fijo = DATA?.fijo ?? '';
+    payload.fijo = DATA?.fijo ?? '';
 
 }
 

@@ -7,6 +7,7 @@
             <!-- Muestra el componente HeaderVue con el nombre de la página -->
             <!-- Si RutaNavegada está vacía, muestra "Configuraciones" -->
             <Headervue v-if="RutaNavegada == ''" nombrePagina="Configuraciones" />
+
             <!-- Si RutaNavegada no está vacía, muestra "Configuración > " seguido del nombre de la ruta -->
             <Headervue v-else :nombrePagina="'Configuración > ' + RutaNavegada " />
         </template>
@@ -16,6 +17,7 @@
             <!-- Renderiza el componente correspondiente a la ruta actual -->
             <router-view />
         </template>
+        
     </LayoutPanel>
 </template>
 
@@ -29,6 +31,10 @@
     // Importa funciones de Vue para manejar la reactividad y la provisión de valores
     import { provide, ref } from 'vue';
     
+    import { useRoute } from 'vue-router'
+
+    const route = useRoute()
+
     // Propiedad reactiva para almacenar el nombre de la ruta actual
     const RutaNavegada = ref('');
     
@@ -40,6 +46,7 @@
     
     // Provee la función CambiarNombreRuta a los componentes hijos para que puedan modificar el nombre de la ruta navegada
     provide('CambiarNombreRuta', CambiarNombreRuta);
+    provide('SociedadID',Number(route.params?.sociedadId));
 </script>
 
 <!-- Estilos CSS -->

@@ -4,10 +4,10 @@
             <div class="row">
                 <InputBorderDescripcion
                     Placeholder="Ingresar nombre"
-                    Titulo="nombre"
+                    Titulo="Nombre"
                     name="nombre"
-                    v-model="NombreSede"
-                    @update:modelValue="NombreSede = $event"
+                    v-model="nombre"
+                    @update:modelValue="nombre = $event"
                     :requerido="RequiereActualizar"
                 />
                 
@@ -78,7 +78,11 @@ import LayoutInputBorder from "@/components/Layouts/LayoutInputBorder.vue";
 import TemplateButton from '@/components/botones/Template-button.vue';
 import trashIcon from '@/components/icons/trash-icon.vue';
 
+import peticiones_configuracion_datosEmpresa from '@/peticiones/configuracion/datos_empresa.js';
+
 import { defineProps, ref, reactive, watch, defineEmits, onMounted} from 'vue';
+
+const ID_USERMASTER = ref(localStorage.getItem('userId'))
 
 const props = defineProps({
     Informacion: {
@@ -91,14 +95,14 @@ const props = defineProps({
     },
 });
 
-const IDFORM = "ActualizarSede" + props.Informacion?.id;
+const IDFORM = "ActualizarSede" + props.Informacion?.id+ "fomr";
 
 const emit = defineEmits([
     "DataNotificacion",
     "ActualizarInformacion"
 ]);
 
-const NombreSede = ref('')
+const nombre = ref('')
 const CiudadSede = ref('')
 const Region = ref('')
 const Comuna = ref('')
@@ -108,8 +112,8 @@ const DireccionSede = ref('')
 const ListaLocalidad = ref(''); //Los datos se asignan segun el idRegion
 
 //filtra la lista de regiones segun el id
-const filtroRegion = (id) => {
-    ListaLocalidad.value = props.parametros.localidad?.filter(item => item.idregion == id);
+const filtroRegion = (ID_comuna) => {
+    ListaLocalidad.value = props.parametros.localidad?.filter(item => item.idregion == ID_comuna);
 };
 
 //control para envio de informacion
@@ -117,38 +121,41 @@ const RequiereActualizar = ref(false);
 
 //Contiene la información original
 const payload_old = reactive({
-    NombreSede: "",
-    CiudadSede: "",
-    Region: "",
-    Comuna: "",
-    Direccion: "",
+    nombre: "",
+    ciudad: "",
+    region_id: "",
+    comuna_id: "",
+    direccion: "",
+    sociedad_id: '',
 });
 
 //Contiene la información a enviar
 const payload = reactive({
-    NombreSede: "",
-    CiudadSede: "",
-    Region: "",
-    Comuna: "",
-    Direccion: "",
+    nombre: "",
+    ciudad: "",
+    region_id: "",
+    comuna_id: "",
+    direccion: "",
+    sociedad_id:'',
 });
 
 //Escuchar cambios en las variables
-watch(NombreSede, (nuevoValor) => ActualizarPayload('NombreSede', nuevoValor));
-watch(CiudadSede, (nuevoValor) => ActualizarPayload('CiudadSede', nuevoValor));
+watch(nombre, (nuevoValor) => ActualizarPayload('nombre', nuevoValor));
+watch(CiudadSede, (nuevoValor) => ActualizarPayload('ciudad', nuevoValor));
 
 watch(Region, (nuevoValor) => {
         filtroRegion(nuevoValor);
-        ActualizarPayload('Region', nuevoValor);
+        ActualizarPayload('region_id', nuevoValor);
     }
 );
-watch(Comuna, (nuevoValor) => ActualizarPayload('Comuna', nuevoValor));
+watch(Comuna, (nuevoValor) => ActualizarPayload('comuna_id', nuevoValor));
 
-watch(DireccionSede, (nuevoValor) => ActualizarPayload('Direccion', nuevoValor.toLocaleLowerCase()));
+watch(DireccionSede, (nuevoValor) => ActualizarPayload('direccion', nuevoValor));
 
 //ve si hay cambios en la informacion y actualiza los campos:
 watch(() => props.Informacion, (nuevoValor) => { 
-  MostrarValores(nuevoValor) 
+    MostrarValores(nuevoValor) 
+    console.log(nuevoValor)
 });
 
 
@@ -162,7 +169,7 @@ const ActualizarPayload = (propiedad, valor) => {
 const verificarCambios = () => {
     // Comprueba si todos los campos relevantes en payload_old y payload son iguales.
     // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
-    const camposIguales = Object.keys(payload_old).every(key => payload_old[key] === payload[key]);
+    const camposIguales = Object.keys(payload_old).every(key => payload_old[key] == payload[key]);
 
     // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
     const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
@@ -170,73 +177,68 @@ const verificarCambios = () => {
     // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
-    RequiereActualizar.value = !(camposIguales && alMenosUnValorVacio);
+    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
 }
 
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
+    
+    // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
+    // utilizando '' si DATA?.documento es null.
+    RequiereActualizar.value = false
+    nombre.value = (DATA?.nombre == null)? '' :DATA?.nombre;    
+    payload.nombre = DATA?.nombre ?? '';
+    payload_old.nombre = DATA?.nombre ?? '';
 
-//actualiza el listado de regiones segun la comuna selecionada
-filtroRegion((DATA?.region_id == null)? '' :DATA?.region_id);
+    CiudadSede.value = (DATA?.ciudad == null)? '' :DATA?.ciudad;
+    payload.ciudad = DATA?.ciudad ?? '';
+    payload_old.ciudad = DATA?.ciudad ?? '';
+    
+    Region.value = (DATA?.region_id == null)? '' :DATA?.region_id;
+    payload.region_id = DATA?.region_id ?? '';
+    payload_old.region_id = DATA?.region_id ?? '';
+    
+    Comuna.value = (DATA?.comuna_id == null)? '' :DATA?.comuna_id;
+    payload.comuna_id = DATA?.comuna_id ?? '';
+    payload_old.comuna_id = DATA?.comuna_id ?? '';
+    
+    DireccionSede.value = (DATA?.direccion == null)? '' :DATA?.direccion;
+    payload.direccion = DATA?.direccion ?? '';
+    payload_old.direccion = DATA?.direccion ?? '';
 
-NombreSede.value = (DATA?.nombre == null)? '' :DATA?.nombre;
-CiudadSede.value = (DATA?.ciudad == null)? '' :DATA?.ciudad;
-
-Region.value = (DATA?.region_id == null)? '' :DATA?.region_id;
-Comuna.value = (DATA?.comuna_id == null)? '' :DATA?.comuna_id;
-DireccionSede.value = (DATA?.direccion == null)? '' :DATA?.direccion;
-
-// Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
-  // utilizando '' si DATA?.documento es null.
-  payload.NombreSede = DATA?.nombre ?? '';
-  payload_old.NombreSede = DATA?.nombre ?? '';
-  
-
-  payload.CiudadSede = DATA?.ciudad ?? '';
-  payload_old.CiudadSede = DATA?.ciudad ?? '';
-  
-  payload.Region = DATA?.region_id ?? '';
-  payload_old.Region = DATA?.region_id ?? '';
-
-  payload.Comuna = DATA?.comuna_id ?? '';
-  payload_old.Comuna = DATA?.comuna_id ?? '';
-
-  payload.Direccion = DATA?.direccion ?? '';
-  payload_old.Direccion = DATA?.direccion ?? '';
+    payload.sociedad_id = DATA?.sociedad_id ?? '';
+    payload_old.sociedad_id = DATA?.sociedad_id ?? '';
 
 };
 
 const eliminarElemento = () => {
     console.log(props.Informacion)
- };
+};
 
 /**
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
- const Enviar = () => {
+ const Enviar = async () => {
   //si ID es nulo crea un usuario
-  if (RequiereActualizar){
-    console.log(payload)
-    emit("DataNotificacion", 
-        {
-            'texto': "Informacion actualizada con exito", 
-            'valor': true
+ 
+  if (RequiereActualizar.value == true) {
+        const respuesta = await peticiones_configuracion_datosEmpresa.ActualizarSede(ID_USERMASTER.value ,props.Informacion?.id
+    ,payload);
+        if(respuesta.success == true){
+        emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
+        } else {
+            console.error(respuesta?.error)
+            emit('DataNotificacion', {'texto': respuesta?.error, 'valor': false})
         }
-    )
-  } else {
-    emit("DataNotificacion", 
-        {
-            'texto': "Todavía hay campos en blanco", 
-            'valor': false
-        }
-    )
-  }
+    } else {
+        emit('DataNotificacion', {'texto': "No se requiere actualizar", 'valor': true});
+    }
 };
 
 onMounted(() => {
-  MostrarValores(props.Informacion)
+    MostrarValores(props.Informacion)
 });
 
 </script>

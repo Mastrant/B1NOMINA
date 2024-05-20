@@ -22,17 +22,26 @@
         <div class="vista-panel">
             <!-- Lista de formularios para Datos Básicos de la Empresa -->
             <ListaFormDatosbasicosEmpresa v-if="panelSelecionado == 1" />
+
             <!-- Lista de formularios para Sedes -->
             <ListaFormSedes v-if="panelSelecionado == 2" />
+
             <!-- Lista de formularios para Departamentos -->
             <ListaDepartamentosConfiguracions v-if="panelSelecionado == 3" />
+
             <!-- Lista de formularios para Grupos -->
             <ListaGruposConfiguracion v-if="panelSelecionado == 4" />
+
             <!-- Lista de formularios para Cargos -->
             <ListaCargosConfiguracion v-if="panelSelecionado == 5" />
+
             <!-- Lista de formularios para Campos Adicionales -->
             <ListaCamposAdicionalesConfiguracion v-if="panelSelecionado == 6" />
         </div>
+
+        <AlertShort
+            ref="notificacionStatus"
+        />
     </div>
 </template>
 
@@ -40,6 +49,7 @@
 <script setup>
 import NavConfigButton from '@/components/botones/Nav-config-button.vue'; // Importa el componente de botón de configuración
 import LayoutNavConfig from '@/components/Layouts/LayoutNavConfig.vue'; // Importa el layout de configuración
+import AlertShort from '@/components/alertas/Alert-short-template.vue';
 
 import ListaFormDatosbasicosEmpresa from '@/components/listas/configuracion/datos-empresa/Lista-Form-DatosBasicos-Empresa.vue'; // Importa el componente de lista para datos básicos
 import ListaFormSedes from '@/components/listas/configuracion/datos-empresa/Lista-Form-Sedes.vue'; // Importa el componente de lista para sedes
@@ -48,13 +58,27 @@ import ListaCargosConfiguracion from '@/components/listas/configuracion/datos-em
 import ListaGruposConfiguracion from '@/components/listas/configuracion/datos-empresa/Lista-Grupos-Configuracion.vue'; // Importa el componente de lista para grupos
 import ListaCamposAdicionalesConfiguracion from '@/components/listas/configuracion/datos-empresa/Lista-CamposAdicionales-Configuracion.vue'; // Importa el componente de lista para campos adicionales
 
-import { ref, inject } from 'vue'; // Importa las funciones reactivas y de inyección de dependencias de Vue
+import { ref, inject, provide } from 'vue'; // Importa las funciones reactivas y de inyección de dependencias de Vue
 
 const panelSelecionado = ref(1); // Variable reactiva para almacenar el número del panel seleccionado
 
 const SelecionarPanel = (num) => { // Función para cambiar el panel seleccionado
     panelSelecionado.value = num;
 }
+
+const notificacionStatus = ref(null)
+
+const showNotificacionShort = (Info) => {
+    // Check if notificacionStatus exists before accessing.value
+    if (notificacionStatus && notificacionStatus.value) {
+        notificacionStatus.value.ActivarNotificacion(Info);
+    } else {
+        console.error('notificacionStatus or notificacionStatus.value is undefined');
+    }
+}
+
+
+provide('showNotificacionShort',showNotificacionShort)
 
 // Accede a la función proporcionada por el componente padre
 const CambiarNombreRuta = inject('CambiarNombreRuta'); // Inyecta una función del componente padre

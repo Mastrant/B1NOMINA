@@ -11,6 +11,7 @@
                <FormSedes 
                     :Informacion="Sede"
                     :parametros="listadoLocalidad"
+                    @DataNotificacion="RefrescarDatos()"
                />                 
             </template>
         </LayoutFondoBorder>
@@ -25,23 +26,35 @@ import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
 import FormSedes from '@/components/formularios/configuracion/datos-empresa/Form-Sedes.vue';
 import TemplateBlankButton from '@/components/botones/Template-blank-button.vue';
 
-import {onMounted, ref} from 'vue';
+import {onMounted, ref, inject} from 'vue';
 
 import peticiones from '@/peticiones/p_empleado';
 import peticiones_Configuracion from '@/peticiones/configuracion/datos_empresa.js'
 
-const ID_Sociedad = ref(localStorage.getItem('userId'));
+const ID_Sociedad = ref(inject('SociedadID'))
+const UserID = ref(localStorage.getItem('userId'));
 
 const listadoLocalidad = ref ({})
 
 const ListaSedes = ref([]);
 
-const AddCampo = () => {
-    console.log("añadir Sede")
+// Accede a la función proporcionada por el componente padre
+const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función del componente padre
+// Llama a la función para enviar información al componente padre
+
+
+const AddCampo = async () => {
+    const respuesta = await peticiones_Configuracion.CreateSede(Number(UserID.value));
+    if (respuesta.success) {
+        RefrescarDatos();
+    } else {
+        console.error(respuesta.error)
+        MostrarMensaje({Titulo:'Error al añadir',Descripcion: respuesta.error.data.message});
+    }
 }
 
 const pedirListadoLocalidad = async () => {
-    const respuesta = await peticiones.ListadoRegiones()
+    const respuesta = await peticiones.ListadoRegiones(ID_Sociedad)
     if (respuesta.success) {
         listadoLocalidad.value = respuesta.data;
     } else {
@@ -49,9 +62,8 @@ const pedirListadoLocalidad = async () => {
     }
 }
 
-const SolicitarListadoSedes = async (ID_Sociedad = Number) => {
-    const respuesta = await peticiones_Configuracion.getListadoSedes(ID_Sociedad);
-    console.log(respuesta)
+const SolicitarListadoSedes = async () => {
+    const respuesta = await peticiones_Configuracion.getListadoSedes(ID_Sociedad.value);
     if (respuesta.success) {
         ListaSedes.value = respuesta.data;
     } else {
@@ -59,9 +71,15 @@ const SolicitarListadoSedes = async (ID_Sociedad = Number) => {
     }
 }
 
+const RefrescarDatos = () => {
+    pedirListadoLocalidad();
+    SolicitarListadoSedes();
+    MostrarMensaje({Titulo:'Datos Actualizados',Descripcion:'Se han actualizado los datos correctamente.'});
+}
+
 onMounted( async () => {
     pedirListadoLocalidad();
-    SolicitarListadoSedes(ID_Sociedad.value);
+    SolicitarListadoSedes();
 });
 
 </script>
@@ -74,11 +92,11 @@ onMounted( async () => {
 }
 
 h3.subtitulo {
-font-size: 22px;
-font-weight: 500;
-line-height: 48px;
-text-align: left;
-margin:0;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 48px;
+    text-align: left;
+    margin:0;
 }
 
 p.descripcion {

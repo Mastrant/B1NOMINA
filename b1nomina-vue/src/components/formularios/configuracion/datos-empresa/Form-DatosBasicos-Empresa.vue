@@ -161,10 +161,10 @@ const payload = reactive({
 });
 
 //Escuchar cambios en las variables
-watch(NombreEmpresa, (nuevoValor) => ActualizarPayload('NombreEmpresa', nuevoValor?.toLocaleLowerCase()));
+watch(NombreEmpresa, (nuevoValor) => ActualizarPayload('NombreEmpresa', nuevoValor?.toUpperCase()));
 watch(numeroDocumento, (nuevoValor) => ActualizarPayload('numeroDocumento', nuevoValor));
-watch(correoEmpresa, (nuevoValor) => ActualizarPayload('correoEmpresa', nuevoValor?.toLocaleLowerCase()));
-watch(CiudadEmpresa, (nuevoValor) => ActualizarPayload('CiudadEmpresa', nuevoValor?.toLocaleLowerCase()));
+watch(correoEmpresa, (nuevoValor) => ActualizarPayload('correoEmpresa', nuevoValor?.toUpperCase()));
+watch(CiudadEmpresa, (nuevoValor) => ActualizarPayload('CiudadEmpresa', nuevoValor?.toUpperCase()));
 watch(Region, (nuevoValor) => {
         filtroRegion(nuevoValor);
         ActualizarPayload('Region', nuevoValor);
@@ -205,41 +205,41 @@ const verificarCambios = () => {
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
 
-//actualiza el listado de regiones segun la comuna selecionada
-filtroRegion((DATA?.comuna_id == null)? '' :DATA?.comuna_id);
+    //actualiza el listado de regiones segun la comuna selecionada
+    filtroRegion((DATA?.comuna_id == null)? '' :DATA?.comuna_id);
 
-NombreEmpresa.value = (DATA?.nombre == null)? '' :DATA?.nombre;
-numeroDocumento.value = (DATA?.rut == null)? '' :DATA?.rut;
-correoEmpresa.value = (DATA?.correo == null)? '' :DATA?.correo;
-CiudadEmpresa.value = (DATA?.ciudad == null)? '' :DATA?.ciudad;
+    NombreEmpresa.value = (DATA?.nombre == null)? '' :DATA?.nombre;
+    numeroDocumento.value = (DATA?.rut == null)? '' :DATA?.rut;
+    correoEmpresa.value = (DATA?.correo == null)? '' :DATA?.correo;
+    CiudadEmpresa.value = (DATA?.ciudad == null)? '' :DATA?.ciudad;
 
-Region.value = (DATA?.region_id == null)? '' :DATA?.region_id;
+    Region.value = (DATA?.region_id == null)? '' :DATA?.region_id;
 
-Comuna.value = (DATA?.comuna_id == null)? '' :DATA?.comuna_id;
-Direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
+    Comuna.value = (DATA?.comuna_id == null)? '' :DATA?.comuna_id;
+    Direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
 
-// Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
-  // utilizando '' si DATA?.documento es null.
-  payload_old.NombreEmpresa = DATA?.nombre ?? '';
-  payload.NombreEmpresa = DATA?.nombre ?? '';
-  
-  payload_old.numeroDocumento = DATA?.rut ?? '';
-  payload.numeroDocumento = DATA?.rut ?? '';
+    // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
+    // utilizando '' si DATA?.documento es null.
+    payload_old.NombreEmpresa = DATA?.nombre ?? '';
+    payload.NombreEmpresa = DATA?.nombre ?? '';
+    
+    payload_old.numeroDocumento = DATA?.rut ?? '';
+    payload.numeroDocumento = DATA?.rut ?? '';
 
-  payload_old.correoEmpresa = DATA?.correo ?? '';
-  payload.correoEmpresa = DATA?.correo ?? '';
+    payload_old.correoEmpresa = DATA?.correo ?? '';
+    payload.correoEmpresa = DATA?.correo ?? '';
 
-  payload_old.CiudadEmpresa = DATA?.ciudad ?? '';
-  payload.CiudadEmpresa = DATA?.ciudad ?? '';
+    payload_old.CiudadEmpresa = DATA?.ciudad ?? '';
+    payload.CiudadEmpresa = DATA?.ciudad ?? '';
 
-  payload_old.Region = DATA?.region_id ?? '';
-  payload.Region = DATA?.region_id ?? '';
+    payload_old.Region = DATA?.region_id ?? '';
+    payload.Region = DATA?.region_id ?? '';
 
-  payload_old.Comuna = DATA?.comuna_id ?? '';
-  payload.Comuna = DATA?.comuna_id ?? '';
+    payload_old.Comuna = DATA?.comuna_id ?? '';
+    payload.Comuna = DATA?.comuna_id ?? '';
 
-  payload_old.Direccion = DATA?.direccion ?? '';
-  payload.Direccion = DATA?.direccion ?? '';
+    payload_old.Direccion = DATA?.direccion ?? '';
+    payload.Direccion = DATA?.direccion ?? '';
 
 }
 
