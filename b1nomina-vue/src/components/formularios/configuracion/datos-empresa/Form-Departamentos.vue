@@ -8,6 +8,7 @@
                 v-model="NombreDepartamento"
                 @update:modelValue="NombreDepartamento = $event"
                 :requerido="RequiereActualizar"
+                minimo-caracteres="2"
             />
             
             <div class="espacioTrash">

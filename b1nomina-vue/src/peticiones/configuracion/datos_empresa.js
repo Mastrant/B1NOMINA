@@ -199,7 +199,7 @@ const peticiones_configuracion_datosEmpresa = {
     CreateGrupo(idCreador){
         try {
             // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
-            return axios.post(`create_grupo_empleado?userCreatorId=${idCreador}`)
+            return axios.post(`precreate_grupo_empleado?userCreatorId=${idCreador}`)
             // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
            .then(respuesta => {
                 return { success: true, data: respuesta?.data };
