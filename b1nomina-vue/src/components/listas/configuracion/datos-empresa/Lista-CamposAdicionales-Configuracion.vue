@@ -22,25 +22,30 @@ import TemplateBlankButton from '@/components/botones/Template-blank-button.vue'
 
 import {onMounted, ref} from 'vue';
 
-const ListaCamposAdicionales = ref([
-    {
-        id: 1,
-        Nombre: 'Color Favorito',
-        estado: false
-    },
-    {
-        id: 2,
-        Nombre: 'Nombre Mascota',
-        estado: false
-    }
-]);
+import peticiones_Configuracion from '@/peticiones/configuracion/datos_empresa.js'
+
+
+const ID_Sociedad = ref(localStorage.getItem('userId'));
+
+const ListaCamposAdicionales = ref([]);
 
 const AddCampo = () => {
     console.log("añadir Campo")
 }
 
-onMounted( () => {
+const SolicitarlistaCamposAdicionales = async (ID_Sociedad = Number) => {
+    const respuesta = await peticiones_Configuracion.getListadoCamposAdicionales(ID_Sociedad);
+    console.log(respuesta)
+    if (respuesta.success) {
+        ListaCamposAdicionales.value = respuesta.data;
+    } else {
+        console.error(respuesta.error)
+    }
+}
 
+
+onMounted( () => {
+    SolicitarlistaCamposAdicionales(ID_Sociedad.value);
 })
 </script>
 

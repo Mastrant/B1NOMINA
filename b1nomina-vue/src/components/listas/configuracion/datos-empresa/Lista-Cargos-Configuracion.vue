@@ -25,19 +25,26 @@ import TemplateBlankButton from '@/components/botones/Template-blank-button.vue'
 
 import {onMounted, ref} from 'vue';
 
-const ListaCargos = ref([
-    {
-        id: 1,
-        Nombre: "Cargo 1"
-    },
-    {
-        id: 2,
-        Nombre: "Cargo 2"
+
+import peticiones_Configuracion from '@/peticiones/configuracion/datos_empresa.js'
+
+
+const ID_Sociedad = ref(localStorage.getItem('userId'));
+
+const ListaCargos = ref([]);
+
+const SolicitarListadoCargos = async (ID_Sociedad = Number) => {
+    const respuesta = await peticiones_Configuracion.getListadoCargos(ID_Sociedad);
+    console.log(respuesta)
+    if (respuesta.success) {
+        ListaCargos.value = respuesta.data;
+    } else {
+        console.error(respuesta.error)
     }
-]);
+}
 
 onMounted(() => {
-
+    SolicitarListadoCargos(ID_Sociedad.value);
 })
 </script>
 

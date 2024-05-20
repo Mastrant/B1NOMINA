@@ -40,6 +40,7 @@
                 @update:modelValue="telefonoResponsable = $event"
                 :requerido="RequiereActualizar"
                 name="Telefono"
+                Tipo="tel"
             />
         </div>
 
@@ -106,9 +107,10 @@ watch(correoResponsable, (nuevoValor) => ActualizarPayload('correoResponsable', 
 watch(telefonoResponsable, (nuevoValor) => ActualizarPayload('telefonoResponsable', nuevoValor));
 
 //ve si hay cambios en la informacion y actualiza los campos:
-watch(() => props.Informacion, (nuevoValor) => { 
+watch(() => props.Informacion.Sociedad, (nuevoValor) => { 
   MostrarValores(nuevoValor) 
 });
+
 
 
 //actualizar datos del payload a enviar
@@ -137,9 +139,9 @@ const verificarCambios = () => {
 const MostrarValores = (DATA) => {
 
 NombreResponsable.value = (DATA?.NombreResponsable == null)? '' :DATA?.NombreResponsable;
-numeroDocumento.value = (DATA?.RutResponsable == null)? '' :DATA?.RutResponsable;
-correoResponsable.value = (DATA?.emailResponsable == null)? '' :DATA?.emailResponsable;
-telefonoResponsable.value = (DATA?.telefonoResposnable == null)? '' :DATA?.telefonoResposnable;
+numeroDocumento.value = (DATA?.rut_responsable == null)? '' :DATA?.rut_responsable;
+correoResponsable.value = (DATA?.email_responsable == null)? '' :DATA?.email_responsable;
+telefonoResponsable.value = (DATA?.telefono_responsable == null)? '' :DATA?.telefono_responsable;
 
 
 // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
@@ -147,14 +149,14 @@ telefonoResponsable.value = (DATA?.telefonoResposnable == null)? '' :DATA?.telef
   payload_old.NombreResponsable = DATA?.NombreResponsable ?? '';
   payload.NombreResponsable = DATA?.NombreResponsable ?? '';
   
-  payload_old.numeroDocumento = DATA?.RutResponsable ?? '';
+  payload_old.numeroDocumento = DATA?.rut_responsable ?? '';
   payload.numeroDocumento = DATA?.RutResponsable ?? '';
 
-  payload_old.correoResponsable = DATA?.emailResponsable ?? '';
+  payload_old.correoResponsable = DATA?.email_responsable ?? '';
   payload.correoResponsable = DATA?.emailResponsable ?? '';
 
-  payload_old.telefonoResponsable = DATA?.telefonoResposnable ?? '';
-  payload.telefonoResponsable = DATA?.telefonoResposnable ?? '';
+  payload_old.telefonoResponsable = DATA?.telefono_responsable ?? '';
+  payload.telefonoResponsable = DATA?.telefono_responsable ?? '';
 
 }
 
@@ -184,8 +186,7 @@ telefonoResponsable.value = (DATA?.telefonoResposnable == null)? '' :DATA?.telef
 
 
 onMounted(() => {
-  MostrarValores(props.Informacion)
-  console.log(props.Informacion)
+  MostrarValores(props.Informacion.Sociedad)
 });
 
 

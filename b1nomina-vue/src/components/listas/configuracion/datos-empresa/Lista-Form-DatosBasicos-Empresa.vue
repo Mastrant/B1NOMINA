@@ -5,7 +5,7 @@
                 <FormDatosbasicosEmpresa 
                     :Informacion="DatosBasicosEmpresa"
                     :parametros="listadoLocalidad"
-                    @DataNotificacion="a"
+                    
                 /> 
             </template>
         </LayoutFondoBorder>
@@ -49,14 +49,15 @@ const pedirListadoLocalidad = async () => {
 const SolicitarDatosBasicosEmpresa = async (ID_Sociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getDatosBasicosEmpresa(ID_Sociedad);
     if (respuesta.success) {
-        console.log(respuesta.data)
+        //console.log(respuesta.data)
         DatosBasicosEmpresa.value = respuesta.data;
     } else {
         console.error(respuesta.error)
     }
 }
 const SolicitarResponsableEmpresa = async (ID_Sociedad = Number) => {
-    const respuesta = await peticiones_Configuracion.getDatosBasicosEmpresa(ID_Sociedad);
+    const respuesta = await peticiones_Configuracion.getDatosRepresentanteEmpresa(ID_Sociedad);
+    //console.log(respuesta)
     if (respuesta.success) {
         DatosResponsableEmpresa.value = respuesta.data;
     } else {
