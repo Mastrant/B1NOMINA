@@ -206,9 +206,11 @@ const verificarCambios = () => {
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
 
+    RequiereActualizar.value = false;
+
     NombreEmpresa.value = (DATA?.nombre == null)? '' :DATA?.nombre;
     numeroDocumento.value = (DATA?.rut == null)? '' :DATA?.rut;
-    correoEmpresa.value = (DATA?.correo == null)? '' :DATA?.correo;
+    correoEmpresa.value = (DATA?.correo == null)? '' :DATA?.email;
     CiudadEmpresa.value = (DATA?.ciudad == null)? '' :DATA?.ciudad;
 
     Region.value = (DATA?.region_id == null)? '' :DATA?.region_id;
@@ -224,8 +226,8 @@ const MostrarValores = (DATA) => {
     payload_old.rut = DATA?.rut ?? '';
     payload.rut = DATA?.rut ?? '';
 
-    payload_old.email = DATA?.correo ?? '';
-    payload.email = DATA?.correo ?? '';
+    payload_old.email = DATA?.email ?? '';
+    payload.email = DATA?.email ?? '';
 
     payload_old.ciudad = DATA?.ciudad ?? '';
     payload.ciudad = DATA?.ciudad ?? '';
@@ -243,7 +245,7 @@ const MostrarValores = (DATA) => {
     payload.sociedad_id = DATA?.id ?? '';
     
     payload_old.sede_id = DATA?.id ?? '';
-    payload.sociedad_id = DATA?.id ?? '';
+    payload.sede_id = DATA?.id ?? '';
 
 }
 
@@ -257,7 +259,7 @@ const MostrarValores = (DATA) => {
  
     if (RequiereActualizar.value == true) {
         const respuesta = await peticiones_configuracion_datosEmpresa.ActualizarDepartamento(
-                ID_USERMASTER.value , ID_Sociedad, payload
+                Number(ID_USERMASTER.value), ID_Sociedad, payload
             );
         if(respuesta.success == true){
         emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
