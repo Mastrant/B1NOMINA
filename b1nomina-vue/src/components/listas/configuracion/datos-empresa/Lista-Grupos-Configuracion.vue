@@ -21,18 +21,28 @@ import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
 import FormGrupo from '@/components/formularios/configuracion/datos-empresa/Form-Grupo.vue'
 import TemplateBlankButton from '@/components/botones/Template-blank-button.vue';
 
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 
-const ListaGrupos = ref([
-    {
-        id: 1,
-        Nombre: "Grupo1"
-    },
-    {
-        id: 2,
-        Nombre: "Grupo1"
+import peticiones_Configuracion from '@/peticiones/configuracion/datos_empresa.js'
+
+const ID_Sociedad = ref(localStorage.getItem('userId'));
+
+const ListaGrupos = ref([]);
+
+
+const SolicitarListadoGrupos = async (ID_Sociedad = Number) => {
+    const respuesta = await peticiones_Configuracion.getListadoGrupos(ID_Sociedad);
+    if (respuesta.success) {
+        ListaGrupos.value = respuesta.data;
+    } else {
+        console.error(respuesta.error)
     }
-]);
+}
+
+onMounted( async () => {
+    SolicitarListadoGrupos(ID_Sociedad.value);
+});
+
 </script>
 
 <style scoped>

@@ -128,7 +128,7 @@ const verificarCambios = () => {
 const MostrarValores = (DATA) => {
 
 
-NombreCampo.value = (DATA?.Nombre == null)? '' :DATA?.Nombre;
+NombreCampo.value = (DATA?.nombre == null)? '' :DATA?.nombre;
 
 EstadoCampo.value = (DATA?.estado == 0) ? true : false;
 
@@ -137,8 +137,8 @@ EstadoCampo.value = (DATA?.estado == 0) ? true : false;
   payload_old.id = DATA?.id ?? '';
   payload.id = DATA?.id ?? '';
 
-  payload_old.NombreCampo = DATA?.Nombre ?? '';
-  payload.NombreCampo = DATA?.Nombre ?? '';
+  payload_old.NombreCampo = DATA?.nombre ?? '';
+  payload.NombreCampo = DATA?.nombre ?? '';
   
   payload_old.estado = DATA?.estado ?? '';
   payload.estado = DATA?.estado ?? '';

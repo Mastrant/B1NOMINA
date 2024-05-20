@@ -98,15 +98,15 @@ const verificarCambios = () => {
 const MostrarValores = (DATA) => {
 
 
-nombreCargo.value = (DATA?.Nombre == null)? '' :DATA?.Nombre;
+nombreCargo.value = (DATA?.nombre == null)? '' :DATA?.nombre;
 
 // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
   // utilizando '' si DATA?.documento es null.
   payload_old.id = DATA?.id ?? '';
   payload.id = DATA?.id ?? '';
 
-  payload_old.nombreCargo = DATA?.Nombre ?? '';
-  payload.nombreCargo = DATA?.Nombre ?? '';
+  payload_old.nombreCargo = DATA?.nombre ?? '';
+  payload.nombreCargo = DATA?.nombre ?? '';
   
 };
 
@@ -122,7 +122,6 @@ const eliminarElemento = () => {
  const Enviar = () => {
 
   if (RequiereActualizar){
-    console.log(payload)
     emit("DataNotificacion", 
         {
             'texto': "Informacion actualizada con exito", 

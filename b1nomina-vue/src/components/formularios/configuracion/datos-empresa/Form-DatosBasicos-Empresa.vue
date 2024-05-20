@@ -96,6 +96,10 @@ import TemplateButton from '@/components/botones/Template-button.vue';
 
 import { defineProps, ref, reactive, watch, defineEmits, onMounted} from 'vue';
 
+import peticiones_configuracion_datosEmpresa from '@/peticiones/configuracion/datos_empresa.js';
+
+const ID_USERMASTER = ref(localStorage.getItem('userId'))
+
 const props = defineProps({
     Informacion: {
         type: Object,
@@ -171,7 +175,7 @@ watch(Comuna, (nuevoValor) => ActualizarPayload('Comuna', nuevoValor));
 watch(Direccion, (nuevoValor) => ActualizarPayload('Direccion', nuevoValor));
 
 //ve si hay cambios en la informacion y actualiza los campos:
-watch(() => props.Informacion, (nuevoValor) => { 
+watch(() => props.Informacion.Sociedad, (nuevoValor) => { 
   MostrarValores(nuevoValor) 
 });
 
@@ -202,7 +206,7 @@ const verificarCambios = () => {
 const MostrarValores = (DATA) => {
 
 //actualiza el listado de regiones segun la comuna selecionada
-filtroRegion((DATA?.region_id == null)? '' :DATA?.region_id);
+filtroRegion((DATA?.comuna_id == null)? '' :DATA?.comuna_id);
 
 NombreEmpresa.value = (DATA?.nombre == null)? '' :DATA?.nombre;
 numeroDocumento.value = (DATA?.rut == null)? '' :DATA?.rut;
@@ -210,6 +214,7 @@ correoEmpresa.value = (DATA?.correo == null)? '' :DATA?.correo;
 CiudadEmpresa.value = (DATA?.ciudad == null)? '' :DATA?.ciudad;
 
 Region.value = (DATA?.region_id == null)? '' :DATA?.region_id;
+
 Comuna.value = (DATA?.comuna_id == null)? '' :DATA?.comuna_id;
 Direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
 
@@ -243,29 +248,23 @@ Direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
- const Enviar = () => {
-  
-  if (RequiereActualizar.value == true){
-    console.log(payload)
-    emit("DataNotificacion", 
-        {
-            'texto': "Informacion actualizada con exito", 
-            'valor': true
-        }
-    )
+ const Enviar = async () => {
+  //si ID es nulo crea un usuario
+ 
+  if (RequiereActualizar.value == true) {
+    const respuesta = await peticiones_configuracion_datosEmpresa.ActualizarDatosBasicosEmpresa(ID_USERMASTER, payload);
+    if(respuesta.success == true){
+       emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
+    } else {
+        console.error(respuesta?.error)
+        emit('DataNotificacion', {'texto': respuesta?.error, 'valor': false})
+    }
   } else {
-    emit("DataNotificacion", 
-        {
-            'texto': "Todavía hay campos en blanco", 
-            'valor':false
-        }
-    )
+    emit('DataNotificacion', {'texto': "No se requiere actualizar", 'valor': true});
   }
 };
-
 onMounted(() => {
   MostrarValores(props.Informacion.Sociedad)
-  console.log(props.Informacion)
 });
 
 </script>

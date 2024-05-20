@@ -3,9 +3,9 @@
         <div class="contend">
             <div class="row">
                 <InputBorderDescripcion
-                    Placeholder="Ingresar Nombre"
-                    Titulo="Nombre"
-                    name="Nombre"
+                    Placeholder="Ingresar nombre"
+                    Titulo="nombre"
+                    name="nombre"
                     v-model="NombreSede"
                     @update:modelValue="NombreSede = $event"
                     :requerido="RequiereActualizar"
@@ -160,14 +160,18 @@ const ActualizarPayload = (propiedad, valor) => {
 
 // Define la función verificarCambios que verifica si hay cambios entre los valores antiguos y nuevos de un payload.
 const verificarCambios = () => {
-
+    // Comprueba si todos los campos relevantes en payload_old y payload son iguales.
+    // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
     const camposIguales = Object.keys(payload_old).every(key => payload_old[key] === payload[key]);
 
+    // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
     const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
 
-    RequiereActualizar.value = !(camposIguales);
-
-};
+    // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
+    // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
+    // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
+    RequiereActualizar.value = !(camposIguales && alMenosUnValorVacio);
+}
 
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
@@ -175,7 +179,7 @@ const MostrarValores = (DATA) => {
 //actualiza el listado de regiones segun la comuna selecionada
 filtroRegion((DATA?.region_id == null)? '' :DATA?.region_id);
 
-NombreSede.value = (DATA?.Nombre == null)? '' :DATA?.Nombre;
+NombreSede.value = (DATA?.nombre == null)? '' :DATA?.nombre;
 CiudadSede.value = (DATA?.ciudad == null)? '' :DATA?.ciudad;
 
 Region.value = (DATA?.region_id == null)? '' :DATA?.region_id;
@@ -184,8 +188,8 @@ DireccionSede.value = (DATA?.direccion == null)? '' :DATA?.direccion;
 
 // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
   // utilizando '' si DATA?.documento es null.
-  payload.NombreSede = DATA?.Nombre ?? '';
-  payload_old.NombreSede = DATA?.Nombre ?? '';
+  payload.NombreSede = DATA?.nombre ?? '';
+  payload_old.NombreSede = DATA?.nombre ?? '';
   
 
   payload.CiudadSede = DATA?.ciudad ?? '';

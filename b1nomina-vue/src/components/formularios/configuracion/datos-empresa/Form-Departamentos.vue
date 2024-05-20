@@ -100,14 +100,14 @@ const verificarCambios = () => {
 const MostrarValores = (DATA) => {
 
 
-NombreDepartamento.value = (DATA?.Nombre == null)? '' :DATA?.Nombre;
+NombreDepartamento.value = (DATA?.nombre == null)? '' :DATA?.nombre;
 
 // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
   // utilizando '' si DATA?.documento es null.
   payload_old.id = DATA?.id ?? '';
   payload.id = DATA?.id ?? '';
-  payload_old.NombreDepartamento = DATA?.Nombre ?? '';
-  payload.NombreDepartamento = DATA?.Nombre ?? '';
+  payload_old.NombreDepartamento = DATA?.nombre ?? '';
+  payload.NombreDepartamento = DATA?.nombre ?? '';
   
 }
 

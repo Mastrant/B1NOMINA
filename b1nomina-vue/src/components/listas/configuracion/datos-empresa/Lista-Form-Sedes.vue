@@ -27,40 +27,14 @@ import TemplateBlankButton from '@/components/botones/Template-blank-button.vue'
 
 import {onMounted, ref} from 'vue';
 
-import peticiones from '@/peticiones/p_empleado'
+import peticiones from '@/peticiones/p_empleado';
+import peticiones_Configuracion from '@/peticiones/configuracion/datos_empresa.js'
+
+const ID_Sociedad = ref(localStorage.getItem('userId'));
 
 const listadoLocalidad = ref ({})
 
-const ListaSedes = ref([
-    {
-        id: 1,
-        Nombre: 'Sede 1',
-        ciudad: 'ciudad 1',
-        region_id: 1,
-        comuna_id: 9,
-        direccion: '',
-        
-    },
-    {
-        id: 2,
-        Nombre: 'Sede',
-        ciudad: 'ciudad',
-        region_id: 4,
-        comuna_id: 9,
-        direccion: 'algun lugar lejos',
-        
-    },
-    {
-        id: 3,
-        Nombre: 'Sede 3',
-        ciudad: 'ciudad 3',
-        region_id: 1,
-        comuna_id: 5,
-        direccion: 'algun lugar lejos',
-        
-    },
-]);
-
+const ListaSedes = ref([]);
 
 const AddCampo = () => {
     console.log("añadir Sede")
@@ -75,8 +49,19 @@ const pedirListadoLocalidad = async () => {
     }
 }
 
+const SolicitarListadoSedes = async (ID_Sociedad = Number) => {
+    const respuesta = await peticiones_Configuracion.getListadoSedes(ID_Sociedad);
+    console.log(respuesta)
+    if (respuesta.success) {
+        ListaSedes.value = respuesta.data;
+    } else {
+        console.error(respuesta.error)
+    }
+}
+
 onMounted( async () => {
     pedirListadoLocalidad();
+    SolicitarListadoSedes(ID_Sociedad.value);
 });
 
 </script>

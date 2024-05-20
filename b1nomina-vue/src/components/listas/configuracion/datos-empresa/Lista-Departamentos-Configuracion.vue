@@ -21,22 +21,27 @@ import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
 import FormDepartamentos from '@/components/formularios/configuracion/datos-empresa/Form-Departamentos.vue'
 import TemplateBlankButton from '@/components/botones/Template-blank-button.vue';
 
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 
-const ListaDepartamentos = ref([
-    {
-        id: 1,
-        Nombre: 'Administracion'
-    },
-    {
-        id: 2,
-        Nombre: 'Contabilidad'
-    },
-    {
-        id: 3,
-        Nombre: ''
+import peticiones_Configuracion from '@/peticiones/configuracion/datos_empresa.js'
+
+
+const ID_Sociedad = ref(localStorage.getItem('userId'));
+
+const ListaDepartamentos = ref([]);
+
+const SolicitarListadoDepartamentos = async (ID_Sociedad = Number) => {
+    const respuesta = await peticiones_Configuracion.getListadoDepartamentos(ID_Sociedad);
+    if (respuesta.success) {
+        ListaDepartamentos.value = respuesta.data;
+    } else {
+        console.error(respuesta.error)
     }
-]);
+}
+
+onMounted( async () => {
+    SolicitarListadoDepartamentos(ID_Sociedad.value);
+});
 </script>
 
 <style scoped>
