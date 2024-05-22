@@ -36,9 +36,10 @@ const DatosAFC= ref([])
 
 const SolicitarDatosConfiPrevisionales = async (ID_Sociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getDatosPrevisionalesBasicos(ID_Sociedad);
+    console.error(respuesta)
     if (respuesta.success) {
         //console.log(respuesta.data)
-        DatosPrevisionales.value = respuesta.data;
+        DatosPrevisionales.value = respuesta.data?.Configuracion;
     } else {
         console.error(respuesta.error)
     }
