@@ -321,10 +321,10 @@ const peticiones_configuracion_datosEmpresa = {
             return { success: false, error: error };
         }  
     }, 
-    CreateCampoAdicional(idCreador){
+    CreateCampoAdicional(idSociedad, idCreador){
         try {
             // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
-            return axios.post(`create_campos_adicionales?userCreatorId=${idCreador}`)
+            return axios.post(`sociedad/${idSociedad}/precreate_campos_adicionales?userCreatorId=${idCreador}`)
             // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
            .then(respuesta => {
                 return { success: true, data: respuesta?.data };
@@ -359,7 +359,25 @@ const peticiones_configuracion_datosEmpresa = {
     getDatosPrevisionalesBasicos(sociedadID){
         try {
             // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
-            return axios.get(`sociedad/${sociedadID}/get_campos_adicionales`)
+            return axios.get(`sociedad/${sociedadID}/conf_remuneracion`)
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+           .then(respuesta => {
+                return { success: true, data: respuesta?.data };
+            })
+            // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+           .catch(error => {
+                return { success: false, error: error?.response };
+            });
+        } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
+            return { success: false, error: error };
+        }  
+    }, 
+
+    getDatosAFC(sociedadID){
+        try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
+            return axios.get(`sociedad/${sociedadID}/get_afc`)
             // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
            .then(respuesta => {
                 return { success: true, data: respuesta?.data };

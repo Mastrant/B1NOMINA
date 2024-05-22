@@ -38,7 +38,7 @@ const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función 
 const ListaCamposAdicionales = ref([]);
 
 const AddCampo = async () => {
-    const respuesta = await peticiones_Configuracion.CreateCampoAdicional(Number(UserID.value));
+    const respuesta = await peticiones_Configuracion.CreateCampoAdicional(ID_Sociedad,Number(UserID.value));
     if (respuesta.success) {
         RefrescarDatos();
     } else {
@@ -47,8 +47,8 @@ const AddCampo = async () => {
     }
 }
 
-const SolicitarlistaCamposAdicionales = async (ID_Sociedad = Number) => {
-    const respuesta = await peticiones_Configuracion.getListadoCamposAdicionales(ID_Sociedad);
+const SolicitarlistaCamposAdicionales = async (IDSociedad = Number) => {
+    const respuesta = await peticiones_Configuracion.getListadoCamposAdicionales(IDSociedad);
     console.log(respuesta)
     if (respuesta.success) {
         ListaCamposAdicionales.value = respuesta.data;

@@ -2,12 +2,18 @@
     <div class="contend">
         <LayoutFondoBorder>
             <template #default>    
-                <FormDatosBasicosPrevisionales />
+                <FormDatosBasicosPrevisionales 
+                    :Informacion="DatosPrevisionales"                    
+                    @DataNotificacion="RefrescarDatos()"
+                />
             </template>
         </LayoutFondoBorder>
         <LayoutFondoBorder>
             <template #default>    
-                <FormAFC />
+                <FormAFC     
+                    :Informacion="DatosAFC"                    
+                    @DataNotificacion="RefrescarDatos()"
+                />
             </template>
         </LayoutFondoBorder>
 
@@ -18,9 +24,35 @@
 import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
 import FormDatosBasicosPrevisionales from '@/components/formularios/configuracion/datos-previsionales/Form-DatosBasicos-previsionales.vue'
 import FormAFC from '@/components/formularios/configuracion/datos-previsionales/Form-AFC.vue';
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 
+const ID_Sociedad = ref(inject('SociedadID'))
 
+const DatosPrevisionales = ref([])
+const DatosAFC= ref([])
+
+const SolicitarDatosConfiPrevisionales = async (ID_Sociedad = Number) => {
+    const respuesta = await peticiones_Configuracion.getDatosPrevisionalesBasicos(ID_Sociedad);
+    if (respuesta.success) {
+        //console.log(respuesta.data)
+        DatosPrevisionales.value = respuesta.data;
+    } else {
+        console.error(respuesta.error)
+    }
+}
+const SolicitarDatosAFC = async (ID_Sociedad = Number) => {
+    const respuesta = await peticiones_Configuracion.getDatosAFC(ID_Sociedad);
+    if (respuesta.success) {
+        DatosAFC.value = respuesta.data;
+    } else {
+        console.error(respuesta.error)
+    }
+};
+
+onMounted(async () => {
+    SolicitarDatosConfiPrevisionales(ID_Sociedad.value)
+    SolicitarDatosAFC(ID_Sociedad.value)
+})
 </script>
 
 <style scoped>
