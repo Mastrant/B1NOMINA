@@ -132,8 +132,8 @@ const Direccion = ref('');
 const ListaLocalidad = ref({}); //Los datos se asignan segun el idRegion
 
 //filtra la lista de regiones segun el id
-const filtroRegion = (id) => {
-    ListaLocalidad.value = props.parametros.localidad?.filter(item => item.idregion == id);
+const filtroRegion = (ID_comuna) => {
+    ListaLocalidad.value = props.parametros.localidad?.filter(item => item.idregion == ID_comuna);
 };
 
 //control para envio de informacion
@@ -176,7 +176,8 @@ watch(Comuna, (nuevoValor) => ActualizarPayload('comuna_id', nuevoValor));
 watch(Direccion, (nuevoValor) => ActualizarPayload('direccion', nuevoValor));
 
 //ve si hay cambios en la informacion y actualiza los campos:
-watch(() => props.Informacion.Sociedad, (nuevoValor) => { 
+watch(() => props.Informacion?.Sociedad, (nuevoValor) => { 
+    
   MostrarValores(nuevoValor) 
 });
 
@@ -191,7 +192,7 @@ const ActualizarPayload = (propiedad, valor) => {
 const verificarCambios = () => {
     // Comprueba si todos los campos relevantes en payload_old y payload son iguales.
     // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
-    const camposIguales = Object.keys(payload_old).every(key => payload_old[key] === payload[key]);
+    const camposIguales = Object.keys(payload_old).every(key => payload_old[key] == payload[key]);
 
     // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
     const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
@@ -199,7 +200,8 @@ const verificarCambios = () => {
     // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
-    RequiereActualizar.value = !(camposIguales && alMenosUnValorVacio);
+    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+
 }
 
 
@@ -208,36 +210,33 @@ const MostrarValores = (DATA) => {
 
     RequiereActualizar.value = false;
 
-    NombreEmpresa.value = (DATA?.nombre == null)? '' :DATA?.nombre;
-    numeroDocumento.value = (DATA?.rut == null)? '' :DATA?.rut;
-    correoEmpresa.value = (DATA?.correo == null)? '' :DATA?.email;
-    CiudadEmpresa.value = (DATA?.ciudad == null)? '' :DATA?.ciudad;
-
-    Region.value = (DATA?.region_id == null)? '' :DATA?.region_id;
-
-    Comuna.value = (DATA?.comuna_id == null)? '' :DATA?.comuna_id;
-    Direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
-
     // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
     // utilizando '' si DATA?.documento es null.
+    NombreEmpresa.value = (DATA?.nombre == null)? '' :DATA?.nombre;
     payload_old.nombre = DATA?.nombre ?? '';
     payload.nombre = DATA?.nombre ?? '';
     
+    numeroDocumento.value = (DATA?.rut == null)? '' :DATA?.rut;
     payload_old.rut = DATA?.rut ?? '';
     payload.rut = DATA?.rut ?? '';
 
+    correoEmpresa.value = (DATA?.email == null)? '' : DATA?.email;
     payload_old.email = DATA?.email ?? '';
     payload.email = DATA?.email ?? '';
 
+    CiudadEmpresa.value = (DATA?.ciudad == null)? '' :DATA?.ciudad;
     payload_old.ciudad = DATA?.ciudad ?? '';
     payload.ciudad = DATA?.ciudad ?? '';
 
+    Region.value = (DATA?.region_id == null)? '' :DATA?.region_id;
     payload_old.region_id = DATA?.region_id ?? '';
     payload.region_id = DATA?.region_id ?? '';
 
+    Comuna.value = (DATA?.comuna_id == null)? '' :DATA?.comuna_id;
     payload_old.comuna_id = DATA?.comuna_id ?? '';
     payload.comuna_id = DATA?.comuna_id ?? '';
 
+    Direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
     payload_old.direccion = DATA?.direccion ?? '';
     payload.direccion = DATA?.direccion ?? '';
 
@@ -256,13 +255,15 @@ const MostrarValores = (DATA) => {
  */
  const Enviar = async () => {
   //si ID es nulo crea un usuario
- 
-    if (RequiereActualizar.value == true) {
-        const respuesta = await peticiones_configuracion_datosEmpresa.ActualizarDepartamento(
-                Number(ID_USERMASTER.value), ID_Sociedad, payload
-            );
+    
+
+    if (RequiereActualizar.value == true) {        
+        const respuesta = await peticiones_configuracion_datosEmpresa.ActualizarDatosBasicosEmpresa(
+            ID_USERMASTER.value, ID_Sociedad.value, payload
+        );
+
         if(respuesta.success == true){
-        emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
+            emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
         } else {
             console.error(respuesta?.error)
             emit('DataNotificacion', {'texto': respuesta?.error, 'valor': false})
@@ -272,9 +273,8 @@ const MostrarValores = (DATA) => {
     }
 };
 
-onMounted(() => {
-    MostrarValores(props.Informacion.Sociedad)
-    console.log(props.Informacion.Sociedad)
+onMounted(async () => {
+    await MostrarValores(props.Informacion?.Sociedad)
 });
 
 </script>

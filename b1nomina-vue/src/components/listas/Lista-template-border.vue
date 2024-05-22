@@ -27,7 +27,10 @@ const props = defineProps({
         default: '' 
     },
     
-    requerido: { type: Boolean, default: false }
+    requerido: { 
+        type: Boolean,
+        default: false 
+    }
 });
 
 const selected = ref('');
@@ -37,15 +40,21 @@ watchEffect(() => {
 
     if(props.preseleccion) {
         // Busca en options el elemento cuyo id coincida con preseleccion
-        const optionPreseleccionada = props.options.find(option => option.id == props.preseleccion);
-        
-        // Si se encuentra una opción preseleccionada, establece selected al id de esa opción
-        if (optionPreseleccionada) {
-            selected.value = optionPreseleccionada.id;
-        } else if (props.options.length > 0) {
-            // Si no hay una opción preseleccionada pero hay opciones disponibles, establece selected al primer id del arreglo
-            selected.value = props.options[0].id;
+        try {
+            const optionPreseleccionada = props.options.find(option => option.id == props.preseleccion);
+            
+            // Si se encuentra una opción preseleccionada, establece selected al id de esa opción
+            if (optionPreseleccionada) {
+                selected.value = optionPreseleccionada.id;
+            } else if (props.options.length > 0) {
+                // Si no hay una opción preseleccionada pero hay opciones disponibles, establece selected al primer id del arreglo
+                selected.value = props.options[0].id;
+            }
+        } catch (Error){
+            console.error(Error)
         }
+        
+        
     } else {
         if (props.optionsSelected == '' && props.options.length > 0) {
         selected.value = props.options[0].id; // Establece el valor inicial al primer id del arreglo

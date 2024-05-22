@@ -3,8 +3,8 @@
         <LayoutFondoBorder>
             <template #default>
                 <FormDatosbasicosEmpresa 
-                    :Informacion="DatosBasicosEmpresa"
                     :parametros="listadoLocalidad"
+                    :Informacion="DatosBasicosEmpresa"                    
                     @DataNotificacion="RefrescarDatos()"
                     
                 /> 
@@ -34,7 +34,6 @@ import peticiones_Configuracion from '@/peticiones/configuracion/datos_empresa.j
 
 
 const ID_Sociedad = ref(inject('SociedadID'))
-const UserID = ref(localStorage.getItem('userId'));
 
 // Accede a la función proporcionada por el componente padre
 const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función del componente padre
@@ -65,7 +64,6 @@ const SolicitarDatosBasicosEmpresa = async (ID_Sociedad = Number) => {
 }
 const SolicitarResponsableEmpresa = async (ID_Sociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getDatosRepresentanteEmpresa(ID_Sociedad);
-    //console.log(respuesta)
     if (respuesta.success) {
         DatosResponsableEmpresa.value = respuesta.data;
     } else {
@@ -89,7 +87,7 @@ onMounted(() => {
     //solicitar la lista de regiones y comunas
     pedirListadoLocalidad();
 
-})
+});
 </script>
 
 <style scoped>

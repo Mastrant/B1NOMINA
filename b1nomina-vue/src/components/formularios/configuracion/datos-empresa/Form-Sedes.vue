@@ -154,7 +154,6 @@ watch(DireccionSede, (nuevoValor) => ActualizarPayload('direccion', nuevoValor))
 //ve si hay cambios en la informacion y actualiza los campos:
 watch(() => props.Informacion, (nuevoValor) => { 
     MostrarValores(nuevoValor) 
-    console.log(nuevoValor)
 });
 
 
@@ -226,7 +225,7 @@ const eliminarElemento = () => {
         const respuesta = await peticiones_configuracion_datosEmpresa.ActualizarSede(ID_USERMASTER.value ,props.Informacion?.id
     ,payload);
         if(respuesta.success == true){
-        emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
+            emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
         } else {
             console.error(respuesta?.error)
             emit('DataNotificacion', {'texto': respuesta?.error, 'valor': false})

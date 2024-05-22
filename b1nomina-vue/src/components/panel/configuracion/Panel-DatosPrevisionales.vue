@@ -9,12 +9,6 @@ import ListaDatosProvisionales from '@/components/listas/configuracion/Lista-Dat
 
 import { ref, inject } from 'vue';
 
-const panelSelecionado = ref(1);
-
-const SelecionarPanel = (num) => {
-    panelSelecionado.value = num;
-}
-
 // Accede a la función proporcionada por el componente padre
 const CambiarNombreRuta = inject('CambiarNombreRuta');
 // Llama a la función para enviar información al componente padre

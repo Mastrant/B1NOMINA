@@ -287,6 +287,21 @@ const MostrarValores = (DATA) => {
     payload.numero_cuenta = DATA?.numero_cuenta ?? '';
 
     Tercero.value = (DATA?.Tercero == null)? '' : Number(DATA?.Tercero);
+    payload_old.terceros = DATA?.terceros ?? false;
+    payload.terceros = DATA?.terceros ?? false;
+    
+    payload_old.rut_tercero = DATA?.rut_tercero ?? '';
+    payload.rut_tercero = DATA?.rut_tercero ?? '';
+    
+    payload_old.nombre_tercero = DATA?.nombre_tercero ?? '';
+    payload.nombre_tercero = DATA?.nombre_tercero ?? '';
+    
+    payload_old.en_uso = DATA?.en_uso ?? '';
+    payload.en_uso = DATA?.en_uso ?? '';
+    
+    payload_old.email_tercero = DATA?.email_tercero ?? '';
+    payload.email_tercero = DATA?.email_tercero ?? '';
+    
     payload_old.user_id = DATA?.user_id ?? '';
     payload.user_id = DATA?.user_id ?? '';
 }

@@ -77,7 +77,6 @@ const showNotificacionShort = (Info) => {
     }
 }
 
-
 provide('showNotificacionShort',showNotificacionShort)
 
 // Accede a la función proporcionada por el componente padre

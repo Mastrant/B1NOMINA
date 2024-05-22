@@ -55,7 +55,9 @@
 import InputBorderDescripcion from '@/components/inputs/Input-Border-descripcion.vue';
 import TemplateButton from '@/components/botones/Template-button.vue';
 
-import { defineProps, ref, reactive, watch, defineEmits, onMounted} from 'vue';
+import peticiones_configuracion_datosEmpresa from '@/peticiones/configuracion/datos_empresa.js';
+
+import { defineProps, ref, reactive, watch, defineEmits, onMounted, inject} from 'vue';
 
 const props = defineProps({
     Informacion: {
@@ -67,6 +69,9 @@ const props = defineProps({
         default: {}
     },
 })
+
+const ID_Sociedad = ref(inject('SociedadID'))
+const ID_USERMASTER = ref(localStorage.getItem('userId'))
 
 const IDFORM = "DatosResponsableEmpresa"
 
@@ -86,25 +91,25 @@ const RequiereActualizar = ref(false);
 
 //Contiene la información original
 const payload_old = reactive({
-    NombreResponsable: "",
-    numeroDocumento: "",
-    correoResponsable: "",
-    telefonoResponsable: "",
+    responsable: "",
+    rut_responsable: "",
+    email_responsable: "",
+    telefono_responsable: "",
 });
 
 //Contiene la información a enviar
 const payload = reactive({
-    NombreResponsable: "",
-    numeroDocumento: "",
-    correoResponsable: "",
-    telefonoResponsable: "",
+    responsable: "",
+    rut_responsable: "",
+    email_responsable: "",
+    telefono_responsable: "",
 });
 
 //Escuchar cambios en las variables
-watch(NombreResponsable, (nuevoValor) => ActualizarPayload('NombreResponsable', nuevoValor?.toLocaleLowerCase()));
-watch(numeroDocumento, (nuevoValor) => ActualizarPayload('numeroDocumento', nuevoValor));
-watch(correoResponsable, (nuevoValor) => ActualizarPayload('correoResponsable', nuevoValor?.toLocaleLowerCase()));
-watch(telefonoResponsable, (nuevoValor) => ActualizarPayload('telefonoResponsable', nuevoValor));
+watch(NombreResponsable, (nuevoValor) => ActualizarPayload('responsable', nuevoValor));
+watch(numeroDocumento, (nuevoValor) => ActualizarPayload('rut_responsable', nuevoValor));
+watch(correoResponsable, (nuevoValor) => ActualizarPayload('email_responsable', nuevoValor));
+watch(telefonoResponsable, (nuevoValor) => ActualizarPayload('telefono_responsable', nuevoValor));
 
 //ve si hay cambios en la informacion y actualiza los campos:
 watch(() => props.Informacion.Sociedad, (nuevoValor) => { 
@@ -123,7 +128,7 @@ const ActualizarPayload = (propiedad, valor) => {
 const verificarCambios = () => {
     // Comprueba si todos los campos relevantes en payload_old y payload son iguales.
     // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
-    const camposIguales = Object.keys(payload_old).every(key => payload_old[key] === payload[key]);
+    const camposIguales = Object.keys(payload_old).every(key => payload_old[key] == payload[key]);
 
     // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
     const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
@@ -131,32 +136,34 @@ const verificarCambios = () => {
     // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
-    RequiereActualizar.value = !(camposIguales && alMenosUnValorVacio);
+    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+    console.log
 }
 
 
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
+    RequiereActualizar.value = false;
 
-NombreResponsable.value = (DATA?.NombreResponsable == null)? '' :DATA?.NombreResponsable;
-numeroDocumento.value = (DATA?.rut_responsable == null)? '' :DATA?.rut_responsable;
-correoResponsable.value = (DATA?.email_responsable == null)? '' :DATA?.email_responsable;
-telefonoResponsable.value = (DATA?.telefono_responsable == null)? '' :DATA?.telefono_responsable;
+    NombreResponsable.value = (DATA?.responsable == null)? '' :DATA?.responsable;
+    numeroDocumento.value = (DATA?.rut_responsable == null)? '' :DATA?.rut_responsable;
+    correoResponsable.value = (DATA?.email_responsable == null)? '' :DATA?.email_responsable;
+    telefonoResponsable.value = (DATA?.telefono_responsable == null)? '' :DATA?.telefono_responsable;
 
 
-// Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
-  // utilizando '' si DATA?.documento es null.
-  payload_old.NombreResponsable = DATA?.NombreResponsable ?? '';
-  payload.NombreResponsable = DATA?.NombreResponsable ?? '';
-  
-  payload_old.numeroDocumento = DATA?.rut_responsable ?? '';
-  payload.numeroDocumento = DATA?.RutResponsable ?? '';
+    // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
+    // utilizando '' si DATA?.documento es null.
+    payload_old.responsable = DATA?.responsable ?? '';
+    payload.responsable = DATA?.responsable ?? '';
+    
+    payload_old.rut_responsable = DATA?.rut_responsable ?? '';
+    payload.rut_responsable = DATA?.rut_responsable ?? '';
 
-  payload_old.correoResponsable = DATA?.email_responsable ?? '';
-  payload.correoResponsable = DATA?.emailResponsable ?? '';
+    payload_old.email_responsable = DATA?.email_responsable ?? '';
+    payload.email_responsable = DATA?.emailResponsable ?? '';
 
-  payload_old.telefonoResponsable = DATA?.telefono_responsable ?? '';
-  payload.telefonoResponsable = DATA?.telefono_responsable ?? '';
+    payload_old.telefono_responsable = DATA?.telefono_responsable ?? '';
+    payload.telefono_responsable = DATA?.telefono_responsable ?? '';
 
 }
 
@@ -164,29 +171,30 @@ telefonoResponsable.value = (DATA?.telefono_responsable == null)? '' :DATA?.tele
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
- */const Enviar = () => {
-  
-  if (RequiereActualizar.value == true){
-    console.log(payload)
-    emit("DataNotificacion", 
-        {
-            'texto': "Informacion actualizada con exito", 
-            'valor': true
+ */
+const Enviar = async () => {
+    //si ID es nulo crea un usuario
+
+
+    if (RequiereActualizar.value == true) {        
+        const respuesta = await peticiones_configuracion_datosEmpresa?.ActualizarDatosReponsableEmpresa(
+            ID_USERMASTER.value, ID_Sociedad.value, payload
+        );
+
+        if(respuesta.success == true){
+            emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
+        } else {
+            console.error(respuesta?.error)
+            emit('DataNotificacion', {'texto': respuesta?.error, 'valor': false})
         }
-    )
-  } else {
-    emit("DataNotificacion", 
-        {
-            'texto': "Todavía hay campos en blanco", 
-            'valor':false
-        }
-    )
-  }
+    } else {
+        emit('DataNotificacion', {'texto': "No se requiere actualizar", 'valor': true});
+    }
 };
 
 
-onMounted(() => {
-  MostrarValores(props.Informacion.Sociedad)
+onMounted(async () => {
+  await MostrarValores(props.Informacion?.Sociedad)
 });
 
 
