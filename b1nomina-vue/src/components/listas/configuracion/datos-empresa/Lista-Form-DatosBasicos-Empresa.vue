@@ -27,7 +27,7 @@ import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
 import FormDatosbasicosEmpresa from '@/components/formularios/configuracion/datos-empresa/Form-DatosBasicos-Empresa.vue';
 import FormResponsableEmpresa from '@/components/formularios/configuracion/datos-empresa/Form-Responsable-Empresa.vue';
  // 
- import {onMounted, ref, inject} from 'vue';
+import {onMounted, ref, inject} from 'vue';
 
 import peticiones from '@/peticiones/p_empleado';
 import peticiones_Configuracion from '@/peticiones/configuracion/datos_empresa.js'

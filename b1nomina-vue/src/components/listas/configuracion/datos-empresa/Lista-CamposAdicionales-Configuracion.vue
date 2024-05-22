@@ -38,7 +38,7 @@ const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función 
 const ListaCamposAdicionales = ref([]);
 
 const AddCampo = async () => {
-    const respuesta = await peticiones_Configuracion.CreateCampoAdicional(ID_Sociedad,Number(UserID.value));
+    const respuesta = await peticiones_Configuracion.CreateCampoAdicional(ID_Sociedad.value, Number(UserID.value));
     if (respuesta.success) {
         RefrescarDatos();
     } else {
@@ -49,7 +49,6 @@ const AddCampo = async () => {
 
 const SolicitarlistaCamposAdicionales = async (IDSociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getListadoCamposAdicionales(IDSociedad);
-    console.log(respuesta)
     if (respuesta.success) {
         ListaCamposAdicionales.value = respuesta.data;
     } else {
@@ -76,11 +75,11 @@ onMounted( () => {
 }
 
 h3.subtitulo {
-font-size: 22px;
-font-weight: 500;
-line-height: 48px;
-text-align: left;
-margin:0;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 48px;
+    text-align: left;
+    margin:0;
 }
 
 p.descripcion {

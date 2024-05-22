@@ -40,7 +40,7 @@ axios.interceptors.response.use(
       if (error.response && error.response.status ==  403 ) {
   
         // Utiliza Vue Router para redirigir al usuario a la página de inicio de sesión
-        router.replace('/seccion');
+        router.replace('/login');
       }
   
       // Retorna el error para que pueda ser manejado posteriormente

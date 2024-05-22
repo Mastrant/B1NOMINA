@@ -24,7 +24,10 @@
 import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
 import FormDatosBasicosPrevisionales from '@/components/formularios/configuracion/datos-previsionales/Form-DatosBasicos-previsionales.vue'
 import FormAFC from '@/components/formularios/configuracion/datos-previsionales/Form-AFC.vue';
-import {onMounted, ref} from 'vue';
+import {onMounted, ref, inject} from 'vue';
+
+import peticiones_Configuracion from '@/peticiones/configuracion/datos_empresa.js'
+
 
 const ID_Sociedad = ref(inject('SociedadID'))
 
@@ -50,9 +53,9 @@ const SolicitarDatosAFC = async (ID_Sociedad = Number) => {
 };
 
 onMounted(async () => {
-    SolicitarDatosConfiPrevisionales(ID_Sociedad.value)
-    SolicitarDatosAFC(ID_Sociedad.value)
-})
+    await SolicitarDatosConfiPrevisionales(ID_Sociedad.value)
+    await SolicitarDatosAFC(ID_Sociedad.value)
+});
 </script>
 
 <style scoped>

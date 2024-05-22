@@ -42,7 +42,7 @@ import TemplateButton from '@/components/botones/Template-button.vue';
 import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
 import trashIcon from '@/components/icons/trash-icon.vue';
 
-import { defineProps, ref, reactive, watch, defineEmits, onMounted} from 'vue';
+import { defineProps, ref, reactive, watch, defineEmits, onMounted, inject} from 'vue';
 
 const props = defineProps({
     Informacion: {
@@ -53,13 +53,12 @@ const props = defineProps({
 
 const RequiereActualizar = ref(false);
 
-
+const ID_Sociedad = ref(inject('SociedadID'))
 
 const IDFORM = "ActualizarCargo" + props.Informacion?.id;
 
 const emit = defineEmits([
     "DataNotificacion",
-    "ActualizarInformacion"
 ]);
 
 // Definicion de variables de los inputs
@@ -96,14 +95,12 @@ const payload = reactive({
 
 //Escuchar cambios en las variables
 watch(NombreCampo, (nuevoValor) => ActualizarPayload('NombreCampo', nuevoValor));
-watch(Estado, (nuevoValor) => ActualizarPayload('estado', Number(nuevoValor)));
-
+watch(Estado, (nuevoValor) => ActualizarPayload('estado', nuevoValor));
 
 //ve si hay cambios en la informacion y actualiza los campos:
 watch(() => props.Informacion, (nuevoValor) => { 
-  MostrarValores(nuevoValor) 
+    MostrarValores(nuevoValor) 
 });
-
 
 //actualizar datos del payload a enviar
 const ActualizarPayload = (propiedad, valor) => {
@@ -115,34 +112,37 @@ const ActualizarPayload = (propiedad, valor) => {
 const verificarCambios = () => {
     // Comprueba si todos los campos relevantes en payload_old y payload son iguales.
     // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
-    const camposIguales = (payload_old?.NombreCampo ===  payload?.NombreCampo)
-    const campoVacio = payload?.NombreCampo == ''
+    const camposIguales = Object.keys(payload_old).every(key => payload_old[key] == payload[key]);
+
+    // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
+    const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
+
     // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
-    RequiereActualizar.value = !(camposIguales && !campoVacio );
+    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+
 }
 
 
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
 
+    NombreCampo.value = (DATA?.nombre == null)? '' :DATA?.nombre;
 
-NombreCampo.value = (DATA?.nombre == null)? '' :DATA?.nombre;
+    EstadoCampo.value = (DATA?.estado == 0) ? true : false;
 
-EstadoCampo.value = (DATA?.estado == 0) ? true : false;
+    // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
+    // utilizando '' si DATA?.documento es null.
+    payload_old.id = DATA?.id ?? '';
+    payload.id = DATA?.id ?? '';
 
-// Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
-  // utilizando '' si DATA?.documento es null.
-  payload_old.id = DATA?.id ?? '';
-  payload.id = DATA?.id ?? '';
-
-  payload_old.NombreCampo = DATA?.nombre ?? '';
-  payload.NombreCampo = DATA?.nombre ?? '';
-  
-  payload_old.estado = DATA?.estado ?? '';
-  payload.estado = DATA?.estado ?? '';
-  
+    payload_old.NombreCampo = DATA?.nombre ?? '';
+    payload.NombreCampo = DATA?.nombre ?? '';
+    
+    payload_old.estado = DATA?.estado ?? '';
+    payload.estado = DATA?.estado ?? '';
+    
 };
 
 const eliminarElemento = () => {
@@ -154,29 +154,28 @@ const eliminarElemento = () => {
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
- const Enviar = () => {
+const Enviar = async () => {
+  //si ID es nulo crea un usuario
+ 
+    if (RequiereActualizar.value == true) {
+        const respuesta = await peticiones_configuracion_datosEmpresa.ActualizarCampoAdicional(
+            ID_USERMASTER.value , props.Informacion?.id, payload
+        );
 
-  
-  if (RequiereActualizar){
-    console.log(payload)
-    emit("DataNotificacion", 
-        {
-            'texto': "Informacion actualizada con exito", 
-            'valor': true
+        if(respuesta.success == true){
+        emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
+        } else {
+            console.error(respuesta?.error)
+            emit('DataNotificacion', {'texto': respuesta?.error, 'valor': false})
         }
-    )
-  } else {
-    emit("DataNotificacion", 
-        {
-            'texto': "Todavía hay campos en blanco", 
-            'valor':false
-        }
-    )
-  }
+    } else {
+        emit('DataNotificacion', {'texto': "No se requiere actualizar", 'valor': true});
+    }
 };
 
 onMounted(() => {
-  MostrarValores(props.Informacion)
+    MostrarValores(props.Informacion)
+    console.log(props.Informacion)
 });
 
 </script>
@@ -193,11 +192,11 @@ form.formulario {
 }
 
 h4 {
-font-size: 22px;
-font-weight: 500;
-line-height: 30px;
-text-align: left;
-margin: 0;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 30px;
+    text-align: left;
+    margin: 0;
 }
 
 div.row {
