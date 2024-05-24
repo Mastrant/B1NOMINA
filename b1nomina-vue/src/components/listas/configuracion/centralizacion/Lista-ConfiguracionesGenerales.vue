@@ -49,10 +49,15 @@ const UserID = ref(localStorage.getItem('userId'));
 const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función del componente padre
 // Llama a la función para enviar información al componente padre
 
+const CentroDecCosto = ref('')
+const PrestamoSolidario = ref('')
+const CuentasContables = ref('')
+const ListadoDimensiones = ref({})
+
 const SolicitarSolicitarCentroDeCosto = async (ID_Sociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getCentroDeCosto(ID_Sociedad);
     if (respuesta.success) {
-        ListaDepartamentos.value = respuesta.data;
+        CentroDecCosto.value = respuesta.data;
     } else {
         console.error(respuesta.error)
     }
@@ -60,7 +65,7 @@ const SolicitarSolicitarCentroDeCosto = async (ID_Sociedad = Number) => {
 const SolicitarPrestamoSolidario = async (ID_Sociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getPrestamoSolidario(ID_Sociedad);
     if (respuesta.success) {
-        ListaDepartamentos.value = respuesta.data;
+        PrestamoSolidario.value = respuesta.data;
     } else {
         console.error(respuesta.error)
     }
@@ -68,7 +73,7 @@ const SolicitarPrestamoSolidario = async (ID_Sociedad = Number) => {
 const SolicitarCuentasContables = async (ID_Sociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getCuentasContables(ID_Sociedad);
     if (respuesta.success) {
-        ListaDepartamentos.value = respuesta.data;
+        CuentasContables.value = respuesta.data;
     } else {
         console.error(respuesta.error)
     }
@@ -78,7 +83,9 @@ const RefrescarDatos = () => {
     SolicitarSolicitarCentroDeCosto(ID_Sociedad.value);
     SolicitarPrestamoSolidario(ID_Sociedad.value);
     SolicitarCuentasContables(ID_Sociedad.value);
-    MostrarMensaje({Titulo:'Datos Actualizados',Descripcion:'Se han actualizado los datos correctamente.'});
+    MostrarMensaje(
+        {Titulo:'Datos Actualizados', Descripcion:'Se han actualizado los datos correctamente.'}
+    );
 }
 
 onMounted( async () => {

@@ -8,7 +8,7 @@
 
         <LayoutFondoBorder v-for="Grupo in ListaGruposCentralizacion" :key="Grupo.id">
             <template #default>    
-                  Formulario para los grupos    
+                <FormGrupoCentralizacion />
             </template>
         </LayoutFondoBorder>
 
@@ -18,6 +18,7 @@
 
 <script setup>
 import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
+import FormGrupoCentralizacion from '@/components/formularios/configuracion/centralizacion/Form-GruposCentralizacion.vue'
 
 import TemplateBlankButton from '@/components/botones/Template-blank-button.vue';
 

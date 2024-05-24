@@ -1,22 +1,29 @@
 <template>
     <form class="formulario" :id="IDFORM" @submit.prevent="Enviar">
         <div class="row">
+            
             <InputBorderDescripcion
-                Placeholder="Ejemplo vendedores área centro , vendedores área norte, vendedores área sur, Empleados en pasantías, etc."
+                Placeholder="Ingresar nombre del campo"
                 :Titulo="`Grupo # ${Informacion.id}`"
-                name="Grupo"
-                v-model="nombreGrupo"
-                @update:modelValue="nombreGrupo = $event"
+                name="CampoAdicional"
+                v-model="NombreCampo"
+                @update:modelValue="NombreCampo = $event"
                 :requerido="RequiereActualizar"
             />
-
             <div class="espacioTrash">
+                
+                <TuerquitaIcon
+                    Stroke="#1A245B"
+                    text="Configurar" 
+                />
+                
                 <trashIcon
                     Stroke="#1A245B" 
                     text="Eliminar"
                     @click="eliminarElemento"
                 />
             </div>
+            
         </div>
 
         <div class="espacioBoto" v-if="RequiereActualizar">
@@ -28,12 +35,10 @@
 <script setup>
 import InputBorderDescripcion from '@/components/inputs/Input-Border-descripcion.vue';
 import TemplateButton from '@/components/botones/Template-button.vue';
+import TuerquitaIcon from  '@/components/icons/Tuerquita-icon.vue';
 import trashIcon from '@/components/icons/trash-icon.vue';
 
-import peticiones_configuracion_datosEmpresa from '@/peticiones/configuracion/datos_empresa.js';
-
-import { defineProps, ref, reactive, watch, defineEmits, onMounted} from 'vue';
-const ID_USERMASTER = ref(localStorage.getItem('userId'))
+import { defineProps, ref, reactive, watch, defineEmits, onMounted, inject} from 'vue';
 
 const props = defineProps({
     Informacion: {
@@ -44,7 +49,9 @@ const props = defineProps({
 
 const RequiereActualizar = ref(false);
 
-const IDFORM = "ActualizarGrupo" + props.Informacion?.id;
+const ID_Sociedad = ref(inject('SociedadID'))
+
+const IDFORM = "GrupoCentralizacion" + props.Informacion?.id;
 
 const emit = defineEmits([
     "DataNotificacion",
@@ -52,30 +59,38 @@ const emit = defineEmits([
 
 // Definicion de variables de los inputs
 
-const nombreGrupo = ref('');
+const NombreCampo = ref('');
+
+const EstadoCampo = ref(false);
+
+const Estado = ref('');
 
 //Contiene la información original
 const payload_old = reactive({
-    id: '',
-    nombre: "",
+    id:'',
+    NombreCampo: "",
+    estado: ''
 
 });
 
 //Contiene la información a enviar
 const payload = reactive({
-    id: '',
-    nombre: "",
+    id:'',
+    NombreCampo: "",
+    estado: ''
 
 });
 
+
+
 //Escuchar cambios en las variables
-watch(nombreGrupo, (nuevoValor) => ActualizarPayload('nombre', nuevoValor));
+watch(NombreCampo, (nuevoValor) => ActualizarPayload('NombreCampo', nuevoValor));
+watch(Estado, (nuevoValor) => ActualizarPayload('estado', nuevoValor));
 
 //ve si hay cambios en la informacion y actualiza los campos:
 watch(() => props.Informacion, (nuevoValor) => { 
-    MostrarValores(nuevoValor);
+    MostrarValores(nuevoValor) 
 });
-
 
 //actualizar datos del payload a enviar
 const ActualizarPayload = (propiedad, valor) => {
@@ -87,43 +102,53 @@ const ActualizarPayload = (propiedad, valor) => {
 const verificarCambios = () => {
     // Comprueba si todos los campos relevantes en payload_old y payload son iguales.
     // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
-    const camposIguales = (payload_old.nombre ==  payload.nombre)
-    const campoVacio = payload.nombre == ''
+    const camposIguales = Object.keys(payload_old).every(key => payload_old[key] == payload[key]);
+
+    // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
+    const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
+
     // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
-    RequiereActualizar.value = !(camposIguales && !campoVacio );
+    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+
 }
 
 
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
 
-    nombreGrupo.value = (DATA?.nombre == null)? '' :DATA?.nombre;
+    NombreCampo.value = (DATA?.nombre == null)? '' :DATA?.nombre;
+
+    EstadoCampo.value = (DATA?.estado == 0) ? true : false;
 
     // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
     // utilizando '' si DATA?.documento es null.
     payload_old.id = DATA?.id ?? '';
     payload.id = DATA?.id ?? '';
 
-    payload_old.nombre = DATA?.nombre ?? '';
-    payload.nombre = DATA?.nombre ?? '';
-
-    payload.sociedad_id = DATA?.sociedad_id ?? '';
-    payload_old.sociedad_id = DATA?.sociedad_id ?? '';
+    payload_old.NombreCampo = DATA?.nombre ?? '';
+    payload.NombreCampo = DATA?.nombre ?? '';
     
-}
+    payload_old.estado = DATA?.estado ?? '';
+    payload.estado = DATA?.estado ?? '';
+    
+};
+
+const eliminarElemento = () => {
+    console.log(props.Informacion)
+ };
 
 /**
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
- const Enviar = async () => {
+const Enviar = async () => {
   //si ID es nulo crea un usuario
  
-  if (RequiereActualizar.value == true) {
-        const respuesta = await peticiones_configuracion_datosEmpresa.ActualizarGrupoCentralizacion(
+    if (RequiereActualizar.value == true) {
+        const respuesta = await peticiones_configuracion_datosEmpresa.ActualizarCampoAdicional(
             ID_USERMASTER.value , props.Informacion?.id, payload
         );
 
@@ -138,12 +163,9 @@ const MostrarValores = (DATA) => {
     }
 };
 
-const eliminarElemento = () => {
-    console.log(props.Informacion)
- };
-
 onMounted(() => {
-  MostrarValores(props.Informacion)
+    MostrarValores(props.Informacion)
+    console.log(props.Informacion)
 });
 
 </script>
@@ -156,20 +178,22 @@ form.formulario {
     width: 100%;
     gap: 12px;
     box-sizing: border-box;
+    position:relative;
 }
 
 h4 {
-font-size: 22px;
-font-weight: 500;
-line-height: 30px;
-text-align: left;
-margin: 0;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 30px;
+    text-align: left;
+    margin: 0;
 }
 
 div.row {
     display: flex;
     justify-content: space-between;
     gap:12px;
+    
 }
 
 div.espacioBoto {
@@ -178,9 +202,14 @@ div.espacioBoto {
 
 div.espacioTrash {
     display:flex;
+    flex-direction: row;
     justify-content: end;
     align-items: start;
     align-self: flex-start;
+    position: absolute;
+    gap:12px;
+    top: -0.6rem; 
+    right: 0;
 }
 
 </style>

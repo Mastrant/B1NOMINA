@@ -26,6 +26,7 @@
 
             <ListaGrupos v-if="panelSelecionado == 3" />
         </div>
+        
         <AlertShort
             ref="notificacionStatus"
         />
