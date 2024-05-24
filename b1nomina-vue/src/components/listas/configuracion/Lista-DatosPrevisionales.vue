@@ -34,12 +34,16 @@ const ID_Sociedad = ref(inject('SociedadID'))
 const DatosPrevisionales = ref([])
 const DatosAFC= ref([])
 
+// Accede a la función proporcionada por el componente padre
+const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función del componente padre
+// Llama a la función para enviar información al componente padre
+
+
 const SolicitarDatosConfiPrevisionales = async (ID_Sociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getDatosPrevisionalesBasicos(ID_Sociedad);
-    console.error(respuesta)
     if (respuesta.success) {
         //console.log(respuesta.data)
-        DatosPrevisionales.value = respuesta.data?.Configuracion;
+        DatosPrevisionales.value = respuesta.data;
     } else {
         console.error(respuesta.error)
     }
@@ -47,11 +51,18 @@ const SolicitarDatosConfiPrevisionales = async (ID_Sociedad = Number) => {
 const SolicitarDatosAFC = async (ID_Sociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getDatosAFC(ID_Sociedad);
     if (respuesta.success) {
-        DatosAFC.value = respuesta.data;
+        DatosAFC.value = respuesta.data?.data;
     } else {
         console.error(respuesta.error)
     }
 };
+
+const RefrescarDatos = async () => {
+    await SolicitarDatosConfiPrevisionales(ID_Sociedad.value);
+    await SolicitarDatosConfiPrevisionales(ID_Sociedad.value)
+    await SolicitarDatosAFC(ID_Sociedad.value)
+    MostrarMensaje({Titulo:'Datos Actualizados',Descripcion:'Se han actualizado los datos correctamente.'});
+}
 
 onMounted(async () => {
     await SolicitarDatosConfiPrevisionales(ID_Sociedad.value)

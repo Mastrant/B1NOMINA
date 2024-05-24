@@ -15,7 +15,7 @@
         
             <InputBorderDescripcion
                 Placeholder="0"
-                Titulo="Gratificación Ingreso Mínimo (%) *"
+                Titulo="Gratificación Ingreso Mínimo (%)"
                 name="Gratificacion_Minimo"
                 v-model="Gratificacion_Minimo"
                 @update:modelValue="Gratificacion_Minimo = $event"
@@ -141,11 +141,15 @@ const payload = reactive({
 //Escuchar cambios en las variables
 watch(Sueldo, (nuevoValor) => ActualizarPayload('sueldo_minimo', nuevoValor));
 watch(Gratificacion_Minimo, (nuevoValor) => ActualizarPayload('gratificacion_minimo', nuevoValor));
-watch(TopeGratificacion, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(Vacaciones, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(HorasDiarias, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(Honorarios, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(TopeGratificacion, (nuevoValor) => ActualizarPayload('tope_gratificacion', nuevoValor));
+watch(Vacaciones, (nuevoValor) => ActualizarPayload('dias_vacaciones', nuevoValor));
+watch(HorasDiarias, (nuevoValor) => ActualizarPayload('horas_legales', nuevoValor));
+watch(Honorarios, (nuevoValor) => ActualizarPayload('retencion_honorarios', nuevoValor));
 
+watch(() => props.Informacion, (nuevoValor) => { 
+
+    MostrarValores(nuevoValor?.Configuracion);
+});
 
 //actualizar datos del payload a enviar
 const ActualizarPayload = (propiedad, valor) => {
@@ -166,7 +170,6 @@ const verificarCambios = () => {
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
     RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
-    console.log(payload)
 }
 
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
@@ -174,8 +177,8 @@ const MostrarValores = (DATA) => {
 
     RequiereActualizar.value = false;
 
-// Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
-// utilizando '' si DATA?.documento es null.
+    // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
+    // utilizando '' si DATA?.documento es null.
 
     Sueldo.value = (DATA?.sueldo_minimo == null)? '' :DATA?.sueldo_minimo;
     payload_old.sueldo_minimo = DATA?.sueldo_minimo ?? '';
@@ -197,13 +200,13 @@ const MostrarValores = (DATA) => {
     payload_old.horas_legales = DATA?.horas_legales ?? '';
     payload.horas_legales = DATA?.horas_legales ?? '';
 
-    Honorarios.value = (DATA?.retencion_honorarios == null)? 0 :DATA?.retencion_honorarios;
+    Honorarios.value = (DATA?.retencion_honorarios == null)? '' :DATA?.retencion_honorarios;
     payload_old.retencion_honorarios = DATA?.retencion_honorarios ?? '';
     payload.retencion_honorarios = DATA?.retencion_honorarios ?? '';
 
+    payload_old.sociedad_id = DATA?.sociedad_id ?? '';
     payload.sociedad_id = DATA?.sociedad_id ?? '';
 }
-
 
 /**
  * Funcion emitida al enviar el formulario
@@ -215,7 +218,7 @@ const MostrarValores = (DATA) => {
     
 
     if (RequiereActualizar.value == true) {        
-        const respuesta = await peticiones_configuracion_datosEmpresa.ActualizarDatosBasicosEmpresa(
+        const respuesta = await peticiones_configuracion_datosEmpresa.ActualizarDatosPrevisionales(
             ID_USERMASTER.value, ID_Sociedad.value, payload
         );
 
@@ -231,8 +234,7 @@ const MostrarValores = (DATA) => {
 };
 
 onMounted(async () => {
-    await MostrarValores(props.Informacion)
-    console.error("a", props.Informacion)
+    await MostrarValores(props.Informacion.Configuracion)
 });
 
 
