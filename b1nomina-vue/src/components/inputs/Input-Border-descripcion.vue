@@ -14,6 +14,7 @@
            :placeholder="Placeholder"
            :minlength="minimoCaracteres"
            :maxlength="maximoCaracteres"
+           :step="NumeroDecimales"
            :value="modelValue"
            @input="$emit('update:modelValue', $event.target.value)"
         >
@@ -61,11 +62,15 @@ const props = defineProps(
         },
         minimoCaracteres: {
             type: [Number, String], // Define el tipo de dato que puede recibir, Number o String.
-            default: 3 // Valor por defecto para el mínimo de caracteres permitidos.
+            default: 2 // Valor por defecto para el mínimo de caracteres permitidos.
         },
         maximoCaracteres: {
             type:[Number, String], // Define el tipo de dato que puede recibir, Number o String.
             default: 100 // Valor por defecto para el máximo de caracteres permitidos.
+        },
+        NumeroDecimales: {
+            type: [Number, String], // Define el tipo de dato que puede recibir, Number o String.
+            default: 2 // Valor por defecto para el mínimo de caracteres permitidos.
         },
         requerido: {
             type: Boolean, // Define el tipo de dato que puede recibir, Boolean.

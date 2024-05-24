@@ -7,45 +7,56 @@
                 Titulo="Seguro AFC Empresa (%)"
                 name="Seguro AFC"
                 v-model="SeguroAFCEmpresa"
+                Tipo="Number"
                 @update:modelValue="SeguroAFCEmpresa = $event"
                 :requerido="RequiereActualizar"
-                 
+                minimo-caracteres="0"
+                -numero-decimales="0.01"
             />
             <InputBorderDescripcion
                 Placeholder="0"
                 Titulo="Seguro AFC Empleado (%) "
                 name="SeguroAFCEmpleado"
                 v-model="SeguroAFCEmpleado"
+                Tipo="Number"
                 @update:modelValue="SeguroAFCEmpleado = $event"
                 :requerido="RequiereActualizar"
-                 
+                minimo-caracteres="0"
+                -numero-decimales="0.01"
             />
             <InputBorderDescripcion
                 Placeholder="0"
                 Titulo="AFC Cont. Plazo Fijo (%)"
-                name="Gratificacion"
+                name="AFCPlazofijo"
                 v-model="AFC_plazo_fijo"
+                Tipo="Number"
                 @update:modelValue="AFC_plazo_fijo = $event"
                 :requerido="RequiereActualizar"
-                 
+                minimo-caracteres="0"
+                -numero-decimales="0.01"
             />
         </div>
 
         <div class="row">
             <InputBorderDescripcion
                 Placeholder="0"
-                Titulo="AFC 11 Años antigüedad (%) *"
-                name="Gratificacion"
+                Titulo="AFC 11 Años antigüedad (%)"
+                name="AFC Antiguedad"
                 v-model="AFC_Antiguedad"
+                Tipo="Number"
                 @update:modelValue="AFC_Antiguedad = $event"
                 :requerido="RequiereActualizar"
-
+                minimo-caracteres="0"
+                -numero-decimales="0.01"
             />
             <InputBorderDescripcion
                 Placeholder="Ingresar tope de seguro AFC"
                 Titulo="Tope Seguro AFC (UF)"
-                name="Sueldo"
+                name="Tope AFC"
                 v-model="UF"
+                minimo-caracteres="0"
+                -numero-decimales="0.01"
+                Tipo="Number"
                 @update:modelValue="UF = $event"
                 :requerido="RequiereActualizar"
             />
@@ -145,9 +156,6 @@ const verificarCambios = () => {
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
     RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
-    console.log(camposIguales)
-    console.log(payload,payload_old)
-    
 }
 
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
