@@ -170,7 +170,8 @@ div.modal-inner {
     background: #FFFFFF; /* Fondo blanco */
     gap:  24px; /* Espacio entre los elementos hijos de Flexbox */
 
-    border-radius:  8px; /* Bordes redondeados */
+    border: solid rgb(81, 81, 81) 1px;
+    border-radius: 8px; /* Bordes redondeados */
     z-index: 5 !important;
 }
 

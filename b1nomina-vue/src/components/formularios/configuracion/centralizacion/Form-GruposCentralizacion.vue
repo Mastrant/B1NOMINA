@@ -15,6 +15,7 @@
                 <TuerquitaIcon
                     Stroke="#1A245B"
                     text="Configurar" 
+                    @click="ActionButton"
                 />
                 
                 <trashIcon
@@ -25,6 +26,21 @@
             </div>
             
         </div>
+
+        <TemplateModal 
+            @closeModal="showModal(false)" 
+            :FormId="IDFormModal"
+            :NombreAccion="TituloModal" 
+            :textSubmit="TextoButton"
+            :activarModal="activarModal"
+            :ModalActivo="1"
+            :DataNotification="InformacionNotificacionModal"
+            
+        >
+            <template #default><!--Espacio para los formularios -->
+                <FormConfigGrupoCentralizacion />
+            </template>
+        </TemplateModal>
 
         <div class="espacioBoto" v-if="RequiereActualizar">
             <TemplateButton :form="IDFORM" Tipo="submit" text="Actualizar"/>
@@ -37,6 +53,8 @@ import InputBorderDescripcion from '@/components/inputs/Input-Border-descripcion
 import TemplateButton from '@/components/botones/Template-button.vue';
 import TuerquitaIcon from  '@/components/icons/Tuerquita-icon.vue';
 import trashIcon from '@/components/icons/trash-icon.vue';
+import TemplateModal from '@/components/modal/TemplateModal.vue'
+import FormConfigGrupoCentralizacion from '@/components/formularios/configuracion/centralizacion/Form-GruposCentralizacion.vue';
 
 import { defineProps, ref, reactive, watch, defineEmits, onMounted, inject} from 'vue';
 
@@ -61,15 +79,35 @@ const emit = defineEmits([
 
 const NombreCampo = ref('');
 
-const EstadoCampo = ref(false);
+    const activarModal = ref(false)
+    const TextoButton = ref('');
+    const TituloModal = ref('');
+    const IDFormModal = ref('');
+    const InformacionNotificacionModal = ref({})
 
-const Estado = ref('');
+        /**
+     * Cambia el valor de lanotificacion del modal
+     * @param {Objeto} respuesta Recive el diccionario necesario para mostrar la notificacion del modal
+    */
+    const ActualizarDataNotificacionModal = (Informacion) => {
+        InformacionNotificacionModal.value = Informacion;
+    };
+
+    const showModal = (valor) => {
+        activarModal.value = valor;
+    };
+
+    const ActionButton = () => {
+        TextoButton.value = 'Actualizar';
+        TituloModal.value = 'Cargar Datos';
+        IDFormModal.value = 'Datos'+ IDFORM;        
+        showModal(true)
+    }
 
 //Contiene la información original
 const payload_old = reactive({
     id:'',
     NombreCampo: "",
-    estado: ''
 
 });
 
@@ -77,15 +115,11 @@ const payload_old = reactive({
 const payload = reactive({
     id:'',
     NombreCampo: "",
-    estado: ''
 
 });
 
-
-
 //Escuchar cambios en las variables
 watch(NombreCampo, (nuevoValor) => ActualizarPayload('NombreCampo', nuevoValor));
-watch(Estado, (nuevoValor) => ActualizarPayload('estado', nuevoValor));
 
 //ve si hay cambios en la informacion y actualiza los campos:
 watch(() => props.Informacion, (nuevoValor) => { 
@@ -114,13 +148,10 @@ const verificarCambios = () => {
 
 }
 
-
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
 
     NombreCampo.value = (DATA?.nombre == null)? '' :DATA?.nombre;
-
-    EstadoCampo.value = (DATA?.estado == 0) ? true : false;
 
     // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
     // utilizando '' si DATA?.documento es null.
@@ -129,9 +160,6 @@ const MostrarValores = (DATA) => {
 
     payload_old.NombreCampo = DATA?.nombre ?? '';
     payload.NombreCampo = DATA?.nombre ?? '';
-    
-    payload_old.estado = DATA?.estado ?? '';
-    payload.estado = DATA?.estado ?? '';
     
 };
 
@@ -165,7 +193,7 @@ const Enviar = async () => {
 
 onMounted(() => {
     MostrarValores(props.Informacion)
-    console.log(props.Informacion)
+
 });
 
 </script>
