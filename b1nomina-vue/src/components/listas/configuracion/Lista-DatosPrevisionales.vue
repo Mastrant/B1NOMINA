@@ -41,6 +41,7 @@ const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función 
 
 const SolicitarDatosConfiPrevisionales = async (ID_Sociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getDatosPrevisionalesBasicos(ID_Sociedad);
+    console.log(respuesta)
     if (respuesta.success) {
         //console.log(respuesta.data)
         DatosPrevisionales.value = respuesta.data;

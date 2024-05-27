@@ -137,7 +137,6 @@ const verificarCambios = () => {
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
     RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
-    console.log
 }
 
 

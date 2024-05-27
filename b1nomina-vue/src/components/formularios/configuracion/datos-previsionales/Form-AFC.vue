@@ -186,8 +186,8 @@ const MostrarValores = (DATA) => {
     payload_old.tope_seguro_afc = DATA?.tope_seguro_afc ?? '';
     payload.tope_seguro_afc = DATA?.tope_seguro_afc ?? '';
 
-    payload_old.sociedad_id = DATA?.sociedad_id ?? '';
-    payload.sociedad_id = DATA?.sociedad_id ?? '';
+    payload_old.sociedad_id = DATA?.sociedad_id ?? ID_Sociedad.value;
+    payload.sociedad_id = DATA?.sociedad_id ?? ID_Sociedad.value;
 }
 
 /**

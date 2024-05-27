@@ -6,9 +6,9 @@
             Un centro de costos se utiliza en la contabilidad de gestión para recopilar y asignar los gastos generales.    
         </p>
 
-        <LayoutFondoBorder v-for="Departamento in ListaDepartamentos" :key="Departamento.id">
+        <LayoutFondoBorder v-for="Centro in ListadoCentrosCostos" :key="Centro.id">
             <template #default>    
-                  <FormCentroosto :Datos="Departamento"/>        
+                  <FormCentroCosto :Informacion="Centro"/>        
             </template>
         </LayoutFondoBorder>
 
@@ -18,12 +18,12 @@
 
 <script setup>
 import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
-import FormCentroosto from '@/components/formularios/configuracion/centralizacion/Form-CentroCosto.vue'
+import FormCentroCosto from '@/components/formularios/configuracion/centralizacion/Form-CentroCosto.vue'
 import TemplateBlankButton from '@/components/botones/Template-blank-button.vue';
 
 import {ref} from 'vue';
 
-const ListaDepartamentos = ref([
+const ListadoCentrosCostos = ref([
     {
         id: 1
     },

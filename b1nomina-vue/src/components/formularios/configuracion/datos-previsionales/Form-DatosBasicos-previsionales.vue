@@ -9,8 +9,7 @@
                 v-model="Sueldo"
                 @update:modelValue="Sueldo = $event"
                 :requerido="RequiereActualizar"
-                :minimo-caracteres="1"
-                :maximo-caracteres="100"
+                :minimo-caracteres="0"
             />
         
             <InputBorderDescripcion
@@ -21,8 +20,6 @@
                 @update:modelValue="Gratificacion_Minimo = $event"
                 :requerido="RequiereActualizar"
                 :minimo-caracteres="0"
-                :maximo-caracteres="100"
-                Tipo="number"    
             />
             
             <InputBorderDescripcion
@@ -33,6 +30,7 @@
                 Tipo="Number"
                 :requerido="RequiereActualizar"
                 name="CorreoElectronico"
+                :minimo-caracteres="0"
             />
         </div>
 
@@ -45,8 +43,7 @@
                 @update:modelValue="Vacaciones = $event"
                 :requerido="RequiereActualizar"
                 :minimo-caracteres="0"
-                :maximo-caracteres="100"
-                Tipo="number"    
+                   
             />
             <InputBorderDescripcion
                 Placeholder="0"
@@ -55,7 +52,7 @@
                 v-model="HorasDiarias"
                 @update:modelValue="HorasDiarias = $event"
                 :requerido="RequiereActualizar"
-                Tipo="number"    
+                :minimo-caracteres="0"
             />
             <InputBorderDescripcion
                 Placeholder="0"
@@ -65,8 +62,6 @@
                 @update:modelValue="Honorarios = $event"
                 :requerido="RequiereActualizar"
                 :minimo-caracteres="0"
-                :maximo-caracteres="100"
-                Tipo="number"    
             />
         </div>
     
@@ -175,7 +170,6 @@ const verificarCambios = () => {
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
 
-    RequiereActualizar.value = false;
 
     // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
     // utilizando '' si DATA?.documento es null.
@@ -204,8 +198,11 @@ const MostrarValores = (DATA) => {
     payload_old.retencion_honorarios = DATA?.retencion_honorarios ?? '';
     payload.retencion_honorarios = DATA?.retencion_honorarios ?? '';
 
-    payload_old.sociedad_id = DATA?.sociedad_id ?? '';
-    payload.sociedad_id = DATA?.sociedad_id ?? '';
+    payload_old.sociedad_id = DATA?.sociedad_id ?? ID_Sociedad.value;
+    payload.sociedad_id = DATA?.sociedad_id ?? ID_Sociedad.value;
+
+    RequiereActualizar.value = false;
+
 }
 
 /**
@@ -221,7 +218,6 @@ const MostrarValores = (DATA) => {
         const respuesta = await peticiones_configuracion_datosEmpresa.ActualizarDatosPrevisionales(
             ID_USERMASTER.value, ID_Sociedad.value, payload
         );
-
         if(respuesta.success == true){
             emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
         } else {
