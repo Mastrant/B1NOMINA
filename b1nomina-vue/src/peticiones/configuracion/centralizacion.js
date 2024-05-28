@@ -93,7 +93,7 @@ const peticiones_configuracion_Centralizaxiones = {
     getCuentasContables(sociedadID){
         try {
             // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
-            return axios.get(`sociedad/${sociedadID}/list_departamentos`)
+            return axios.get(`sociedad/${sociedadID}/get_centralizaciones`)
             // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
            .then(respuesta => {
                 return { success: true, data: respuesta?.data };

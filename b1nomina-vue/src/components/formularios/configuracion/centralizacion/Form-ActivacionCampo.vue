@@ -10,7 +10,10 @@
 
 <script setup>
 import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
-import { defineProps, ref } from 'vue';
+
+import { defineProps, ref, reactive, watch, defineEmits, onMounted} from 'vue';
+
+const ID_USERMASTER = ref(localStorage.getItem('userId'))
 
 const props = defineProps({
     Titulo: {
@@ -20,10 +23,44 @@ const props = defineProps({
     descripcion: {
         String,
         default: "Permite agrupar y centralizar datos específicos de tu centro de costos."
+    },
+    Informacion: {
+        default: {}
     }
 })
 
 const EstadoCampo = ref(true);
+
+//Contiene la información a enviar
+const payload = reactive({
+    id:'',
+    estado: "",
+
+});
+
+// Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
+const MostrarValores = (DATA) => {
+
+
+    EstadoCampo.value = (DATA?.nombre == true)? false :DATA?.nombre;
+
+// Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
+    // utilizando '' si DATA?.documento es null.
+    payload.id = DATA?.id ?? '';
+
+    payload.nombre = DATA?.nombre ?? '';
+  
+    payload.sociedad_id = DATA?.sociedad_id ?? '';
+    
+    payload.sede_id = DATA?.sede_id ?? '';
+
+    payload.nivel_cargo = DATA?.nivel_cargo ?? '';
+
+};
+
+onMounted(()=> {
+    MostrarValores(props.Informacion)
+})
 </script>
 
 <style scoped>

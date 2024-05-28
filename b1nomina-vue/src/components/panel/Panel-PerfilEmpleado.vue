@@ -73,7 +73,7 @@
                 <template v-slot:cabecera>
                     <NavButtonTemplate text="Datos Laborales" :seleccionado="panelShow== 1" @click="showInfo(1)" />
                     <NavButtonTemplate text="Datos Personales" :seleccionado="panelShow== 2" @click="showInfo(2)" />
-                    <NavButtonTemplate text="Eventos Recurrentes" :seleccionado="panelShow== 3" @click="showInfo(3)" />
+                    <NavButtonTemplate text="Datos Previsionales" :seleccionado="panelShow== 3" @click="showInfo(3)" />
                     <NavButtonTemplate text="Solicitudes" :seleccionado="panelShow== 4" @click="showInfo(4)" />
                 </template>
                 <template v-slot:formulario>
@@ -405,20 +405,239 @@
                         </LayoutTablaEMpleados>
                     </div>
                     <div class="contenedorInfo" v-if="panelShow ==3">
-                        <LayoutEmpy>
-                            <template #imagen>                           
-                                <img src="@/components/icons/svg/Calculadora-icon.svg">                                    
+                        <LayoutTablaEMpleados>
+                            <template #boton1>                                                                    
+                                <TemplateBlanckButton @click="EditarInfo?.ActionButton(5,EmpleadoID)" text="Editar">
+                                    <template #default>
+                                        <EdiIcon Stroke="#000000"/>
+                                    </template>
+                                </TemplateBlanckButton>
                             </template>
-                            <template #contenido>
-                                <h3 class="titulo">Eventos Recurrentes</h3>
-                                <span class="texto">
-                                    Acá puedes agregar asignaciones o retenciones recurrentes a pagos de tipos previsionales y no previsionales.
-                                </span>
-                                <TemplateButton2 text="Añadir Evento"/>
+                            <template #boton3>                                                                    
+                                <TemplateBlanckButton @click="EditarInfo?.ActionButton(6,EmpleadoID)" text="Editar">
+                                    <template #default>
+                                        <EdiIcon Stroke="#000000"/>
+                                    </template>
+                                </TemplateBlanckButton>
                             </template>
-                        </LayoutEmpy>
+                            <template #boton5>                                                                    
+                                <TemplateBlanckButton @click="EditarInfo?.ActionButton(7,EmpleadoID)" text="Editar">
+                                    <template #default>
+                                        <EdiIcon Stroke="#000000"/>
+                                    </template>
+                                </TemplateBlanckButton>
+                            </template>
+
+                        <!--primer apartado-->
+                            <template #titulo1>                                                                    
+                                Administradoras de fondos de pensiones (AFP)
+                            </template>
+
+                            <template #st-1>                                                                    
+                                Jubilado AFP
+                            </template>
+                            <template #text-1>                                                                    
+                                <InterruptorButton
+                                    Tipo="individual"
+                                    :Texto="(DatosUsuario?.apv_directo == 1)? 'Activo' : 'Inactivo' " 
+                                    :Estado="(DatosUsuario?.jubilado_afp == 1)? true : false"
+                                />
+                            </template>
+                            <template #st-2>                                                                    
+                                Institución
+                            </template>
+                            <template #text-2>                                                                    
+                                
+                            </template>
+                            <template #st-3>                                                                    
+                                Ahorro AFP Cuenta 2 ($)
+                            </template>
+                            <template #text-3>                                                                    
+
+                            </template>
+
+                            
+                        <!--segundo apartado-->
+
+                            <template #titulo3>                                                                    
+                                Ahorro Provisional Voluntario (APV)
+                            </template>
+                                                       
+                            <template #st-9>                                                       
+                                Activo
+                            </template>
+                            <template #text-9>                                                                    
+                                <InterruptorButton
+                                    Tipo="individual"
+                                    :Texto="(DatosUsuario?.apv_directo == 1)? 'Activo' : 'Inactivo' " 
+                                    :Estado="(DatosUsuario?.apv_activo == 1)? true : false"
+                                />
+                            </template>
+                            <template #st-10> <!---->                                                                 
+                                Colectivo
+                            </template>
+                            <template #text-10>                                                                    
+                                <InterruptorButton
+                                    Tipo="individual"
+                                    :Texto="(DatosUsuario?.apv_directo == 1)? 'Activo' : 'Inactivo' " 
+                                    :Estado="(DatosUsuario?.apv_colectivo == 1)? true : false"
+                                />
+                            </template>
+                            <template #st-11>  <!---->                                                                            
+                                Directo
+                            </template>
+                            <template #text-11>                                                                    
+                                <InterruptorButton
+                                    Tipo="individual"
+                                    :Texto="(DatosUsuario?.apv_directo == 1)? 'Activo' : 'Inactivo' " 
+                                    :Estado="(DatosUsuario?.apv_directo == 1)? true : false"
+                                />
+                            </template>
+                            <template #st-12> <!---->                                                                     
+                                Institución
+                            </template>
+                            <template #text-12>                                                                    
+
+                            </template>
+                            <template #st-13> <!---->                                                                      
+                                Unidad
+                            </template>
+                            <template #text-13>                                                                    
+                                
+                            </template>
+                            <template #st-14> <!---->    
+                               Régimen
+                            </template>
+                            <template #text-14>                                                                    
+                                
+                            </template>
+
+                            <template #st-15> <!---->    
+                               Pactado($)
+                            </template>
+                            <template #text-15>                                                                    
+                                
+                            </template>
+
+                            <template #st-16> <!---->    
+                               N° Convenio
+                            </template>
+                            <template #text-16>                                                                    
+                                
+                            </template>
+
+                        <!--segundo apartado-->
+
+                            <template #titulo5>                                                                    
+                               Previsión de Salud
+                            </template>     
+                                                                               
+                            <template #st-17>  <!---->                                                                            
+                                Institución
+                            </template>
+                            <template #text-17>                                                                    
+
+                            </template>
+                            <!--
+                            <template #st-18>                                                                      
+                                Banco
+                            </template>
+                            <template #text-18>                                                                    
+                                {{DatosUsuario?.nombre_banco}}
+                            </template>
+
+                            -->
+                            <template #st-19> <!---->                                                                      
+                                Pactado (UF)
+                            </template>
+                            <template #text-19>                                                                    
+   
+                            </template>
+                            <!--
+                            <template #st-20> 
+                                Número de cuenta
+                            </template>
+                            <template #text-20>                                                                    
+                                {{DatosUsuario?.numero_cuenta}}
+                            </template>
+                            -->
+
+                            <template #titulo6>                                                                    
+                               Datos Adicionales
+                            </template>  
+
+                            <template #st-21> <!---->                                                                      
+                                Aplica Gratificación Legal
+                            </template>
+                            <template #text-21>                                                                    
+                                <InterruptorButton
+                                    Tipo="individual"
+                                    :Texto="(DatosUsuario?.gratificacion_legal == 1)? 'Activo' : 'Inactivo' " 
+                                    :Estado="(DatosUsuario?.gratificacion_legal == 1)? true : false"
+                                />
+                            </template>
+                            <template #st-22> <!---->                                                                      
+                                Afiliado AFC
+                            </template>
+                            <template #text-22>                                                                    
+                                <InterruptorButton
+                                    Tipo="individual"
+                                    :Texto="(DatosUsuario?.afiliado_afc == 1)? 'Activo' : 'Inactivo' " 
+                                    :Estado="(DatosUsuario?.afiliado_afc == 1)? true : false"
+                                />
+                            </template>
+                            <template #st-23> <!---->                                                                      
+                                Antiguedad Máxima AFC
+                            </template>
+                            <template #text-23>                                                                    
+                                <InterruptorButton
+                                    Tipo="individual"
+                                    :Texto="(DatosUsuario?.antiguedad_AFC == 1)? 'Activo' : 'Inactivo' " 
+                                    :Estado="(DatosUsuario?.antiguedad_AFC == 1)? true : false"
+                                />
+                            </template>
+                            <!--
+                            <template #st-24>                                                                
+                                
+                            </template>
+                            <template #text-24>                                                                    
+   
+                            </template>
+                            -->
+                            <template #st-25> <!--Tipo de cuenta-->                                                                      
+                               Pens. Vejez
+                            </template>
+                            <template #text-25>                                                                    
+                                <InterruptorButton
+                                    Tipo="individual"
+                                    :Texto="(DatosUsuario?.p_vejez == 1)? 'Activo' : 'Inactivo' " 
+                                    :Estado="(DatosUsuario?.p_vejez == 1)? true : false"
+                                />
+                            </template>
+                            <template #st-26> <!--Tipo de cuenta-->                                                                      
+                                 Pens. Invalidez
+                            </template>
+                            <template #text-26>                                                                    
+                                <InterruptorButton
+                                    Tipo="individual"
+                                    :Texto="(DatosUsuario?.p_invalidez == 1)? 'Activo' : 'Inactivo' " 
+                                    :Estado="(DatosUsuario?.p_invalidez == 1)? true : false"
+                                />
+                            </template>
+                            <template #st-27> <!--Tipo de cuenta-->                                                                      
+                                Es ExINP
+                            </template>
+                            <template #text-27>                                                                    
+                                <InterruptorButton
+                                    Tipo="individual"
+                                    :Texto="(DatosUsuario?.ExINP == 1)? 'Activo' : 'Inactivo' " 
+                                    :Estado="(DatosUsuario?.ExINP == 1)? true : false"
+                                />
+                            </template>
+                            
+                        </LayoutTablaEMpleados>
                     </div>
-                    <div class="contenedorInfo" v-if="panelShow ==4">
+                    <div class="contenedorInfo" v-if="panelShow == 4">
                         <LayoutEmpy>
                             <template #imagen>
                                 <img src="@/components/icons/svg/NotificationPerson-icon.svg">    

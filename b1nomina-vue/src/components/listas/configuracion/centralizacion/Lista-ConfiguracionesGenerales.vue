@@ -12,6 +12,7 @@
                                 
             </template>
         </LayoutFondoBorder>
+
         <LayoutFondoBorder>
             <template #default>
                 <FormActivacionCampoVue
@@ -22,6 +23,7 @@
                 />
             </template>
         </LayoutFondoBorder>
+
         <LayoutFondoBorder>
             <template #default>
                 <FormCuentasContables 
@@ -49,9 +51,9 @@ const UserID = ref(localStorage.getItem('userId'));
 const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función del componente padre
 // Llama a la función para enviar información al componente padre
 
-const CentroDecCosto = ref('')
-const PrestamoSolidario = ref('')
-const CuentasContables = ref('')
+const CentroDecCosto = ref({})
+const PrestamoSolidario = ref({})
+const CuentasContables = ref({})
 const ListadoDimensiones = ref({})
 
 const SolicitarSolicitarCentroDeCosto = async (ID_Sociedad = Number) => {
@@ -62,6 +64,7 @@ const SolicitarSolicitarCentroDeCosto = async (ID_Sociedad = Number) => {
         console.error(respuesta.error)
     }
 }
+
 const SolicitarPrestamoSolidario = async (ID_Sociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getPrestamoSolidario(ID_Sociedad);
     if (respuesta.success) {
@@ -70,8 +73,10 @@ const SolicitarPrestamoSolidario = async (ID_Sociedad = Number) => {
         console.error(respuesta.error)
     }
 }
+
 const SolicitarCuentasContables = async (ID_Sociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getCuentasContables(ID_Sociedad);
+    console.log(respuesta)
     if (respuesta.success) {
         CuentasContables.value = respuesta.data;
     } else {
