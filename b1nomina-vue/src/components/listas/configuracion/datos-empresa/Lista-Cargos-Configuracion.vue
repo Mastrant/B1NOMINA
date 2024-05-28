@@ -61,7 +61,7 @@ const AddCampo = async () => {
 
 const RefrescarDatos = () => {
     SolicitarListadoCargos(ID_Sociedad.value);
-    MostrarMensaje({Titulo:'Datos Actualizados',Descripcion:'Se han actualizado los datos correctamente.'});
+    MostrarMensaje({Titulo:'Datos Actualizados', Descripcion:'Se han actualizado los datos correctamente.'});
 }
 
 onMounted(() => {

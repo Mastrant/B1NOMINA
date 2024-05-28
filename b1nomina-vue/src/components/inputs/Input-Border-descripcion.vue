@@ -80,7 +80,6 @@ const props = defineProps(
 );
 </script>
 
-
 <style scoped>
 /* Establece el estilo para un contenedor de entrada de línea, utilizando flexbox para organizar sus elementos hijos en una columna. */
 div.input-line-contend {
@@ -101,7 +100,6 @@ label.input-label {
     font-size: 16px;
     line-height: 20px;
     text-align: left;
-
 }
 
 /* Establece el estilo para los spans dentro de las etiquetas de entrada. */
@@ -118,7 +116,7 @@ input.input-template {
     margin-top: 8px; /* Establece un margen superior de 8px. */
     color: #1A245B; /* Establece el color del texto a un azul oscuro. */
     font-size: 18px; /* Establece el tamaño de fuente a 18px. */
-    height: 46px; /* Establece una altura de 50px para el campo de entrada. */
+    height: 46px; /* Establece una altura de 46px para el campo de entrada. */
     border: 2px solid #1A245B;
     border-radius: 7.8px;
     padding: 0 12px;
@@ -128,5 +126,17 @@ input.input-template {
 /* Establece el estilo para el estado de foco del campo de entrada. */
 input.input-template:focus {
     outline: none; /* Elimina el contorno que aparece cuando el campo de entrada está enfocado. */
+}
+
+/* Media query para pantallas pequeñas */
+@media (max-width: 1400px) {
+    label.input-label {
+        font-size: 14px; /* Reduce el tamaño de la fuente para pantallas pequeñas. */
+    }
+
+    input.input-template {
+        font-size: 16px; /* Reduce el tamaño de la fuente para pantallas pequeñas. */
+        height: 38px; /* Reduce la altura del campo de entrada para pantallas pequeñas. */
+    }
 }
 </style>

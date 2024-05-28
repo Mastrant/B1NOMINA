@@ -1,52 +1,11 @@
 <template>
-    <form class="formulario" :id="IDFORM" @submit.prevent="Enviar">
-        <h4>Datos básicos de tu empresa</h4>
-        <div class="row">
-            <InputBorderDescripcion
-                Placeholder="Ingresar Nombre"
-                Titulo="nombre de la empresa"
-                name="nombre"
-                v-model="NombreEmpresa"
-                @update:modelValue="NombreEmpresa = $event"
-                :requerido="RequiereActualizar"
-                :minimo-caracteres="3"
-                :maximo-caracteres="100"
-            />
-        
-            <InputBorderDescripcion
-                Placeholder="Ingresar Rut"
-                Titulo="Rut de la empresa"
-                name="Documento"
-                v-model="numeroDocumento"
-                @update:modelValue="numeroDocumento = $event"
-                :requerido="RequiereActualizar"
-                :minimo-caracteres="3"
-                :maximo-caracteres="100"/>
-            
-            <InputBorderDescripcion
-                Placeholder="Ingresar Correo Electrónico "
-                Titulo="Email de contacto"
-                v-model="correoEmpresa"
-                @update:modelValue="correoEmpresa = $event"
-                Tipo="email"
-                :requerido="RequiereActualizar"
-                name="CorreoElectronico"
-            />
-        </div>
+    <form class="formulario" :id="FormID" @submit.prevent="Enviar">
+        <p>
+            Ingresa los parámetros y cuentas que determinarán lo valores en tu centro de costos.
+        </p>
 
-        <h4>Ubicación de la empresa</h4>
         <div class="row">
-            <InputBorderDescripcion 
-                Placeholder="Ingresar nombre de la ciudad"
-                Titulo="Ciudad"
-                name="Ciudad"
-                v-model="CiudadEmpresa"
-                @update:modelValue="CiudadEmpresa = $event"
-                :requerido="RequiereActualizar"
-                :minimo-caracteres="3"
-                :maximo-caracteres="100"
-            />
-            <LayoutInputBorder textLabel="Región" :requerido="RequiereActualizar">
+            <LayoutInputBorder textLabel="Validar eventos según" :requerido="RequiereActualizar">
                 <template v-slot>
                   <ListaTemplateBorder
                     v-model="Region"
@@ -57,33 +16,242 @@
                   />
                 </template>
             </LayoutInputBorder>
-
-              <LayoutInputBorder textLabel="Comuna" :requerido="RequiereActualizar">
-                <template v-slot>
-                  <ListaTemplateBorder
-                    v-model="Comuna"
-                    :options="ListaLocalidad"
-                    :requerido="RequiereActualizar"            
-                    :preseleccion="Comuna"  
-                    optionsSelected="Seleccionar"
-                  />
-                </template>
-              </LayoutInputBorder>
         </div>
+
         <div class="row">
-            <InputBorderDescripcion 
-                Placeholder="Ingresar dirección de la empresa"
-                Titulo="Dirección de la empresa"
-                name="Direccion"
-                v-model="Direccion"
-                @update:modelValue="Direccion = $event"
+            <InputBorderDescripcion
+                Placeholder="Ingresar Porcentaje"
+                Titulo="% Tope cuota prestamo"
+                name="TopeCuotaPrestamo"
+                v-model="TopeCuotaPrestamo"
+                @update:modelValue="TopeCuotaPrestamo = $event"
                 :requerido="RequiereActualizar"
-                :minimo-caracteres="3"
+                :minimo-caracteres="0"
                 :maximo-caracteres="100"
             />
+        
+            <InputBorderDescripcion
+                Placeholder="Ingresar Porcentaje"
+                Titulo="% Max. anticipo"
+                name="Documento"
+                v-model="PorcentajeAnticipo"
+                @update:modelValue="PorcentajeAnticipo = $event"
+                :requerido="RequiereActualizar"
+                :minimo-caracteres="0"
+                :maximo-caracteres="100"
+            />
+            
         </div>
-        <div class="espacioBoto" v-if="RequiereActualizar">
-            <TemplateButton :form="IDFORM" Tipo="submit" text="Actualizar"/>
+        
+        <h4> Cuentas contables </h4>
+
+        <div class="row">
+            <InputBorderDescripcion
+                Placeholder="Ingresar número de cuenta"
+                Titulo="Remunera"
+                name="Remunera"
+                v-model="Remunera"
+                @update:modelValue="Remunera = $event"
+                :requerido="RequiereActualizar"
+                :minimo-caracteres="0"
+                :maximo-caracteres="100"
+            />
+
+            <InputBorderDescripcion
+                Placeholder="Ingresar número de cuenta"
+                Titulo="AFP"
+                name="AFP"
+                v-model="AFP"
+                @update:modelValue="AFP = $event"
+                :requerido="RequiereActualizar"
+                :minimo-caracteres="0"
+                :maximo-caracteres="100"
+            />
+
+            <InputBorderDescripcion
+                Placeholder="Ingresar número de cuenta"
+                Titulo="Previsión Salud"
+                name="previsionSalud"
+                v-model="previsionSalud"
+                @update:modelValue="previsionSalud = $event"
+                :requerido="RequiereActualizar"
+                :minimo-caracteres="0"
+                :maximo-caracteres="100"
+            />
+        
+            
+        </div>
+
+        <div class="row">
+            <InputBorderDescripcion
+                Placeholder="Ingresar número de cuenta"
+                Titulo="Gratificacion"
+                name="Gratificacion"
+                v-model="Gratificacion"
+                @update:modelValue="Gratificacion = $event"
+                :requerido="RequiereActualizar"
+                :minimo-caracteres="0"
+                :maximo-caracteres="100"
+            />
+
+            <InputBorderDescripcion
+                Placeholder="Ingresar número de cuenta"
+                Titulo="H. Extra"
+                name="H.Extra"
+                v-model="H_Extra"
+                @update:modelValue="H_Extra = $event"
+                :requerido="RequiereActualizar"
+                :minimo-caracteres="0"
+                :maximo-caracteres="100"
+            />
+
+            <InputBorderDescripcion
+                Placeholder="Ingresar número de cuenta"
+                Titulo="AFC"
+                name="AFC"
+                v-model="AFC"
+                @update:modelValue="AFC = $event"
+                :requerido="RequiereActualizar"
+                :minimo-caracteres="0"
+                :maximo-caracteres="100"
+            />
+        
+            
+        </div>
+
+        <div class="row">
+            <InputBorderDescripcion
+                Placeholder="Ingresar número de cuenta"
+                Titulo="Movilización"
+                name="Movilizacion"
+                v-model="Movilizacion"
+                @update:modelValue="Movilizacion = $event"
+                :requerido="RequiereActualizar"
+                :minimo-caracteres="0"
+                :maximo-caracteres="100"
+            />
+
+            <InputBorderDescripcion
+                Placeholder="Ingresar número de cuenta"
+                Titulo="Colación"
+                name="Colacion"
+                v-model="Colacion"
+                @update:modelValue="Colacion = $event"
+                :requerido="RequiereActualizar"
+                :minimo-caracteres="0"
+                :maximo-caracteres="100"
+            />
+
+            <InputBorderDescripcion
+                Placeholder="Ingresar número de cuenta"
+                Titulo="Otra Asignación"
+                name="O_asignacion"
+                v-model="O_asignacion"
+                @update:modelValue="O_asignacion = $event"
+                :requerido="RequiereActualizar"
+                :minimo-caracteres="0"
+                :maximo-caracteres="100"
+            />
+        
+            
+        </div>
+
+        <div class="row">
+            <InputBorderDescripcion
+                Placeholder="Ingresar número de cuenta"
+                Titulo="SIS"
+                name="SIS"
+                v-model="SIS"
+                @update:modelValue="SIS = $event"
+                :requerido="RequiereActualizar"
+                :minimo-caracteres="0"
+                :maximo-caracteres="100"
+            />
+
+            <InputBorderDescripcion
+                Placeholder="Ingresar número de cuenta"
+                Titulo="Mutual"
+                name="Mutual"
+                v-model="Mutual"
+                @update:modelValue="Mutual = $event"
+                :requerido="RequiereActualizar"
+                :minimo-caracteres="0"
+                :maximo-caracteres="100"
+            />
+
+            <InputBorderDescripcion
+                Placeholder="Ingresar número de cuenta"
+                Titulo="Inpuesto único"
+                name="I_unico"
+                v-model="I_unico"
+                @update:modelValue="I_unico = $event"
+                :requerido="RequiereActualizar"
+                :minimo-caracteres="0"
+                :maximo-caracteres="100"
+            />
+        
+            
+        </div>
+        <div class="row">
+            <InputBorderDescripcion
+                Placeholder="Ingresar número de cuenta"
+                Titulo="Asig. Familiar"
+                name="Asig. Familiar"
+                v-model="A_familiar"
+                @update:modelValue="A_familiar = $event"
+                :requerido="RequiereActualizar"
+                :minimo-caracteres="0"
+                :maximo-caracteres="100"
+            />
+
+            <InputBorderDescripcion
+                Placeholder="Ingresar número de cuenta"
+                Titulo="Asig. Familiar x Pagar"
+                name="A_Familiar_Pagar"
+                v-model="A_Familiar_Pagar"
+                @update:modelValue="A_Familiar_Pagar = $event"
+                :requerido="RequiereActualizar"
+                :minimo-caracteres="0"
+                :maximo-caracteres="100"
+            />
+
+            <InputBorderDescripcion
+                Placeholder="Ingresar número de cuenta"
+                Titulo="Imp.único x pagar"
+                name="Imp.único x pagar"
+                v-model="I_unico_pagar"
+                @update:modelValue="I_unico_pagar = $event"
+                :requerido="RequiereActualizar"
+                :minimo-caracteres="0"
+                :maximo-caracteres="100"
+            />
+        
+            
+        </div>
+        <div class="row">
+            <InputBorderDescripcion
+                Placeholder="Ingresar número de cuenta"
+                Titulo="AFC x Pagar"
+                name="AFC x Pagar"
+                v-model="AFC_Pagar"
+                @update:modelValue="AFC_Pagar = $event"
+                :requerido="RequiereActualizar"
+                :minimo-caracteres="0"
+                :maximo-caracteres="100"
+            />
+
+            <InputBorderDescripcion
+                Placeholder="Ingresar número de cuenta"
+                Titulo="Sueldos x Pagar"
+                name="Sueldos x Pagar"
+                v-model="sueldos_pagar"
+                @update:modelValue="sueldos_pagar = $event"
+                :requerido="RequiereActualizar"
+                :minimo-caracteres="0"
+                :maximo-caracteres="100"
+            />
+        
+            
         </div>
     </form>
 </template>
@@ -92,16 +260,18 @@
 import InputBorderDescripcion from '@/components/inputs/Input-Border-descripcion.vue';
 import ListaTemplateBorder from "@/components/listas/Lista-template-border.vue";
 import LayoutInputBorder from "@/components/Layouts/LayoutInputBorder.vue";
-import TemplateButton from '@/components/botones/Template-button.vue';
 
 import { defineProps, ref, reactive, watch, defineEmits, onMounted, inject} from 'vue';
 
-import peticiones_configuracion_datosEmpresa from '@/peticiones/configuracion/datos_empresa.js';
+import peticiones_configuracion from '@/peticiones/configuracion/centralizacion.js';
 
 const ID_Sociedad = ref(inject('SociedadID'))
 const ID_USERMASTER = ref(localStorage.getItem('userId'))
 
 const props = defineProps({
+    FormID: {
+        type: Text
+    },
     Informacion: {
         type: Object,
         default: {}
@@ -112,7 +282,6 @@ const props = defineProps({
     },
 })
 
-const IDFORM = "DatosBasicosEmpresa"
 
 const emit = defineEmits([
     "DataNotificacion",
@@ -120,63 +289,66 @@ const emit = defineEmits([
 
 // Definicion de variables de los inputs
 
-const NombreEmpresa = ref('');
-const numeroDocumento = ref('');
-const correoEmpresa= ref('');
-const CiudadEmpresa = ref('');
-const Region = ref('');
-const Comuna = ref('');
-const Direccion = ref('');
+const TopeCuotaPrestamo = ref('');
+const PorcentajeAnticipo = ref('');
+const Remunera = ref('');
+const AFP = ref('');
+const previsionSalud = ref('');
+const Gratificacion = ref('');
+const H_Extra = ref('');
+const AFC = ref('');
+const Movilizacion = ref('');
+const Colacion= ref('');
+const O_asignacion= ref('');
+const SIS= ref('');
+const Mutual= ref('');
+const I_unico= ref('');
+const A_familiar= ref('');
+const A_Familiar_Pagar= ref('');
+const I_unico_pagar= ref('');
+const AFC_Pagar= ref('');
+const sueldos_pagar= ref('');
 
-//definicion de vaiables de los parametos
-const ListaLocalidad = ref({}); //Los datos se asignan segun el idRegion
 
-//filtra la lista de regiones segun el id
-const filtroRegion = (ID_comuna) => {
-    ListaLocalidad.value = props.parametros.localidad?.filter(item => item.idregion == ID_comuna);
-};
 
 //control para envio de informacion
 const RequiereActualizar = ref(false);
 
 //Contiene la información original
 const payload_old = reactive({
-    nombre: "",
-    rut: "",
-    email: "",
-    ciudad: "",
-    region_id: "",
-    comuna_id: "",
-    direccion: "",
+
 });
 
 //Contiene la información a enviar
 const payload = reactive({
-    nombre: "",
-    rut: "",
-    email: "",
-    ciudad: "",
-    region_id: "",
-    comuna_id: "",
-    direccion: "",
+
 });
 
 //Escuchar cambios en las variables
-watch(NombreEmpresa, (nuevoValor) => ActualizarPayload('nombre', nuevoValor?.toUpperCase()));
-watch(numeroDocumento, (nuevoValor) => ActualizarPayload('rut', nuevoValor));
-watch(correoEmpresa, (nuevoValor) => ActualizarPayload('email', nuevoValor?.toUpperCase()));
-watch(CiudadEmpresa, (nuevoValor) => ActualizarPayload('ciudad', nuevoValor?.toUpperCase()));
-watch(Region, (nuevoValor) => {
-        filtroRegion(nuevoValor);
-        ActualizarPayload('region_id', nuevoValor);
-    }
-);
-watch(Comuna, (nuevoValor) => ActualizarPayload('comuna_id', nuevoValor));
+watch(TopeCuotaPrestamo, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(PorcentajeAnticipo, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(Remunera, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(AFP, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(previsionSalud, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(Gratificacion, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(H_Extra, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(AFC, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(Movilizacion, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(Colacion, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(O_asignacion, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(SIS, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(Mutual, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(I_unico, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(A_familiar, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(A_Familiar_Pagar, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(I_unico_pagar, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(AFC_Pagar, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(sueldos_pagar, (nuevoValor) => ActualizarPayload('', nuevoValor));
 
-watch(Direccion, (nuevoValor) => ActualizarPayload('direccion', nuevoValor));
+
 
 //ve si hay cambios en la informacion y actualiza los campos:
-watch(() => props.Informacion?.Sociedad, (nuevoValor) => { 
+watch(() => props.Informacion, (nuevoValor) => { 
     
   MostrarValores(nuevoValor) 
 });
@@ -212,40 +384,29 @@ const MostrarValores = (DATA) => {
 
     // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
     // utilizando '' si DATA?.documento es null.
-    NombreEmpresa.value = (DATA?.nombre == null)? '' :DATA?.nombre;
-    payload_old.nombre = DATA?.nombre ?? '';
-    payload.nombre = DATA?.nombre ?? '';
+    TopeCuotaPrestamo.value = (DATA?.dato == null)? '' :DATA?.dato;
+    PorcentajeAnticipo.value = (DATA?.dato == null)? '' :DATA?.dato;
+    Remunera.value = (DATA?.dato == null)? '' :DATA?.dato;
+    AFP.value = (DATA?.dato == null)? '' :DATA?.dato;
+    previsionSalud.value = (DATA?.dato == null)? '' :DATA?.dato;
+    Gratificacion.value = (DATA?.dato == null)? '' :DATA?.dato;
+    H_Extra.value = (DATA?.dato == null)? '' :DATA?.dato;
+    AFC.value = (DATA?.dato == null)? '' :DATA?.dato;
+    Movilizacion.value = (DATA?.dato == null)? '' :DATA?.dato;
+    Colacion.value = (DATA?.dato == null)? '' :DATA?.dato;
+    O_asignacion.value = (DATA?.dato == null)? '' :DATA?.dato;
+    SIS.value = (DATA?.dato == null)? '' :DATA?.dato;
+    Mutual.value = (DATA?.dato == null)? '' :DATA?.dato;
+    I_unico.value = (DATA?.dato == null)? '' :DATA?.dato;
+    A_familiar.value = (DATA?.dato == null)? '' :DATA?.dato;
+    A_Familiar_Pagar.value = (DATA?.dato == null)? '' :DATA?.dato;
+    I_unico_pagar.value = (DATA?.dato == null)? '' :DATA?.dato;
+    AFC_Pagar.value = (DATA?.dato == null)? '' :DATA?.dato;
+    sueldos_pagar.value = (DATA?.dato == null)? '' :DATA?.dato;
     
-    numeroDocumento.value = (DATA?.rut == null)? '' :DATA?.rut;
-    payload_old.rut = DATA?.rut ?? '';
-    payload.rut = DATA?.rut ?? '';
-
-    correoEmpresa.value = (DATA?.email == null)? '' : DATA?.email;
-    payload_old.email = DATA?.email ?? '';
-    payload.email = DATA?.email ?? '';
-
-    CiudadEmpresa.value = (DATA?.ciudad == null)? '' :DATA?.ciudad;
-    payload_old.ciudad = DATA?.ciudad ?? '';
-    payload.ciudad = DATA?.ciudad ?? '';
-
-    Region.value = (DATA?.region_id == null)? '' :DATA?.region_id;
-    payload_old.region_id = DATA?.region_id ?? '';
-    payload.region_id = DATA?.region_id ?? '';
-
-    Comuna.value = (DATA?.comuna_id == null)? '' :DATA?.comuna_id;
-    payload_old.comuna_id = DATA?.comuna_id ?? '';
-    payload.comuna_id = DATA?.comuna_id ?? '';
-
-    Direccion.value = (DATA?.direccion == null)? '' :DATA?.direccion;
-    payload_old.direccion = DATA?.direccion ?? '';
-    payload.direccion = DATA?.direccion ?? '';
-
-    payload_old.sociedad_id = DATA?.id ?? '';
-    payload.sociedad_id = DATA?.id ?? '';
     
-    payload_old.sede_id = DATA?.id ?? '';
-    payload.sede_id = DATA?.id ?? '';
-
+    payload_old.TopeCuotaPrestamo = DATA?.dato ?? '';
+    payload.TopeCuotaPrestamo = DATA?.dato ?? '';
 }
 
 /**
@@ -256,9 +417,8 @@ const MostrarValores = (DATA) => {
  const Enviar = async () => {
   //si ID es nulo crea un usuario
     
-
     if (RequiereActualizar.value == true) {        
-        const respuesta = await peticiones_configuracion_datosEmpresa.ActualizarDatosBasicosEmpresa(
+        const respuesta = await peticiones_configuracion.ActualizarConfiguracionGrupoCentralizacion(
             ID_USERMASTER.value, ID_Sociedad.value, payload
         );
 
@@ -274,7 +434,7 @@ const MostrarValores = (DATA) => {
 };
 
 onMounted(async () => {
-    await MostrarValores(props.Informacion?.Sociedad)
+    await MostrarValores(props.Informacion)
 });
 
 </script>
@@ -285,7 +445,9 @@ form.formulario {
     display: flex;
     flex-direction: column;
     width: 100%;
-    gap: 12px
+    gap: 12px;
+    box-sizing: border-box;
+    
 }
 
 h4 {
@@ -294,16 +456,24 @@ font-weight: 500;
 line-height: 30px;
 text-align: left;
 margin: 0;
+color: #1A245B;
+
 }
 
 div.row {
     display: flex;
     justify-content: space-between;
     gap:12px;
+    box-sizing: border-box;
 }
 
-div.espacioBoto {
-    width: 100%;
+
+p {
+font-size: 16px;
+font-weight: 400;
+line-height: 26px;
+text-align: justified;
+margin: 0;
 }
 
 </style>

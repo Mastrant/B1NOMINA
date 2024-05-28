@@ -1,5 +1,22 @@
 <template>
     <form class="formulario" :id="IDFORM" @submit.prevent="Enviar">
+        <TemplateModal 
+            @closeModal="showModal(false)" 
+            :FormId="IDFormModal"
+            :NombreAccion="TituloModal" 
+            :textSubmit="TextoButton"
+            :activarModal="activarModal"
+            :ModalActivo="1"
+            :DataNotification="InformacionNotificacionModal"
+            
+        >
+            <template #default><!--Espacio para los formularios -->
+                <FormConfigGrupoCentralizacion 
+                    :FormID="IDFormModal"
+                    @DataNotificacion="ActualizarDataNotificacionModal"                
+                />
+            </template>
+        </TemplateModal>
         <div class="row">
             
             <InputBorderDescripcion
@@ -27,21 +44,6 @@
             
         </div>
 
-        <TemplateModal 
-            @closeModal="showModal(false)" 
-            :FormId="IDFormModal"
-            :NombreAccion="TituloModal" 
-            :textSubmit="TextoButton"
-            :activarModal="activarModal"
-            :ModalActivo="1"
-            :DataNotification="InformacionNotificacionModal"
-            
-        >
-            <template #default><!--Espacio para los formularios -->
-                <FormConfigGrupoCentralizacion />
-            </template>
-        </TemplateModal>
-
         <div class="espacioBoto" v-if="RequiereActualizar">
             <TemplateButton :form="IDFORM" Tipo="submit" text="Actualizar"/>
         </div>
@@ -54,7 +56,7 @@ import TemplateButton from '@/components/botones/Template-button.vue';
 import TuerquitaIcon from  '@/components/icons/Tuerquita-icon.vue';
 import trashIcon from '@/components/icons/trash-icon.vue';
 import TemplateModal from '@/components/modal/TemplateModal.vue'
-import FormConfigGrupoCentralizacion from '@/components/formularios/configuracion/centralizacion/Form-GruposCentralizacion.vue';
+import FormConfigGrupoCentralizacion from '@/components/formularios/configuracion/centralizacion/Form-Configuracion-GrupoCentralizacion.vue';
 
 import { defineProps, ref, reactive, watch, defineEmits, onMounted, inject} from 'vue';
 
@@ -98,8 +100,8 @@ const NombreCampo = ref('');
     };
 
     const ActionButton = () => {
-        TextoButton.value = 'Actualizar';
-        TituloModal.value = 'Cargar Datos';
+        TextoButton.value = 'Guardar Configuración';
+        TituloModal.value = 'Configuracion Avanzada';
         IDFormModal.value = 'Datos'+ IDFORM;        
         showModal(true)
     }

@@ -162,8 +162,8 @@ div.modal-inner {
     display:flex; /* Utiliza Flexbox para organizar el contenido */
     flex-direction: column; /* Organiza los elementos hijos en columna */
     position: relative; /* Posiciona el contenido interno del modal en relación al modal */
-    max-width:  810px; /* Establece un ancho máximo para el modal */
-    width:  80%; /* Ajusta el ancho al  80% del ancho del contenedor modal */
+    max-width:  850px; /* Establece un ancho máximo para el modal */
+    width:  85%; /* Ajusta el ancho al  80% del ancho del contenedor modal */
 
     box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el tamaño total del elemento */
     padding:  38px; /* Espacio interior alrededor del contenido */
