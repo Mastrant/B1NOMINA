@@ -56,6 +56,83 @@ getListadoDepartamentos(sociedadID){
     },
 */
 const peticiones_configuracion_Centralizaxiones = {
+   
+
+ 
+
+
+    getConfiguracionGeneral(sociedadID){
+        try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
+            return axios.get(`sociedad/${sociedadID}/get_centralizaciones_costos`)
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+           .then(respuesta => {
+                return { success: true, data: respuesta?.data };
+            })
+            // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+           .catch(error => {
+                return { success: false, error: error?.response };
+            });
+        } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
+            return { success: false, error: error };
+        }  
+    }, 
+
+    ActualizarEstadoCentroCosto(idMaster, sociedadID, estado){
+        try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
+            return axios.put(`sociedad/${sociedadID}/change_estatus_centralizacion?estado=${estado}&user_updater=${idMaster}`)
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+           .then(respuesta => {
+                return { success: true, data: respuesta?.data };
+            })
+            // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+           .catch(error => {
+                return { success: false, error: error?.response };
+            });
+        } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
+            return { success: false, error: error };
+        }  
+    },
+    ActualizarEstadoPrestamoSolidario(idMaster, sociedadID, estado){
+        try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
+            return axios.put(`sociedad/${sociedadID}/change_estatus_prestamos_solidario?estado=${estado}&user_updater=${idMaster}`)
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+           .then(respuesta => {
+                return { success: true, data: respuesta?.data };
+            })
+            // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+           .catch(error => {
+                return { success: false, error: error?.response };
+            });
+        } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
+            return { success: false, error: error };
+        }  
+    },
+
+    ActualizarCuentasContables(idMaster, id, payload){
+        try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
+            return axios.put(`centralizacion/${id}/update?user_updater=${idMaster}`,payload)
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+           .then(respuesta => {
+                return { success: true, data: respuesta?.data };
+            })
+            // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+           .catch(error => {
+                return { success: false, error: error?.response };
+            });
+        } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
+            return { success: false, error: error };
+        }  
+    },
+
+
     getCentroDeCosto(sociedadID){
         try {
             // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
@@ -73,40 +150,7 @@ const peticiones_configuracion_Centralizaxiones = {
             return { success: false, error: error };
         }  
     }, 
-    getPrestamoSolidario(sociedadID){
-        try {
-            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
-            return axios.get(`sociedad/${sociedadID}/list_departamentos`)
-            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
-           .then(respuesta => {
-                return { success: true, data: respuesta?.data };
-            })
-            // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
-           .catch(error => {
-                return { success: false, error: error?.response };
-            });
-        } catch (error) {
-            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
-            return { success: false, error: error };
-        }  
-    }, 
-    getCuentasContables(sociedadID){
-        try {
-            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
-            return axios.get(`sociedad/${sociedadID}/get_centralizaciones`)
-            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
-           .then(respuesta => {
-                return { success: true, data: respuesta?.data };
-            })
-            // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
-           .catch(error => {
-                return { success: false, error: error?.response };
-            });
-        } catch (error) {
-            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
-            return { success: false, error: error };
-        }  
-    }, 
+
     getCentralizacion(sociedadID){
         try {
             // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
@@ -124,7 +168,7 @@ const peticiones_configuracion_Centralizaxiones = {
             return { success: false, error: error };
         }  
     }, 
-
+    
     ActualizarConfiguracionGrupoCentralizacion(idMaster, id, payload){
         try {
             // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
@@ -142,6 +186,7 @@ const peticiones_configuracion_Centralizaxiones = {
             return { success: false, error: error };
         }  
     },
+
 }
 
 

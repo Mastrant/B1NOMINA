@@ -40,7 +40,7 @@
 import InputBorderDescripcion from '@/components/inputs/Input-Border-descripcion.vue';
 import TemplateButton from '@/components/botones/Template-button.vue';
 
-import peticiones_configuracion_datosEmpresa from '@/peticiones/configuracion/datos_empresa.js';
+import peticiones_configuracion from '@/peticiones/configuracion/centralizacion.js';
 
 import { defineProps, ref, reactive, watch, defineEmits, onMounted, inject} from 'vue';
 
@@ -84,9 +84,9 @@ const payload = reactive({
 });
 
 //Escuchar cambios en las variables
-watch(cuentaAnticipo, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(CuentaBonosFeriados, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(CuentaPrestamoSolidarios, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(cuentaAnticipo, (nuevoValor) => ActualizarPayload('cuenta_anticipo', nuevoValor));
+watch(CuentaBonosFeriados, (nuevoValor) => ActualizarPayload('cuenta_bonos_feriado', nuevoValor));
+watch(CuentaPrestamoSolidarios, (nuevoValor) => ActualizarPayload('cuenta_prestamos_solidarios', nuevoValor));
 
 
 //ve si hay cambios en la informacion y actualiza los campos:
@@ -122,16 +122,41 @@ const verificarCambios = () => {
 const MostrarValores = (DATA) => {
     RequiereActualizar.value = false;
 
-    cuentaAnticipo.value = (DATA?.responsable == null)? '' :DATA?.responsable;
-    CuentaBonosFeriados.value = (DATA?.responsable == null)? '' :DATA?.responsable;
-    CuentaPrestamoSolidarios.value = (DATA?.responsable == null)? '' :DATA?.responsable;
+    cuentaAnticipo.value = (DATA?.cuenta_anticipo == null)? '' :DATA?.cuenta_anticipo;
+    CuentaBonosFeriados.value = (DATA?.cuenta_bonos_feriado == null)? '' :DATA?.cuenta_bonos_feriado;
+    CuentaPrestamoSolidarios.value = (DATA?.cuenta_prestamos_solidarios == null)? '' :DATA?.cuenta_prestamos_solidarios;
 
 
     // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
     // utilizando '' si DATA?.documento es null.
-    payload_old.responsable = DATA?.responsable ?? '';
-    payload.responsable = DATA?.responsable ?? '';
+    payload_old.cuenta_anticipo = DATA?.cuenta_anticipo ?? '';
+    payload.cuenta_anticipo = DATA?.cuenta_anticipo ?? '';
 
+    payload_old.cuenta_bonos_feriado = DATA?.cuenta_bonos_feriado ?? '';
+    payload.cuenta_bonos_feriado = DATA?.cuenta_bonos_feriado ?? '';
+
+    payload_old.cuenta_prestamos_solidarios = DATA?.cuenta_prestamos_solidarios ?? '';
+    payload.cuenta_prestamos_solidarios = DATA?.cuenta_prestamos_solidarios ?? '';
+
+    payload_old.sociedad_id = DATA?.sociedad_id ?? ID_Sociedad.value;
+    payload.sociedad_id = DATA?.sociedad_id ?? ID_Sociedad.value;
+
+    payload_old.cuenta_anticipo = DATA?.cuenta_anticipo ?? '';
+    payload.cuenta_anticipo = DATA?.cuenta_anticipo ?? '';
+    
+    // Esto forma parte del esquema de datos del payload, pero no se maneja desde acá solo se utiliza la informacion del props
+    
+    payload_old.cuenta_honorarios = DATA?.cuenta_honorarios ?? '';
+    payload.cuenta_honorarios = DATA?.cuenta_honorarios ?? '';
+    
+    payload_old.usa_centros_costos = DATA?.usa_centros_costos ?? '';
+    payload.usa_centros_costos = DATA?.usa_centros_costos ?? '';
+    
+    payload_old.usa_centros_costos = DATA?.usa_centros_costos ?? 0;
+    payload.usa_centros_costos = DATA?.usa_centros_costos ?? 0;
+    
+    payload_old.prestamo_solidario_imponible = DATA?.prestamo_solidario_imponible ?? 0;
+    payload.prestamo_solidario_imponible = DATA?.prestamo_solidario_imponible ?? 0;
 }
 
 /**
@@ -142,18 +167,19 @@ const MostrarValores = (DATA) => {
 const Enviar = async () => {
     //si ID es nulo crea un usuario
 
+    console.log(payload)
 
     if (RequiereActualizar.value == true) {        
-        const respuesta = await peticiones_configuracion_datosEmpresa?.ActualizarCuentasContables(
+        const respuesta = await peticiones_configuracion?.ActualizarCuentasContables(
             ID_USERMASTER.value, ID_Sociedad.value, payload
         );
 
         if(respuesta.success == true){
-            emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
-        } else {
-            console.error(respuesta?.error)
-            emit('DataNotificacion', {'texto': respuesta?.error, 'valor': false})
-        }
+        emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
+    } else {
+        console.error(respuesta?.error)
+        emit('DataNotificacion', {'texto': respuesta?.error.data.message, 'valor': false})
+    }
     } else {
         emit('DataNotificacion', {'texto': "No se requiere actualizar", 'valor': true});
     }
