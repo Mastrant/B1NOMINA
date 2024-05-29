@@ -90,8 +90,8 @@ watch(CuentaPrestamoSolidarios, (nuevoValor) => ActualizarPayload('cuenta_presta
 
 
 //ve si hay cambios en la informacion y actualiza los campos:
-watch(() => props.Informacion.Sociedad, (nuevoValor) => { 
-  MostrarValores(nuevoValor) 
+watch(() => props.Informacion, (nuevoValor) => { 
+  MostrarValores(nuevoValor.data) 
 });
 
 
@@ -108,19 +108,17 @@ const verificarCambios = () => {
     // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
     const camposIguales = Object.keys(payload_old).every(key => payload_old[key] == payload[key]);
 
-    // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
-    const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
-
     // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
-    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+    RequiereActualizar.value = !(camposIguales);
 }
 
 
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
-    RequiereActualizar.value = false;
+
+
 
     cuentaAnticipo.value = (DATA?.cuenta_anticipo == null)? '' :DATA?.cuenta_anticipo;
     CuentaBonosFeriados.value = (DATA?.cuenta_bonos_feriado == null)? '' :DATA?.cuenta_bonos_feriado;
@@ -157,6 +155,8 @@ const MostrarValores = (DATA) => {
     
     payload_old.prestamo_solidario_imponible = DATA?.prestamo_solidario_imponible ?? 0;
     payload.prestamo_solidario_imponible = DATA?.prestamo_solidario_imponible ?? 0;
+
+    RequiereActualizar.value = false;
 }
 
 /**
@@ -167,19 +167,17 @@ const MostrarValores = (DATA) => {
 const Enviar = async () => {
     //si ID es nulo crea un usuario
 
-    console.log(payload)
-
     if (RequiereActualizar.value == true) {        
         const respuesta = await peticiones_configuracion?.ActualizarCuentasContables(
             ID_USERMASTER.value, ID_Sociedad.value, payload
         );
 
         if(respuesta.success == true){
-        emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
-    } else {
-        console.error(respuesta?.error)
-        emit('DataNotificacion', {'texto': respuesta?.error.data.message, 'valor': false})
-    }
+            emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
+        } else {
+            console.error(respuesta?.error)
+            emit('DataNotificacion', {'texto': respuesta?.error.data.message, 'valor': false})
+        }
     } else {
         emit('DataNotificacion', {'texto': "No se requiere actualizar", 'valor': true});
     }
@@ -187,7 +185,7 @@ const Enviar = async () => {
 
 
 onMounted(async () => {
-  await MostrarValores(props.Informacion?.Sociedad)
+  await MostrarValores(props.Informacion?.data)
 });
 
 
