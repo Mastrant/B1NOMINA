@@ -117,7 +117,7 @@ const peticiones_configuracion_Centralizaxiones = {
     ActualizarCuentasContables(idMaster, id, payload){
         try {
             // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
-            return axios.put(`centralizacion/${id}/update?user_updater=${idMaster}`,payload)
+            return axios.put(`centralizacion/${id}/update_reduced?user_updater=${idMaster}`,payload)
             // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
            .then(respuesta => {
                 return { success: true, data: respuesta?.data };
