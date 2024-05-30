@@ -46,7 +46,7 @@ const SolicitarListadoCentrosCostos = async (ID_Sociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getCentralizacion(ID_Sociedad);
     console.log(respuesta)
     if (respuesta.success) {
-        ListaCargos.value = respuesta.data;
+        ListadoCentrosCostos.value = respuesta.data;
     } else {
         console.error(respuesta.error)
     }
