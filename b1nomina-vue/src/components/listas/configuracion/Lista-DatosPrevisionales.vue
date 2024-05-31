@@ -28,9 +28,7 @@ import {onMounted, ref, inject} from 'vue';
 
 import peticiones_Configuracion from '@/peticiones/configuracion/datos_empresa.js'
 
-
 const ID_Sociedad = ref(inject('SociedadID'))
-
 const DatosPrevisionales = ref([])
 const DatosAFC= ref([])
 
@@ -41,9 +39,7 @@ const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función 
 
 const SolicitarDatosConfiPrevisionales = async (ID_Sociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getDatosPrevisionalesBasicos(ID_Sociedad);
-    console.log(respuesta)
     if (respuesta.success) {
-        //console.log(respuesta.data)
         DatosPrevisionales.value = respuesta.data;
     } else {
         console.error(respuesta.error)
@@ -72,6 +68,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+
 .contend {
     display:flex;
     flex-direction: column;
@@ -80,11 +77,11 @@ onMounted(async () => {
 }
 
 h3.subtitulo {
-font-size: 22px;
-font-weight: 500;
-line-height: 48px;
-text-align: left;
-margin:0;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 48px;
+    text-align: left;
+    margin:0;
 }
 
 p.descripcion {

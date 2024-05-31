@@ -14,8 +14,8 @@
         </td>
         <!--ROL-->
         <td class="rol">
-            <span class="cargo">
-                <slot name="cargo"></slot>
+            <span class="rol">
+                <slot name="ROL"></slot>
             </span>
         </td>
         <!--Detalle-->
@@ -25,9 +25,9 @@
             </span>
         </td>
         <!--Valor-->
-        <td class="monto">
-            <span class="monto">
-                <slot name="monto"></slot>
+        <td class="valor">
+            <span class="valor">
+                <slot name="valor"></slot>
             </span>                    
         </td>
     </tr>
@@ -80,6 +80,18 @@ tr.cuerpo > td {
     text-align: center;
 }
 
-
+tr.cuerpo > td.detalle {
+    justify-content: start;
+    align-items: start;
+    text-align: start;
+    word-wrap: break-word;
+    
+}
+tr.cuerpo > td.valor {
+    justify-content: start;
+    align-items: start;
+    text-align: start;
+    word-wrap: break-word;
+}
 
 </style>

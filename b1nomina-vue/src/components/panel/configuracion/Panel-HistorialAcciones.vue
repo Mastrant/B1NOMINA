@@ -36,7 +36,6 @@ const listado = ref([]);
 
 const SolicitarListadoDeAcciones = async (id = Number) => {
     const respuesta = await peticiones_configuracion_datosEmpresa?.getHistorialDeAcciones(id);
-    console.log(respuesta)
     if (respuesta.success) {
         //console.log(respuesta.data)
         listado.value = respuesta.data;
@@ -47,7 +46,7 @@ const SolicitarListadoDeAcciones = async (id = Number) => {
 
 onMounted(async () => {
     await SolicitarListadoDeAcciones(ID_Sociedad.value)
-})
+});
 
 </script>
 
@@ -58,6 +57,8 @@ onMounted(async () => {
     height: 100%;
     box-sizing: border-box;
     gap: 12px;
+    word-wrap: break-word;
+    overflow: scroll;
 }
 
 .contend > div {

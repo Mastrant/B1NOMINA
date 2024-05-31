@@ -147,13 +147,12 @@ import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
 
 import { ref, watch, reactive, inject , defineEmits, onMounted} from 'vue';
 
-    import peticiones from '@/peticiones/p_empleado';
-
+import peticiones from '@/peticiones/p_empleado';
 
 import almacen from '@/store/almacen';
 
 const DatosUsuario = reactive(inject('dataEmpleado'))
-    const parametros = reactive(inject('parametros'))
+const parametros = reactive(inject('parametros'))
 
 const ID_USERMASTER  = ref(almacen?.userID)
 

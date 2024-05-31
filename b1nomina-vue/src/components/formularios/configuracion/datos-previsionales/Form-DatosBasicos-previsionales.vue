@@ -10,6 +10,7 @@
                 @update:modelValue="Sueldo = $event"
                 :requerido="RequiereActualizar"
                 :minimo-caracteres="0"
+                 -numero-decimales="0.01"
             />
         
             <InputBorderDescripcion
@@ -20,6 +21,7 @@
                 @update:modelValue="Gratificacion_Minimo = $event"
                 :requerido="RequiereActualizar"
                 :minimo-caracteres="0"
+                 -numero-decimales="0.01"
             />
             
             <InputBorderDescripcion
@@ -31,6 +33,7 @@
                 :requerido="RequiereActualizar"
                 name="CorreoElectronico"
                 :minimo-caracteres="0"
+                 -numero-decimales="0.01"
             />
         </div>
 
@@ -43,6 +46,7 @@
                 @update:modelValue="Vacaciones = $event"
                 :requerido="RequiereActualizar"
                 :minimo-caracteres="0"
+                 -numero-decimales="0.01"
                    
             />
             <InputBorderDescripcion
@@ -53,6 +57,7 @@
                 @update:modelValue="HorasDiarias = $event"
                 :requerido="RequiereActualizar"
                 :minimo-caracteres="0"
+                 -numero-decimales="0.01"
             />
             <InputBorderDescripcion
                 Placeholder="0"
@@ -62,6 +67,7 @@
                 @update:modelValue="Honorarios = $event"
                 :requerido="RequiereActualizar"
                 :minimo-caracteres="0"
+                 -numero-decimales="0.01"
             />
         </div>
     

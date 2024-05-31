@@ -176,7 +176,7 @@
         if (respuesta?.valor == true){
             actualizar();
         }
-        NotificacionModal.value = respuesta
+        NotificacionModal.value = respuesta.value
     };
 
     //Expoe la funcion para activar el modal

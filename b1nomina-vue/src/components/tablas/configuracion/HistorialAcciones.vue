@@ -21,43 +21,29 @@
                 </th>
             </tr>
 
+
             <!--Cuerpo de la tabla-->
             <HistorialAccionesRow  v-for="(item) in DatosPaginados" :key="item.id">
                 <!--Nombre y apelidos-->
-                <template v-slot:NombresApellidos>
-                    {{item.nombres}} 
-                    {{ item.apellido_paterno }}
-                    {{ item.apellido_materno }}
+                <template v-slot:FechaHora>
+                    {{ item?.fecha_registro }}
                 </template>
                 <!--Rut-->
-                <template v-slot:rut>
-                    {{item.rut}}
+                <template v-slot:NombreUsuario>
+                    {{ item?.nombre_creador }}
                 </template>
                     <!--Cargo-->
-                <template v-slot:cargo>
-                    {{ item.cargo }}
+                <template v-slot:ROL>
+                    {{ item?.rol_usuario_creador }}
                 </template>
                 <!--Saladio / sueldo-->
-                <template v-slot:sueldo>
-                    {{ item.sueldo }}
+                <template v-slot:Detalle>
+                    {{ item?.accion }}                    
                 </template>
-                <!--Estado-->
-                <template v-slot:activateComponente>
-                    <InterruptorButton 
-                        :Objid="item.id" 
-                        :Estado="item.activo"
-                        @actualizarListado="() => emit('actualizar_Lista')"
-                    />
-                    <span v-if="item.activo == true">Activo</span>
-                    <span v-else>Inactivo</span>
+                <template v-slot:valor>
+                    {{ item?.observaciones }}                    
                 </template>
-                <template v-slot:accionButton>
-                    <router-link :to="{ name: 'panel-empleado', params: { sociedadId: almacen.SociedadID, empleadoId: item.id } }">
-                        <OjitoIcon class="icon" />    
-                    </router-link>
-            
-                    <DescargaIcon @click="console.log('descargar info' + item.id)" text="Descargar"/>
-                </template>
+                
             </HistorialAccionesRow>
             <!--Final cuerpo-->
         </table>        
@@ -74,38 +60,24 @@
 import HistorialAccionesRow from '@/components/tablas/configuracion/HistorialAcciones-Row.vue';
 import Paginacion from '@/components/elementos/Paginacion.vue';
 import SeleccionarPaginacion from '@/components/elementos/Seleccionar-paginacion.vue'
-import DescargaIcon from '@/components/icons/Descarga-icon.vue'
 
 import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
 
 import { useRoute } from 'vue-router';
 
-import almacen from '@/store/almacen.js';
-
 const route = useRoute();
-const sociedadId = route.params.sociedadId;
 
 // Define los props
 const props = defineProps({
-  listaAcciones: {
-    type: Array,
-    default: () => []
-  }
+    listaAcciones: {
+        type: Array,
+        default: () => []
+    }
 });
-const emit = defineEmits([
-    'upData',
-    'actualizar_Lista'
-
-]);
 
 // Accede a la lista de empleados desde props
 const listaAcciones = ref(props.listaAcciones);
 
-const upData = (arrayData) => {
-    // Convertir el objeto proxy a un array real
-    const arrayReal = [...arrayData];
-    emit('upData', arrayReal);
-};
 
 //configuracion del paginado
 const DatosPaginados = ref([]); //arreglo con los datos picados
@@ -153,6 +125,7 @@ watchEffect(() => {
 onMounted(()=> {
     //ejecuta la actualizacion del paginado
     listaAcciones.value = props.listaAcciones;
+    console.log(listaAcciones.value)
 });
 </script>
 
