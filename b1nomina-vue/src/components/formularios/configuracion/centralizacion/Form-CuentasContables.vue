@@ -2,31 +2,34 @@
     <form class="formulario" :id="IDFORM" @submit.prevent="Enviar">
         <h4>Cuentas Contables</h4>
         <div class="row">
-            <InputBorderDescripcion
+            <InputBorderList
                 Placeholder="Ingresar número de cuenta"
                 Titulo="Cuenta anticipo"
                 name="CuentaAnticipo"
                 v-model="cuentaAnticipo"
                 @update:modelValue="cuentaAnticipo = $event"
                 :requerido="RequiereActualizar"
+                :opciones="[{id:1, nombre:'opcion'}]"
             />
         
-            <InputBorderDescripcion
+            <InputBorderList
                 Placeholder="Ingresar número de cuenta"
                 Titulo="Cuenta bonos feriado"
                 name="CuentaBonosFeriados"
                 v-model="CuentaBonosFeriados"
                 @update:modelValue="CuentaBonosFeriados = $event"
                 :requerido="RequiereActualizar"
+                :opciones="[{id:1, nombre:'predro'}]"
             />
 
-            <InputBorderDescripcion
+            <InputBorderList
                 Placeholder="Ingresar número de cuenta"
                 Titulo="Cuenta Prestamos Solidarios"
                 name="CuentaPrestamoSolidarios"
                 v-model="CuentaPrestamoSolidarios"
                 @update:modelValue="CuentaPrestamoSolidarios = $event"
                 :requerido="RequiereActualizar"
+                :opciones="[{id:1, nombre:'predro'}]"
             />           
         </div>
 
@@ -37,7 +40,7 @@
 </template>
 
 <script setup>
-import InputBorderDescripcion from '@/components/inputs/Input-Border-descripcion.vue';
+import InputBorderList from '@/components/inputs/Input-Border-List.vue';
 import TemplateButton from '@/components/botones/Template-button.vue';
 
 import peticiones_configuracion from '@/peticiones/configuracion/centralizacion.js';
