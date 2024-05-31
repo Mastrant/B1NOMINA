@@ -250,6 +250,7 @@ const verEstado = (valor) => {
 
 const Enviar = async () => {
   //si ID es nulo crea un usuario
+  console.log(payload)
  
   if (Hay_cambios.value == true) {
     const respuesta = await peticiones?.ActualizarDatosPago(DatosUsuario.value?.user_id, ID_USERMASTER.value, payload);
@@ -273,8 +274,8 @@ const MostrarValores = (DATA) => {
     payload_old.medio = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 1 : DATA?.medio_pago;
     payload.medio = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 1 : DATA?.medio_pago;
 
-    Banco.value = (DATA?.banco_id == null) ? '' : DATA?.banco_id;
-    payload_old.banco_id = Number(DATA?.banco_id) ?? '';
+    Banco.value = (DATA?.banco_id == null || DATA?.banco_id == "No Asignado") ? 0 : DATA?.banco_id;
+    payload_old.banco_id = Number(DATA?.banco_id == "No Asignado") ?? 0;
     payload.banco_id = Number(DATA?.banco_id) ?? '';
 
     TCuenta.value =  (DATA?.tipo_cuenta == null) ? '' : DATA?.tipo_cuenta;
@@ -285,9 +286,9 @@ const MostrarValores = (DATA) => {
     payload_old.numero_cuenta = DATA?.numero_cuenta ?? '';
     payload.numero_cuenta = DATA?.numero_cuenta ?? '';
 
-    Tercero.value = (DATA?.Tercero == null)? '' : Number(DATA?.Tercero);
-    payload_old.terceros = DATA?.terceros ?? false;
-    payload.terceros = DATA?.terceros ?? false;
+    Tercero.value = (DATA?.Tercero == null  || DATA?.Tercero == "No Tercero")? 0 : Number(DATA?.Tercero);
+    payload_old.terceros = (DATA?.Tercero == null  || DATA?.Tercero == "No Tercero")? 0 : Number(DATA?.Tercero);
+    payload.terceros = (DATA?.Tercero == null  || DATA?.Tercero == "No Tercero")? 0 : Number(DATA?.Tercero);
     
     payload_old.rut_tercero = DATA?.rut_tercero ?? '';
     payload.rut_tercero = DATA?.rut_tercero ?? '';
@@ -295,14 +296,15 @@ const MostrarValores = (DATA) => {
     payload_old.nombre_tercero = DATA?.nombre_tercero ?? '';
     payload.nombre_tercero = DATA?.nombre_tercero ?? '';
     
-    payload_old.en_uso = DATA?.en_uso ?? '';
-    payload.en_uso = DATA?.en_uso ?? '';
+    payload_old.en_uso = (DATA?.en_uso == null || DATA?.en_uso == "No Asignado") ? 0 : DATA?.en_uso;
+    payload.en_uso = (DATA?.en_uso == null || DATA?.en_uso == "No Asignado") ? 0 : DATA?.en_uso;
     
     payload_old.email_tercero = DATA?.email_tercero ?? '';
     payload.email_tercero = DATA?.email_tercero ?? '';
     
     payload_old.user_id = DATA?.user_id ?? '';
     payload.user_id = DATA?.user_id ?? '';
+
 }
 
 

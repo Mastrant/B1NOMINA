@@ -714,7 +714,7 @@ const showInfo = (id_apartado) => {
 };
 //referencia del ciclo editar info
 const EditarInfo = ref(null);
-const shortTemplateModal = ref(null)
+const shortTemplateModal = ref(null);
 
 /*
 onMounted(async () => {

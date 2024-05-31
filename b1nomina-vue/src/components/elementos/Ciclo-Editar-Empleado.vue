@@ -175,8 +175,12 @@
     const notificacionModal = (respuesta) => {
         if (respuesta?.valor == true){
             actualizar();
+            NotificacionModal.value = respuesta
+        } else {
+            NotificacionModal.value = respuesta.error
         }
-        NotificacionModal.value = respuesta.value
+        console.log(respuesta)
+       
     };
 
     //Expoe la funcion para activar el modal
