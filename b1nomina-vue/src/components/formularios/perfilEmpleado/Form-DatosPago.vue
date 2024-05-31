@@ -1,5 +1,5 @@
 <template>
-    <form class="formulario" id="ActualizarDatosPago" @submit.prevent="Enviar()">
+    <form class="formulario" id="ActualizarDatosPago" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos de Pago</h2> 
         <div class="row-form">
             <LayoutInputLineal textLabel="Medio de pago" :requerido="RequiereActualizar">
@@ -8,30 +8,31 @@
                         v-model="MedioPago" 
                         grupo="MedioPago" 
                         texto="Transferencia" 
+                        id-radius="Transferencia"
                         :valor="1"
                         :class="{ selected: MedioPago == 1 }"
-                        id-radius="Transferencia"
                     />
                    <InputRadioButton 
                         v-model="MedioPago" 
                         grupo="MedioPago" 
                         texto="Cheque" 
+                        id-radius="Cheque"
                         :valor="2"
                         :class="{ selected: MedioPago == 2 }"
-                        id-radius="Cheque"
                     />
                     <InputRadioButton 
                         v-model="MedioPago" 
                         grupo="MedioPago" 
                         texto="Al contado" 
+                        id-radius="Alcontado"
                         :valor="3"
                         :class="{ selected: MedioPago == 3 }"
-                        id-radius="Alcontado"
                     />
                 </template>
             </LayoutInputLineal>
         </div>
-        <div class="row-form" v-show="MedioPago == 1">
+
+        <div class="row-form" v-show="Expancion1">
             <LayoutInputLineal textLabel="Banco" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
@@ -51,7 +52,7 @@
                         v-model="TCuenta" 
                         grupo="TCuenta" 
                         texto="Corriente" 
-                        :valor="0"
+                        :valor="1"
                         id-radius="CCorriente"  
                         :requerido="RequiereActualizar"                      
                     />
@@ -59,7 +60,7 @@
                         v-model="TCuenta" 
                         grupo="TCuenta"
                         texto="Ahorro"
-                        :valor="1"
+                        :valor="2"
                         id-radius="CAhorro"  
                         :requerido="RequiereActualizar"  
                     />
@@ -67,7 +68,7 @@
                         v-model="TCuenta" 
                         grupo="TCuenta"
                         texto="Vista"
-                        :valor="2"
+                        :valor="3"
                         id-radius="CVista"  
                         :requerido="RequiereActualizar"  
                     />
@@ -75,7 +76,7 @@
             </LayoutInputLineal>            
         </div>
 
-        <div class="row-form " v-show="MedioPago == 1" :requerido="RequiereActualizar">
+        <div class="row-form " v-show="Expancion1" :requerido="RequiereActualizar">
             <InputLinealDescripcion 
                 Placeholder="Ingrese Numero de Cuenta" 
                 Titulo="N° Cuenta"
@@ -89,8 +90,8 @@
                     <InterruptorButton 
                         @ValorEstado="verEstado"
                         Objid="CuentaTercero"
-                        :Texto="(EstatusTercero)? 'Activo': 'Inactivo'"
                         Tipo="individual"
+                        :Texto="(EstatusTercero)? 'Activo': 'Inactivo'"
                         :Estado="(EstatusTercero == true)? true :false"
                         :requerido="RequiereActualizar"
                     />
@@ -99,9 +100,9 @@
 
         </div>  
 
-        <h2 v-show="Tercero == 1 && MedioPago == 1" class="titulo-form">Datos de Pago</h2> 
+        <h2 v-show="Expancion2" class="titulo-form">Datos de Pago</h2> 
 
-        <p v-show="Tercero == 1 && MedioPago == 1">
+        <p v-show="Expancion2">
             A continuación introduce los datos de terceros para ser validados a través de su correo electrónico y poder autorizar el pago a esta cuenta.
         </p>
 
@@ -143,8 +144,6 @@ import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
 import InputRadioButton from '@/components/botones/Input-Radio-button.vue';
 import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
 
-
-
 import { ref, watch, reactive, inject , defineEmits, onMounted} from 'vue';
 
 import peticiones from '@/peticiones/p_empleado';
@@ -174,10 +173,13 @@ const RutTercero = ref('');
 const emailTercero = ref('');
 
 
+const Expancion1 = ref(false)
+const Expancion2 = ref(false)
+
 // payload de la peticion
 const payload = reactive({
     "banco_id": '',
-    "medio": '0',
+    "medio": '',
     "tipo_cuenta": '',
     "numero_cuenta": '',
     "user_id": '',
@@ -185,7 +187,7 @@ const payload = reactive({
 
 const payload_old = reactive({
     "banco_id": '',
-    "medio": '0',
+    "medio": '',
     "tipo_cuenta": '',
     "numero_cuenta": '',
     "user_id": '',
@@ -228,9 +230,20 @@ const verificarCambios = () => {
 }
 
 watch(Banco, (nuevoValor) => ActualizarPayload('banco_id', nuevoValor));
-watch(MedioPago, (nuevoValor) => ActualizarPayload('medio', String(nuevoValor)));
+watch(MedioPago, (nuevoValor) => {
+    ActualizarPayload('medio', String(nuevoValor))
+    if (nuevoValor == 1) {
+        Expancion1.value = true
+    }
+});
 watch(TCuenta, (nuevoValor) => ActualizarPayload('tipo_cuenta', Number( nuevoValor)));
 watch(NCuenta, (nuevoValor) => ActualizarPayload('numero_cuenta', nuevoValor));
+
+watch(() => DatosUsuario.value, 
+    (nuevoValor) => {
+        MostrarValores(nuevoValor);
+    }
+);
 
 const verificarMediodePago = (medio) => {
     if(medio != 1){
@@ -248,29 +261,10 @@ const verEstado = (valor) => {
 }
 
 
-const Enviar = async () => {
-  //si ID es nulo crea un usuario
-  console.log(payload)
- 
-  if (Hay_cambios.value == true) {
-    const respuesta = await peticiones?.ActualizarDatosPago(DatosUsuario.value?.user_id, ID_USERMASTER.value, payload);
-    if(respuesta.success == true){
-       emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
-    } else {
-        console.error(respuesta?.error)
-        emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false})
-    }
-
-  } else {
-    emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor':true});
-  }
-};
-
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
-const MostrarValores = (DATA) => {
- 
+const MostrarValores = (DATA) => { 
 
-    MedioPago.value = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 1 : DATA?.medio_pago;
+    MedioPago.value = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 1 : Number(DATA?.medio_pago);
     payload_old.medio = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 1 : DATA?.medio_pago;
     payload.medio = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 1 : DATA?.medio_pago;
 
@@ -278,17 +272,17 @@ const MostrarValores = (DATA) => {
     payload_old.banco_id = Number(DATA?.banco_id == "No Asignado") ?? 0;
     payload.banco_id = Number(DATA?.banco_id) ?? '';
 
-    TCuenta.value =  (DATA?.tipo_cuenta == null) ? '' : DATA?.tipo_cuenta;
-    payload_old.tipo_cuenta = DATA?.tipo_cuenta ?? '';
-    payload.tipo_cuenta = DATA?.tipo_cuenta ?? '';
+    TCuenta.value =  (DATA?.tipo_cuenta == null) ? 0 : DATA?.tipo_cuenta;
+    payload_old.tipo_cuenta = DATA?.tipo_cuenta ?? 0;
+    payload.tipo_cuenta = DATA?.tipo_cuenta ?? 0;
 
-    NCuenta.value =  (DATA?.numero_cuenta == null) ? '' : DATA?.numero_cuenta;
-    payload_old.numero_cuenta = DATA?.numero_cuenta ?? '';
-    payload.numero_cuenta = DATA?.numero_cuenta ?? '';
+    NCuenta.value =  (DATA?.numero_cuenta == null || DATA?.numero_cuenta == "No Asignado") ? '0' : DATA?.numero_cuenta;
+    payload_old.numero_cuenta = (DATA?.numero_cuenta == null || DATA?.numero_cuenta == "No Asignado") ? '0' : DATA?.numero_cuenta;
+    payload.numero_cuenta = (DATA?.numero_cuenta == null || DATA?.numero_cuenta == "No Asignado") ? '0' : DATA?.numero_cuenta;
 
-    Tercero.value = (DATA?.Tercero == null  || DATA?.Tercero == "No Tercero")? 0 : Number(DATA?.Tercero);
-    payload_old.terceros = (DATA?.Tercero == null  || DATA?.Tercero == "No Tercero")? 0 : Number(DATA?.Tercero);
-    payload.terceros = (DATA?.Tercero == null  || DATA?.Tercero == "No Tercero")? 0 : Number(DATA?.Tercero);
+    Tercero.value = (DATA?.Tercero == null  || DATA?.Tercero == "No Tercero")? '0' : DATA?.Tercero;
+    payload_old.terceros = (DATA?.Tercero == null  || DATA?.Tercero == "No Tercero")? '0' : DATA?.Tercero;
+    payload.terceros = (DATA?.Tercero == null  || DATA?.Tercero == "No Tercero")? '0' : DATA?.Tercero;
     
     payload_old.rut_tercero = DATA?.rut_tercero ?? '';
     payload.rut_tercero = DATA?.rut_tercero ?? '';
@@ -305,11 +299,31 @@ const MostrarValores = (DATA) => {
     payload_old.user_id = DATA?.user_id ?? '';
     payload.user_id = DATA?.user_id ?? '';
 
+    RequiereActualizar.value = false
+    Expancion2.value = (Tercero.value == 1 && MedioPago.value == 1)
+
 }
 
+const Enviar = async () => {
+  //si ID es nulo crea un usuario
+ 
+  if (Hay_cambios.value == true) {
+    const respuesta = await peticiones?.ActualizarDatosPago(DatosUsuario.value?.user_id, ID_USERMASTER.value, payload);
+    if(respuesta.success == true){
+       emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
+    } else {
+        console.error(respuesta?.error)
+        emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false})
+    }
 
-onMounted(() => {
-  MostrarValores(DatosUsuario.value)
+  } else {
+    emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor':true});
+  }
+};
+
+onMounted(async () => {
+    await MostrarValores(DatosUsuario.value)
+    
 });
 </script>
 

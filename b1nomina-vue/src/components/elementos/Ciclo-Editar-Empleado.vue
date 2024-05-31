@@ -44,6 +44,18 @@
                     @respuestaServidor="notificacionModal"
                 />
             </div>
+            <div v-if=" formActivo == 8"> <!--retomar contrato-->                    
+                
+            </div>
+            <div v-if=" formActivo == 9"> <!--retomar contrato-->                    
+                
+            </div>
+            <div v-if=" formActivo == 10"> <!--retomar contrato-->                    
+                
+            </div>
+            <div v-if=" formActivo == 11"> <!--retomar contrato-->                    
+                
+            </div>
         </template>
     </TemplateModal>
 </template>
@@ -162,6 +174,38 @@
                 IDFormModal.value = 'ActualizarDatosPago';
 
                 break; 
+            case 8:
+                formActivo.value = TipoAccion;
+                EmpleadoID_Selecionado.value = item_ID;
+                TextoButton.value = 'Actualizar';
+                TituloModal.value = 'Datos Previcionales';
+                IDFormModal.value = 'ActualizarAFP';
+
+                break; 
+            case 9:
+                formActivo.value = TipoAccion;
+                EmpleadoID_Selecionado.value = item_ID;
+                TextoButton.value = 'Actualizar';
+                TituloModal.value = 'Datos Previcionales';
+                IDFormModal.value = 'ActualizarAPV';
+
+                break; 
+            case 10:
+                formActivo.value = TipoAccion;
+                EmpleadoID_Selecionado.value = item_ID;
+                TextoButton.value = 'Actualizar';
+                TituloModal.value = 'Datos Previcionales';
+                IDFormModal.value = 'ActualizarPrevisionSalud';
+
+                break; 
+            case 11:
+                formActivo.value = TipoAccion;
+                EmpleadoID_Selecionado.value = item_ID;
+                TextoButton.value = 'Actualizar';
+                TituloModal.value = 'Datos Adicionales';
+                IDFormModal.value = 'ActualizarDatosAdicionales';
+
+                break; 
                 
         }
         showModal(1)
@@ -179,7 +223,7 @@
         } else {
             NotificacionModal.value = respuesta.error
         }
-        console.log(respuesta)
+        
        
     };
 

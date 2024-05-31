@@ -1,5 +1,6 @@
 <template>
     <div class="panel-PerfilEmpleado">
+
         <LayoutCabeceraEmpleado @clickEvent="() => console.log('editarfoto')" :imagen="DatosUsuario?.foto">
             <template #Rol>
                 Rol                
@@ -73,11 +74,13 @@
                 <template v-slot:cabecera>
                     <NavButtonTemplate text="Datos Laborales" :seleccionado="panelShow== 1" @click="showInfo(1)" />
                     <NavButtonTemplate text="Datos Personales" :seleccionado="panelShow== 2" @click="showInfo(2)" />
-                    <NavButtonTemplate text="Datos Previsionales" :seleccionado="panelShow== 3" @click="showInfo(3)" />
-                    <NavButtonTemplate text="Solicitudes" :seleccionado="panelShow== 4" @click="showInfo(4)" />
+                    <NavButtonTemplate text="Datos de Pago" :seleccionado="panelShow== 3" @click="showInfo(3)" />
+                    <NavButtonTemplate text="Datos Previsionales" :seleccionado="panelShow== 4" @click="showInfo(4)" />
+                    <NavButtonTemplate text="Asignaciones" :seleccionado="panelShow== 5" @click="showInfo(5)" />
+                    <NavButtonTemplate text="Documentos" :seleccionado="panelShow== 6" @click="showInfo(6)"/>
                 </template>
                 <template v-slot:formulario>
-                    <div class="contenedorInfo" v-if="panelShow ==1">            
+                    <div class="contenedorInfo" v-if="panelShow == 1">            
                         <LayoutTablaEMpleados>
                             <!--Formulario Salario-->
                             <template #boton1>                                                                    
@@ -259,7 +262,7 @@
 
                         </LayoutTablaEMpleados>
                     </div>
-                    <div class="contenedorInfo" v-if="panelShow ==2">
+                    <div class="contenedorInfo" v-if="panelShow == 2">
                         <LayoutTablaEMpleados>
                             <template #boton1>                                                                    
                                 <TemplateBlanckButton @click="EditarInfo?.ActionButton(5,EmpleadoID)" text="Editar">
@@ -274,14 +277,7 @@
                                         <EdiIcon Stroke="#000000"/>
                                     </template>
                                 </TemplateBlanckButton>
-                            </template>
-                            <template #boton5>                                                                    
-                                <TemplateBlanckButton @click="EditarInfo?.ActionButton(7,EmpleadoID)" text="Editar">
-                                    <template #default>
-                                        <EdiIcon Stroke="#000000"/>
-                                    </template>
-                                </TemplateBlanckButton>
-                            </template>
+                            </template>                            
 
                         <!--primer apartado-->
                             <template #titulo1>                                                                    
@@ -371,57 +367,91 @@
                             <template #text-14>                                                                    
                                 {{DatosUsuario?.direccion}}
                             </template>
-
-                        <!--segundo apartado-->
-
-                            <template #titulo5>                                                                    
+                
+                        </LayoutTablaEMpleados>
+                    </div>
+                    <div class="contenedorInfo" v-if="panelShow == 3">
+                        <LayoutTablaEMpleados>
+                            <template #boton1>                                                                    
+                                <TemplateBlanckButton @click="EditarInfo?.ActionButton(7,EmpleadoID)" text="Editar">
+                                    <template #default>
+                                        <EdiIcon Stroke="#000000"/>
+                                    </template>
+                                </TemplateBlanckButton>
+                            </template>
+                        <!--primer apartado-->
+                            <template #titulo1>                                                                    
                                 Datos de pago
-                            </template>     
-                                                                               
-                            <template #st-17>  <!--Medio de pago-->                                                                            
+                            </template>                            
+                            <template #st-1>                                                                    
                                 Medio de pago
                             </template>
-                            <template #text-17>                                                                    
-                                {{DatosUsuario?.nomcomuna}}
+                            <template #text-1>                                                                    
+                                {{DatosUsuario?.medio_pago_nombre}}
                             </template>
-                            <template #st-18> <!--Banco-->                                                                     
+                            <template #st-2>                                                                    
                                 Banco
                             </template>
-                            <template #text-18>                                                                    
+                            <template #text-2>                                                                    
                                 {{DatosUsuario?.nombre_banco}}
                             </template>
-                            <template #st-19> <!--Tipo de cuenta-->                                                                      
+                            <template #st-3>                                                                    
                                 Tipo de cuenta
                             </template>
-                            <template #text-19>                                                                    
-                                Corriente       
+                            <template #text-3>                                                                    
+                                {{DatosUsuario?.tipo_cuenta}}
                             </template>
-                            <template #st-20> <!--Número de cuenta-->    
-                                Número de cuenta
+                            <template #st-4>                                                                    
+                               Número de cuenta
                             </template>
-                            <template #text-20>                                                                    
+                            <template #text-4>                                                                    
                                 {{DatosUsuario?.numero_cuenta}}
+                            </template>                                                    
+                            <template #st-5>                                                                    
+                                Rut Tercero
+                            </template>
+                            <template #text-5>                                                                    
+                                {{DatosUsuario?.rut_tercero}}
+                            </template>
+                            <template #st-6>                                                                    
+                                Nombre y apellido Tercero
+                            </template>
+                            <template #text-6>                                                                                                                                    
+                                {{DatosUsuario?.nombre_tercero}}
+                            </template>
+                            <template #st-7>                                                                    
+                                Correo Tercero
+                            </template>
+                            <template #text-7>                                                                                                                                    
+                                {{DatosUsuario?.email_tercero}}
                             </template>
                         </LayoutTablaEMpleados>
                     </div>
-                    <div class="contenedorInfo" v-if="panelShow ==3">
+                    <div class="contenedorInfo" v-if="panelShow == 4">
                         <LayoutTablaEMpleados>
                             <template #boton1>                                                                    
-                                <TemplateBlanckButton @click="EditarInfo?.ActionButton(5,EmpleadoID)" text="Editar">
+                                <TemplateBlanckButton @click="EditarInfo?.ActionButton(8,EmpleadoID)" text="Editar">
                                     <template #default>
                                         <EdiIcon Stroke="#000000"/>
                                     </template>
                                 </TemplateBlanckButton>
                             </template>
                             <template #boton3>                                                                    
-                                <TemplateBlanckButton @click="EditarInfo?.ActionButton(6,EmpleadoID)" text="Editar">
+                                <TemplateBlanckButton @click="EditarInfo?.ActionButton(9,EmpleadoID)" text="Editar">
                                     <template #default>
                                         <EdiIcon Stroke="#000000"/>
                                     </template>
                                 </TemplateBlanckButton>
                             </template>
                             <template #boton5>                                                                    
-                                <TemplateBlanckButton @click="EditarInfo?.ActionButton(7,EmpleadoID)" text="Editar">
+                                <TemplateBlanckButton @click="EditarInfo?.ActionButton(10,EmpleadoID)" text="Editar">
+                                    <template #default>
+                                        <EdiIcon Stroke="#000000"/>
+                                    </template>
+                                </TemplateBlanckButton>
+                            </template>
+                            <template #boton6>                                                                    
+                                <TemplateBlanckButton @click="EditarInfo?.ActionButton(11,EmpleadoID)" text="Editar">
                                     <template #default>
                                         <EdiIcon Stroke="#000000"/>
                                     </template>
@@ -637,7 +667,7 @@
                             
                         </LayoutTablaEMpleados>
                     </div>
-                    <div class="contenedorInfo" v-if="panelShow == 4">
+                    <div class="contenedorInfo" v-if="panelShow == 5">
                         <LayoutEmpy>
                             <template #imagen>
                                 <img src="@/components/icons/svg/NotificationPerson-icon.svg">    

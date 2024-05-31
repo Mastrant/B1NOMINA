@@ -49,6 +49,7 @@ const AddCampo = async () => {
 
 const SolicitarlistaCamposAdicionales = async (IDSociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getListadoCamposAdicionales(IDSociedad);
+    console.log(respuesta)
     if (respuesta.success) {
         ListaCamposAdicionales.value = respuesta.data;
     } else {
