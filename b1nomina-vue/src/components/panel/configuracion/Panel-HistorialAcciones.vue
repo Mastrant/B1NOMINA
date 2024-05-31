@@ -7,7 +7,9 @@
                     <p>
                         El historial de cambios de B1 Nómina fue diseñado para llevar un registro de los cambios efectuados en la configuración del sistema.
                     </p>
-                    <HistorialAcciones />
+                    <HistorialAcciones 
+                        :listaAcciones="listado"
+                    />
                 </div>
             </template>
         </LayoutFondoBorder>               
@@ -25,6 +27,7 @@ const CambiarNombreRuta = inject('CambiarNombreRuta');
 // Llama a la función para enviar información al componente padre
 CambiarNombreRuta('Historial de Acciones');
 
+const listado = ref([])
 
 </script>
 
