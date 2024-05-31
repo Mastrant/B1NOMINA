@@ -56,7 +56,6 @@ const pedirListadoLocalidad = async () => {
 const SolicitarDatosBasicosEmpresa = async (ID_Sociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getDatosBasicosEmpresa(ID_Sociedad);
     if (respuesta.success) {
-        //console.log(respuesta.data)
         DatosBasicosEmpresa.value = respuesta.data;
     } else {
         console.error(respuesta.error)

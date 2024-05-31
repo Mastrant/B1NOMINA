@@ -112,6 +112,11 @@ const MostrarValores = (DATA) => {
     payload.sociedad_id = DATA?.sociedad_id ?? '';
     payload_old.sociedad_id = DATA?.sociedad_id ?? '';
     
+    payload.es_honorario = DATA?.es_honorario ?? 0;
+    payload_old.es_honorario = DATA?.es_honorario ?? 0;
+
+    
+    
 }
 
 /**

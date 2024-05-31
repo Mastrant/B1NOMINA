@@ -19,7 +19,10 @@
 <script setup>
 import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
 
-import { ref, inject } from 'vue';
+import { ref, inject, onMounted } from 'vue';
+
+import peticiones_configuracion_datosEmpresa from '@/peticiones/configuracion/datos_empresa.js';
+
 import HistorialAcciones from '@/components/tablas/configuracion/HistorialAcciones.vue';
 
 // Accede a la función proporcionada por el componente padre
@@ -27,7 +30,24 @@ const CambiarNombreRuta = inject('CambiarNombreRuta');
 // Llama a la función para enviar información al componente padre
 CambiarNombreRuta('Historial de Acciones');
 
-const listado = ref([])
+const ID_Sociedad = ref(inject('SociedadID'))
+
+const listado = ref([]);
+
+const SolicitarListadoDeAcciones = async (id = Number) => {
+    const respuesta = await peticiones_configuracion_datosEmpresa?.getHistorialDeAcciones(id);
+    console.log(respuesta)
+    if (respuesta.success) {
+        //console.log(respuesta.data)
+        listado.value = respuesta.data;
+    } else {
+        console.error(respuesta.error)
+    }
+}
+
+onMounted(async () => {
+    await SolicitarListadoDeAcciones(ID_Sociedad.value)
+})
 
 </script>
 

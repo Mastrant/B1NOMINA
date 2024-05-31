@@ -74,6 +74,7 @@
 import HistorialAccionesRow from '@/components/tablas/configuracion/HistorialAcciones-Row.vue';
 import Paginacion from '@/components/elementos/Paginacion.vue';
 import SeleccionarPaginacion from '@/components/elementos/Seleccionar-paginacion.vue'
+import DescargaIcon from '@/components/icons/Descarga-icon.vue'
 
 import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
 
