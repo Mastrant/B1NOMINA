@@ -11,48 +11,59 @@
         
     >
         <template #default><!--Espacio para los formularios -->
-            <div v-if=" formActivo == 1"> <!--retomar contrato-->                    
+            <div v-if=" formActivo == 1"> <!--retomar Salario-->                    
                 <FormSalario 
                    @respuestaServidor="notificacionModal"
                 />
             </div>
+
             <div v-if=" formActivo == 2"> <!--retomar contrato-->                    
                 <FormDatosContrato 
                     @respuestaServidor="notificacionModal"
                 />
             </div>
-            <div v-if=" formActivo == 3"> <!--retomar contrato-->                    
+
+            <div v-if=" formActivo == 3"> <!--retomar Puesto-->                    
                 <FormPuesto 
                     @respuestaServidor="notificacionModal"
                 />
             </div>
-            <div v-if=" formActivo == 4"> <!--retomar contrato-->                    
-                formulario Centralizacion
+            
+            <div v-if=" formActivo == 4"> <!--retomar Centralizacion y adicionales-->                    
+                <FormCentralizacionDatosAdicionales 
+                    @respuestaServidor="notificacionModal"
+                />
             </div>
-            <div v-if=" formActivo == 5"> <!--retomar contrato-->     
+
+            <div v-if=" formActivo == 5"> <!--retomar Datos Principales-->     
                 <FormDatosPrincipales 
                     @respuestaServidor="notificacionModal"
                 />                         
             </div>
-            <div v-if=" formActivo == 6"> <!--retomar contrato-->                    
+
+            <div v-if=" formActivo == 6"> <!--retomar contacto-->                    
                 <FormDatosContacto 
                     @respuestaServidor="notificacionModal"
                 />
             </div>
-            <div v-if=" formActivo == 7"> <!--retomar contrato-->                    
+
+            <div v-if=" formActivo == 7"> <!--retomar Pago-->                    
                 <FormDatosPago 
                     @respuestaServidor="notificacionModal"
                 />
             </div>
+
             <div v-if=" formActivo == 8"> <!--retomar contrato-->                    
                 
             </div>
             <div v-if=" formActivo == 9"> <!--retomar contrato-->                    
                 
             </div>
+
             <div v-if=" formActivo == 10"> <!--retomar contrato-->                    
                 
             </div>
+
             <div v-if=" formActivo == 11"> <!--retomar contrato-->                    
                 
             </div>
@@ -70,6 +81,7 @@
     import FormDatosPrincipales from '@/components/formularios/perfilEmpleado/Form-DatosPrincipales.vue';
     import FormDatosContacto from '@/components/formularios/perfilEmpleado/Form-DatosContacto.vue';
     import FormDatosPago from '@/components/formularios/perfilEmpleado/Form-DatosPago.vue';
+    import FormCentralizacionDatosAdicionales from '@/components/formularios/perfilEmpleado/Form-Centralizacion-DatosAdicionales.vue';
     
     //librerias
     import { ref, onMounted, defineExpose, inject } from 'vue';
@@ -147,7 +159,7 @@
                 EmpleadoID_Selecionado.value = item_ID;
                 TextoButton.value = 'Actualizar';
                 TituloModal.value = 'Datos Laborales';
-                IDFormModal.value = 'ActualizarCentralizacion';
+                IDFormModal.value = 'Actualizar-CentralizacionCamposAdicionales';
 
                 break; 
             case 5:

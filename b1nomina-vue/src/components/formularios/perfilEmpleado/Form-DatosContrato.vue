@@ -146,6 +146,7 @@ const payload_old = reactive({
 });
 
 const MostrarValores = (DATA) => {
+
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
         RequiereActualizar.value = false;
         
@@ -157,9 +158,9 @@ const MostrarValores = (DATA) => {
         payload_old.nivel_estudio_id = DATA?.nivel_estudio_id ?? '';
         payload.nivel_estudio_id = DATA?.nivel_estudio_id ?? '';
 
-        TerminoContrato.value = (DATA?.termino_contrato_id == null)? '' : DATA?.termino_contrato_id;
-        payload_old.termino_contrato = DATA?.termino_contrato_id ?? '';
-        payload.termino_contrato = DATA?.termino_contrato_id ?? '';
+        TerminoContrato.value = (DATA?.termino_contrato == null || DATA?.termino_contrato == undefined )? 0 : Number(DATA?.termino_contrato);
+        payload_old.termino_contrato = DATA?.termino_contrato ?? '';
+        payload.termino_contrato = DATA?.termino_contrato ?? '';
 
         FechaContratacion.value = (DATA?.fecha_inicio == null)? '' :DATA?.fecha_inicio;
         payload_old.fecha_inicio = DATA?.fecha_inicio ?? '';

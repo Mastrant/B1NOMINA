@@ -1,6 +1,6 @@
 <template>
     
-    <form class="formulario" id="" @submit.prevent="">
+    <form class="formulario" id="Actualizar-CentralizacionCamposAdicionales" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos Laborales</h2>
         
         <div class="row-form">
@@ -9,7 +9,7 @@
                 Titulo="Campo 1" 
                 v-model="variable"
                 @update:modelValue="variable = $event"
-                :requerido="formularioRequerido"
+                :requerido="RequiereActualizar"
                 Tipo="String"
             />
             <InputLinealDescripcion 
@@ -17,7 +17,7 @@
                 Titulo="Campo 2" 
                 v-model="variable"
                 @update:modelValue="variable = $event"
-                :requerido="formularioRequerido"
+                :requerido="RequiereActualizar"
                 Tipo="String"
             />
             
@@ -28,7 +28,7 @@
                 Titulo="Campo 3" 
                 v-model="variable"
                 @update:modelValue="variable = $event"
-                :requerido="formularioRequerido"
+                :requerido="RequiereActualizar"
                 Tipo="String"
             />
             <InputLinealDescripcion 
@@ -36,24 +36,24 @@
                 Titulo="Campo 4" 
                 v-model="variable"
                 @update:modelValue="variable = $event"
-                :requerido="formularioRequerido"
+                :requerido="RequiereActualizar"
                 Tipo="String"
             />
             
         </div>
-        <div class="row-form">
+        <div class="row-form cut">
             <InputLinealDescripcion 
                 Placeholder="Ingrese Nombre" 
                 Titulo="Campo 5" 
                 v-model="variable"
                 @update:modelValue="variable = $event"
-                :requerido="formularioRequerido"
+                :requerido="RequiereActualizar"
                 Tipo="String"
             />
             
         </div>
-        <div class="row-form">
-            <LayoutInputLineal textLabel="Grupo de centralización" :requerido="false">
+        <div class="row-form cut">
+            <LayoutInputLineal textLabel="Grupo de centralización" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="variable" 
@@ -69,20 +69,130 @@
 </template>
 
 <script setup>
+import InputLinealDescripcion from '@/components/inputs/Input-Lineal-descripcion.vue';
+import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
+import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
 
-const props = defineProps({
-        ID_Empleado: {
-            type: [String, Number],
-            default: 0
-        },
-        parametos: {
-            type: Object,
-            default: {}
+import {reactive, ref, watch, inject, onMounted, defineEmits} from 'vue';
+
+import peticiones from '@/peticiones/p_empleado';
+
+const DatosUsuario = reactive(inject('dataEmpleado'))
+const parametros = reactive(inject('parametros'))
+const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
+
+
+const variable = ref('');
+
+const RequiereActualizar = ref(false)
+
+// payload de las peticiones
+const payload = reactive({        
+
+});
+
+// payload de las peticiones
+const payload_old = reactive({        
+
+});
+
+const PeriodoSalario = ref('');
+watch(PeriodoSalario, (nuevoValor) => ActualizarPayload('salario_base', nuevoValor));
+
+const UnidadSueldo = ref('')
+watch(UnidadSueldo, (nuevoValor) => ActualizarPayload('unidad_sueldo', nuevoValor));
+
+
+
+watch(DatosUsuario, (nuevaInfo) => {
+    MostrarValores(nuevaInfo)        
+})
+
+const MostrarValores = (DATA) => {
+    RequiereActualizar.value = false;
+    // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
+    PeriodoSalario.value = (DATA?.periodo_sueldo == null)? '' :DATA?.periodo_sueldo;
+    payload_old.salario_base = DATA?.periodo_sueldo ?? '';
+    payload.salario_base = DATA?.periodo_sueldo ?? '';
+
+}
+
+/**
+* Actualiza el valor de una propiedad específica dentro del objeto 'payload'.
+*
+* @param {string} propiedad - El nombre de la propiedad a actualizar en el objeto 'payload'.
+* @param {any} valor - El nuevo valor que se asignará a la propiedad especificada.
+*
+* @example
+* // 'payload' es un objeto con una estructura predefinida.
+* const payload = {
+*   nombre: '',
+*   edad: 0
+* };
+*
+* // Llamando a ActualizarPayload para cambiar el nombre.
+* ActualizarPayload('nombre', variable);
+*
+* // Ahora, 'payload' se verá así:
+* // {
+* //   nombre: 'Pedro',
+* //   edad: 30
+* // }
+*/
+const ActualizarPayload = (propiedad, valor) => {
+// Asigna el nuevo valor a la propiedad especificada dentro del objeto 'payload'.
+payload[propiedad] = valor;
+
+verificarCambios();
+
+};
+
+// Define la función verificarCambios que verifica si hay cambios entre los valores antiguos y nuevos de un payload.
+const verificarCambios = () => {
+// Comprueba si todos los campos relevantes en payload_old y payload son iguales.
+// Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
+const camposIguales = Object.keys(payload_old).every( key => payload_old[key] == payload[key]);
+
+// Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
+const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
+
+// Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
+// establece RequiereActualizar.value en false, indicando que no se requiere actualización.
+// De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
+RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+}
+
+onMounted(() => {
+    MostrarValores(DatosUsuario.value)
+});
+
+const emit = defineEmits([
+    'respuestaServidor',
+]);
+
+/**
+* Funcion emitida al enviar el formulario
+* @params payload Contiene los datos que se pasaran
+* Ejecuta la peticion con axios
+*/
+const Enviar = async () => {
+//si ID es nulo crea un usuario
+
+    if (RequiereActualizar.value == true) {
+        const respuesta = await peticiones.ActualizarSalario(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+        if(respuesta.success == true){
+            emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
+        } else {
+            console.error(respuesta?.error)
+            emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false})
         }
-    });
 
-const variable = ref('')
-const formularioRequerido = ref(false);
+    } else {
+    emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor':true});
+    }
+};
+
+
 </script>
 
 <style scoped>
@@ -140,6 +250,10 @@ h2.titulo-form {
     font-weight:  500;  
     line-height:  32px;  
     word-wrap: break-word;
+}
+
+div.row-form.cut {
+    max-width: 48.5%;
 }
 
 

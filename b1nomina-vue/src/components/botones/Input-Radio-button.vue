@@ -6,8 +6,8 @@
             :name="grupo"
             type="radio"
             :id="idRadius"
-            :value="valor"
-            :checked="valor == modelValue"
+            :value="Valor"
+            :checked="Selecionado"
             @change="onChange"
         >
         <!-- Etiqueta asociada al input de radio -->
@@ -17,7 +17,7 @@
 
 <script setup>
 // Importa defineProps y defineEmits de Vue para definir las propiedades y eventos del componente
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, ref, watch, onMounted } from 'vue';
 
 // Define las propiedades del componente
 const props = defineProps({
@@ -44,20 +44,37 @@ const props = defineProps({
     idRadius: {
         type: String,
         default: 'Radio'
-    }
+    },
+    preseleccion:{
+        type: [Number, String]
+    },
 });
 
 // Define los eventos que el componente puede emitir
 const emit = defineEmits(['update:modelValue']);
 
 // Propiedad computada para manejar el v-model
-const modelValue = props.modelValue;
+const ModelValue = ref(props.modelValue);
+const Valor = ref(props?.valor);
+const Selecionado = ref(false);
 
 // Método para manejar el cambio de valor del radio
 const onChange = () => {
     // Emite el evento update:modelValue con el nuevo valor
-    emit('update:modelValue', props.valor);
+    emit('update:modelValue', Valor.value);
+    Selecionado.value = ModelValue.value == Valor.value;
 };
+
+// Observa los cambios en ModelValue y los imprime en la consola
+watch(() => ModelValue.value, (newValue) => {
+    console.log(newValue);
+});
+
+
+onMounted(() => {
+    console.log()
+    onChange;
+})
 </script>
 
 <style scoped>

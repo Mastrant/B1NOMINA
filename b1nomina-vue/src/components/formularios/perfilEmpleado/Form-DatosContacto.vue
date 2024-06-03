@@ -8,7 +8,7 @@
                 v-model="email"
                 @update:modelValue="email = $event"
                 Tipo="email"
-                :requerido="true"
+                :requerido="RequiereActualizar"
                 name="CorreoElectronico"
             />
         </div>
@@ -128,6 +128,10 @@ watch(comuna_id, (nuevoValor) => ActualizarPayload('comuna_id', nuevoValor));
 watch(direccion, (nuevoValor) => ActualizarPayload('direccion', nuevoValor));
 watch(telefonoCelular, (nuevoValor) => ActualizarPayload('movil', nuevoValor));
 watch(telefonoLocal, (nuevoValor) => ActualizarPayload('fijo', nuevoValor));
+
+watch(DatosUsuario, (nuevaInfo) => {
+        MostrarValores(nuevaInfo)
+    })
 
 /**
  * Actualiza el valor de una propiedad específica dentro del objeto 'payload'.

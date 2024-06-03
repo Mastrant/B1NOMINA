@@ -174,6 +174,10 @@
     watch(fechaNacimiento, (nuevoValor) => ActualizarPayload('fecha_nacimiento', nuevoValor));
     watch(estadoCivil, (nuevoValor) => ActualizarPayload('estado_civil_id', nuevoValor));
 
+    watch(DatosUsuario, (nuevaInfo) => {
+        MostrarValores(nuevaInfo)
+    })
+
     const cambiargenero = () => {
         genero.value = 2;
     }
