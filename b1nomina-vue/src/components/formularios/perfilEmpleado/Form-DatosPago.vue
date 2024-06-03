@@ -224,24 +224,40 @@ const verificarCambios = () => {
     // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
-    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+    RequiereActualizar.value = !(camposIguales);
     Hay_cambios.value = !(camposIguales && !alMenosUnValorVacio)
 
 }
 
 watch(Banco, (nuevoValor) => ActualizarPayload('banco_id', nuevoValor));
 watch(MedioPago, (nuevoValor) => {
+
+    console.log(nuevoValor)
     ActualizarPayload('medio', String(nuevoValor))
     if (nuevoValor == 1) {
         Expancion1.value = true
+    } else {
+        Expancion1.value = false
+        Expancion2.value = false
     }
 });
+
 watch(TCuenta, (nuevoValor) => ActualizarPayload('tipo_cuenta', Number( nuevoValor)));
+watch(NCuenta, (nuevoValor) => ActualizarPayload('numero_cuenta', nuevoValor));
+
+watch(Tercero, (nuevoValor) => {
+    ActualizarPayload('numero_cuenta', nuevoValor);
+    if (Tercero == true){
+        Expancion2.value = true
+    }
+});
+watch(EstatusTercero, (nuevoValor) => ActualizarPayload('numero_cuenta', nuevoValor));
+watch(NombreTercero, (nuevoValor) => ActualizarPayload('numero_cuenta', nuevoValor));
 watch(NCuenta, (nuevoValor) => ActualizarPayload('numero_cuenta', nuevoValor));
 
 watch(() => DatosUsuario.value, 
     (nuevoValor) => {
-        MostrarValores(nuevoValor);
+        MostrarValores(nuevoValor.value);
     }
 );
 
@@ -251,6 +267,11 @@ const verificarMediodePago = (medio) => {
         payload.banco_id = 0;
         payload.tipo_cuenta = 0; 
         RequiereActualizar.value = false;
+
+        payload.terceros = '';
+        payload.rut_tercero = '';
+        payload_old.email_tercero = '';
+
     }
 }
 
@@ -264,7 +285,7 @@ const verEstado = (valor) => {
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => { 
 
-    MedioPago.value = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 1 : Number(DATA?.medio_pago);
+    MedioPago.value = (DATA?.medio_pago == null || DATA?.medio_pago.toLowerCase() == 'no asignado' || DATA?.medio_pago == '') ? 1 : DATA?.medio_pago;
     payload_old.medio = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 1 : DATA?.medio_pago;
     payload.medio = (DATA?.medio_pago == null || DATA?.medio_pago == '') ? 1 : DATA?.medio_pago;
 
@@ -276,13 +297,13 @@ const MostrarValores = (DATA) => {
     payload_old.tipo_cuenta = DATA?.tipo_cuenta ?? 0;
     payload.tipo_cuenta = DATA?.tipo_cuenta ?? 0;
 
-    NCuenta.value =  (DATA?.numero_cuenta == null || DATA?.numero_cuenta == "No Asignado") ? '0' : DATA?.numero_cuenta;
-    payload_old.numero_cuenta = (DATA?.numero_cuenta == null || DATA?.numero_cuenta == "No Asignado") ? '0' : DATA?.numero_cuenta;
-    payload.numero_cuenta = (DATA?.numero_cuenta == null || DATA?.numero_cuenta == "No Asignado") ? '0' : DATA?.numero_cuenta;
+    NCuenta.value =  (DATA?.numero_cuenta == null || DATA?.numero_cuenta.toLowerCase() == 'no asignado') ? '0' : DATA?.numero_cuenta;
+    payload_old.numero_cuenta = (DATA?.numero_cuenta == null || DATA?.numero_cuenta.toLowerCase() == 'no asignado') ? '0' : DATA?.numero_cuenta;
+    payload.numero_cuenta = (DATA?.numero_cuenta == null || DATA?.numero_cuenta.toLowerCase() == 'no asignado') ? '0' : DATA?.numero_cuenta;
 
-    Tercero.value = (DATA?.Tercero == null  || DATA?.Tercero == "No Tercero")? '0' : DATA?.Tercero;
-    payload_old.terceros = (DATA?.Tercero == null  || DATA?.Tercero == "No Tercero")? '0' : DATA?.Tercero;
-    payload.terceros = (DATA?.Tercero == null  || DATA?.Tercero == "No Tercero")? '0' : DATA?.Tercero;
+    Tercero.value = (DATA?.Tercero == null  || DATA?.Tercero.toLowerCase() == "no tercero")? '0' : DATA?.Tercero;
+    payload_old.terceros = (DATA?.Tercero == null  || DATA?.Tercero.toLowerCase() == "no tercero")? '0' : DATA?.Tercero;
+    payload.terceros = (DATA?.Tercero == null  || DATA?.Tercero.toLowerCase() == "no tercero")? '0' : DATA?.Tercero;
     
     payload_old.rut_tercero = DATA?.rut_tercero ?? '';
     payload.rut_tercero = DATA?.rut_tercero ?? '';
@@ -300,6 +321,7 @@ const MostrarValores = (DATA) => {
     payload.user_id = DATA?.user_id ?? '';
 
     RequiereActualizar.value = false
+    Expancion1.value = (DATA?.medio_pago == null || DATA?.medio_pago.toLowerCase() == 'no asignado' || DATA?.medio_pago == '')? true : false;
     Expancion2.value = (Tercero.value == 1 && MedioPago.value == 1)
 
 }
