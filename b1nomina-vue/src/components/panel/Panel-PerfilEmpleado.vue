@@ -153,7 +153,7 @@
                                 Término de contrato
                             </template>
                             <template #text-6>                                                                    
-                                {{DatosUsuario?.termino_contrato}}
+                                {{DatosUsuario?.termino_contrato_nombre}}
                             </template>
                             <template #st-7>  <!--Fecha de contratación-->                                                                            
                                 Fecha de contratación

@@ -14,10 +14,9 @@
 
                     <RedirecButton  text="Volver al Dasboard" direccion="dashboard">
                         <template #default>
-                            <CuboIcon />
+                            <CuboIcon Stroke="#1A245B" />
                         </template>
                     </RedirecButton>
-
                 </div>
             </div>
         </template>

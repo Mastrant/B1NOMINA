@@ -30,7 +30,8 @@
                 Titulo="Teléfono Local" 
                 v-model="telefonoLocal"
                 @update:modelValue="telefonoLocal = $event"
-                :requerido="RequiereActualizar"
+                :minimo-caracteres="0"
+                :maximo-caracteres="14"
             />
         </div>
 

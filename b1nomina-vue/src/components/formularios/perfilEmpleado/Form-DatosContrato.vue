@@ -35,7 +35,6 @@
                         :options="parametros?.terminocontrato" 
                         :requerido="RequiereActualizar"
                         :preseleccion="TerminoContrato" 
-                        optionsSelected="Seleccionar"
                     />
                 </template>
             </LayoutInputLineal>
@@ -166,10 +165,10 @@ const MostrarValores = (DATA) => {
         payload_old.fecha_inicio = DATA?.fecha_inicio ?? '';
         payload.fecha_inicio = DATA?.fecha_inicio ?? '';
 
-
-        FechaFinalizacionContrato.value = (DATA?.fecha_fin == null | DATA?.fecha_fin.toLowerCase() == 'no asignado')? '' :DATA?.fecha_fin;
-        payload_old.fecha_fin = (DATA?.fecha_fin == null | DATA?.fecha_fin.toLowerCase() == 'no asignado')? '1990-01-01' :DATA?.fecha_fin;
-        payload.fecha_fin = (DATA?.fecha_fin == null | DATA?.fecha_fin.toLowerCase() == 'no asignado')? '1990-01-01' :DATA?.fecha_fin;
+    console.log(FechaFinalizacionContrato)
+        FechaFinalizacionContrato.value = (DATA?.fecha_fin == null || DATA?.fecha_fin == '' || DATA?.fecha_fin.toLowerCase() == 'no asignado')? '' :DATA?.fecha_fin;
+        payload_old.fecha_fin = (DATA?.fecha_fin == null || DATA?.fecha_fin == '' || DATA?.fecha_fin.toLowerCase() == 'no asignado')? '1990-01-01' :DATA?.fecha_fin;
+        payload.fecha_fin = (DATA?.fecha_fin == null || DATA?.fecha_fin == '' || DATA?.fecha_fin.toLowerCase() == 'no asignado')? '1990-01-01' :DATA?.fecha_fin;
 
         HoraEntrada.value = (DATA?.hora_ingreso == null || DATA?.hora_ingreso == '') ? '08:00' : DATA?.hora_ingreso;
         payload_old.hora_ingreso = DATA?.hora_ingreso ?? '08:00';
