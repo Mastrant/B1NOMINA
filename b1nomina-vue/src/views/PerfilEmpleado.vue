@@ -103,8 +103,8 @@
     provide('actualizarData', pedirDatos)
 
     // Ejecuta las funciones al montar el componente
-    onMounted(async () => {
-       await pedirDatos();
-       await pedirParametros();
+    onMounted(() => {
+        pedirDatos();
+        pedirParametros();
     });
 </script>

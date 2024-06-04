@@ -83,7 +83,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="nacionalidad" 
-                        :options="parametros?.nacionalidad" 
+                        :options="Parametros?.nacionalidad" 
                         :requerido="RequiereActualizar"    
                         :preseleccion="nacionalidad" 
                         optionsSelected="Seleccionar"                    
@@ -95,7 +95,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="estadoCivil" 
-                        :options="parametros?.estadocivil" 
+                        :options="Parametros?.estadocivil" 
                         :preseleccion="estadoCivil" 
                         :requerido="RequiereActualizar"
                         optionsSelected="Seleccionar"
@@ -112,13 +112,13 @@
     import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
     import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
     import InputRadioButton from '@/components/botones/Input-Radio-button.vue';
-
-    import {reactive, ref, watch, inject, onMounted, defineEmits} from 'vue';
-
+    
+    import {reactive, ref, watch, inject, onMounted, defineEmits, onBeforeMount} from 'vue';
     import peticiones from '@/peticiones/p_empleado';
 
     const DatosUsuario = reactive(inject('dataEmpleado'))
     const parametros = reactive(inject('parametros'))
+    const Parametros = ref({});
     const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
     
     //lista de
@@ -176,6 +176,10 @@
 
     watch(DatosUsuario, (nuevaInfo) => {
         MostrarValores(nuevaInfo)
+    })
+
+    watch(parametros, (nuevaInfo) => {     
+        Parametros.value = nuevaInfo
     })
 
     const cambiargenero = () => {
@@ -272,6 +276,10 @@ const verificarCambios = () => {
     const emit = defineEmits([
         'respuestaServidor',
     ]);
+
+    onBeforeMount(() => {
+        Parametros.value = parametros.value
+    })
 
 
 /**

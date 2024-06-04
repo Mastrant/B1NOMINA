@@ -41,7 +41,7 @@
                 <template v-slot>
                     <ListaTemplateLineal 
                         v-model="region_id" 
-                        :options="parametros.regiones" 
+                        :options="Parametros.regiones" 
                         :preseleccion="region_id" 
                         optionsSelected="Seleccionar"
                         :requerido="RequiereActualizar"
@@ -81,12 +81,13 @@ import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
 import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
 import InputLinealDescripcion from '@/components/inputs/Input-Lineal-descripcion.vue';
 
-import {reactive, ref, watch, inject, onMounted, defineEmits} from 'vue';
+import {reactive, ref, watch, inject, onMounted, defineEmits, onBeforeMount } from 'vue';
 
 import peticiones from '@/peticiones/p_empleado';
 
 const DatosUsuario = reactive(inject('dataEmpleado'))
 const parametros = reactive(inject('parametros'))
+const Parametros = ref({});
 const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
 
 const RequiereActualizar = ref(false)
@@ -134,6 +135,11 @@ watch(DatosUsuario, (nuevaInfo) => {
         MostrarValores(nuevaInfo)
     })
 
+watch(parametros, (nuevaInfo) => {     
+    Parametros.value = nuevaInfo
+
+})
+
 /**
  * Actualiza el valor de una propiedad específica dentro del objeto 'payload'.
  *
@@ -156,7 +162,7 @@ watch(DatosUsuario, (nuevaInfo) => {
  * //   edad: 30
  * // }
  */
- const ActualizarPayload = (propiedad, valor) => {
+const ActualizarPayload = (propiedad, valor) => {
     // Asigna el nuevo valor a la propiedad especificada dentro del objeto 'payload'.
     payload[propiedad] = valor;
     
@@ -213,30 +219,35 @@ const MostrarValores = (DATA) => {
         MostrarValores(DatosUsuario.value)
     })
     
+    onBeforeMount(() => {
+        Parametros.value = parametros.value
+    })
+    
     const emit = defineEmits([
         'respuestaServidor',
     ]);
 
+
     //filtra la lista de regiones segun el id
     const filtroRegion = (id) => {
-        ListaLocalidad.value = parametros.value?.localidad.filter(item => item.idregion == id)
+        ListaLocalidad.value = Parametros.value?.localidad.filter(item => item.idregion == id)
     };
 
-    const Enviar = async () => {
-  //si ID es nulo crea un usuario
- 
-  if (RequiereActualizar.value == true) {
-    const respuesta = await peticiones.ActualizarContacto(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
-    if(respuesta.success == true){
-       emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
-    } else {
-        console.error(respuesta?.error)
-        emit('respuestaServidor', {'texto':respuesta?.error?.message, 'valor':false})
-    }
+const Enviar = async () => {
+    //si ID es nulo crea un usuario
+    
+    if (RequiereActualizar.value == true) {
+        const respuesta = await peticiones.ActualizarContacto(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+        if(respuesta.success == true){
+            emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
+        } else {
+            console.error(respuesta?.error)
+            emit('respuestaServidor', {'texto':respuesta?.error?.message, 'valor':false})
+        }
 
-  } else {
-    emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor':true});
-  }
+    } else {
+        emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor':true});
+    }
 };
 
 </script>

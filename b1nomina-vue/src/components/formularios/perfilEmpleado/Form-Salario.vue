@@ -6,7 +6,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="PeriodoSalario" 
-                        :options="parametros?.tiposalario" 
+                        :options="Parametros?.tiposalario" 
                         :requerido="RequiereActualizar"            
                         :preseleccion="PeriodoSalario" 
                         optionsSelected="Seleccionar"
@@ -17,7 +17,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="UnidadSueldo" 
-                        :options="parametros?.unidadessueldo" 
+                        :options="Parametros?.unidadessueldo" 
                         :requerido="RequiereActualizar"            
                         :preseleccion="UnidadSueldo" 
                         optionsSelected="Seleccionar"
@@ -41,12 +41,13 @@
     import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
     import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
 
-    import {reactive, ref, watch, inject, onMounted, defineEmits} from 'vue';
+    import {reactive, ref, watch, inject, onMounted, defineEmits, onBeforeMount} from 'vue';
 
     import peticiones from '@/peticiones/p_empleado';
 
     const DatosUsuario = reactive(inject('dataEmpleado'))
     const parametros = reactive(inject('parametros'))
+    const Parametros = ref({});
     const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
 
     const RequiereActualizar = ref(false)
@@ -76,6 +77,10 @@
 
     watch(DatosUsuario, (nuevaInfo) => {
         MostrarValores(nuevaInfo)        
+    })
+
+    watch(parametros, (nuevaInfo) => {     
+        Parametros.value = nuevaInfo
     })
 
     const MostrarValores = (DATA) => {
@@ -142,6 +147,10 @@ const verificarCambios = () => {
     onMounted(() => {
         MostrarValores(DatosUsuario.value)
     });
+
+    onBeforeMount(() => {
+        Parametros.value = parametros.value
+    })
 
     const emit = defineEmits([
         'respuestaServidor',

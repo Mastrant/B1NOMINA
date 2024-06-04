@@ -8,7 +8,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="SedeDeTrabajo" 
-                        :options="parametros?.sede" 
+                        :options="Parametros?.sede" 
                         :requerido="RequiereActualizar"
                         :preseleccion="SedeDeTrabajo"
                         optionsSelected="Seleccionar"
@@ -20,7 +20,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Departamento" 
-                        :options="parametros?.departamentos" 
+                        :options="Parametros?.departamentos" 
                         :requerido="RequiereActualizar"
                         :preseleccion="Departamento"
                         optionsSelected="Seleccionar"
@@ -34,7 +34,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Cargo" 
-                        :options="parametros?.cargos" 
+                        :options="Parametros?.cargos" 
                         :requerido="RequiereActualizar"
                         :preseleccion="Cargo"
                         optionsSelected="Seleccionar"
@@ -46,7 +46,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Grupo" 
-                        :options="parametros?.grupos" 
+                        :options="Parametros?.grupos" 
                         :requerido="RequiereActualizar"
                         :preseleccion="Grupo"
                         optionsSelected="Sin Asignar"
@@ -75,13 +75,13 @@
     import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
     import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
    
-    
-    import {reactive, ref, watch, inject, onMounted, defineEmits} from 'vue';
+    import {reactive, ref, watch, inject, onMounted, defineEmits, onBeforeMount} from 'vue';
 
     import peticiones from '@/peticiones/p_empleado';
     
     const DatosUsuario = reactive(inject('dataEmpleado'))
     const parametros = reactive(inject('parametros'))
+    const Parametros = ref({});
     const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
 
     const RequiereActualizar = ref(false);
@@ -174,6 +174,10 @@ const verificarCambios = () => {
     watch(DatosUsuario, (nuevaInfo) => {
         MostrarValores(nuevaInfo)
     })
+
+    watch(parametros, (nuevaInfo) => {     
+        Parametros.value = nuevaInfo
+    })
     
     const MostrarValores = (DATA) => {
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
@@ -204,6 +208,10 @@ const verificarCambios = () => {
 
     onMounted(() => {
         MostrarValores(DatosUsuario.value);
+    })
+
+    onBeforeMount(() => {
+        Parametros.value = parametros.value
     })
 
     const emit = defineEmits([

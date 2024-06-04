@@ -8,7 +8,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="TipoDeContrato" 
-                        :options="parametros?.tipocontrato" 
+                        :options="Parametros?.tipocontrato" 
                         :requerido="RequiereActualizar"
                         :preseleccion="TipoDeContrato" 
                         optionsSelected="Seleccionar"
@@ -20,7 +20,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="NivelEstudio" 
-                        :options="parametros?.nivelestudio" 
+                        :options="Parametros?.nivelestudio" 
                         :requerido="RequiereActualizar"
                         :preseleccion="NivelEstudio" 
                         optionsSelected="Seleccionar"  
@@ -32,7 +32,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="TerminoContrato"
-                        :options="parametros?.terminocontrato" 
+                        :options="Parametros?.terminocontrato" 
                         :requerido="RequiereActualizar"
                         :preseleccion="TerminoContrato" 
                     />
@@ -97,13 +97,14 @@ import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
 import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
 import InputLinealDescripcion from '@/components/inputs/Input-Lineal-descripcion.vue';
 import InputCheckbox from '@/components/inputs/Input-Checkbox.vue';
-import {reactive, ref, watch, inject, onMounted} from 'vue';
+import {reactive, ref, watch, inject, onMounted, onBeforeMount } from 'vue';
 
 
 import peticiones from '@/peticiones/p_empleado';
 
 const DatosUsuario = reactive(inject('dataEmpleado'));
-const parametros = reactive(inject('parametros'));
+const parametros = reactive(inject('parametros'))
+const Parametros = ref({});
 const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
 
 const RequiereActualizar = ref(false);
@@ -242,6 +243,9 @@ watch(HoraSalida, (nuevoValor) => ActualizarPayload('hora_egreso', String(nuevoV
 watch(DatosUsuario, (nuevaInfo) => {
         MostrarValores(nuevaInfo)
     })
+watch(parametros, (nuevaInfo) => {     
+    Parametros.value = nuevaInfo
+})
 
 const emit = defineEmits([
         'respuestaServidor',
@@ -271,6 +275,10 @@ const emit = defineEmits([
 onMounted(() => {
     MostrarValores(DatosUsuario.value)
 });
+
+onBeforeMount(() => {
+    Parametros.value = parametros.value
+})
 
 </script>
 

@@ -69,7 +69,7 @@
             </div>
         </template>
     </TemplateModal>
-</template>
+</template>|
 
 <script setup>
     //componentes

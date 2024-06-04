@@ -37,7 +37,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Banco" 
-                        :options="parametros.bancos" 
+                        :options="Parametros.bancos" 
                         :requerido="RequiereActualizar"
                         :preseleccion="Banco"
                         optionsSelected="Seleccionar"
@@ -144,7 +144,7 @@ import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
 import InputRadioButton from '@/components/botones/Input-Radio-button.vue';
 import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
 
-import { ref, watch, reactive, inject , defineEmits, onMounted} from 'vue';
+import {reactive, ref, watch, inject, onMounted, defineEmits, onBeforeMount} from 'vue';
 
 import peticiones from '@/peticiones/p_empleado';
 
@@ -152,6 +152,7 @@ import almacen from '@/store/almacen';
 
 const DatosUsuario = reactive(inject('dataEmpleado'))
 const parametros = reactive(inject('parametros'))
+const Parametros = ref({});
 
 const ID_USERMASTER  = ref(almacen?.userID)
 
@@ -261,6 +262,10 @@ watch(() => DatosUsuario.value,
     }
 );
 
+watch(parametros, (nuevaInfo) => {     
+        Parametros.value = nuevaInfo
+    })
+
 const verificarMediodePago = (medio) => {
     if(medio != 1){
         payload.numero_cuenta = '';
@@ -347,6 +352,11 @@ onMounted(async () => {
     await MostrarValores(DatosUsuario.value)
     
 });
+
+
+onBeforeMount(() => {
+        Parametros.value = parametros.value
+    });
 </script>
 
 <style scoped>
