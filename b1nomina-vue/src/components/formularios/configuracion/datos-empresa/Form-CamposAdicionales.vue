@@ -132,7 +132,6 @@ const verificarCambios = () => {
 
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
-    console.log(DATA)
     RequiereActualizar.value = false;
 
     NombreCampo.value = (DATA?.nombre == null)? '' :DATA?.nombre;

@@ -3,8 +3,8 @@
     <form class="formulario" id="Actualizar-CentralizacionCamposAdicionales" @submit.prevent="Enviar">
         <h2 class="titulo-form">Datos Laborales</h2>
         
-        <div class="row-form">
-            <InputLinealDescripcion 
+        <div class="row-form" >
+            <InputLinealDescripcion v-if="ShowCampo1"
                 Placeholder="Ingrese Nombre" 
                 Titulo="Campo 1" 
                 v-model="variable"
@@ -12,7 +12,7 @@
                 :requerido="RequiereActualizar"
                 Tipo="String"
             />
-            <InputLinealDescripcion 
+            <InputLinealDescripcion v-if="ShowCampo2"
                 Placeholder="Ingrese Nombre" 
                 Titulo="Campo 2" 
                 v-model="variable"
@@ -22,18 +22,18 @@
             />
             
         </div>
-        <div class="row-form">
-            <InputLinealDescripcion 
+        <div class="row-form" >
+            <InputLinealDescripcion v-if="ShowCampo3"
                 Placeholder="Ingrese Nombre" 
-                Titulo="Campo 3" 
+                Titulo="Campo 1" 
                 v-model="variable"
                 @update:modelValue="variable = $event"
                 :requerido="RequiereActualizar"
                 Tipo="String"
             />
-            <InputLinealDescripcion 
+            <InputLinealDescripcion v-if="ShowCampo4"
                 Placeholder="Ingrese Nombre" 
-                Titulo="Campo 4" 
+                Titulo="Campo 2" 
                 v-model="variable"
                 @update:modelValue="variable = $event"
                 :requerido="RequiereActualizar"
@@ -41,8 +41,9 @@
             />
             
         </div>
+        
         <div class="row-form cut">
-            <InputLinealDescripcion 
+            <InputLinealDescripcion v-if="ShowCampo5"
                 Placeholder="Ingrese Nombre" 
                 Titulo="Campo 5" 
                 v-model="variable"
@@ -78,11 +79,16 @@ import {reactive, ref, watch, inject, onMounted, defineEmits} from 'vue';
 import peticiones from '@/peticiones/p_empleado';
 
 const DatosUsuario = reactive(inject('dataEmpleado'))
-const parametros = reactive(inject('parametros'))
+const parametros = ref({})
 
-console.log(parametros.value)
+
 const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
 
+const ShowCampo1 = ref(false)
+const ShowCampo2 = ref(false)
+const ShowCampo3 = ref(false)
+const ShowCampo4 = ref(false)
+const ShowCampo5 = ref(false)
 
 const variable = ref('');
 
@@ -104,6 +110,9 @@ watch(PeriodoSalario, (nuevoValor) => ActualizarPayload('salario_base', nuevoVal
 const UnidadSueldo = ref('')
 watch(UnidadSueldo, (nuevoValor) => ActualizarPayload('unidad_sueldo', nuevoValor));
 
+watch(parametros,(newValue => {
+console.log(newValue)
+}))
 
 
 watch(DatosUsuario, (nuevaInfo) => {
@@ -151,21 +160,30 @@ verificarCambios();
 
 // Define la función verificarCambios que verifica si hay cambios entre los valores antiguos y nuevos de un payload.
 const verificarCambios = () => {
-// Comprueba si todos los campos relevantes en payload_old y payload son iguales.
-// Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
-const camposIguales = Object.keys(payload_old).every( key => payload_old[key] == payload[key]);
+    // Comprueba si todos los campos relevantes en payload_old y payload son iguales.
+    // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
+    const camposIguales = Object.keys(payload_old).every( key => payload_old[key] == payload[key]);
 
-// Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
-const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
+    // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
+    const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
 
-// Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
-// establece RequiereActualizar.value en false, indicando que no se requiere actualización.
-// De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
-RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+    // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
+    // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
+    // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
+    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
 }
 
-onMounted(() => {
-    MostrarValores(DatosUsuario.value)
+const MostrarCampos = (ListaCampos) => {
+    ShowCampo1.value = ListaCampos[0]?.activo == 1
+    ShowCampo2.value = ListaCampos[0]?.activo == 1
+    ShowCampo3.value = ListaCampos[0]?.activo == 1
+    ShowCampo4.value = ListaCampos[0]?.activo == 1
+    ShowCampo5.value = ListaCampos[0]?.activo == 1
+}
+
+onMounted(async () => {
+    await MostrarValores(DatosUsuario.value)
+    parametros.value = await inject('parametros')
 });
 
 const emit = defineEmits([
