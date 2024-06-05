@@ -44,6 +44,8 @@ import trashIcon from '@/components/icons/trash-icon.vue';
 
 import { defineProps, ref, reactive, watch, defineEmits, onMounted, inject} from 'vue';
 
+import peticiones_configuracion_datosEmpresa from '@/peticiones/configuracion/datos_empresa.js';
+
 const props = defineProps({
     Informacion: {
         type: Object,
@@ -54,6 +56,8 @@ const props = defineProps({
 const RequiereActualizar = ref(false);
 
 const ID_Sociedad = ref(inject('SociedadID'))
+
+const ID_USERMASTER = ref(localStorage.getItem('userId'))
 
 const IDFORM = "ActualizarCargo" + props.Informacion?.id;
 
@@ -78,16 +82,16 @@ const verEstado = (valor) => {
 //Contiene la información original
 const payload_old = reactive({
     id:'',
-    NombreCampo: "",
-    estado: ''
+    nombre: "",
+    activo: ''
 
 });
 
 //Contiene la información a enviar
 const payload = reactive({
     id:'',
-    NombreCampo: "",
-    estado: ''
+    nombre: "",
+    activo: ''
 
 });
 
@@ -95,7 +99,9 @@ const payload = reactive({
 
 //Escuchar cambios en las variables
 watch(NombreCampo, (nuevoValor) => ActualizarPayload('NombreCampo', nuevoValor));
-watch(Estado, (nuevoValor) => ActualizarPayload('estado', nuevoValor));
+watch(Estado, (nuevoValor) => {
+    ActualizarPayload('activo', nuevoValor)
+});
 
 //ve si hay cambios en la informacion y actualiza los campos:
 watch(() => props.Informacion, (nuevoValor) => { 
@@ -114,13 +120,10 @@ const verificarCambios = () => {
     // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
     const camposIguales = Object.keys(payload_old).every(key => payload_old[key] == payload[key]);
 
-    // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
-    const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
-
     // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
-    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+    RequiereActualizar.value = !(camposIguales);
 
 }
 
@@ -128,20 +131,21 @@ const verificarCambios = () => {
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
 
+    RequiereActualizar.value = false;
+
     NombreCampo.value = (DATA?.nombre == null)? '' :DATA?.nombre;
+    payload_old.nombre = DATA?.nombre ?? '';
+    payload.nombre = DATA?.nombre ?? '';
 
-    EstadoCampo.value = (DATA?.estado == 0) ? true : false;
+    EstadoCampo.value = (DATA?.activo == 0) ? true : false;
+    payload_old.activo = DATA?.activo ?? '';
+    payload.activo = DATA?.activo ?? '';
 
-    // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
-    // utilizando '' si DATA?.documento es null.
     payload_old.id = DATA?.id ?? '';
     payload.id = DATA?.id ?? '';
 
-    payload_old.NombreCampo = DATA?.nombre ?? '';
-    payload.NombreCampo = DATA?.nombre ?? '';
-    
-    payload_old.estado = DATA?.estado ?? '';
-    payload.estado = DATA?.estado ?? '';
+    payload.sociedad_id = DATA?.sociedad_id ?? '';
+    payload_old.sociedad_id = DATA?.sociedad_id ?? '';
     
 };
 
@@ -175,7 +179,6 @@ const Enviar = async () => {
 
 onMounted(() => {
     MostrarValores(props.Informacion)
-    console.log(props.Informacion)
 });
 
 </script>

@@ -79,6 +79,8 @@ import peticiones from '@/peticiones/p_empleado';
 
 const DatosUsuario = reactive(inject('dataEmpleado'))
 const parametros = reactive(inject('parametros'))
+
+console.log(parametros.value)
 const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
 
 

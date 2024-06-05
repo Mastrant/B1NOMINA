@@ -26,7 +26,7 @@ import TemplateBlankButton from '@/components/botones/Template-blank-button.vue'
 
 import {onMounted, ref, inject} from 'vue';
 
-import peticiones_Configuracion from '@/peticiones/configuracion/datos_empresa.js'
+import peticiones_configuracion_datosEmpresa from '@/peticiones/configuracion/datos_empresa.js';
 
 const ID_Sociedad = ref(inject('SociedadID'))
 const UserID = ref(localStorage.getItem('userId'));
@@ -38,7 +38,7 @@ const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función 
 const ListaCamposAdicionales = ref([]);
 
 const AddCampo = async () => {
-    const respuesta = await peticiones_Configuracion.CreateCampoAdicional(ID_Sociedad.value, Number(UserID.value));
+    const respuesta = await peticiones_configuracion_datosEmpresa.CreateCampoAdicional(ID_Sociedad.value, Number(UserID.value));
     if (respuesta.success) {
         RefrescarDatos();
     } else {
@@ -48,10 +48,9 @@ const AddCampo = async () => {
 }
 
 const SolicitarlistaCamposAdicionales = async (IDSociedad = Number) => {
-    const respuesta = await peticiones_Configuracion.getListadoCamposAdicionales(IDSociedad);
-    console.log(respuesta)
+    const respuesta = await peticiones_configuracion_datosEmpresa.getListadoCamposAdicionales(IDSociedad);
     if (respuesta.success) {
-        ListaCamposAdicionales.value = respuesta.data;
+        ListaCamposAdicionales.value = respuesta.data.data;
     } else {
         console.error(respuesta.error)
     }

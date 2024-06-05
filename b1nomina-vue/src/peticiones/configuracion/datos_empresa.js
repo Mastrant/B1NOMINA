@@ -322,7 +322,7 @@ const peticiones_configuracion_datosEmpresa = {
     CreateCampoAdicional(idSociedad, idCreador){
         try {
             // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
-            return axios.post(`sociedad/${idSociedad}/precreate_campos_adicionales?userCreatorId=${idCreador}`)
+            return axios.post(`sociedades/${idSociedad}/precreate_campos_adicionales?userCreatorId=${idCreador}`)
             // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
            .then(respuesta => {
                 return { success: true, data: respuesta?.data };
@@ -339,7 +339,7 @@ const peticiones_configuracion_datosEmpresa = {
     ActualizarCampoAdicional(idMaster, id, payload){
         try {
             // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
-            return axios.put(`cargos/${id}/update?user_updater=${idMaster}`,payload)
+            return axios.put(`campos_adicionales/${id}/update?user_updater=${idMaster}`,payload)
             // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
            .then(respuesta => {
                 return { success: true, data: respuesta?.data };
