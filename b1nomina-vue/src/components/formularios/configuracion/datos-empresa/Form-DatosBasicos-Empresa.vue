@@ -94,7 +94,7 @@ import ListaTemplateBorder from "@/components/listas/Lista-template-border.vue";
 import LayoutInputBorder from "@/components/Layouts/LayoutInputBorder.vue";
 import TemplateButton from '@/components/botones/Template-button.vue';
 
-import { defineProps, ref, reactive, watch, defineEmits, onMounted, inject} from 'vue';
+import { defineProps, ref, reactive, watch, defineEmits, onMounted, inject, onBeforeMount} from 'vue';
 
 import peticiones_configuracion_datosEmpresa from '@/peticiones/configuracion/datos_empresa.js';
 
@@ -131,9 +131,10 @@ const Direccion = ref('');
 //definicion de vaiables de los parametos
 const ListaLocalidad = ref({}); //Los datos se asignan segun el idRegion
 
-//filtra la lista de regiones segun el id
-const filtroRegion = (ID_comuna) => {
-    ListaLocalidad.value = props.parametros.localidad?.filter(item => item.idregion == ID_comuna);
+const filtroRegion = async (ID_comuna) => {
+    if (!props.parametros) return; // Verifica si props.parametros está definido
+
+    ListaLocalidad.value = await props.parametros.localidad.filter(item => item.idregion == ID_comuna);
 };
 
 //control para envio de informacion
@@ -167,6 +168,7 @@ watch(numeroDocumento, (nuevoValor) => ActualizarPayload('rut', nuevoValor));
 watch(correoEmpresa, (nuevoValor) => ActualizarPayload('email', nuevoValor?.toUpperCase()));
 watch(CiudadEmpresa, (nuevoValor) => ActualizarPayload('ciudad', nuevoValor?.toUpperCase()));
 watch(Region, (nuevoValor) => {
+        console.log(nuevoValor)
         filtroRegion(nuevoValor);
         ActualizarPayload('region_id', nuevoValor);
     }
@@ -273,7 +275,7 @@ const MostrarValores = (DATA) => {
     }
 };
 
-onMounted(async () => {
+onBeforeMount(async () => {
     await MostrarValores(props.Informacion?.Sociedad)
 });
 

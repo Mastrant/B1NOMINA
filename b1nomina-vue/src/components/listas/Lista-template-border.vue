@@ -16,7 +16,10 @@
 import { ref, defineProps, watchEffect, watch } from 'vue';
 
 const props = defineProps({
-    options: { default: () => [{}] },
+    options: {
+        type: [Object, String], 
+        default:{} 
+    },
 
     preseleccion:{
         type: [Number, String]
@@ -41,7 +44,7 @@ watchEffect(() => {
     if(props.preseleccion) {
         // Busca en options el elemento cuyo id coincida con preseleccion
         try {
-            const optionPreseleccionada = props.options.find(option => option.id == props.preseleccion);
+            const optionPreseleccionada = Array.isArray(props.options)? props.options.find(option => option.id == props.preseleccion) : undefined;
             
             // Si se encuentra una opción preseleccionada, establece selected al id de esa opción
             if (optionPreseleccionada) {

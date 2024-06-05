@@ -91,9 +91,9 @@
                         @ValorEstado="verEstado"
                         Objid="CuentaTercero"
                         Tipo="individual"
-                        :Texto="(EstatusTercero)? 'Activo': 'Inactivo'"
                         :Estado="(EstatusTercero == true)? true :false"
                         :requerido="RequiereActualizar"
+                        :-texto="(EstatusTercero = true)? 'activo' : 'inactivo'"
                     />
                 </template>
             </LayoutInputLineal>
@@ -348,14 +348,10 @@ const Enviar = async () => {
   }
 };
 
-onMounted(async () => {
-    await MostrarValores(DatosUsuario.value)
-    
-});
-
 
 onBeforeMount(() => {
         Parametros.value = parametros.value
+        MostrarValores(DatosUsuario.value)
     });
 </script>
 
