@@ -13,7 +13,7 @@
         <!-- Slot para el panel principal de la página -->
         <template #panel>
             <!-- Renderiza el componente PanelPerfilEmpleado -->
-            <PanelPerfilEmpleado/>
+            <PanelPerfilEmpleado v-if="parametros != {}"/>
         </template>
     </LayoutPanel>
 </template>

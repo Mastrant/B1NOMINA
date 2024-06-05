@@ -6,7 +6,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="nacionalidad" 
-                        :options="ListaNacionalidad" 
+                        :options="parametros?.nacionalidad" 
                         :requerido="RequiereActualizar"    
                         :preseleccion="nacionalidad"     
                         optionsSelected="Seleccionar"               

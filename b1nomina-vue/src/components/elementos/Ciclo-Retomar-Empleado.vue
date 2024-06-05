@@ -42,13 +42,14 @@
                     />
                     
                     <FormRDatosLaborales 
+                        v-if="idFormularioActivo == 3"
                         @nextModal="avanzarForm"
                         @respuesta="activarNotificacionModal"
                         :EmpleadoID="ID_Empleado_Selecionado"
                         :parametros="parametrosDL"
                         :Informacion="Data_Usuario" 
-                        v-if="idFormularioActivo == 3"
                         ref="Form3"
+                        style="overflow: scroll; max-heit"
                     />
 
                     <FormRDatosPago

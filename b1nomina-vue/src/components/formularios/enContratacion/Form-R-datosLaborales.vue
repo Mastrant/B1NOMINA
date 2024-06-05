@@ -699,7 +699,7 @@ columna con un espacio de  16px entre ellos */
 form.formulario {
     display: flex;
     flex-direction: column;
-    gap:  16px
+    gap: 16px;
 }
 
 /* Contenedor para elementos multimedia, organizados 

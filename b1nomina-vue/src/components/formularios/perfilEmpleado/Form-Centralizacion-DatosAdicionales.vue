@@ -4,36 +4,38 @@
         <h2 class="titulo-form">Datos Laborales</h2>
         
         <div class="row-form" >
-            <InputLinealDescripcion v-if="ShowCampo1"
-                Placeholder="Ingrese Nombre" 
-                Titulo="Campo 1" 
+            <InputLinealDescripcion
+                Placeholder="Ingrese texto" 
+                :Titulo="parametros.camposadicionales[0].nombre" 
                 v-model="variable"
                 @update:modelValue="variable = $event"
                 :requerido="RequiereActualizar"
                 Tipo="String"
             />
-            <InputLinealDescripcion v-if="ShowCampo2"
-                Placeholder="Ingrese Nombre" 
-                Titulo="Campo 2" 
+            <InputLinealDescripcion
+            Placeholder="Ingrese texto" 
+                :Titulo="parametros.camposadicionales[1]?.nombre" 
                 v-model="variable"
                 @update:modelValue="variable = $event"
                 :requerido="RequiereActualizar"
                 Tipo="String"
+                :Deshabilitar="parametros.camposadicionales[1].estado"
             />
             
         </div>
         <div class="row-form" >
-            <InputLinealDescripcion v-if="ShowCampo3"
-                Placeholder="Ingrese Nombre" 
-                Titulo="Campo 1" 
+            <InputLinealDescripcion
+            Placeholder="Ingrese texto" 
+                :Titulo="parametros.camposadicionales[2]?.nombre" 
                 v-model="variable"
                 @update:modelValue="variable = $event"
                 :requerido="RequiereActualizar"
                 Tipo="String"
             />
-            <InputLinealDescripcion v-if="ShowCampo4"
-                Placeholder="Ingrese Nombre" 
-                Titulo="Campo 2" 
+            <InputLinealDescripcion
+                
+                Placeholder="Ingrese texto" 
+                :Titulo="parametros.camposadicionales[3]?.nombre" 
                 v-model="variable"
                 @update:modelValue="variable = $event"
                 :requerido="RequiereActualizar"
@@ -43,15 +45,14 @@
         </div>
         
         <div class="row-form cut">
-            <InputLinealDescripcion v-if="ShowCampo5"
-                Placeholder="Ingrese Nombre" 
-                Titulo="Campo 5" 
+            <InputLinealDescripcion
+            Placeholder="Ingrese texto" 
+                :Titulo="parametros.camposadicionales[4]?.nombre" 
                 v-model="variable"
                 @update:modelValue="variable = $event"
                 :requerido="RequiereActualizar"
                 Tipo="String"
             />
-            
         </div>
         <div class="row-form cut">
             <LayoutInputLineal textLabel="Grupo de centralización" :requerido="RequiereActualizar">
@@ -79,8 +80,10 @@ import {reactive, ref, watch, inject, onMounted, defineEmits} from 'vue';
 import peticiones from '@/peticiones/p_empleado';
 
 const DatosUsuario = reactive(inject('dataEmpleado'))
-const parametros = ref({})
+const parametros = reactive(inject('parametros'))
 
+
+console.log(parametros.value.camposadicionales)
 
 const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
 
@@ -109,11 +112,6 @@ watch(PeriodoSalario, (nuevoValor) => ActualizarPayload('salario_base', nuevoVal
 
 const UnidadSueldo = ref('')
 watch(UnidadSueldo, (nuevoValor) => ActualizarPayload('unidad_sueldo', nuevoValor));
-
-watch(parametros,(newValue => {
-console.log(newValue)
-}))
-
 
 watch(DatosUsuario, (nuevaInfo) => {
     MostrarValores(nuevaInfo)        
@@ -174,17 +172,22 @@ const verificarCambios = () => {
 }
 
 const MostrarCampos = (ListaCampos) => {
-    ShowCampo1.value = ListaCampos[0]?.activo == 1
-    ShowCampo2.value = ListaCampos[0]?.activo == 1
+    console.log(ListaCampos[0].estado == 1)
+    
+    ShowCampo1.value = ListaCampos[0]?.estado == 0
+    /*
+    ShowCampo2.value = ListaCampos.1?.activo == 1
     ShowCampo3.value = ListaCampos[0]?.activo == 1
     ShowCampo4.value = ListaCampos[0]?.activo == 1
     ShowCampo5.value = ListaCampos[0]?.activo == 1
+    */
 }
 
 onMounted(async () => {
     await MostrarValores(DatosUsuario.value)
-    parametros.value = await inject('parametros')
 });
+
+MostrarCampos(parametros.value?.camposadicionales)
 
 const emit = defineEmits([
     'respuestaServidor',
