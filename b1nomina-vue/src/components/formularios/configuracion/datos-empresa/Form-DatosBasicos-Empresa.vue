@@ -129,13 +129,23 @@ const Comuna = ref('');
 const Direccion = ref('');
 
 //definicion de vaiables de los parametos
+const AllLocalidades = ref(props.parametros.localidad)
 const ListaLocalidad = ref({}); //Los datos se asignan segun el idRegion
 
-const filtroRegion = async (ID_comuna) => {
-    if (!props.parametros) return; // Verifica si props.parametros está definido
-
-    ListaLocalidad.value = await props.parametros.localidad.filter(item => item.idregion == ID_comuna);
+const filtroRegion = async (ID_Region) => {
+    
+    if (AllLocalidades.value == undefined || AllLocalidades.value == {}) {
+        // Espera 1000 milisegundos (1 segundo) antes de continuar
+        setTimeout(async () => {
+            if (AllLocalidades.value!== undefined) {
+                ListaLocalidad.value = await AllLocalidades.value.filter(item => item.idregion == ID_Region);
+            }
+        }, 1000);
+    } else {
+        ListaLocalidad.value = AllLocalidades.value.filter(item => item.idregion == ID_Region);
+    }
 };
+
 
 //control para envio de informacion
 const RequiereActualizar = ref(false);
@@ -168,7 +178,6 @@ watch(numeroDocumento, (nuevoValor) => ActualizarPayload('rut', nuevoValor));
 watch(correoEmpresa, (nuevoValor) => ActualizarPayload('email', nuevoValor?.toUpperCase()));
 watch(CiudadEmpresa, (nuevoValor) => ActualizarPayload('ciudad', nuevoValor?.toUpperCase()));
 watch(Region, (nuevoValor) => {
-        console.log(nuevoValor)
         filtroRegion(nuevoValor);
         ActualizarPayload('region_id', nuevoValor);
     }
@@ -179,8 +188,12 @@ watch(Direccion, (nuevoValor) => ActualizarPayload('direccion', nuevoValor));
 
 //ve si hay cambios en la informacion y actualiza los campos:
 watch(() => props.Informacion?.Sociedad, (nuevoValor) => { 
-    
-  MostrarValores(nuevoValor) 
+     MostrarValores(nuevoValor) 
+});
+
+watch(() => props.parametros?.localidad, (nuevoValor) => { 
+    AllLocalidades.value = nuevoValor;
+    filtroRegion(Region.value)
 });
 
 
@@ -257,7 +270,6 @@ const MostrarValores = (DATA) => {
  */
  const Enviar = async () => {
   //si ID es nulo crea un usuario
-    
 
     if (RequiereActualizar.value == true) {        
         const respuesta = await peticiones_configuracion_datosEmpresa.ActualizarDatosBasicosEmpresa(
@@ -275,8 +287,8 @@ const MostrarValores = (DATA) => {
     }
 };
 
-onBeforeMount(async () => {
-    await MostrarValores(props.Informacion?.Sociedad)
+onMounted(async () => {
+   await MostrarValores(props.Informacion?.Sociedad)
 });
 
 </script>

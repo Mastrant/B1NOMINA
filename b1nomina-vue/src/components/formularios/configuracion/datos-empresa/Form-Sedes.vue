@@ -108,11 +108,21 @@ const Comuna = ref('')
 const DireccionSede = ref('')
 
 //definicion de vaiables de los parametos
-const ListaLocalidad = ref(''); //Los datos se asignan segun el idRegion
+const AllLocalidades = ref(props.parametros.localidad)
+const ListaLocalidad = ref({}); //Los datos se asignan segun el idRegion
 
-//filtra la lista de regiones segun el id
-const filtroRegion = (ID_comuna) => {
-    ListaLocalidad.value = props.parametros.localidad?.filter(item => item.idregion == ID_comuna);
+const filtroRegion = async (ID_Region) => {
+    
+    if (AllLocalidades.value == undefined || AllLocalidades.value == {}) {
+        // Espera 1000 milisegundos (1 segundo) antes de continuar
+        setTimeout(async () => {
+            if (AllLocalidades.value!== undefined) {
+                ListaLocalidad.value = await AllLocalidades.value.filter(item => item.idregion == ID_Region);
+            }
+        }, 1000);
+    } else {
+        ListaLocalidad.value = AllLocalidades.value.filter(item => item.idregion == ID_Region);
+    }
 };
 
 //control para envio de informacion
@@ -154,6 +164,11 @@ watch(DireccionSede, (nuevoValor) => ActualizarPayload('direccion', nuevoValor))
 //ve si hay cambios en la informacion y actualiza los campos:
 watch(() => props.Informacion, (nuevoValor) => { 
     MostrarValores(nuevoValor) 
+});
+
+watch(() => props.parametros?.localidad, (nuevoValor) => { 
+    AllLocalidades.value = nuevoValor;
+    filtroRegion(Region.value)
 });
 
 
