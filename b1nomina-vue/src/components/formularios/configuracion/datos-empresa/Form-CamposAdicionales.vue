@@ -69,10 +69,13 @@ const emit = defineEmits([
 
 const NombreCampo = ref('');
 
+//valor inicial del boton
 const EstadoCampo = ref(false);
 
+//valor que devuelve
 const Estado = ref('');
 
+//validacion del valor para el payload
 const verEstado = (valor) => {
     (valor == true)
         ? Estado.value = 1
@@ -96,9 +99,8 @@ const payload = reactive({
 });
 
 
-
 //Escuchar cambios en las variables
-watch(NombreCampo, (nuevoValor) => ActualizarPayload('NombreCampo', nuevoValor));
+watch(NombreCampo, (nuevoValor) => ActualizarPayload('nombre', nuevoValor));
 watch(Estado, (nuevoValor) => {
     ActualizarPayload('activo', nuevoValor)
 });
@@ -130,14 +132,14 @@ const verificarCambios = () => {
 
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
-
+    console.log(DATA)
     RequiereActualizar.value = false;
 
     NombreCampo.value = (DATA?.nombre == null)? '' :DATA?.nombre;
     payload_old.nombre = DATA?.nombre ?? '';
     payload.nombre = DATA?.nombre ?? '';
 
-    EstadoCampo.value = (DATA?.activo == 0) ? true : false;
+    EstadoCampo.value = (DATA?.activo == 0 ) ? false : true;
     payload_old.activo = DATA?.activo ?? '';
     payload.activo = DATA?.activo ?? '';
 
