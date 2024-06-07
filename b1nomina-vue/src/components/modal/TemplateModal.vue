@@ -31,9 +31,11 @@
                         </div>
 
                         <!-- Slot para el contenido principal del modal. -->
-                        <slot>
+                        <div class="Modal-contenido">
+                            <slot>
 
-                        </slot>
+                            </slot>
+                        </div>
 
                         <!-- Contenedor para los botones del modal.
                              Se muestra basado en si FormId es distinto de null. -->
@@ -147,14 +149,15 @@ div.modal {
     flex-direction: column;
     justify-content:center; /* Centra horizontalmente el contenido */
     align-items: center; /* Centra verticalmente el contenido */
-    height:  100%; /* Ajusta la altura al  100% de la altura de la ventana del navegador */
-    width:  100%; /* Ajusta la anchura al  100% del ancho de la ventana del navegador */
+    height:  100vh; /* Ajusta la altura al  100% de la altura de la ventana del navegador */
+    width:  100vw; /* Ajusta la anchura al  100% del ancho de la ventana del navegador */
     position:absolute; /* Posiciona el modal absolutamente en relación al primer ancestro posicionado (o el viewport si no hay ninguno) */
     top:0; /* Alinea el modal con el borde superior de la ventana del navegador */
     left:  0; /* Alinea el modal con el borde izquierdo de la ventana del navegador */
     background-color:  #00000080; /* Fondo negro con  50% de transparencia */
-    z-index:  100; /* Asegura que el modal se muestre por encima de otros elementos */
+    z-index:  5; /* Asegura que el modal se muestre por encima de otros elementos */
     box-sizing: border-box;
+
 }
 
 /* Estilos para el contenido interno del modal, con un diseño flexible y limitaciones de tamaño */
@@ -163,16 +166,26 @@ div.modal-inner {
     flex-direction: column; /* Organiza los elementos hijos en columna */
     position: relative; /* Posiciona el contenido interno del modal en relación al modal */
     max-width:  850px; /* Establece un ancho máximo para el modal */
-    width:  85%; /* Ajusta el ancho al  80% del ancho del contenedor modal */
+    width:  86%; /* Ajusta el ancho al  80% del ancho del contenedor modal */
+    max-height: 1000px;
 
     box-sizing: border-box; /* Asegura que el padding y el borde se incluyan en el tamaño total del elemento */
-    padding:  38px; /* Espacio interior alrededor del contenido */
+    padding:  38px 28px 38px 38px; /* Espacio interior alrededor del contenido */
     background: #FFFFFF; /* Fondo blanco */
     gap:  24px; /* Espacio entre los elementos hijos de Flexbox */
 
     border: solid rgb(81, 81, 81) 1px;
     border-radius: 8px; /* Bordes redondeados */
     z-index: 5 !important;
+
+    box-sizing: border-box;
+}
+
+/* Aplica overflow: scroll cuando la pantalla sea más pequeña de 700px */
+@media (max-width: 950px) {
+   .div.modal {
+        overflow: scroll;
+    }
 }
 
 /* Estilos para los elementos div dentro del modal-inner, utilizando Flexbox para organizarlos */
@@ -180,6 +193,15 @@ div.modal-inner > div {
     display: flex; /* Utiliza Flexbox para organizar los elementos */
     gap:24px; /* Espacio entre los elementos hijos de Flexbox */
 }
+
+.Modal-contenido {
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+
 
 /* Estilos para el encabezado del modal, con un diseño flexible y alineación de elementos */
 div.header-modal {

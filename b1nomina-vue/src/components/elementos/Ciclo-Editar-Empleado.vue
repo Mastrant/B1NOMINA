@@ -65,7 +65,9 @@
             </div>
 
             <div v-if=" formActivo == 11"> <!--retomar contrato-->                    
-                
+                <FormDatospAdicionales
+                    @respuestaServidor="notificacionModal"
+                />
             </div>
         </template>
     </TemplateModal>
@@ -82,6 +84,8 @@
     import FormDatosContacto from '@/components/formularios/perfilEmpleado/Form-DatosContacto.vue';
     import FormDatosPago from '@/components/formularios/perfilEmpleado/Form-DatosPago.vue';
     import FormCentralizacionDatosAdicionales from '@/components/formularios/perfilEmpleado/Form-Centralizacion-DatosAdicionales.vue';
+
+    import FormDatospAdicionales from '@/components/formularios/perfilEmpleado/Form-DatosP-Adicionales.vue';
     
     //librerias
     import { ref, onMounted, defineExpose, inject } from 'vue';

@@ -26,6 +26,7 @@ div.body-panel {
     height: 100%;
     width: 100%;
     box-sizing: border-box;
+    overflow-y: scroll;
 }
 
 </style>
