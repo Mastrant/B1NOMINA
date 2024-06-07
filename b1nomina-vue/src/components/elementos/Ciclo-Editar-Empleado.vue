@@ -83,9 +83,9 @@
     import FormDatosPrincipales from '@/components/formularios/perfilEmpleado/Form-DatosPrincipales.vue';
     import FormDatosContacto from '@/components/formularios/perfilEmpleado/Form-DatosContacto.vue';
     import FormDatosPago from '@/components/formularios/perfilEmpleado/Form-DatosPago.vue';
-    import FormCentralizacionDatosAdicionales from '@/components/formularios/perfilEmpleado/Form-Centralizacion-DatosAdicionales.vue';
+    import FormCentralizacionDatosAdicionales from '@/components/formularios/perfilEmpleado/From-DatosP-Adicionales.vue';
 
-    import FormDatospAdicionales from '@/components/formularios/perfilEmpleado/Form-DatosP-Adicionales.vue';
+    import FormDatospAdicionales from '@/components/formularios/perfilEmpleado/From-DatosP-Adicionales.vue';
     
     //librerias
     import { ref, onMounted, defineExpose, inject } from 'vue';
@@ -219,7 +219,7 @@
                 EmpleadoID_Selecionado.value = item_ID;
                 TextoButton.value = 'Actualizar';
                 TituloModal.value = 'Datos Adicionales';
-                IDFormModal.value = 'ActualizarDatosAdicionales';
+                IDFormModal.value = 'ActualizarDatosPrevisionalesAdicionales';
 
                 break; 
                 

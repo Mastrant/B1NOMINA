@@ -8,99 +8,93 @@
 
         <div class="row-form">
             <span>Aplica Gratificacion Legal</span>
-
-            <LayoutInputLineal textLabel="Modalidad" :requerido="RequiereActualizar">
-                <template v-slot>
-                    <InterruptorButton 
-                        @ValorEstado="aplica_Gratificacion_Legal"
-                        Objid="aplica_Gratificacion_Legal"
-                        :Texto="( aplica_Gratificacion_Legal == true)? 'Activo' : 'Inactivo'"
-                        Tipo="individual"
-                        :Estado="(aplica_Gratificacion_Legal)? true :false"
-                        :requerido="RequiereActualizar"
-                    />
-                </template>
-            </LayoutInputLineal>
+            
+            <div class="separador-button">
+                <InterruptorButton 
+                    @ValorEstado="aplica_Gratificacion_Legal"
+                    Objid="aplica_Gratificacion_Legal"
+                    :Texto="( aplica_Gratificacion_Legal == true)? 'Activo' : 'Inactivo'"
+                    Tipo="individual"
+                    :Estado="(aplica_Gratificacion_Legal)? true :false"
+                    :requerido="RequiereActualizar"
+                />                
+            </div>
+            
         </div>
         <div class="row-form">
             <span>Afiliado AFC</span>
-
-            <LayoutInputLineal textLabel="Modalidad" :requerido="RequiereActualizar">
-                <template v-slot>
-                    <InterruptorButton 
-                        @ValorEstado="afiliado_AFC"
-                        Objid="afiliado_AFC"
-                        :Texto="( afiliado_AFC == true)? 'Activo' : 'Inactivo'"
-                        Tipo="individual"
-                        :Estado="afiliado_AFC"
-                        :requerido="RequiereActualizar"
-                    />
-                </template>
-            </LayoutInputLineal>
+            
+            <div class="separador-button">
+                <InterruptorButton 
+                    @ValorEstado="afiliado_AFC"
+                    Objid="afiliado_AFC"
+                    :Texto="( afiliado_AFC == true)? 'Activo' : 'Inactivo'"
+                    Tipo="individual"
+                    :Estado="afiliado_AFC"
+                    :requerido="RequiereActualizar"
+                />                
+            </div>
+            
         </div>
         <div class="row-form">
             <span>Antiguedad Máxima AFC</span>
-
-            <LayoutInputLineal textLabel="Modalidad" :requerido="RequiereActualizar">
-                <template v-slot>
-                    <InterruptorButton 
-                        @ValorEstado="antiguedad_Maxima_AFC"
-                        Objid="antiguedad_Maxima_AFC"
-                        :Texto="( antiguedad_Maxima_AFC == true)? 'Activo' : 'Inactivo'"
-                        Tipo="individual"
-                        :Estado="antiguedad_Maxima_AFC"
-                        :requerido="RequiereActualizar"
-                    />
-                </template>
-            </LayoutInputLineal>
+            
+            <div class="separador-button">
+                <InterruptorButton 
+                    @ValorEstado="antiguedad_Maxima_AFC"
+                    Objid="antiguedad_Maxima_AFC"
+                    :Texto="( antiguedad_Maxima_AFC == true)? 'Activo' : 'Inactivo'"
+                    Tipo="individual"
+                    :Estado="antiguedad_Maxima_AFC"
+                    :requerido="RequiereActualizar"
+                />                
+            </div>
+            
         </div>
         <div class="row-form">
             <span>Pens. Vejez</span>
-
-            <LayoutInputLineal textLabel="Modalidad" :requerido="RequiereActualizar">
-                <template v-slot>
-                    <InterruptorButton 
-                        @ValorEstado="pens_vejez"
-                        Objid="pens_vejez"
-                        :Texto="( pens_vejez == true)? 'Activo' : 'Inactivo'"
-                        Tipo="individual"
-                        :Estado="pens_vejez"
-                        :requerido="RequiereActualizar"
-                    />
-                </template>
-            </LayoutInputLineal>
+            
+            <div class="separador-button">
+                <InterruptorButton 
+                    @ValorEstado="pens_vejez"
+                    Objid="pens_vejez"
+                    :Texto="( pens_vejez == true)? 'Activo' : 'Inactivo'"
+                    Tipo="individual"
+                    :Estado="pens_vejez"
+                    :requerido="RequiereActualizar"
+                />                
+            </div>
+            
         </div>
         <div class="row-form">
             <span>Pens. Invalidez</span>
 
-            <LayoutInputLineal textLabel="Modalidad" :requerido="RequiereActualizar">
-                <template v-slot>
-                    <InterruptorButton 
-                        @ValorEstado="pens_invalidez"
-                        Objid="pens_invalidez"
-                        :Texto="( pens_invalidez == true)? 'Activo' : 'Inactivo'"
-                        Tipo="individual"
-                        :Estado="pens_invalidez"
-                        :requerido="RequiereActualizar"
-                    />
-                </template>
-            </LayoutInputLineal>
+        <div class="separador-button">
+            <InterruptorButton 
+                @ValorEstado="pens_invalidez"
+                Objid="pens_invalidez"
+                :Texto="( pens_invalidez == true)? 'Activo' : 'Inactivo'"
+                Tipo="individual"
+                :Estado="pens_invalidez"
+                :requerido="RequiereActualizar"
+            />
+
+        </div>
+
         </div>
         <div class="row-form">
             <span>Es ExINP</span>
 
-            <LayoutInputLineal textLabel="Modalidad" :requerido="RequiereActualizar">
-                <template v-slot>
-                    <InterruptorButton 
-                        @ValorEstado="ExINP"
-                        Objid="ExINP"
-                        :Texto="( ExINP == true)? 'Activo' : 'Inactivo'"
-                        Tipo="individual"
-                        :Estado="ExINP"
-                        :requerido="RequiereActualizar"
-                    />
-                </template>
-            </LayoutInputLineal>
+            <div class="separador-button">
+                <InterruptorButton 
+                    @ValorEstado="ExINP"
+                    Objid="ExINP"
+                    :Texto="( ExINP == true)? 'Activo' : 'Inactivo'"
+                    Tipo="individual"
+                    :Estado="ExINP"
+                    :requerido="RequiereActualizar"
+                />
+            </div>
         </div>
     </form>
 </template>
@@ -240,7 +234,9 @@ onBeforeMount(() => {
  */
  const Enviar = async () => {
   //si ID es nulo crea un usuario
+  console.log(payload)
  
+  /*
   if (RequiereActualizar.value == true) {
     const respuesta = await peticiones.ActualizarDatosPrincipales(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
     if(respuesta.success == true){
@@ -252,6 +248,7 @@ onBeforeMount(() => {
   } else {
     emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor': true});
   }
+  */
 };
 </script>
 
@@ -286,20 +283,19 @@ div.multimedia {
     gap:  12px;
 }
 
-/* Estilo para el botón de añadir una foto, con bordes 
-y un padding específico para un mejor aspecto visual */
-div.multimedia div.add-photo{
-    border-radius:  6px;
-    border:  0.5px #363855 dashed;
-    border-width:  5px;
-    box-sizing: border-box;
-    padding:  12px  48px;
+.row-form > span {
+    width: 50%;
+    color: black;
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 26px;
+    word-wrap: break-word;
+    margin-left: 12px;
+}
+.row-form > div {
+    width: 50%;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width:  100%;
-    height: fit-content;
+    justify-content: center;
 }
 
 /* Estilo para el título del formulario, asegurando que el texto sea legible y estéticamente agradable */
@@ -312,6 +308,5 @@ h2.titulo-form {
     line-height:  32px;  
     word-wrap: break-word;
 }
-
 
 </style>

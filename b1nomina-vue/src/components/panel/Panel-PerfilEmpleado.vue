@@ -469,7 +469,7 @@
                             <template #text-1>                                                                    
                                 <InterruptorButton
                                     Tipo="individual"
-                                    :Texto="(DatosUsuario?.apv_directo == 1)? 'Activo' : 'Inactivo' " 
+                                    :Texto="(DatosUsuario?.jubilado_afp == 1)? 'Activo' : 'Inactivo' " 
                                     :Estado="(DatosUsuario?.jubilado_afp == 1)? true : false"
                                 />
                             </template>
@@ -483,7 +483,7 @@
                                 Ahorro AFP Cuenta 2 ($)
                             </template>
                             <template #text-3>                                                                    
-
+                               $ {{ DatosUsuario?.ahorro_afp2 }}
                             </template>
 
                             
@@ -734,6 +734,8 @@ import {useRoute}  from 'vue-router';
 import almacen from '@/store/almacen';
 
 const DatosUsuario = ref(inject('dataEmpleado'))
+
+console.log(DatosUsuario.value)
 
 const route = useRoute();  
 const EmpleadoID = route.params.empleadoId
