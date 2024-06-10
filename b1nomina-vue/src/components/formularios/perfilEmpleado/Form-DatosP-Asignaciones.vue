@@ -2,21 +2,9 @@
     <form class="formulario" id="Actualizar-AFP" @submit.prevent="Enviar">
         <h2 class="titulo-form">Salario</h2>
         
+
         <div class="row-form">
-            <span>Jubilado AFP</span>
-            <div class="separador-button">
-                <InterruptorButton 
-                    @ValorEstado="estado_jubiladoAFP"
-                    Objid="aplica_Gratificacion_Legal"
-                    :Texto="(estado_jubiladoAFP == true)? 'Activo' : 'Inactivo'"
-                    Tipo="individual"
-                    :Estado="(estado_jubiladoAFP)? true :false"
-                    :requerido="RequiereActualizar"
-                />                
-            </div>
-        </div>
-        <div class="row-form">
-            <LayoutInputLineal textLabel="Institución" :requerido="RequiereActualizar">
+            <LayoutInputLineal textLabel="Concepto" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="institución" 
@@ -27,15 +15,28 @@
                     />
                 </template>
             </LayoutInputLineal>
+        </div>
+        <div class="row-form">
+            <InputLinealDescripcion 
+                v-model="ahorroAFP"
+                Placeholder="Ingresar Descripción" 
+                Titulo="Descripción" 
+                @update:modelValue="ahorroAFP = $event"
+                :requerido="RequiereActualizar"
+            />
+
+        </div>
+        <div class="row-form">
             <InputLinealDescripcion 
                 v-model="ahorroAFP"
                 Placeholder="$ 0" 
-                Titulo="Ahorro AFP Cuenta 2 ($)" 
+                Titulo="Valor mensual" 
                 @update:modelValue="ahorroAFP = $event"
                 Tipo="Number"
                 :CantidadDecimales="0.01"
                 :requerido="RequiereActualizar"
             />
+
         </div>
     </form>    
 </template>
