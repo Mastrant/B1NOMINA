@@ -1,7 +1,5 @@
 <template>    
-    <form class="formulario" id="Actualizar-AFP" @submit.prevent="Enviar">
-        <h2 class="titulo-form">Salario</h2>
-        
+    <form class="formulario" id="ActualizarPrevisionSalud" @submit.prevent="Enviar">
         
         <div class="row-form">
             <LayoutInputLineal textLabel="Institución" :requerido="RequiereActualizar">
@@ -14,12 +12,15 @@
                         optionsSelected="Seleccionar"
                     />
                 </template>
-            </LayoutInputLineal>
+            </LayoutInputLineal>            
+        </div>
+
+        <div class="row-form">
             <InputLinealDescripcion 
-                v-model="ahorroAFP"
+                v-model="PactadoUF"
                 Placeholder="Ingresar monto" 
                 Titulo="Pactado (UF)" 
-                @update:modelValue="ahorroAFP = $event"
+                @update:modelValue="PactadoUF = $event"
                 Tipo="Number"
                 :CantidadDecimales="0.01"
                 :requerido="RequiereActualizar"
@@ -52,14 +53,11 @@
     // payload de las peticiones
     const payload_old = reactive({});
 
-    const estado_jubiladoAFP = ref(false);
-    watch(estado_jubiladoAFP, (nuevoValor) => ActualizarPayload('', (nuevoValor == true)? 1: 0));
-    
     const institución = ref('')
     watch(institución, (nuevoValor) => ActualizarPayload('', nuevoValor));
 
-    const ahorroAFP = ref('');
-    watch(ahorroAFP, (nuevoValor) =>  ActualizarPayload('monto_sueldo', Math.abs(nuevoValor)));
+    const PactadoUF = ref('');
+    watch(PactadoUF, (nuevoValor) =>  ActualizarPayload('monto_sueldo', nuevoValor));
 
     watch(DatosUsuario, (nuevaInfo) => {
         MostrarValores(nuevaInfo)        
@@ -72,17 +70,15 @@
     const MostrarValores = (DATA) => {
         RequiereActualizar.value = false;
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
-        institución.value = (DATA?.periodo_sueldo == null)? '' :DATA?.periodo_sueldo;
-        payload_old.institución = DATA?.periodo_sueldo ?? '';
-        payload.institución = DATA?.periodo_sueldo ?? '';
+
         
-        estado_jubiladoAFP.value = (DATA?.unidad_sueldo == null)? '' :DATA?.unidad_sueldo;
-        payload_old.estado_jubiladoAFP = DATA?.unidad_sueldo ?? '';
-        payload.estado_jubiladoAFP = DATA?.unidad_sueldo ?? '';
+        institución.value = (DATA?.institución == null)? '' :DATA?.institución;
+        payload_old.institución = DATA?.institución ?? '';
+        payload.institución = DATA?.institución ?? '';
         
-        ahorroAFP.value = (DATA?.salario_base == null)? '' :DATA?.salario_base;
-        payload_old.ahorroAFP = DATA?.salario_base ?? '';
-        payload.ahorroAFP = DATA?.salario_base ?? '';
+        PactadoUF.value = (DATA?.PactadoUF == null)? '' :DATA?.PactadoUF;
+        payload_old.PactadoUF = DATA?.PactadoUF ?? '';
+        payload.PactadoUF = DATA?.PactadoUF ?? '';
     }
 
 /**
@@ -171,12 +167,15 @@ const verificarCambios = () => {
 usando flexbox para alinear elementos en filas y 
 espaciarlos uniformemente */
 div.row-form {
+    box-sizing: border-box;
     display: flex;
     flex-direction: row;
     gap:24px;
     width:  100%;
     align-items: center;
     justify-content: space-between;
+    padding: 0 24px;
+
 }
 
 /* Define el estilo del formulario, utilizando 

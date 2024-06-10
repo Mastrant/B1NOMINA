@@ -1,10 +1,9 @@
 <template>    
-    <form class="formulario" id="Actualizar-AFP" @submit.prevent="Enviar">
-        <h2 class="titulo-form">Salario</h2>
+    <form class="formulario" id="ActualizarAFP" @submit.prevent="Enviar">
         
         <div class="row-form">
-            <span>Jubilado AFP</span>
             <div class="separador-button">
+                <span>Jubilado AFP</span>
                 <InterruptorButton 
                     @ValorEstado="estado_jubiladoAFP"
                     Objid="aplica_Gratificacion_Legal"
@@ -183,6 +182,7 @@ const verificarCambios = () => {
 usando flexbox para alinear elementos en filas y 
 espaciarlos uniformemente */
 div.row-form {
+    box-sizing: border-box;
     display: flex;
     flex-direction: row;
     gap:24px;
@@ -235,5 +235,9 @@ h2.titulo-form {
     word-wrap: break-word;
 }
 
-
+div.separador-button {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+}
 </style>

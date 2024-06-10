@@ -1,38 +1,37 @@
 <template>    
     <form class="formulario" id="Actualizar-APV" @submit.prevent="Enviar">
-        <h2 class="titulo-form">Salario</h2>
         
         <div class="row-form">
             <div class="separador-button">
-                <span>Jubilado AFP</span>
+                <span>Activo</span>
                 <InterruptorButton 
-                    @ValorEstado="estado_jubiladoAFP"
-                    Objid="aplica_Gratificacion_Legal"
-                    :Texto="(estado_jubiladoAFP == true)? 'Activo' : 'Inactivo'"
+                    @ValorEstado="Activo"
+                    Objid="Activo"
+                    :Texto="(Activo == true)? 'Activo' : 'Inactivo'"
                     Tipo="individual"
-                    :Estado="(estado_jubiladoAFP)? true :false"
+                    :Estado="(Activo)? true :false"
                     :requerido="RequiereActualizar"
                 />                
             </div>
             <div class="separador-button">
-                <span>Jubilado AFP</span>
+                <span>Colectivo</span>
                 <InterruptorButton 
-                    @ValorEstado="estado_jubiladoAFP"
-                    Objid="aplica_Gratificacion_Legal"
-                    :Texto="(estado_jubiladoAFP == true)? 'Activo' : 'Inactivo'"
+                    @ValorEstado="Colectivo"
+                    Objid="Colectivo"
+                    :Texto="(Colectivo == true)? 'Activo' : 'Inactivo'"
                     Tipo="individual"
-                    :Estado="(estado_jubiladoAFP)? true :false"
+                    :Estado="(Colectivo)? true :false"
                     :requerido="RequiereActualizar"
                 />                
             </div>
             <div class="separador-button">
-                <span>Jubilado AFP</span>
+                <span>Pago Directo</span>
                 <InterruptorButton 
-                    @ValorEstado="estado_jubiladoAFP"
+                    @ValorEstado="PagoDirecto"
                     Objid="aplica_Gratificacion_Legal"
-                    :Texto="(estado_jubiladoAFP == true)? 'Activo' : 'Inactivo'"
+                    :Texto="(PagoDirecto == true)? 'Activo' : 'Inactivo'"
                     Tipo="individual"
-                    :Estado="(estado_jubiladoAFP)? true :false"
+                    :Estado="(PagoDirecto)? true :false"
                     :requerido="RequiereActualizar"
                 />                
             </div>
@@ -53,32 +52,33 @@
 
         <div class="row-form">
             <InputLinealDescripcion 
-            v-model="ahorroAFP"
-            Placeholder="$ 0" 
-            Titulo="Ahorro AFP Cuenta 2 ($)" 
-            @update:modelValue="ahorroAFP = $event"
-            Tipo="Number"
-            :CantidadDecimales="0.01"
-            :requerido="RequiereActualizar"
+                v-model="Pactado"
+                Placeholder="$ 0" 
+                Titulo="Pactado($)" 
+                @update:modelValue="Pactado = $event"
+                Tipo="Number"
+                :CantidadDecimales="0.01"
+                :requerido="RequiereActualizar"
             />
-            <LayoutInputLineal textLabel="Institución" :requerido="RequiereActualizar">
+
+            <LayoutInputLineal textLabel="Unidad" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
-                        v-model="institución" 
-                        :options="Parametros?.tiposalario" 
+                        v-model="Unidad" 
+                        :options="Parametros?.Unidad" 
                         :requerido="RequiereActualizar"            
-                        :preseleccion="institución" 
+                        :preseleccion="Unidad" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
             </LayoutInputLineal>
-            <LayoutInputLineal textLabel="Institución" :requerido="RequiereActualizar">
+            <LayoutInputLineal textLabel="Regimen" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
-                        v-model="institución" 
-                        :options="Parametros?.tiposalario" 
+                        v-model="Regimen" 
+                        :options="Parametros?.Regimen" 
                         :requerido="RequiereActualizar"            
-                        :preseleccion="institución" 
+                        :preseleccion="Regimen" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -87,13 +87,13 @@
 
         <div class="row-form">
             <InputLinealDescripcion 
-            v-model="ahorroAFP"
-            Placeholder="$ 0" 
-            Titulo="Ahorro AFP Cuenta 2 ($)" 
-            @update:modelValue="ahorroAFP = $event"
-            Tipo="Number"
-            :CantidadDecimales="0.01"
-            :requerido="RequiereActualizar"
+                v-model="NConvenio"
+                Titulo="N° Convenio" 
+                Placeholder="Ingresar Número" 
+                Tipo="Number"
+                @update:modelValue="NConvenio = $event"
+                :minimo-caracteres="1"
+                :requerido="RequiereActualizar"
             />
         </div>
         
@@ -124,14 +124,31 @@
     // payload de las peticiones
     const payload_old = reactive({});
 
-    const estado_jubiladoAFP = ref(false);
-    watch(estado_jubiladoAFP, (nuevoValor) => ActualizarPayload('', (nuevoValor == true)? 1: 0));
+    
+    const Activo = ref(false);
+    watch(Activo, (nuevoValor) => ActualizarPayload('', (nuevoValor == true)? 1: 0));
+
+    const Colectivo = ref(false);
+    watch(Colectivo, (nuevoValor) => ActualizarPayload('', (nuevoValor == true)? 1: 0));
+
+    const PagoDirecto = ref(false);
+    watch(PagoDirecto, (nuevoValor) => ActualizarPayload('', (nuevoValor == true)? 1: 0));
     
     const institución = ref('')
     watch(institución, (nuevoValor) => ActualizarPayload('', nuevoValor));
+    
+    const Pactado = ref('')
+    watch(Pactado, (nuevoValor) => ActualizarPayload('', nuevoValor));
 
-    const ahorroAFP = ref('');
-    watch(ahorroAFP, (nuevoValor) =>  ActualizarPayload('monto_sueldo', Math.abs(nuevoValor)));
+    const Unidad = ref('')
+    watch(Unidad, (nuevoValor) => ActualizarPayload('', nuevoValor));
+
+    const Regimen = ref('')
+    watch(Regimen, (nuevoValor) => ActualizarPayload('', nuevoValor));
+
+    const NConvenio = ref('')
+    watch(NConvenio, (nuevoValor) => ActualizarPayload('', nuevoValor));
+
 
     watch(DatosUsuario, (nuevaInfo) => {
         MostrarValores(nuevaInfo)        
@@ -144,17 +161,39 @@
     const MostrarValores = (DATA) => {
         RequiereActualizar.value = false;
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
-        institución.value = (DATA?.periodo_sueldo == null)? '' :DATA?.periodo_sueldo;
-        payload_old.institución = DATA?.periodo_sueldo ?? '';
-        payload.institución = DATA?.periodo_sueldo ?? '';
         
-        estado_jubiladoAFP.value = (DATA?.unidad_sueldo == null)? '' :DATA?.unidad_sueldo;
-        payload_old.estado_jubiladoAFP = DATA?.unidad_sueldo ?? '';
-        payload.estado_jubiladoAFP = DATA?.unidad_sueldo ?? '';
+        Activo.value = (DATA?.apv_activo == 1)? true : false;
+        payload_old.Activo = (DATA?.apv_activo == 1)? DATA?.apv_activo : 0;
+        payload.Activo = (DATA?.apv_activo == 1)? DATA?.apv_activo : 0;
+
+        Colectivo.value = (DATA?.apv_colectivo == 1)? true : false;
+        payload_old.Colectivo = (DATA?.apv_colectivo == 1)? DATA?.apv_colectivo : 0;
+        payload.Colectivo = (DATA?.apv_colectivo == 1)? DATA?.apv_colectivo : 0;
+
+        PagoDirecto.value = (DATA?.apv_activo == 1)? true : false;
+        payload_old.PagoDirecto = (DATA?.apv_activo == 1)? DATA?.apv_activo : 0;
+        payload.PagoDirecto = (DATA?.apv_activo == 1)? DATA?.apv_activo : 0;
+
+        institución.value = (DATA?.institución == null)? '' :DATA?.institución;
+        payload_old.institución = DATA?.institución ?? '';
+        payload.institución = DATA?.institución ?? '';
         
-        ahorroAFP.value = (DATA?.salario_base == null)? '' :DATA?.salario_base;
-        payload_old.ahorroAFP = DATA?.salario_base ?? '';
-        payload.ahorroAFP = DATA?.salario_base ?? '';
+        Pactado.value = (DATA?.Pactado == null)? '' :DATA?.Pactado;
+        payload_old.Pactado = DATA?.Pactado ?? '';
+        payload.Pactado = DATA?.Pactado ?? '';
+
+        Unidad.value = (DATA?.Unidad == null)? '' :DATA?.Unidad;
+        payload_old.Unidad = DATA?.Unidad ?? '';
+        payload.Unidad = DATA?.Unidad ?? '';
+
+        Regimen.value = (DATA?.Regimen == null)? '' :DATA?.Regimen;
+        payload_old.Regimen = DATA?.Regimen ?? '';
+        payload.Regimen = DATA?.Regimen ?? '';
+
+        NConvenio.value = (DATA?.NConvenio == null)? '' :DATA?.NConvenio;
+        payload_old.NConvenio = DATA?.NConvenio ?? '';
+        payload.NConvenio = DATA?.NConvenio ?? '';
+
     }
 
 /**

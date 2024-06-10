@@ -53,15 +53,21 @@
                 />
             </div>
 
-            <div v-if=" formActivo == 8"> <!--retomar contrato-->                    
-                
+            <div v-if=" formActivo == 8"> <!--retomar AFP-->                    
+                <FormDatosPAFP 
+                    @respuestaServidor="notificacionModal"
+                />
             </div>
-            <div v-if=" formActivo == 9"> <!--retomar contrato-->                    
-                
+            <div v-if=" formActivo == 9"> <!--retomar APV-->                    
+                <FormDatosPAPV 
+                    @respuestaServidor="notificacionModal"
+                />
             </div>
 
             <div v-if=" formActivo == 10"> <!--retomar contrato-->                    
-                
+                <FormDatosP_PrevisionSalud 
+                    @respuestaServidor="notificacionModal"
+                />
             </div>
 
             <div v-if=" formActivo == 11"> <!--retomar contrato-->                    
@@ -85,6 +91,9 @@
     import FormDatosPago from '@/components/formularios/perfilEmpleado/Form-DatosPago.vue';
     import FormCentralizacionDatosAdicionales from '@/components/formularios/perfilEmpleado/From-DatosP-Adicionales.vue';
 
+    import FormDatosPAFP from '@/components/formularios/perfilEmpleado/Form-DatosP-AFP.vue';
+    import FormDatosPAPV from '@/components/formularios/perfilEmpleado/Form-DatosP-APV.vue';
+    import FormDatosP_PrevisionSalud from '@/components/formularios/perfilEmpleado/Form-DatosP-PrevisionSalud.vue';
     import FormDatospAdicionales from '@/components/formularios/perfilEmpleado/From-DatosP-Adicionales.vue';
     
     //librerias
@@ -193,31 +202,31 @@
             case 8:
                 formActivo.value = TipoAccion;
                 EmpleadoID_Selecionado.value = item_ID;
-                TextoButton.value = 'Actualizar';
-                TituloModal.value = 'Datos Previcionales';
+                TextoButton.value = 'Guardar';
+                TituloModal.value = 'Administradoras de fondos de pensiones (AFP)';
                 IDFormModal.value = 'ActualizarAFP';
 
                 break; 
             case 9:
                 formActivo.value = TipoAccion;
                 EmpleadoID_Selecionado.value = item_ID;
-                TextoButton.value = 'Actualizar';
-                TituloModal.value = 'Datos Previcionales';
+                TextoButton.value = 'Guardar';
+                TituloModal.value = 'Ahorro Previsional Voluntario (APV)';
                 IDFormModal.value = 'ActualizarAPV';
 
                 break; 
             case 10:
                 formActivo.value = TipoAccion;
                 EmpleadoID_Selecionado.value = item_ID;
-                TextoButton.value = 'Actualizar';
-                TituloModal.value = 'Datos Previcionales';
+                TextoButton.value = 'Guardar';
+                TituloModal.value = 'Previsión de Salud';
                 IDFormModal.value = 'ActualizarPrevisionSalud';
 
                 break; 
             case 11:
                 formActivo.value = TipoAccion;
                 EmpleadoID_Selecionado.value = item_ID;
-                TextoButton.value = 'Actualizar';
+                TextoButton.value = 'Guardar';
                 TituloModal.value = 'Datos Adicionales';
                 IDFormModal.value = 'ActualizarDatosPrevisionalesAdicionales';
 
