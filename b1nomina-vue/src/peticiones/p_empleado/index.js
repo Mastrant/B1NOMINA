@@ -173,6 +173,32 @@ const peticiones = {
             return { success: false, error: error?.response };
         }
     },
+    
+    
+    // Función asíncrona para actualizar los datos bancarios de un empleado.
+    async ActualizarAPV(idEmpleado, idMaster, payload){
+        try {
+            // Intenta realizar una petición PUT para actualizar los datos bancarios del empleado.
+            const respuesta = await axios.put(`user/${idEmpleado}/update_apv?user_updater=${idMaster}`, payload);
+            // Devuelve un objeto con éxito y los datos obtenidos si la petición fue exitosa.
+            return { success: true, data: respuesta?.data };
+        } catch (error) {
+            // En caso de error, devuelve un objeto indicando el fallo y el error.
+            return { success: false, error: error?.response };
+        }
+    },
+    // Función asíncrona para actualizar los datos bancarios de un empleado.
+    async ActualizarPresvisionSalud(idEmpleado, idMaster, payload){
+        try {
+            // Intenta realizar una petición PUT para actualizar los datos bancarios del empleado.
+            const respuesta = await axios.put(`user/${idEmpleado}/update_prevision_salud?user_updater=${idMaster}`, payload);
+            // Devuelve un objeto con éxito y los datos obtenidos si la petición fue exitosa.
+            return { success: true, data: respuesta?.data };
+        } catch (error) {
+            // En caso de error, devuelve un objeto indicando el fallo y el error.
+            return { success: false, error: error?.response };
+        }
+    },
 }
 
 // Exporta el objeto peticiones para su uso en otros módulos.
