@@ -32,7 +32,8 @@
                 Titulo="Ahorro AFP Cuenta 2 ($)" 
                 @update:modelValue="ahorroAFP = $event"
                 Tipo="Number"
-                :CantidadDecimales="0.01"
+                :minimo-numeros="0.01"
+                numero-decimales="any"
                 :requerido="RequiereActualizar"
             />
         </div>

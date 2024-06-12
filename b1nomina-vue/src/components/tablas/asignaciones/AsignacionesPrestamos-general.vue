@@ -4,23 +4,18 @@
         <table class="TablaEmpleados">
             <!--Encabezado de la tabla-->
             <tr class="rowTabla encabezado">
-                <th class="filaCheckbox"> 
-                    <InputCheckbox />
-                </th>
+
                 <th class="rowNombre">
-                    EMPLEADOS 
+                    CONCEPTO 
                 </th>
                 <th class="">
-                    RUT
+                    DESCRIPCION
                 </th>
                 <th class=""> 
-                    CARGO
+                    VALOR
                 </th>
                 <th class=""> 
-                    SALARIO BASE
-                </th>
-                <th class="Estado"> 
-                    ESTADO 
+                    CUOTAS
                 </th>
                 <th class=""> 
                     ACCIONES 
@@ -29,70 +24,44 @@
             <!--Final encabezado-->
 
             <!--Cuerpo de la tabla-->
-            <EmpleadosRow  v-for="(item) in DatosPaginados" :key="item.id">
-                <!--ChecBox-->
-                <template v-slot:checkbox>
-                    <InputCheckbox 
-                        :Objid="item.id" 
-                        @update="InteraccionListaEmpleadosSelecionados"
-                    />
-                </template>
+            <AsignacionesPrestamosRow>
+
                 <!--Nombre y apelidos-->
-                <template v-slot:NombresApellidos>
-                    {{item.nombres}} 
-                    {{ item.apellido_paterno }}
-                    {{ item.apellido_materno }}
+                <template v-slot:CONCEPTO>
+                    Empresarial
                 </template>
                 <!--Rut-->
-                <template v-slot:rut>
-                    {{item.rut}}
+                <template v-slot:DESCRIPCION>
+                    Descripcion del prestamo
                 </template>
                  <!--Cargo-->
-                <template v-slot:cargo>
-                    {{ item.cargo }}
+                <template v-slot:VALOR>
+                    $50000
                 </template>
                 <!--Saladio / sueldo-->
-                <template v-slot:sueldo>
-                    {{ item.sueldo }}
+                <template v-slot:CUOTAS>
+                   5
                 </template>
                 <!--Estado-->
-                <template v-slot:activateComponente>
-                    <InterruptorButton 
-                        :Objid="item.id" 
-                        :Estado="item.activo"
-                        @actualizarListado="resultadoActivacion"
-                    />
-                    <span v-if="item.activo == true">Activo</span>
-                    <span v-else>Inactivo</span>
+                <template v-slot:ACCIONES>
+                    <EditIcon Stroke="#1A2771" text="Editar" />
+                    <TrashIcon Stroke="#1A2771" text="Eliminar" />
                 </template>
-                <template v-slot:accionButton>
-                    <router-link :to="{ name: 'panel-empleado', params: { sociedadId: almacen.SociedadID, empleadoId: item.id } }">
-                        <OjitoIcon text="Ver Perfil" Stroke="#1A2771"/>    
-                    </router-link>
-          
-                    <DescargaIcon @click="console.log('descargar info' + item.id)" text="Descargar"/>
-                </template>
-            </EmpleadosRow>
+            </AsignacionesPrestamosRow>
             <!--Final cuerpo-->
         </table>        
-        
-        <div class="espacio-paginacion">
-            <SeleccionarPaginacion @valorSelecionado="asignarValor"/>
-            <Paginacion :totalPaginas="totalpaginas()" @NumeroSelecionado="getDataPorPagina"/>
-        </div>
         
     </div>
    
 </template>
 
 <script setup>
-import OjitoIcon from '@/components/icons/Ojito-icon.vue';
-import DescargaIcon from '@/components/icons/Descarga-icon.vue';
+import TrashIcon from '@/components/icons/trash-icon.vue'
+import EditIcon from '@/components/icons/Edit-icon.vue'
 import InterruptorButton from '@/components/inputs/Interruptor-modal-button.vue';
 import InputCheckbox from '@/components/inputs/Input-Checkbox.vue';
-import EmpleadosRow from '@/components/tablas/Empleados/Empleados-Row.vue';
-import Paginacion from '@/components/elementos/Paginacion.vue';
-import SeleccionarPaginacion from '@/components/elementos/Seleccionar-paginacion.vue'
+import AsignacionesPrestamosRow from '@/components/tablas/asignaciones/AsignacionesPrestamos-row.vue';
+
 
 import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
 
@@ -105,7 +74,7 @@ const sociedadId = route.params.sociedadId;
 
 // Define los props
 const props = defineProps({
-  listaEmpleados: {
+  ListadoPrestamos: {
     type: Array,
     default: () => []
   }
@@ -123,7 +92,7 @@ const resultadoActivacion = (Data) => {
 }
 
 // Accede a la lista de empleados desde props
-const ListaEmpleados = ref(props.listaEmpleados);
+const ListadoPrestamos = ref(props.ListadoPrestamos);
 
 const listaEmpleadosSelecionados = ref([]);
 
@@ -166,7 +135,7 @@ watch(listaEmpleadosSelecionados.value, upData)
 //configuracion del paginado
 const DatosPaginados = ref([]); //arreglo con los datos picados
 const paginaActual = ref(1); //inicializacion de la pagina
-const elementosPorPagina = ref(12); //numero de filas por pagina
+const elementosPorPagina = ref(24); //numero de filas por pagina
 
 const asignarValor = (Numero) => {
     elementosPorPagina.value = Numero;
@@ -175,7 +144,7 @@ const asignarValor = (Numero) => {
 //total de paginas
 const totalpaginas = () => {
     //devuelve el numero de paginas segun los datos y redondea el resultado
-    return Math.ceil(ListaEmpleados.value.length / elementosPorPagina.value);
+    return Math.ceil(ListadoPrestamos.value.length / elementosPorPagina.value);
 };
 
 //optener data segun la pagina
@@ -194,13 +163,13 @@ function getDataPorPagina(numeroPagina){
     let fin = (numeroPagina * elementosPorPagina.value);
     
     //recorre los datos de lista y los indexa en la paginacion
-    DatosPaginados.value = ListaEmpleados.value.slice(ini, fin)
+    DatosPaginados.value = ListadoPrestamos.value.slice(ini, fin)
 };
 
 
 //al cambiar los datos reinicia el renderizado
 watchEffect(() => {
-  ListaEmpleados.value = props.listaEmpleados;
+  ListadoPrestamos.value = props.ListadoPrestamos;
   //al detectar el cambio en la lista solicita los datos
   getDataPorPagina();
 });
@@ -208,7 +177,7 @@ watchEffect(() => {
 //al montar el componente solicita la data
 onMounted(()=> {
     //ejecuta la actualizacion del paginado
-    ListaEmpleados.value = props.listaEmpleados;
+    ListadoPrestamos.value = props.ListadoPrestamos;
 });
 </script>
 
@@ -325,11 +294,6 @@ th.acciones {
     margin: auto; /* Margen automático para centrar */
 }
 
-/**
- * Estilos para la columna de nombres de empleados
- * Alinea el texto al inicio y limita el ancho máximo para evitar desbordamientos
- */
-th.rowNombre,
 
 /* Estilos para la columna de acciones (iconos) */
 .acciones > div {
@@ -337,5 +301,6 @@ th.rowNombre,
     gap: 12px; /* Espacio entre iconos */
     justify-content: center; /* Centrado de iconos */
     white-space: nowrap; /* Evita el salto de línea para iconos */
+    height: 100%;
 }
 </style>

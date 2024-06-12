@@ -372,7 +372,7 @@
                     </div>
                     <div class="contenedorInfo" v-if="panelShow == 3">
                         <LayoutTablaEMpleados>
-                            <template #boton1>                                                                    
+                            <template #boton2>                                                                    
                                 <TemplateBlanckButton @click="EditarInfo?.ActionButton(7,EmpleadoID)" text="Editar">
                                     <template #default>
                                         <EdiIcon Stroke="#000000"/>
@@ -382,49 +382,95 @@
                         <!--primer apartado-->
                             <template #titulo1>                                                                    
                                 Datos de pago
-                            </template>                            
+                            </template>       
+
                             <template #st-1>                                                                    
-                                Medio de pago
+                                
                             </template>
                             <template #text-1>                                                                    
-                                {{DatosUsuario?.medio_pago_nombre}}
+                                <InputRadioButton 
+                                    texto="Transferencia Bancaria"
+                                />
+
+                                
                             </template>
                             <template #st-2>                                                                    
-                                Banco
+                                
                             </template>
                             <template #text-2>                                                                    
-                                {{DatosUsuario?.nombre_banco}}
+                                <InputRadioButton 
+                                    texto="Cheque"
+                                />
+                                
                             </template>
                             <template #st-3>                                                                    
-                                Tipo de cuenta
+                                
                             </template>
                             <template #text-3>                                                                    
-                                {{DatosUsuario?.tipo_cuenta}}
+                                <InputRadioButton 
+                                    texto="Al contado"
+                                />
                             </template>
                             <template #st-4>                                                                    
-                               Número de cuenta
+                               
                             </template>
                             <template #text-4>                                                                    
-                                {{DatosUsuario?.numero_cuenta}}
-                            </template>                                                    
+                               
+                            </template>   
+
+                            <template #titulo2>                                                                    
+                                Cuenta Activa
+                            </template>  
+
                             <template #st-5>                                                                    
-                                Rut Tercero
+                                Banco
                             </template>
                             <template #text-5>                                                                    
-                                {{DatosUsuario?.rut_tercero}}
+                                {{DatosUsuario?.nombre_banco}}
                             </template>
                             <template #st-6>                                                                    
-                                Nombre y apellido Tercero
+                                Tipo de cuenta
                             </template>
                             <template #text-6>                                                                                                                                    
-                                {{DatosUsuario?.nombre_tercero}}
+                                {{DatosUsuario?.tipo_cuenta_nombre}}
                             </template>
                             <template #st-7>                                                                    
-                                Correo Tercero
+                                Número de cuenta
                             </template>
                             <template #text-7>                                                                                                                                    
+                                {{DatosUsuario?.numero_cuenta}}
+                            </template>
+                            <template #st-8>                                                                    
+                                Cuenta de tercero
+                            </template>
+                            <template #text-8>      
+                                <InterruptorButton
+                                    Tipo="individual"
+                                    :Texto="(DatosUsuario?.terceros == 1)? 'Activo' : 'Inactivo' " 
+                                    :Estado="(DatosUsuario?.terceros == 1)? true : false"
+                                />                                                                                                                              
+                            </template>
+                            
+                            <template #st-9>                                                                    
+                                Rut Tercero
+                            </template>
+                            <template #text-9>                                                                                                                                    
+                                {{DatosUsuario?.rut_tercero}}
+                            </template>
+                            <template #st-10>                                                                    
+                                Nombre y apellido Tercero
+                            </template>
+                            <template #text-10>                                                                                                                                    
+                                {{DatosUsuario?.nombre_tercero}}
+                            </template>
+                            <template #st-11>                                                                    
+                                Correo Tercero
+                            </template>
+                            <template #text-11>                                                                                                                                    
                                 {{DatosUsuario?.email_tercero}}
                             </template>
+                            
+                           
                         </LayoutTablaEMpleados>
                     </div>
                     <div class="contenedorInfo" v-if="panelShow == 4">
@@ -681,6 +727,20 @@
                             </template>
                         </LayoutEmpy>    
                     </div>
+                    <div class="contenedorInfo" v-if="panelShow == 6">
+                        <LayoutEmpy>
+                            <template #imagen>
+                                <img src="@/components/icons/svg/NotificationPerson-icon.svg">    
+                            </template>
+                            <template #contenido>
+                                <h3 class="titulo">No tienes solicitudes Pendientes</h3>
+                                <span class="texto">
+                                    Aquí podrás visualizar, aceptar y rechazar las solicitudes realizadas por tu empleado.
+                                </span>
+                                
+                            </template>
+                        </LayoutEmpy>    
+                    </div>
                 </template>
         </LayoutForm>
         <!--Modales Editar información-->
@@ -720,6 +780,8 @@ import TemplateBlanckButton from '@/components/botones/Template-blank-button.vue
 import LayoutEmpy from '@/components/Layouts/LayoutEmpy.vue'
 import CicloEditarEmpleado from '@/components/elementos/Ciclo-Editar-Empleado.vue';
 import ShortTemplateModal from '@/components/modal/Short-TemplateModal.vue';
+import InputRadioButton from '@/components/botones/Input-Radio-button.vue';
+
 //iconos
 import DolarIcon from '@/components/icons/Dolar-icon-blanco.vue';
 import InfoIcon from '@/components/icons/Info-icon.vue';

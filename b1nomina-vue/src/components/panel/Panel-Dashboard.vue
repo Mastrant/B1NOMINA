@@ -1,13 +1,25 @@
 <template>
     <div class="conted">
-        <span>En Desarrollo, gracias por su paciencia.</span>
+        <LayoutTablasSimples Titulo="Asignación de Préstamos">
+            <template #boton>
+            
+                boton        
+                
+            </template>
+
+            <template #Tabla>
+                <AsignacionesPrestamos />
+            </template>
+        </LayoutTablasSimples>
     </div>
 </template>
 
 <script setup>
-import InputBorderList from '@/components/inputs/Input-Border-List.vue';
+import LayoutTablasSimples from '@/components/Layouts/LayoutTablasSimples.vue'
+import AsignacionesPrestamos from '@/components/tablas/asignaciones/AsignacionesPrestamos-general.vue';
 import { ref, watch } from 'vue';
-const variable = ref('')
+import LayoutTablaDatosEmpleadoVue from '../Layouts/LayoutTabla-datosEmpleado.vue';
+const variable = ref('');
 
 </script>
 

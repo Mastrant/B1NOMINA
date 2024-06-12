@@ -22,7 +22,8 @@
                 Titulo="Pactado (UF)" 
                 @update:modelValue="PactadoUF = $event"
                 Tipo="Number"
-                :CantidadDecimales="0.01"
+                numero-decimales="any"
+                :minimo-numeros="0.01"
                 :requerido="RequiereActualizar"
             />
         </div>

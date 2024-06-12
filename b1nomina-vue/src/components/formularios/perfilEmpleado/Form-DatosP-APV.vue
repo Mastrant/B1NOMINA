@@ -57,7 +57,8 @@
                 Titulo="Pactado($)" 
                 @update:modelValue="Pactado = $event"
                 Tipo="Number"
-                :CantidadDecimales="0.01"
+                :minimo-numeros="0.01"
+                numero-decimales="any"
                 :requerido="RequiereActualizar"
             />
 
@@ -138,7 +139,9 @@
     watch(institución, (nuevoValor) => ActualizarPayload('apv_institucion_id', nuevoValor));
     
     const Pactado = ref('')
-    watch(Pactado, (nuevoValor) => ActualizarPayload('monto_pacto', nuevoValor));
+    watch(Pactado, (nuevoValor) => {
+        ActualizarPayload('monto_pacto', (nuevoValor))
+    });
 
     const Unidad = ref('')
     watch(Unidad, (nuevoValor) => ActualizarPayload('unidad_pacto_id', nuevoValor));

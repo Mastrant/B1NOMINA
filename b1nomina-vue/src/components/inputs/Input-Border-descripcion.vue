@@ -68,6 +68,14 @@ const props = defineProps(
             type:[Number, String], // Define el tipo de dato que puede recibir, Number o String.
             default: 100 // Valor por defecto para el máximo de caracteres permitidos.
         },
+        minimoNumeros: {
+            type:[Number, String], // Define el tipo de dato que puede recibir, Number o String.
+            default: 0 // Valor por defecto para el máximo de caracteres permitidos.
+        },
+        maximoNumeros: {
+            type:[Number, String], // Define el tipo de dato que puede recibir, Number o String.
+            default: 100 // Valor por defecto para el máximo de caracteres permitidos.
+        },
         NumeroDecimales: {
             type: [Number, String], // Define el tipo de dato que puede recibir, Number o String.
             default: 2 // Valor por defecto para el mínimo de caracteres permitidos.
