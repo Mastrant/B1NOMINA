@@ -4,7 +4,7 @@
         <div class="row">
             <InputBorderDescripcion
                 Placeholder="Ingresar Nombre"
-                Titulo="nombre de la empresa"
+                Titulo="Nombre de la Empresa"
                 name="nombre"
                 v-model="NombreEmpresa"
                 @update:modelValue="NombreEmpresa = $event"

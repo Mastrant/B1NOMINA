@@ -713,19 +713,55 @@
                             
                         </LayoutTablaEMpleados>
                     </div>
-                    <div class="contenedorInfo" v-if="panelShow == 5">
-                        <LayoutEmpy>
-                            <template #imagen>
-                                <img src="@/components/icons/svg/NotificationPerson-icon.svg">    
-                            </template>
-                            <template #contenido>
-                                <h3 class="titulo">No tienes solicitudes Pendientes</h3>
-                                <span class="texto">
-                                    Aquí podrás visualizar, aceptar y rechazar las solicitudes realizadas por tu empleado.
-                                </span>
+                    <div class="contenedorInfo tablas" v-if="panelShow == 5">
+
+                        <LayoutTablasSimples Titulo="Asignación de Préstamos">
+                            <template #boton>
+                            
+                                <TemplateButton2 @click="EditarInfo?.ActionButton(12,EmpleadoID)" text="Nuevo Préstamo" >
+                                    <template #default>                                        
+                                        <PlusCirculoIcon Stroke="#002E99"/>
+                                    </template>
+                                </TemplateButton2> 
                                 
                             </template>
-                        </LayoutEmpy>    
+                
+                            <template #Tabla>
+                                <AsignacionesPrestamos />
+                            </template>
+                        </LayoutTablasSimples>
+
+                        <LayoutTablasSimples Titulo="Otras Asignaciones">
+                            <template #boton>
+                            
+                                <TemplateButton2 text="Nuevo Préstamo">
+                                    <template #default>                                        
+                                        <PlusCirculoIcon Stroke="#002E99"/>
+                                    </template>
+                                </TemplateButton2> 
+                                
+                            </template>
+                
+                            <template #Tabla>
+                                <AsignacionesPrestamos />
+                            </template>
+                        </LayoutTablasSimples>
+
+                        <LayoutTablasSimples Titulo="Cargas Previsionales">
+                            <template #boton>
+                            
+                                <TemplateButton2 text="Nuevo Préstamo">
+                                    <template #default>                                        
+                                        <PlusCirculoIcon Stroke="#002E99"/>
+                                    </template>
+                                </TemplateButton2> 
+                                
+                            </template>
+                
+                            <template #Tabla>
+                                <AsignacionesPrestamos />
+                            </template>
+                        </LayoutTablasSimples>
                     </div>
                     <div class="contenedorInfo" v-if="panelShow == 6">
                         <LayoutEmpy>
@@ -774,6 +810,7 @@ import LayoutForm from '@/components/Layouts/LayoutForm.vue';
 import LayoutTablaEMpleados from '@/components/Layouts/LayoutTabla-datosEmpleado.vue'
 import boxInfo from '@/components/elementos/Box-info.vue';
 import NavButtonTemplate from '@/components/botones/Nav-button-templateForm.vue';
+import TemplateButton from '@/components/botones/Template-button.vue';
 import TemplateButton2 from '@/components/botones/Template-button2.vue';
 import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
 import TemplateBlanckButton from '@/components/botones/Template-blank-button.vue';
@@ -782,6 +819,9 @@ import CicloEditarEmpleado from '@/components/elementos/Ciclo-Editar-Empleado.vu
 import ShortTemplateModal from '@/components/modal/Short-TemplateModal.vue';
 import InputRadioButton from '@/components/botones/Input-Radio-button.vue';
 
+import LayoutTablasSimples from '@/components/Layouts/LayoutTablasSimples.vue'
+import AsignacionesPrestamos from '@/components/tablas/asignaciones/AsignacionesPrestamos-general.vue';
+
 //iconos
 import DolarIcon from '@/components/icons/Dolar-icon-blanco.vue';
 import InfoIcon from '@/components/icons/Info-icon.vue';
@@ -789,6 +829,7 @@ import SolIcon from '@/components/icons/Sol-icon.vue';
 import OjitoIcon from '@/components/icons/Ojito-icon.vue';
 import ExitColorIcon from '@/components/icons/Exit-color-icon.vue'
 import EdiIcon from '@/components/icons/Edit-icon.vue';
+import PlusCirculoIcon from '@/components/icons/Plus-Circulo-icon.vue';
 
 //Librerias y acciones
 import {ref, inject } from 'vue';
@@ -843,6 +884,13 @@ div.cards {
 
 div.contenedorInfo {
     background: #fcfcfc;
+}
+div.contenedorInfo.tablas {
+    display: flex;
+    flex-direction: column;
+    background: #fcfcfc;
+    gap: 2.5rem;
+    margin: 12px 0 ; 
 }
 
 h3.titulo {

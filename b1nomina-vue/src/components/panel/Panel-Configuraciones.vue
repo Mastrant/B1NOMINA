@@ -12,7 +12,7 @@
         />
         <CardLink 
             Titulo="Periodos"
-            -descripcion="Crea y habilita los periodos en los que manejaras los eventos en B1 Nómina."
+            -descripcion="Crea y habilita los periodos en los que manejáras los eventos en B1 Nómina."
             -ruta-name="periodos"
         />
         <CardLink 

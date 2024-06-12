@@ -57,8 +57,8 @@
                 Titulo="Pactado($)" 
                 @update:modelValue="Pactado = $event"
                 Tipo="Number"
-                :minimo-numeros="0.01"
                 numero-decimales="any"
+                :minimo-numeros="0.00"
                 :requerido="RequiereActualizar"
             />
 

@@ -39,8 +39,8 @@
                                 </router-link>
                             </template>
                         </NotificationButton>
-                        <!-- Soporte y Asistencia-->
-                        <NavButton :class="{'order': !desplegarMenu}">
+                        <!-- Soporte y Asistencia
+                        <NavButton :class="{'order': !desplegarMenu}" :activate="false">
                             <template #direccion>
                                 <router-link to="/help">
                                     <HelpCircleIcon />
@@ -48,6 +48,9 @@
                                 </router-link>
                             </template>
                         </NavButton>
+
+                        -->
+                        
                         <!--Configuración-->
                         <NavButton :class="{'order': !desplegarMenu}">
                             <template #direccion>

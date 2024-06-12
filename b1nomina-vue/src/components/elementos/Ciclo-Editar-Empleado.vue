@@ -75,6 +75,22 @@
                     @respuestaServidor="notificacionModal"
                 />
             </div>
+
+            <div v-if=" formActivo == 12"> <!--retomar Asignaciones Prestamo-->                    
+                <FormDatospAdicionales
+                    @respuestaServidor="notificacionModal"
+                />
+            </div>
+            <div v-if=" formActivo == 13"> <!--retomar Asignaciones Prestamo-->                    
+                <FormDatospAdicionales
+                    @respuestaServidor="notificacionModal"
+                />
+            </div>
+            <div v-if=" formActivo == 14"> <!--retomar Asignaciones Prestamo-->                    
+                <FormDatospAdicionales
+                    @respuestaServidor="notificacionModal"
+                />
+            </div>
         </template>
     </TemplateModal>
 </template>|
@@ -229,6 +245,14 @@
                 TextoButton.value = 'Guardar';
                 TituloModal.value = 'Datos Adicionales';
                 IDFormModal.value = 'ActualizarDatosPrevisionalesAdicionales';
+
+                break; 
+            case 12:
+                formActivo.value = TipoAccion;
+                EmpleadoID_Selecionado.value = item_ID;
+                TextoButton.value = 'Guardar';
+                TituloModal.value = 'Asignación de Préstamos';
+                IDFormModal.value = 'AsignacionesPrestamos';
 
                 break; 
                 
