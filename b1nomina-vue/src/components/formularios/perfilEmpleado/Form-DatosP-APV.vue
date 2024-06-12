@@ -41,7 +41,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="institución" 
-                        :options="Parametros?.tiposalario" 
+                        :options="Parametros?.apv_" 
                         :requerido="RequiereActualizar"            
                         :preseleccion="institución" 
                         optionsSelected="Seleccionar"
@@ -126,28 +126,28 @@
 
     
     const Activo = ref(false);
-    watch(Activo, (nuevoValor) => ActualizarPayload('', (nuevoValor == true)? 1: 0));
+    watch(Activo, (nuevoValor) => ActualizarPayload('apv_activo', (nuevoValor == true)? 1: 0));
 
     const Colectivo = ref(false);
-    watch(Colectivo, (nuevoValor) => ActualizarPayload('', (nuevoValor == true)? 1: 0));
+    watch(Colectivo, (nuevoValor) => ActualizarPayload('colectivo', (nuevoValor == true)? 1: 0));
 
     const PagoDirecto = ref(false);
-    watch(PagoDirecto, (nuevoValor) => ActualizarPayload('', (nuevoValor == true)? 1: 0));
+    watch(PagoDirecto, (nuevoValor) => ActualizarPayload('pago_directo', (nuevoValor == true)? 1: 0));
     
     const institución = ref('')
-    watch(institución, (nuevoValor) => ActualizarPayload('', nuevoValor));
+    watch(institución, (nuevoValor) => ActualizarPayload('apv_institucion_id', nuevoValor));
     
     const Pactado = ref('')
-    watch(Pactado, (nuevoValor) => ActualizarPayload('', nuevoValor));
+    watch(Pactado, (nuevoValor) => ActualizarPayload('monto_pacto', nuevoValor));
 
     const Unidad = ref('')
-    watch(Unidad, (nuevoValor) => ActualizarPayload('', nuevoValor));
+    watch(Unidad, (nuevoValor) => ActualizarPayload('unidad_pacto_id', nuevoValor));
 
     const Regimen = ref('')
-    watch(Regimen, (nuevoValor) => ActualizarPayload('', nuevoValor));
+    watch(Regimen, (nuevoValor) => ActualizarPayload('regimen', nuevoValor));
 
     const NConvenio = ref('')
-    watch(NConvenio, (nuevoValor) => ActualizarPayload('', nuevoValor));
+    watch(NConvenio, (nuevoValor) => ActualizarPayload('nconvenio', nuevoValor));
 
 
     watch(DatosUsuario, (nuevaInfo) => {
@@ -166,33 +166,33 @@
         payload_old.Activo = (DATA?.apv_activo == 1)? DATA?.apv_activo : 0;
         payload.Activo = (DATA?.apv_activo == 1)? DATA?.apv_activo : 0;
 
-        Colectivo.value = (DATA?.apv_colectivo == 1)? true : false;
-        payload_old.Colectivo = (DATA?.apv_colectivo == 1)? DATA?.apv_colectivo : 0;
-        payload.Colectivo = (DATA?.apv_colectivo == 1)? DATA?.apv_colectivo : 0;
+        Colectivo.value = (DATA?.colectivo == 1)? true : false;
+        payload_old.Colectivo = (DATA?.colectivo == 1)? DATA?.colectivo : 0;
+        payload.Colectivo = (DATA?.colectivo == 1)? DATA?.colectivo : 0;
 
-        PagoDirecto.value = (DATA?.apv_activo == 1)? true : false;
-        payload_old.PagoDirecto = (DATA?.apv_activo == 1)? DATA?.apv_activo : 0;
-        payload.PagoDirecto = (DATA?.apv_activo == 1)? DATA?.apv_activo : 0;
+        PagoDirecto.value = (DATA?.pago_directo == 1)? true : false;
+        payload_old.PagoDirecto = (DATA?.pago_directo == 1)? DATA?.pago_directo : 0;
+        payload.PagoDirecto = (DATA?.pago_directo == 1)? DATA?.pago_directo : 0;
 
-        institución.value = (DATA?.institución == null)? '' :DATA?.institución;
-        payload_old.institución = DATA?.institución ?? '';
-        payload.institución = DATA?.institución ?? '';
+        institución.value = (DATA?.apv_institucion_id == null || DATA?.apv_institucion_id.toLowerCase() == 'no asignado')? '' :DATA?.apv_institucion_id;
+        payload_old.institución = (DATA?.apv_institucion_id == null || DATA?.apv_institucion_id.toLowerCase() == 'no asignado')? '' :DATA?.apv_institucion_id;
+        payload.institución = (DATA?.apv_institucion_id == null || DATA?.apv_institucion_id.toLowerCase() == 'no asignado')? '' :DATA?.apv_institucion_id;
         
-        Pactado.value = (DATA?.Pactado == null)? '' :DATA?.Pactado;
-        payload_old.Pactado = DATA?.Pactado ?? '';
-        payload.Pactado = DATA?.Pactado ?? '';
+        Pactado.value =  (DATA?.monto_pacto == null || DATA?.monto_pacto.toLowerCase() == 'no asignado') ? '' :DATA?.monto_pacto;
+        payload_old.Pactado = (DATA?.monto_pacto == null || DATA?.monto_pacto.toLowerCase() == 'no asignado') ? '' :DATA?.monto_pacto;
+        payload.Pactado = (DATA?.monto_pacto == null || DATA?.monto_pacto.toLowerCase() == 'no asignado') ? '' :DATA?.monto_pacto;
 
-        Unidad.value = (DATA?.Unidad == null)? '' :DATA?.Unidad;
-        payload_old.Unidad = DATA?.Unidad ?? '';
-        payload.Unidad = DATA?.Unidad ?? '';
+        Unidad.value = (DATA?.unidad_pacto_id == null || DATA?.unidad_pacto_id.toLowerCase() == 'no asignado')? '' :DATA?.unidad_pacto_id;
+        payload_old.Unidad = (DATA?.unidad_pacto_id == null || DATA?.unidad_pacto_id.toLowerCase() == 'no asignado')? '' :DATA?.unidad_pacto_id;
+        payload.Unidad = (DATA?.unidad_pacto_id == null || DATA?.unidad_pacto_id.toLowerCase() == 'no asignado')? '' :DATA?.unidad_pacto_id;
 
-        Regimen.value = (DATA?.Regimen == null)? '' :DATA?.Regimen;
-        payload_old.Regimen = DATA?.Regimen ?? '';
-        payload.Regimen = DATA?.Regimen ?? '';
+        Regimen.value = (DATA?.regimen == null)? '' :DATA?.regimen;
+        payload_old.Regimen = DATA?.regimen ?? '';
+        payload.Regimen = DATA?.regimen ?? '';
 
-        NConvenio.value = (DATA?.NConvenio == null)? '' :DATA?.NConvenio;
-        payload_old.NConvenio = DATA?.NConvenio ?? '';
-        payload.NConvenio = DATA?.NConvenio ?? '';
+        NConvenio.value = (DATA?.nconvenio == null)? '' :DATA?.nconvenio;
+        payload_old.NConvenio = DATA?.nconvenio ?? '';
+        payload.NConvenio = DATA?.nconvenio ?? '';
 
     }
 

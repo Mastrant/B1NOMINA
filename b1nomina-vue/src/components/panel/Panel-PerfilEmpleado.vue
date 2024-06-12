@@ -477,7 +477,7 @@
                                 Institución
                             </template>
                             <template #text-2>                                                                    
-                                
+                                {{ DatosUsuario?.afp_nombre }}
                             </template>
                             <template #st-3>                                                                    
                                 Ahorro AFP Cuenta 2 ($)
@@ -499,7 +499,7 @@
                             <template #text-9>                                                                    
                                 <InterruptorButton
                                     Tipo="individual"
-                                    :Texto="(DatosUsuario?.apv_directo == 1)? 'Activo' : 'Inactivo' " 
+                                    :Texto="(DatosUsuario?.apv_activo == 1)? 'Activo' : 'Inactivo' " 
                                     :Estado="(DatosUsuario?.apv_activo == 1)? true : false"
                                 />
                             </template>
@@ -509,8 +509,8 @@
                             <template #text-10>                                                                    
                                 <InterruptorButton
                                     Tipo="individual"
-                                    :Texto="(DatosUsuario?.apv_directo == 1)? 'Activo' : 'Inactivo' " 
-                                    :Estado="(DatosUsuario?.apv_colectivo == 1)? true : false"
+                                    :Texto="(DatosUsuario?.colectivo == 1)? 'Activo' : 'Inactivo' " 
+                                    :Estado="(DatosUsuario?.colectivo == 1)? true : false"
                                 />
                             </template>
                             <template #st-11>  <!---->                                                                            
@@ -519,41 +519,41 @@
                             <template #text-11>                                                                    
                                 <InterruptorButton
                                     Tipo="individual"
-                                    :Texto="(DatosUsuario?.apv_directo == 1)? 'Activo' : 'Inactivo' " 
-                                    :Estado="(DatosUsuario?.apv_directo == 1)? true : false"
+                                    :Texto="(DatosUsuario?.pago_directo == 1)? 'Activo' : 'Inactivo' " 
+                                    :Estado="(DatosUsuario?.pago_directo == 1)? true : false"
                                 />
                             </template>
                             <template #st-12> <!---->                                                                     
                                 Institución
                             </template>
                             <template #text-12>                                                                    
-
+                                {{ DatosUsuario?.apv_institucion_nombre }}
                             </template>
                             <template #st-13> <!---->                                                                      
                                 Unidad
                             </template>
                             <template #text-13>                                                                    
-                                
+                                {{ DatosUsuario?.unidad_pacto_nombre }}
                             </template>
                             <template #st-14> <!---->    
                                Régimen
                             </template>
                             <template #text-14>                                                                    
-                                
+                                {{ DatosUsuario?.regimen }}
                             </template>
 
                             <template #st-15> <!---->    
                                Pactado($)
                             </template>
                             <template #text-15>                                                                    
-                                
+                                {{ DatosUsuario?.monto_pacto }}
                             </template>
 
                             <template #st-16> <!---->    
                                N° Convenio
                             </template>
                             <template #text-16>                                                                    
-                                
+                                {{ DatosUsuario?.nconvenio }}
                             </template>
 
                         <!--segundo apartado-->
@@ -566,7 +566,7 @@
                                 Institución
                             </template>
                             <template #text-17>                                                                    
-
+                                {{ DatosUsuario?.nombre_prevision_salud }}
                             </template>
                             <!--
                             <template #st-18>                                                                      
@@ -581,7 +581,7 @@
                                 Pactado (UF)
                             </template>
                             <template #text-19>                                                                    
-   
+                                {{ DatosUsuario?.pactado }}
                             </template>
                             <!--
                             <template #st-20> 
@@ -602,8 +602,8 @@
                             <template #text-21>                                                                    
                                 <InterruptorButton
                                     Tipo="individual"
-                                    :Texto="(DatosUsuario?.gratificacion_legal == 1)? 'Activo' : 'Inactivo' " 
-                                    :Estado="(DatosUsuario?.gratificacion_legal == 1)? true : false"
+                                    :Texto="(DatosUsuario?.gratificacion == 1)? 'Activo' : 'Inactivo' " 
+                                    :Estado="(DatosUsuario?.gratificacion == 1)? true : false"
                                 />
                             </template>
                             <template #st-22> <!---->                                                                      
@@ -622,8 +622,8 @@
                             <template #text-23>                                                                    
                                 <InterruptorButton
                                     Tipo="individual"
-                                    :Texto="(DatosUsuario?.antiguedad_AFC == 1)? 'Activo' : 'Inactivo' " 
-                                    :Estado="(DatosUsuario?.antiguedad_AFC == 1)? true : false"
+                                    :Texto="(DatosUsuario?.antiguedad_afc == 1)? 'Activo' : 'Inactivo' " 
+                                    :Estado="(DatosUsuario?.antiguedad_afc == 1)? true : false"
                                 />
                             </template>
                             <!--
@@ -640,8 +640,8 @@
                             <template #text-25>                                                                    
                                 <InterruptorButton
                                     Tipo="individual"
-                                    :Texto="(DatosUsuario?.p_vejez == 1)? 'Activo' : 'Inactivo' " 
-                                    :Estado="(DatosUsuario?.p_vejez == 1)? true : false"
+                                    :Texto="(DatosUsuario?.vejez == 1)? 'Activo' : 'Inactivo' " 
+                                    :Estado="(DatosUsuario?.vejez == 1)? true : false"
                                 />
                             </template>
                             <template #st-26> <!--Tipo de cuenta-->                                                                      
@@ -650,8 +650,8 @@
                             <template #text-26>                                                                    
                                 <InterruptorButton
                                     Tipo="individual"
-                                    :Texto="(DatosUsuario?.p_invalidez == 1)? 'Activo' : 'Inactivo' " 
-                                    :Estado="(DatosUsuario?.p_invalidez == 1)? true : false"
+                                    :Texto="(DatosUsuario?.invalidez == 1)? 'Activo' : 'Inactivo' " 
+                                    :Estado="(DatosUsuario?.invalidez == 1)? true : false"
                                 />
                             </template>
                             <template #st-27> <!--Tipo de cuenta-->                                                                      
@@ -660,8 +660,8 @@
                             <template #text-27>                                                                    
                                 <InterruptorButton
                                     Tipo="individual"
-                                    :Texto="(DatosUsuario?.ExINP == 1)? 'Activo' : 'Inactivo' " 
-                                    :Estado="(DatosUsuario?.ExINP == 1)? true : false"
+                                    :Texto="(DatosUsuario?.exinp == 1)? 'Activo' : 'Inactivo' " 
+                                    :Estado="(DatosUsuario?.exinp == 1)? true : false"
                                 />
                             </template>
                             

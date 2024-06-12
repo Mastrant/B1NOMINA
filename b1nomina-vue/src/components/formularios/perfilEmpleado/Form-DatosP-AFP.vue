@@ -82,18 +82,19 @@
 
     const MostrarValores = (DATA) => {
         RequiereActualizar.value = false;
+
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
-        institución.value = (DATA?.periodo_sueldo == null)? '' :DATA?.periodo_sueldo;
-        payload_old.institución = DATA?.periodo_sueldo ?? '';
-        payload.institución = DATA?.periodo_sueldo ?? '';
+        estado_jubiladoAFP.value = (DATA?.jubilado_afp == 1)? true : false;
+        payload_old.estado_jubiladoAFP = (DATA?.jubilado_afp == 1)? 1 : 0;
+        payload.estado_jubiladoAFP = (DATA?.jubilado_afp == 1)? 1 : 0;
+       
+        institución.value = (DATA?.afp_id == null || DATA?.afp_id.toLowerCase() == 'no asignado')? '' :DATA?.afp_id;
+        payload_old.institución = (DATA?.afp_id == null || DATA?.afp_id.toLowerCase() == 'no asignado')? '' :DATA?.afp_id;
+        payload.institución = (DATA?.afp_id == null || DATA?.afp_id.toLowerCase() == 'no asignado')? '' :DATA?.afp_id;
         
-        estado_jubiladoAFP.value = (DATA?.unidad_sueldo == null)? '' :DATA?.unidad_sueldo;
-        payload_old.estado_jubiladoAFP = DATA?.unidad_sueldo ?? '';
-        payload.estado_jubiladoAFP = DATA?.unidad_sueldo ?? '';
-        
-        ahorroAFP.value = (DATA?.salario_base == null)? '' :DATA?.salario_base;
-        payload_old.ahorroAFP = DATA?.salario_base ?? '';
-        payload.ahorroAFP = DATA?.salario_base ?? '';
+        ahorroAFP.value = (DATA?.ahorro_afp2 == null)? '' :DATA?.ahorro_afp2;
+        payload_old.ahorroAFP = DATA?.ahorro_afp2 ?? '';
+        payload.ahorroAFP = DATA?.ahorro_afp2 ?? '';
     }
 
 /**
