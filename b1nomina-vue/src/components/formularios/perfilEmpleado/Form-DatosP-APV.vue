@@ -66,7 +66,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Unidad" 
-                        :options="Parametros?.Unidad" 
+                        :options="Parametros?.unidadessueldo" 
                         :requerido="RequiereActualizar"            
                         :preseleccion="Unidad" 
                         optionsSelected="Seleccionar"

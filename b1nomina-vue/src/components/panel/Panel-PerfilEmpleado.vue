@@ -734,7 +734,7 @@
                         <LayoutTablasSimples Titulo="Otras Asignaciones">
                             <template #boton>
                             
-                                <TemplateButton2 text="Nuevo Préstamo">
+                                <TemplateButton2 @click="EditarInfo?.ActionButton(13 ,EmpleadoID)" text="Nuevo Préstamo" >
                                     <template #default>                                        
                                         <PlusCirculoIcon Stroke="#002E99"/>
                                     </template>
@@ -743,14 +743,14 @@
                             </template>
                 
                             <template #Tabla>
-                                <AsignacionesPrestamos />
+                                
                             </template>
                         </LayoutTablasSimples>
 
                         <LayoutTablasSimples Titulo="Cargas Previsionales">
                             <template #boton>
                             
-                                <TemplateButton2 text="Nuevo Préstamo">
+                                <TemplateButton2 @click="EditarInfo?.ActionButton(14,EmpleadoID)" text="Nuevo Préstamo" >
                                     <template #default>                                        
                                         <PlusCirculoIcon Stroke="#002E99"/>
                                     </template>
@@ -759,10 +759,11 @@
                             </template>
                 
                             <template #Tabla>
-                                <AsignacionesPrestamos />
+                                
                             </template>
                         </LayoutTablasSimples>
                     </div>
+                    
                     <div class="contenedorInfo" v-if="panelShow == 6">
                         <LayoutEmpy>
                             <template #imagen>

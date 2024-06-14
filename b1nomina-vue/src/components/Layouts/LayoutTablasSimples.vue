@@ -17,7 +17,7 @@ import {defineProps} from 'vue'
 const props = defineProps({
 
     Titulo: {
-        type: Text,
+        type: String,
         default: 'Texto Titulo'
     }
 });

@@ -1,39 +1,38 @@
 <template>    
-    <form class="formulario" id="ActualizarAFP" @submit.prevent="Enviar">
+    <form class="formulario" id="ActualizarPrevisionSalud" @submit.prevent="Enviar">
         
         <div class="row-form">
-            <div class="separador-button">
-                <span>Jubilado AFP</span>
-                <InterruptorButton 
-                    @ValorEstado="estado_jubiladoAFP"
-                    Objid="aplica_Gratificacion_Legal"
-                    :Texto="(estado_jubiladoAFP == true)? 'Activo' : 'Inactivo'"
-                    Tipo="individual"
-                    :Estado="(estado_jubiladoAFP)? true :false"
-                    :requerido="RequiereActualizar"
-                />                
-            </div>
-        </div>
-        <div class="row-form">
-            <LayoutInputLineal textLabel="Institución" :requerido="RequiereActualizar">
+            <LayoutInputLineal textLabel="Concepto" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="institución" 
-                        :options="Parametros?.afp" 
+                        :options="Parametros?.tiposalario" 
                         :requerido="RequiereActualizar"            
                         :preseleccion="institución" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
-            </LayoutInputLineal>
+            </LayoutInputLineal>            
+        </div>
+
+        <div class="row-form">
             <InputLinealDescripcion 
-                v-model="ahorroAFP"
+                v-model="PactadoUF"
+                Placeholder="Ingresar Descripción" 
+                Titulo="Descripción" 
+                @update:modelValue="PactadoUF = $event"
+                :requerido="RequiereActualizar"
+            />
+        </div>
+        <div class="row-form">
+            <InputLinealDescripcion 
+                v-model="PactadoUF"
                 Placeholder="$ 0" 
-                Titulo="Ahorro AFP Cuenta 2 ($)" 
-                @update:modelValue="ahorroAFP = $event"
+                Titulo="Valor mensual" 
+                @update:modelValue="PactadoUF = $event"
                 Tipo="Number"
-                :minimo-numeros="0.00"
                 numero-decimales="any"
+                :minimo-numeros="0.00"
                 :requerido="RequiereActualizar"
             />
         </div>
@@ -64,14 +63,11 @@
     // payload de las peticiones
     const payload_old = reactive({});
 
-    const estado_jubiladoAFP = ref(false);
-    watch(estado_jubiladoAFP, (nuevoValor) => ActualizarPayload('', (nuevoValor == true)? 1: 0));
-    
     const institución = ref('')
     watch(institución, (nuevoValor) => ActualizarPayload('', nuevoValor));
 
-    const ahorroAFP = ref('');
-    watch(ahorroAFP, (nuevoValor) =>  ActualizarPayload('monto_sueldo', Math.abs(nuevoValor)));
+    const PactadoUF = ref('');
+    watch(PactadoUF, (nuevoValor) =>  ActualizarPayload('monto_sueldo', nuevoValor));
 
     watch(DatosUsuario, (nuevaInfo) => {
         MostrarValores(nuevaInfo)        
@@ -83,19 +79,16 @@
 
     const MostrarValores = (DATA) => {
         RequiereActualizar.value = false;
-
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
-        estado_jubiladoAFP.value = (DATA?.jubilado_afp == 1)? true : false;
-        payload_old.estado_jubiladoAFP = (DATA?.jubilado_afp == 1)? 1 : 0;
-        payload.estado_jubiladoAFP = (DATA?.jubilado_afp == 1)? 1 : 0;
-       
-        institución.value = (DATA?.afp_id == null || DATA?.afp_id.toLowerCase() == 'no asignado')? '' :DATA?.afp_id;
-        payload_old.institución = (DATA?.afp_id == null || DATA?.afp_id.toLowerCase() == 'no asignado')? '' :DATA?.afp_id;
-        payload.institución = (DATA?.afp_id == null || DATA?.afp_id.toLowerCase() == 'no asignado')? '' :DATA?.afp_id;
+
         
-        ahorroAFP.value = (DATA?.ahorro_afp2 == null)? '' :DATA?.ahorro_afp2;
-        payload_old.ahorroAFP = DATA?.ahorro_afp2 ?? '';
-        payload.ahorroAFP = DATA?.ahorro_afp2 ?? '';
+        institución.value = (DATA?.institución == null)? '' :DATA?.institución;
+        payload_old.institución = DATA?.institución ?? '';
+        payload.institución = DATA?.institución ?? '';
+        
+        PactadoUF.value = (DATA?.PactadoUF == null)? '' :DATA?.PactadoUF;
+        payload_old.PactadoUF = DATA?.PactadoUF ?? '';
+        payload.PactadoUF = DATA?.PactadoUF ?? '';
     }
 
 /**
@@ -191,6 +184,8 @@ div.row-form {
     width:  100%;
     align-items: center;
     justify-content: space-between;
+    padding: 0 24px;
+
 }
 
 /* Define el estilo del formulario, utilizando 
@@ -237,9 +232,5 @@ h2.titulo-form {
     word-wrap: break-word;
 }
 
-div.separador-button {
-    display: flex;
-    align-items: center;
-    gap: 36px;
-}
+
 </style>
