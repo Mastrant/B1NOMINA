@@ -74,20 +74,21 @@
                 <FormDatospAdicionales
                     @respuestaServidor="notificacionModal"
                 />
+                </div>
+                
+            <div v-if=" formActivo == 12"> <!--retomar Asignaciones Prestamo-->                    
+                    <FormPrestamosAsignaciones
+                        @respuestaServidor="notificacionModal"
+                    />
+                    
             </div>
 
-            <div v-if=" formActivo == 12"> <!--retomar Asignaciones Prestamo-->                    
-                <FormDatospAdicionales
-                    @respuestaServidor="notificacionModal"
-                />
+            <div v-if=" formActivo == 13"> <!--retomar otras Asignaciones-->                    
+                
             </div>
-            <div v-if=" formActivo == 13"> <!--retomar Asignaciones Prestamo-->                    
-                <FormDatospAdicionales
-                    @respuestaServidor="notificacionModal"
-                />
-            </div>
-            <div v-if=" formActivo == 14"> <!--retomar Asignaciones Prestamo-->                    
-                <FormDatospAdicionales
+
+            <div v-if=" formActivo == 14"> <!--retomar cargas previsionales -->                    
+                <FormPrestamosCargaPrevisional 
                     @respuestaServidor="notificacionModal"
                 />
             </div>
@@ -111,6 +112,9 @@
     import FormDatosPAPV from '@/components/formularios/perfilEmpleado/Form-DatosP-APV.vue';
     import FormDatosP_PrevisionSalud from '@/components/formularios/perfilEmpleado/Form-DatosP-PrevisionSalud.vue';
     import FormDatospAdicionales from '@/components/formularios/perfilEmpleado/From-DatosP-Adicionales.vue';
+
+    import FormPrestamosAsignaciones from '@/components/formularios/perfilEmpleado/Form-Prestamos-Asignaciones.vue';
+    import FormPrestamosCargaPrevisional from '@/components/formularios/perfilEmpleado/Form-Prestamos-CargaPrevisionales.vue';
     
     //librerias
     import { ref, onMounted, defineExpose, inject } from 'vue';
@@ -253,6 +257,24 @@
                 TextoButton.value = 'Guardar';
                 TituloModal.value = 'Asignación de Préstamos';
                 IDFormModal.value = 'AsignacionesPrestamos';
+
+                break; 
+
+            case 13:
+                formActivo.value = TipoAccion;
+                EmpleadoID_Selecionado.value = item_ID;
+                TextoButton.value = 'Guardar';
+                TituloModal.value = 'Otras Asignaciones';
+                IDFormModal.value = 'OtrasAsignaciones';
+
+                break; 
+
+            case 14:
+                formActivo.value = TipoAccion;
+                EmpleadoID_Selecionado.value = item_ID;
+                TextoButton.value = 'Guardar';
+                TituloModal.value = 'Cargas Previsionales';
+                IDFormModal.value = 'CargasPrevisionales';
 
                 break; 
                 
