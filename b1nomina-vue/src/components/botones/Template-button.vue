@@ -7,7 +7,8 @@
         <!-- Muestra el texto definido por la propiedad 'text' -->
         <span>
             {{ text }}
-        </span>
+        </span>        
+        <slot name="post"></slot>
     </button>    
 </template>
 
