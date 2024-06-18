@@ -110,9 +110,9 @@
         }
        
         //solicita la actualizaion de los datos
-        (parametrosPeticionEmpleados.departamento_id === 0 & parametrosPeticionEmpleados.grupo_id === 0 & parametrosPeticionEmpleados.sede_id === 0)?
-        pedirEmpleados(): //si los valores de parametrosPeticionEmpleados son 0
-        pedirEmplead2(); //si los valores de parametrosPeticionEmpleados varian de 0     
+        /*
+
+        */
     };
 
     // Arreglo que contiene el arreglo original
@@ -156,8 +156,7 @@
 
     // al montar el componente ejecuta las funciones
     onMounted(async () => {
-
-        await pedirGrupos(); //solicita los grupos        
+     
     });
 </script>
 

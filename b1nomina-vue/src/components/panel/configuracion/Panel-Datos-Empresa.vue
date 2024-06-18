@@ -73,7 +73,7 @@ const showNotificacionShort = (Info) => {
     if (notificacionStatus && notificacionStatus.value) {
         notificacionStatus.value.ActivarNotificacion(Info);
     } else {
-        console.error('notificacionStatus or notificacionStatus.value is undefined');
+        console.error('notificacionStatus or notificacionStatus is undefined');
     }
 }
 
@@ -98,11 +98,13 @@ CambiarNombreRuta('Datos de la Empresa');
     display: flex;
     flex-grow: 1;
     height: 100%;
+    max-height: 60rem;
     width: 100%;
     justify-content: start;
     flex-direction: column;
     gap: 48px;
     padding: 24px 0px;
     box-sizing: border-box;
+    overflow-y: scroll;
 }
 </style>
