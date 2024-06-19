@@ -15,7 +15,7 @@
 
 <script>
 //importar componentes
-import NavegadorVue from '@/components/Navegador.vue';
+import NavegadorVue from '@/components/elementos/Navegador.vue';
 import LayoutCore from '@/components/Layouts/LayoutCore.vue';
 import axios from 'axios';
 

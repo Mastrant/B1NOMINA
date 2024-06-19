@@ -1,6 +1,8 @@
 <template>
-    <header class="header">
-        <h2 class="Name-page">{{nombrePagina}}</h2>
+    <header class="Header">
+        <router-link class="card-button" :to="{name: RutaName}">            
+            <h2 class="Name-page">{{nombrePagina}}</h2>
+        </router-link>
     </header>
 </template>
 
@@ -9,12 +11,13 @@ export default {
     name: 'headerPage',
     props: [
         'nombrePagina',
+        'RutaName'
     ]
 }
 </script>
 
 <style scoped>
-header.header {
+header.Header {
 background: #F8F8F8;
 color: #1A2771;
 height: 81px;
@@ -28,11 +31,17 @@ flex-grow: 1;
 
 }
 
-header.header > h2.Name-page {
+header.Header > * {
+    text-decoration: none;
+}
+
+header.Header h2.Name-page {
     color: #1A2771;
     font-size: 28px;
     font-family: Poppins;
     font-weight: 500;
     word-wrap: break-word;
+
+    
 }
 </style>
