@@ -6,10 +6,8 @@
         <template #cabecera>
             <!-- Muestra el componente HeaderVue con el nombre de la página -->
             <!-- Si RutaNavegada está vacía, muestra "Configuraciones" -->
-            <Headervue v-if="RutaNavegada == ''" nombrePagina="Configuraciones" />
+            <Headervue nombrePagina="Configuraciones" RutaName="configuracion" :rutaNavegada="RutaNavegada" />
 
-            <!-- Si RutaNavegada no está vacía, muestra "Configuración > " seguido del nombre de la ruta -->
-            <Headervue v-else :nombrePagina="'Configuración > ' + RutaNavegada " />
         </template>
         
         <!-- Slot para el panel principal de la página -->
@@ -41,7 +39,12 @@
     // Función que permite a los componentes hijos actualizar el nombre de la ruta navegada
     const CambiarNombreRuta = (Nombre) => {
         // Actualiza el valor de RutaNavegada con el nuevo nombre proporcionado
-        RutaNavegada.value = Nombre;
+        if (Nombre) {
+            RutaNavegada.value = ">  " + Nombre;
+        } else {
+            RutaNavegada.value = '';
+        }
+
     };
     
     // Provee la función CambiarNombreRuta a los componentes hijos para que puedan modificar el nombre de la ruta navegada

@@ -1,19 +1,25 @@
 <template>
     <header class="Header">
-        <router-link class="card-button" :to="{name: RutaName}">            
+        <router-link :to="{ path: `/sociedad/${sociedadId}/${RutaName}` }">
             <h2 class="Name-page">{{nombrePagina}}</h2>
         </router-link>
+        <h2 v-if="rutaNavegada" class="Name-page">{{rutaNavegada}}</h2>
     </header>
 </template>
 
-<script>
-export default {
-    name: 'headerPage',
-    props: [
-        'nombrePagina',
-        'RutaName'
-    ]
-}
+<script setup>
+import { defineProps } from 'vue';
+
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const sociedadId = route.params.sociedadId;
+
+const props = defineProps({
+        nombrePagina: {},
+        rutaNavegada:{},
+        RutaName:{},
+});
 </script>
 
 <style scoped>
@@ -28,11 +34,14 @@ box-sizing: border-box;
 display: flex;
 align-items: center;
 flex-grow: 1;
+gap: 24px;
 
 }
 
 header.Header > * {
     text-decoration: none;
+    display: flex;
+
 }
 
 header.Header h2.Name-page {
