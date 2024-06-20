@@ -1,28 +1,35 @@
 <template>
     <header class="Header">
-        <router-link :to="{ path: `/sociedad/${sociedadId}/${RutaName}` }">
-            <h2 class="Name-page">{{nombrePagina}}</h2>
-        </router-link>
+        
+        <h2 v-if="rutaNavegada" class="Name-page main" @click="retrocederRuta">{{nombrePagina}}</h2>
         <h2 v-if="rutaNavegada" class="Name-page">{{rutaNavegada}}</h2>
+        
+        <h2 v-else class="Name-page">{{nombrePagina}}</h2>
     </header>
 </template>
 
 <script setup>
+
 import { defineProps } from 'vue';
 
-import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 
-const route = useRoute();
-const sociedadId = route.params.sociedadId;
+const router = useRouter();
 
 const props = defineProps({
         nombrePagina: {},
         rutaNavegada:{},
-        RutaName:{},
 });
+
+// Define la función que será llamada al hacer clic en el botón
+const retrocederRuta = () => {
+  // Usa el método go de router para moverse hacia atrás en el historial de navegación
+  router.go(-1);
+};
 </script>
 
 <style scoped>
+
 header.Header {
 background: #F8F8F8;
 color: #1A2771;
@@ -42,6 +49,11 @@ header.Header > * {
     text-decoration: none;
     display: flex;
 
+}
+
+header.Header h2.Name-page.main {
+
+    cursor: pointer;    
 }
 
 header.Header h2.Name-page {

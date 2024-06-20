@@ -6,7 +6,7 @@
         <template #cabecera>
             <!-- Muestra el componente HeaderVue con el nombre de la página -->
             <!-- Si RutaNavegada está vacía, muestra "Configuraciones" -->
-            <Headervue nombrePagina="Configuraciones" RutaName="configuracion" :rutaNavegada="RutaNavegada" />
+            <Headervue nombrePagina="Configuraciones" :rutaNavegada="RutaNavegada" />
 
         </template>
         
