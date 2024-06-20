@@ -61,16 +61,16 @@
                 </template>
             </PeriodosRow>
             <!--Final cuerpo-->
-        </table>                
+        </table>    
+        <CicloRetomarEmpleado ref='CicloCrearEmpleado' @notificacion="resultadoActivacion" />            
     </div>
-   
 </template>
 
 <script setup>
 import EditIcon from '@/components/icons/Edit-icon.vue';
 import InterruptorButton from '@/components/inputs/Interruptor-modal-button.vue';
-import InputCheckbox from '@/components/inputs/Input-Checkbox.vue';
 import PeriodosRow from '@/components/tablas/configuracion/Periodos-row.vue';
+import CicloRetomarEmpleado from '@/components/elementos/Ciclo-Retomar-Empleado.vue';
 
 import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
 
@@ -88,6 +88,9 @@ const props = defineProps({
     default: () => []
   }
 });
+
+const CicloCrearEmpleado = ref(null)
+
 const emit = defineEmits([
     'upData',
     'actualizar_Lista',

@@ -2,17 +2,17 @@
     <div class="panel-empleados">
         <div class="acciones-form">
             <div class="filtros">
-                <ListaTemplate v-model="filtroGrupo" :options="ListaGrupos" optionsSelected="Seleccionar Periodo"/>
+                <ListaTemplate v-model="filtroPeriodo" :options="ListaPeriodos" optionsSelected="Seleccionar Periodo"/>
             </div>     
             
-            <TemplateButton text="Añadir Siguiente Periodo">
+            <TemplateButton text="Añadir Siguiente Periodo" @click="ActionButton">
                 <template #post>
                     <PlusCirculoIcon Stroke="#FFFFFF"/>
                 </template>
             </TemplateButton>
 
         </div><!--final contenedor acciones-form-->
-        <!--tabla con los datos-->
+        <!--tabla con los datos
         <div class="cuerpo-tabla">
             <PeriodosGeneral  
                 :listaEmpleados="ListaPeriodos"   
@@ -21,6 +21,7 @@
                 @mostrarNotificacion="showNotificacion"
             />
         </div>
+        -->
         <AlertShort
             ref="notificacionStatus"
         />
@@ -36,12 +37,8 @@
     //alertas
     import AlertShort from '@/components/alertas/Alert-short-template.vue';
 
-
-
     //librerias
     import { ref, onMounted, reactive, toRefs, watch, inject} from 'vue';
-    
-    import axios from 'axios';
 
     // Inyectar el valor proporcionado por la url
     import { useRoute } from 'vue-router';
@@ -65,8 +62,6 @@
         ActualizarDatosNavegador();
     }
 
-
-
     //fin control del modal
 
     //variables a utilizar de forma reactiva
@@ -74,10 +69,7 @@
         ListaPeriodos: [], // areglo con los datos de los empleados
     });
 
-
-    //lista de grupos
-    const ListaGrupos = ref([]);
-    const filtroGrupo = ref(0)
+    const filtroPeriodo = ref(0)
 
     //valor ingresado por el usuario
     const shearch = ref('')
@@ -85,12 +77,7 @@
     //lista de empleados
     const {ListaPeriodos} = toRefs(state); 
     
-
-
-
-
     //filtros
-
 
     /**
     * Asigna el valor de "grupo" al arreglo de parámetros de la petición de empleados.
@@ -101,7 +88,7 @@
     * @param {string | number} valor - El valor del grupo que se asignará.
     * @returns {void} No devuelve ningún valor, pero modifica el objeto 'parametrosPeticionEmpleados'.
     */ 
-    const addGrupo = (valor) => {
+    const addPeriodo = (valor) => {
         if (valor == '' || valor == null) {
             parametrosPeticionEmpleados.grupo_id = 0
         } else {
@@ -115,49 +102,25 @@
         */
     };
 
-    // Arreglo que contiene el arreglo original
-    let listaEmpleadosOriginal = null;
-
-    /**
-     * aplica un filtro segun el texto ingresado
-     * @param {String} text - entrada del texto del usuario
-    
-    */
-    const filtrar = (text) => {
-    // Si la lista original no está establecida, guarda la lista actual como la original
-        if (listaEmpleadosOriginal === null) {
-            listaEmpleadosOriginal = [...ListaPeriodos.value];
-        }
-
-        // Si el texto es vacío, restablece la lista mostrada a la lista original
-        if (text.trim() === '') {
-            ListaPeriodos.value = [...listaEmpleadosOriginal];
-            return;
-        }
-
-        // Normaliza el texto de búsqueda
-        let normalizarText = text?.toLowerCase().trim();
-
-        // Filtra la lista original basándose en el texto de búsqueda
-        const filtrado = listaEmpleadosOriginal.filter(
-            (empleado) => empleado.nombre?.toLowerCase().includes(normalizarText) ||
-            empleado.apellido_paterno?.toLowerCase().includes(normalizarText) ||
-            empleado.rut?.includes(normalizarText)
-        );
-
-        // Actualiza la lista mostrada con los resultados filtrados
-        ListaPeriodos.value = filtrado;
-    };
 
     //escucha el cambio de la variable y ejecuta la funcion
-    watch(filtroGrupo, addGrupo);
-    //escucha los cambios en la variable y ejecuta la funcion filtrar
-    watch(shearch, filtrar);
+    watch(filtroPeriodo, addPeriodo);
+
+
+const ActionButton = () => {
+    
+}
+
+
+
+
 
     // al montar el componente ejecuta las funciones
     onMounted(async () => {
      
     });
+
+    
 </script>
 
 <style scoped>
