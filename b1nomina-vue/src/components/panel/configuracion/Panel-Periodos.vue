@@ -15,9 +15,9 @@
         <!--tabla con los datos         -->
         
         <div class="cuerpo-tabla">
-            <PeriodosGeneral  
+            <PeriodosGeneral v-if="ListaPeriodos"  
                 ref="TablaPeriodos"
-                :listaEmpleados="ListaPeriodos"   
+                :listaEmpleados="ListadoPeriodos_selecionado"   
                 @actualizar_Lista="pedirPeriodos"
                 @mostrarNotificacion="showNotificacion"
             />
@@ -88,13 +88,14 @@
     * @returns {void} No devuelve ningún valor, pero modifica el objeto 'parametrosPeticionEmpleados'.
     */ 
     const addPeriodo = (valor) => {
-        
         filtroPeriodo.value = valor;
-        if (valor == '' || valor == null) {
-            ListadoPeriodos_selecionado.value = ListaPeriodos[0]
+        const keysD = Object.keys(ListaPeriodos.value)
+
+        if (valor == '' || valor == undefined) {
+            ListadoPeriodos_selecionado.value = ListaPeriodos.value[keysD[0]]
         } else {
             //convierte el valor a entero y lo guarda en el arreglo
-            ListadoPeriodos_selecionado.value = ListaPeriodos[valor] ;
+            ListadoPeriodos_selecionado.value = ListaPeriodos.value[valor] ;
         }
     };
 
@@ -125,18 +126,20 @@ const pedirPeriodos = async () => {
             return acumulador;
         }, {});
 
-        ListaPeriodos.value(agrupadoPorAnio);
+        ListaPeriodos.value = agrupadoPorAnio;
+        const keysD = Object.keys(ListaPeriodos.value)
+
+        console.log(filtroPeriodo.value)
+        console.log(ListaPeriodos.value[keysD[0]])
 
         // Seleccionar el primer elemento si filtroPeriodo es 0, de lo contrario, seleccionar uno basado en filtroPeriodo.value
-        (filtroPeriodo == 0)? ListadoPeriodos_selecionado.value = agrupadoPorAnio : ListadoPeriodos_selecionado.value = agrupadoPorAnio[filtroPeriodo.value];
+        ListadoPeriodos_selecionado.value = ListaPeriodos.value[keysD[0]]
     } else {
         console.error(respuesta?.error);
         showNotificacion({'texto':respuesta?.data?.message, 'valor': true});
     }
 
 }
-
-
 
     provide('actualizarData', pedirPeriodos());
 

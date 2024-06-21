@@ -1,25 +1,25 @@
 <template>
     <tr class="rowTabla cuerpo">
         <!--Nombre y apelidos-->
-        <td class="">
+        <td class="rowperiodo">
             <div>
                 <slot name="periodo"></slot>
             </div>                    
         </td>
         <!--Rut-->
-        <td class="">
+        <td class="Number">
             <span>
                 <slot name="uf"></slot>
             </span>
         </td>
         <!--utm-->
-        <td class="">
+        <td class="Number">
             <span class="utm">
                 <slot name="utm"></slot>
             </span>
         </td>
         <!--Saladio / Fac.Actualización	-->
-        <td class="">
+        <td class="Number">
             <span>
                 <slot name="factor_actualizacion"></slot>
             </span>
@@ -97,9 +97,16 @@ tr.cuerpo > td {
  * Estilos para la columna de nombres de empleados
  * Alinea el texto al inicio y limita el ancho máximo para evitar desbordamientos
  */
-td.rowNombre > div {
+td.rowperiodo > div {
     text-align: start;
-    max-width: 290px;
+    max-width: 200px;
+    box-sizing: border-box;
+    padding-left: 24px;
+}
+
+td.Number > div {
+    text-align: end;
+    box-sizing: border-box;
 }
 
 

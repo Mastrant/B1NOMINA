@@ -4,7 +4,7 @@
         <table class="TablaEmpleados">
             <!--Encabezado de la tabla-->
             <tr class="rowTabla encabezado">
-                <th class="rowNombre">
+                <th class="">
                     PERIODO 
                 </th>
                 <th class="">
@@ -14,7 +14,7 @@
                     UTM
                 </th>
                 <th class=""> 
-                    Fac. Actualización
+                    FACTOR
                 </th>
                 <th class="Estado"> 
                     ESTADO 
