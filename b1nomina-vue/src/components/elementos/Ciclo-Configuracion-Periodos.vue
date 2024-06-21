@@ -11,16 +11,12 @@
         
     >
         <template #default><!--Espacio para los formularios -->
-            <div v-if=" formActivo == 1"> <!--retomar Salario-->                    
-                <FormSalario 
-                   @respuestaServidor="notificacionModal"
-                />
+            <div v-if=" formActivo == 1"> <!--Añadir Periodo-->                    
+                {{ Informacion }}
             </div>
 
-            <div v-if=" formActivo == 2"> <!--retomar contrato-->                    
-                <FormDatosContrato 
-                    @respuestaServidor="notificacionModal"
-                />
+            <div v-if=" formActivo == 2"> <!--Editar Periodo-->                    
+                {{Informacion}}
             </div>
 
         </template>
@@ -31,11 +27,9 @@
     //componentes
     import TemplateModal from '@/components/modal/TemplateModal.vue';
     //formularios
-    import FormSalario from '@/components/formularios/perfilEmpleado/Form-Salario.vue';
-    import FormDatosContrato from '@/components/formularios/perfilEmpleado/Form-DatosContrato.vue';
 
     //librerias
-    import { ref, onMounted, defineExpose, inject } from 'vue';
+    import { ref, onMounted, defineExpose, inject, defineEmits} from 'vue';
     import { useRoute } from 'vue-router';
 
     const actualizar = inject('actualizarData')
@@ -49,7 +43,7 @@
     const formActivo = ref(1)
     const TextoButton = ref('')
     const TituloModal = ref('')
-    const EmpleadoID_Selecionado = ref(0)
+    const Informacion = ref([])
     const modalActivo = ref(0)
     const IDFormModal = ref('')
 
@@ -80,24 +74,26 @@
      * @example
      * ActionButton(1, 1, 123); // Muestra el modal para cargar CV con el ID 123.
      */
-    const ActionButton = (TipoAccion, item_ID) => {
+    const ActionButton = (TipoAccion, Datos) => {
         switch (TipoAccion) {
             case 1:                
                 formActivo.value = TipoAccion;
-                EmpleadoID_Selecionado.value = item_ID;
-                TextoButton.value = 'Actualizar';
-                TituloModal.value = 'Datos Laborales';
-                IDFormModal.value = 'ActualizarSalario';               
+                Informacion.value = Datos
+                TextoButton.value = 'Añadir siguiente periodo';
+                TituloModal.value = 'Añadir siguiente periodo';
+                IDFormModal.value = 'AddPeriodo';               
                 break;
             case 2:
                 formActivo.value = TipoAccion;
-                EmpleadoID_Selecionado.value = item_ID;
-                TextoButton.value = 'Actualizar';
-                TituloModal.value = 'Datos Laborales';
-                IDFormModal.value = 'ActualizarContrato';
+                Informacion.value = Datos
+                TextoButton.value = 'Guardar';
+                TituloModal.value = 'Datos del periodo';
+                IDFormModal.value = 'EditPeriodo';
             
                 break;
-            case 3:
+            /* 
+            por si es necesario añadir otro tipo de accion
+                     case 3:
                 formActivo.value = TipoAccion;
                 EmpleadoID_Selecionado.value = item_ID;
                 TextoButton.value = 'Actualizar';
@@ -105,6 +101,7 @@
                 IDFormModal.value = 'ActualizarPuesto';
 
                 break;
+            */
         }
         showModal(1)
     }
@@ -127,8 +124,10 @@
 
     //Expoe la funcion para activar el modal
     defineExpose({
-        ActionButton,
+        ActionButton
     })
+
+
 
 
 // al montar el componente ejecuta las funciones

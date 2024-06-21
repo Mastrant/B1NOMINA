@@ -74,21 +74,21 @@
 
 <script setup>
 // Componentes
-import LogoTextVue from '../logos/Logo-text.vue';
-import MenuButton from '../botones/Menu-button.vue';
-import NavButton from '../botones/Nav-button.vue';
-import NotificationButton from '../botones/Notification-button.vue';
-import CantidadNotificaciones from '../CantidadNotificaciones.vue';
+import LogoTextVue from '@/components/logos/Logo-text.vue';
+import MenuButton from '@/components/botones/Menu-button.vue';
+import NavButton from '@/components/botones/Nav-button.vue';
+import NotificationButton from '@/components/botones/Notification-button.vue';
+import CantidadNotificaciones from '@/components/CantidadNotificaciones.vue';
 
 //Iconos
 
-import CuboIcon from '../icons/Cubo-icon.vue';
+import CuboIcon from '@/components/icons/Cubo-icon.vue';
 //import TwoPersonIcon from './icons/TwoPerson-icon.vue';
 //import TableIcon from './icons/Table-icon.vue';
 //import AjustesIcon from './icons/Ajustes-icon.vue';
-import CampanaIcon from '../icons/Campana-icon.vue';
-import HelpCircleIcon from '../icons/HelpCircle-icon.vue';
-import TuerquitaIcon from '../icons/Tuerquita-icon.vue';
+import CampanaIcon from '@/components/icons/Campana-icon.vue';
+import HelpCircleIcon from '@/components/icons/HelpCircle-icon.vue';
+import TuerquitaIcon from '@/components/icons/Tuerquita-icon.vue';
 import SociedadBox from '@/components/box/Sociedad-box.vue';
 
 //axios

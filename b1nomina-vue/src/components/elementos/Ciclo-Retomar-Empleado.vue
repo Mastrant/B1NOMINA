@@ -120,15 +120,6 @@
     const Form3 = ref(null);
     const Form4 = ref(null);
 
-    const limpiarFormularios = () => {
-    // Llamar a las funciones de limpieza de cada componente hijo
-        Form1.value?.resetForm();
-        Form2.value?.resetForm();
-        Form3.value?.resetForm();
-        Form4.value?.resetForm();
-        ID_Empleado_Selecionado.value = null;
-    };
-
     const PedirInfo = async (ID_Empleado) => {
        
         EmpleadoID.value = ID_Empleado;

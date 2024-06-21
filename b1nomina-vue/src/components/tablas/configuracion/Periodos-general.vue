@@ -26,57 +26,54 @@
             <!--Final encabezado-->
 
             <!--Cuerpo de la tabla-->
-            <PeriodosRow  v-for="(item) in ListaEmpleados" :key="item.id">
+            <PeriodosRow  v-for="(item) in ListaEmpleados" :key="item?.id">
                 <!--ChecBox-->
                 <!--Nombre y apelidos-->
                 <template v-slot:NombresApellidos>
-                    {{item.nombres}} 
-                    {{ item.apellido_paterno }}
-                    {{ item.apellido_materno }}
+                    {{item}} 
+                    {{ item }}
+                    {{ item }}
                 </template>
                 <!--Rut-->
                 <template v-slot:rut>
-                    {{item.rut}}
+                    {{item?.uf}}
                 </template>
                  <!--Cargo-->
                 <template v-slot:cargo>
-                    {{ item.cargo }}
+                    {{ item?.utm }}
                 </template>
                 <!--Saladio / sueldo-->
                 <template v-slot:sueldo>
-                    {{ item.sueldo }}
+                    {{ item?.factor_actualizacion }}
                 </template>
                 <!--Estado-->
                 <template v-slot:activateComponente>
-                    <InterruptorButton 
-                        :Objid="item.id" 
-                        :Estado="item.activo"
-                        @actualizarListado="resultadoActivacion"
+                    <InterruptorButton
+                        Tipo="individual"
+                        :Texto="(item?.activo == 1)? 'Activo' : 'Inactivo' " 
+                        :Estado="(item?.activo == 1)? true : false"
                     />
-                    <span v-if="item.activo == true">Activo</span>
-                    <span v-else>Inactivo</span>
                 </template>
                 <template v-slot:accionButton>          
-                    <EditIcon @click="console.log('descargar info' + item.id)" text="Descargar"/>
+                    <EditIcon Stroke="#1A245B" @click="activarFormulario(2,[])" text="Editar"/>
                 </template>
             </PeriodosRow>
             <!--Final cuerpo-->
         </table>    
-        <CicloRetomarEmpleado ref='CicloCrearEmpleado' @notificacion="resultadoActivacion" />            
+
+        <CicloConfiguracionPeriodos ref='CicloCrearPeriodo' />            
     </div>
 </template>
 
 <script setup>
 import EditIcon from '@/components/icons/Edit-icon.vue';
-import InterruptorButton from '@/components/inputs/Interruptor-modal-button.vue';
+import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
 import PeriodosRow from '@/components/tablas/configuracion/Periodos-row.vue';
-import CicloRetomarEmpleado from '@/components/elementos/Ciclo-Retomar-Empleado.vue';
+import CicloConfiguracionPeriodos from '@/components/elementos/Ciclo-Configuracion-Periodos.vue';
 
 import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
 
 import { useRoute } from 'vue-router';
-
-import almacen from '@/store/almacen.js';
 
 const route = useRoute();
 const sociedadId = route.params.sociedadId;
@@ -85,11 +82,22 @@ const sociedadId = route.params.sociedadId;
 const props = defineProps({
   listaEmpleados: {
     type: Array,
-    default: () => []
+    default: () => [{id:'ab'}]
   }
 });
 
-const CicloCrearEmpleado = ref(null)
+const CicloCrearPeriodo = ref(null)
+
+
+
+const activarFormulario = (Action, Data = []) => {
+    CicloCrearPeriodo.value?.ActionButton(Action, Data)
+}
+
+defineExpose({
+    activarFormulario
+})
+
 
 const emit = defineEmits([
     'upData',

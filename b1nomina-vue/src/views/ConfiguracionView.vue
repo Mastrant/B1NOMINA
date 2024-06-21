@@ -40,7 +40,7 @@
     const CambiarNombreRuta = (Nombre) => {
         // Actualiza el valor de RutaNavegada con el nuevo nombre proporcionado
         if (Nombre) {
-            RutaNavegada.value = ">  " + Nombre;
+            RutaNavegada.value = "> " + Nombre;
         } else {
             RutaNavegada.value = '';
         }

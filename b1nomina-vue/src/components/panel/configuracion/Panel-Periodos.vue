@@ -2,7 +2,7 @@
     <div class="panel-empleados">
         <div class="acciones-form">
             <div class="filtros">
-                <ListaTemplate v-model="filtroPeriodo" :options="ListaPeriodos" optionsSelected="Seleccionar Periodo"/>
+                <ListaTemplate v-model="filtroPeriodo" :options="Listado_years" optionsSelected="Seleccionar Periodo"/>
             </div>     
             
             <TemplateButton text="Añadir Siguiente Periodo" @click="ActionButton">
@@ -12,16 +12,18 @@
             </TemplateButton>
 
         </div><!--final contenedor acciones-form-->
-        <!--tabla con los datos
+        <!--tabla con los datos         -->
+        
         <div class="cuerpo-tabla">
             <PeriodosGeneral  
-                :listaEmpleados="ListaPeriodos"   
-                @upData="InteraccionListaEmpleadosSelecionados"
-                @actualizar_Lista="pedirEmpleados"
+                ref="TablaPeriodos"
+                :listaEmpleados="ListadoPeriodos_selecionado"   
+                @actualizar_Lista="pedirPeriodos"
                 @mostrarNotificacion="showNotificacion"
             />
+            
         </div>
-        -->
+
         <AlertShort
             ref="notificacionStatus"
         />
@@ -38,10 +40,15 @@
     import AlertShort from '@/components/alertas/Alert-short-template.vue';
 
     //librerias
-    import { ref, onMounted, reactive, toRefs, watch, inject} from 'vue';
+    import { ref, reactive, toRefs, watch, inject, onBeforeMount, provide} from 'vue';
+
+    import peticiones_configuracion_Periodos from '@/peticiones/configuracion/periodos.js';
+
 
     // Inyectar el valor proporcionado por la url
     import { useRoute } from 'vue-router';
+
+    const TablaPeriodos = ref(null)
 
     // Accede a la función proporcionada por el componente padre
     const CambiarNombreRuta = inject('CambiarNombreRuta');
@@ -56,10 +63,7 @@
     const notificacionStatus = ref(null);
 
     const showNotificacion = (Data) => {
-        notificacionStatus.value.ActivarNotificacion(
-            Data //Formato: {'Titulo': "empleado especial", 'Descripcion': "esta es la descripcion de la cartica"}   
-        );
-        ActualizarDatosNavegador();
+        notificacionStatus.value.ActivarNotificacion(Data); //Formato: {'Titulo': "empleado especial", 'Descripcion': "esta es la descripcion de la cartica"}   
     }
 
     //fin control del modal
@@ -70,12 +74,12 @@
     });
 
     const filtroPeriodo = ref(0)
-
-    //valor ingresado por el usuario
-    const shearch = ref('')
     
     //lista de empleados
     const {ListaPeriodos} = toRefs(state); 
+    const Listado_years = ref([])
+    const ListadoPeriodos_selecionado = ref([])
+    const Data_addPeriodo = ref(['asdasd'])
     
     //filtros
 
@@ -89,17 +93,13 @@
     * @returns {void} No devuelve ningún valor, pero modifica el objeto 'parametrosPeticionEmpleados'.
     */ 
     const addPeriodo = (valor) => {
+        filtroPeriodo.value = valor;
         if (valor == '' || valor == null) {
-            parametrosPeticionEmpleados.grupo_id = 0
+            ListadoPeriodos_selecionado.value = ListaPeriodos[0]
         } else {
             //convierte el valor a entero y lo guarda en el arreglo
-            parametrosPeticionEmpleados.grupo_id = parseInt(valor);
+            ListadoPeriodos_selecionado.value = ListaPeriodos[valor] ;
         }
-       
-        //solicita la actualizaion de los datos
-        /*
-
-        */
     };
 
 
@@ -107,17 +107,34 @@
     watch(filtroPeriodo, addPeriodo);
 
 
-const ActionButton = () => {
+    const ActionButton = () => {
+        TablaPeriodos.value?.activarFormulario(1, Data_addPeriodo.value)
+    }
+
+const pedirPeriodos = async () => {
+    const respuesta = await peticiones_configuracion_Periodos.getListadoPeriodos(idSociedad);
     
+    if(respuesta.success === true){
+        Listado_years.value = respuesta.data?.years;
+        // Asumiendo que details es la propiedad correcta y no una función
+        ListaPeriodos.value = respuesta.data?.details;
+
+        // Seleccionar el primer elemento si filtroPeriodo es 0, de lo contrario, seleccionar uno basado en filtroPeriodo.value
+        (filtroPeriodo == 0)? ListadoPeriodos_selecionado.value = ListaPeriodos : ListadoPeriodos_selecionado.value = ListaPeriodos[filtroPeriodo.value];
+    } else {
+        console.error(respuesta?.error);
+        showNotificacion({'texto':respuesta?.data?.message, 'valor': true});
+    }
+    console.log(ListaPeriodos.value);
 }
 
 
 
-
+    provide('actualizarData', pedirPeriodos());
 
     // al montar el componente ejecuta las funciones
-    onMounted(async () => {
-     
+    onBeforeMount(async () => {
+        pedirPeriodos()
     });
 
     

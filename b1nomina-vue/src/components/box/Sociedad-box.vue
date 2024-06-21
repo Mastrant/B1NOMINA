@@ -7,7 +7,7 @@
             <span class="text-perfil">Rut {{rutScoiedad}}</span>
         </div>
         <div v-show="desplegarMenu">
-            <TresPuntosIcon class="icon" @click="logOut"/>
+            <DoorExit text="Cerrar Sesión" @click="logOut"/>
         </div>           
     </div>
 
@@ -20,7 +20,7 @@
 <script setup>
 // uso 
 import { defineProps } from 'vue';
-import TresPuntosIcon from '@/components/icons/TresPuntos-icon.vue';
+import DoorExit from '@/components/icons/Door-exit-icon.vue';
 //AVATAR
 import Avatar from '@/components/avatars/Avatar1.vue'
 import { useRouter } from 'vue-router';
