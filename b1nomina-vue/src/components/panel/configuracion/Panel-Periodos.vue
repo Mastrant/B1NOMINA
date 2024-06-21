@@ -68,15 +68,10 @@
 
     //fin control del modal
 
-    //variables a utilizar de forma reactiva
-    const state = reactive({
-        ListaPeriodos: [], // areglo con los datos de los empleados
-    });
-
     const filtroPeriodo = ref(0)
     
     //lista de empleados
-    const {ListaPeriodos} = toRefs(state); 
+    const ListaPeriodos = ref([]); 
     const Listado_years = ref([])
     const ListadoPeriodos_selecionado = ref([])
     const Data_addPeriodo = ref(['asdasd'])
@@ -93,6 +88,7 @@
     * @returns {void} No devuelve ningún valor, pero modifica el objeto 'parametrosPeticionEmpleados'.
     */ 
     const addPeriodo = (valor) => {
+        
         filtroPeriodo.value = valor;
         if (valor == '' || valor == null) {
             ListadoPeriodos_selecionado.value = ListaPeriodos[0]
@@ -119,10 +115,20 @@ const pedirPeriodos = async () => {
         // Asumiendo que details es la propiedad correcta y no una función
         ListaPeriodos.value = respuesta.data?.details;
 
-        console.log( Listado_years.value);
+        // Agrupar elementos por año
+        const agrupadoPorAnio = respuesta.data?.details.reduce((acumulador, item) => {
+            const anio = item.anio;
+            if (!acumulador[anio]) {
+                acumulador[anio] = [];
+            }
+            acumulador[anio].push(item);
+            return acumulador;
+        }, {});
+
+        ListaPeriodos.value(agrupadoPorAnio);
 
         // Seleccionar el primer elemento si filtroPeriodo es 0, de lo contrario, seleccionar uno basado en filtroPeriodo.value
-        (filtroPeriodo == 0)? ListadoPeriodos_selecionado.value = ListaPeriodos : ListadoPeriodos_selecionado.value = ListaPeriodos[filtroPeriodo.value];
+        (filtroPeriodo == 0)? ListadoPeriodos_selecionado.value = agrupadoPorAnio : ListadoPeriodos_selecionado.value = agrupadoPorAnio[filtroPeriodo.value];
     } else {
         console.error(respuesta?.error);
         showNotificacion({'texto':respuesta?.data?.message, 'valor': true});
