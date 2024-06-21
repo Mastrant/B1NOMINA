@@ -26,28 +26,26 @@
             <!--Final encabezado-->
 
             <!--Cuerpo de la tabla-->
-            <PeriodosRow  v-for="(item) in ListaEmpleados" :key="item?.id">
+            <PeriodosRow  v-for="item in ListaEmpleados" :key="item?.id">
                 <!--ChecBox-->
-                <!--Nombre y apelidos-->
-                <template v-slot:NombresApellidos>
-                    {{item}} 
-                    {{ item }}
-                    {{ item }}
+
+                <template #periodo>
+                    {{item?.nombre}} 
                 </template>
-                <!--Rut-->
-                <template v-slot:rut>
+
+                <template #uf>
                     {{item?.uf}}
                 </template>
-                 <!--Cargo-->
-                <template v-slot:cargo>
+
+                <template #utm>
                     {{ item?.utm }}
                 </template>
-                <!--Saladio / sueldo-->
-                <template v-slot:sueldo>
+
+                <template #factor_actualizacion>
                     {{ item?.factor_actualizacion }}
                 </template>
                 <!--Estado-->
-                <template v-slot:activateComponente>
+                <template #activateComponente>
                     <InterruptorButton
                         Tipo="individual"
                         :Texto="(item?.activo == 1)? 'Activo' : 'Inactivo' " 
@@ -82,7 +80,7 @@ const sociedadId = route.params.sociedadId;
 const props = defineProps({
   listaEmpleados: {
     type: Array,
-    default: () => [{id:'ab'}]
+    default: () => []
   }
 });
 

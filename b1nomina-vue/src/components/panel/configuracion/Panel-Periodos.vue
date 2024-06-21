@@ -17,7 +17,7 @@
         <div class="cuerpo-tabla">
             <PeriodosGeneral  
                 ref="TablaPeriodos"
-                :listaEmpleados="ListadoPeriodos_selecionado"   
+                :listaEmpleados="ListaPeriodos"   
                 @actualizar_Lista="pedirPeriodos"
                 @mostrarNotificacion="showNotificacion"
             />
@@ -119,13 +119,15 @@ const pedirPeriodos = async () => {
         // Asumiendo que details es la propiedad correcta y no una función
         ListaPeriodos.value = respuesta.data?.details;
 
+        console.log( Listado_years.value);
+
         // Seleccionar el primer elemento si filtroPeriodo es 0, de lo contrario, seleccionar uno basado en filtroPeriodo.value
         (filtroPeriodo == 0)? ListadoPeriodos_selecionado.value = ListaPeriodos : ListadoPeriodos_selecionado.value = ListaPeriodos[filtroPeriodo.value];
     } else {
         console.error(respuesta?.error);
         showNotificacion({'texto':respuesta?.data?.message, 'valor': true});
     }
-    console.log(ListaPeriodos.value);
+
 }
 
 

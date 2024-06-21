@@ -3,25 +3,25 @@
         <!--Nombre y apelidos-->
         <td class="">
             <div>
-                <slot name="NombresApellidos"></slot>
+                <slot name="periodo"></slot>
             </div>                    
         </td>
         <!--Rut-->
         <td class="">
             <span>
-                <slot name="rut"></slot>
+                <slot name="uf"></slot>
             </span>
         </td>
-        <!--Cargo-->
+        <!--utm-->
         <td class="">
-            <span class="cargo">
-                <slot name="cargo"></slot>
+            <span class="utm">
+                <slot name="utm"></slot>
             </span>
         </td>
-        <!--Saladio / sueldo-->
+        <!--Saladio / Fac.Actualización	-->
         <td class="">
             <span>
-                <slot name="sueldo"></slot>
+                <slot name="factor_actualizacion"></slot>
             </span>
         </td>
         <!--Estado-->
