@@ -17,8 +17,7 @@
                 />
             </div>
 
-            <div v-if=" formActivo == 2"> <!--Editar Periodo-->  
-                {{ Informacion }}                  
+            <div v-if=" formActivo == 2"> <!--Editar Periodo-->                  
                 <FormEditPeriodo 
                     :Informacion="Informacion"
                     @DataNotificacion="procesarRespuesta"
