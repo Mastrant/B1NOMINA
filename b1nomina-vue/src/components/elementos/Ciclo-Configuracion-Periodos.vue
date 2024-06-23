@@ -21,6 +21,7 @@
                 <FormEditPeriodo 
                     :Informacion="Informacion"
                     @DataNotificacion="procesarRespuesta"
+                    @DataNotificacionModal="asd"
                 />
             </div>
 

@@ -44,6 +44,49 @@ const peticiones_configuracion_Periodos = {
             return { success: false, error: error };
         }  
     }, 
+
+    /**
+     * 
+     * @param {Number} idMaster 
+     * @param {Number} idPeriodo 
+     * @param {Object} payload 
+     * @returns {Object} { success: true, data: respuesta?.data };
+     */
+    ActualizarInformacionPeriodo(idMaster, idPeriodo, payload){
+        try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
+            
+            return axios.put(`periodo/${idPeriodo}/update?user_updater=${idMaster}`,payload)
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+           .then(respuesta => {
+                return { success: true, data: respuesta?.data };
+            })
+            // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+           .catch(error => {
+                return { success: false, error: error?.response };
+            });
+        } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
+            return { success: false, error: error };
+        }  
+    },
+    ActualizarEstadoPeriodo(idMaster, id, payload){
+        try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
+            return axios.put(`departamento/${id}/update?user_updater=${idMaster}`,payload)
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+           .then(respuesta => {
+                return { success: true, data: respuesta?.data };
+            })
+            // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+           .catch(error => {
+                return { success: false, error: error?.response };
+            });
+        } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
+            return { success: false, error: error };
+        }  
+    },
 }
 
 

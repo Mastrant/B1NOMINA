@@ -45,8 +45,8 @@
 
 <script setup>
 import InputBorderDescripcion from '@/components/inputs/Input-Border-descripcion.vue';
-
-import { defineProps, ref, reactive, watch, defineEmits, onMounted, inject} from 'vue';
+import peticiones_configuracion_Periodos from '@/peticiones/configuracion/periodos.js'
+import { defineProps, ref, reactive, watch, defineEmits, onMounted, inject, onBeforeMount} from 'vue';
 
 const props = defineProps({
     Informacion: {
@@ -87,8 +87,8 @@ watch(monto_UTM, (nuevoValor) => ActualizarPayload('monto_UTM', nuevoValor));
 watch(factor_actualizacion, (nuevoValor) => ActualizarPayload('factor_actualizacion', nuevoValor));
 
 //ve si hay cambios en la informacion y actualiza los campos:
-watch(() => props.Informacion.Sociedad, (nuevoValor) => { 
-  MostrarValores(nuevoValor) 
+watch(() => props.Informacion, (nuevoValor) => { 
+    MostrarValores(nuevoValor) 
 });
 
 
@@ -119,26 +119,21 @@ const verificarCambios = () => {
 const MostrarValores = (DATA) => {
     RequiereActualizar.value = false;
 
-    monto_UF.value = (DATA?.responsable == null)? '' :DATA?.responsable;
-    monto_UTM.value = (DATA?.rut_responsable == null)? '' :DATA?.rut_responsable;
-    factor_actualizacion.value = (DATA?.email_responsable == null)? '' :DATA?.email_responsable;
+    monto_UF.value = (DATA?.uf == null)? '' :DATA?.uf;
+    monto_UTM.value = (DATA?.utm == null)? '' :DATA?.utm;
+    factor_actualizacion.value = (DATA?.factor_actualizacion == null)? '' :DATA?.factor_actualizacion;
 
     // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
     // utilizando '' si DATA?.documento es null.
-    payload_old.responsable = DATA?.responsable ?? '';
-    payload.responsable = DATA?.responsable ?? '';
+    payload_old.utm = DATA?.utm ?? '';
+    payload.utm = DATA?.utm ?? '';
     
-    payload_old.rut_responsable = DATA?.rut_responsable ?? '';
-    payload.rut_responsable = DATA?.rut_responsable ?? '';
+    payload_old.uf = DATA?.uf ?? '';
+    payload.uf = DATA?.uf ?? '';
 
-    payload_old.email_responsable = DATA?.email_responsable ?? '';
-    payload.email_responsable = DATA?.emailResponsable ?? '';
-
-    payload_old.telefono_responsable = DATA?.telefono_responsable ?? '';
-    payload.telefono_responsable = DATA?.telefono_responsable ?? '';
-
+    payload_old.factor_actualizacion = DATA?.factor_actualizacion ?? '';
+    payload.factor_actualizacion = DATA?.factor_actualizacion ?? '';
 }
-
 /**
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
@@ -149,24 +144,24 @@ const Enviar = async () => {
 
 
     if (RequiereActualizar.value == true) {        
-        const respuesta = await peticiones_configuracion_datosEmpresa?.ActualizarCentroDeCosto(
-            ID_USERMASTER.value, ID_Sociedad.value, payload
+        const respuesta = await peticiones_configuracion_Periodos?.ActualizarInformacionPeriodo(
+            ID_USERMASTER.value, props.Informacion?.id, payload
         );
 
         if(respuesta.success == true){
-            emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
+            emit('DataNotificacion', {'titulo': 'Periodo editado con éxito', 'texto':respuesta?.data?.message, 'valor': true})
         } else {
             console.error(respuesta?.error)
-            emit('DataNotificacion', {'texto': respuesta?.error, 'valor': false})
+            emit('DataNotificacion', {'titulo': 'Error al editar el Periodo', 'texto': respuesta?.error, 'valor': false})
         }
     } else {
-        emit('DataNotificacion', {'texto': "No se requiere actualizar", 'valor': true});
+        emit('DataNotificacionModal', {'titulo': 'Accion Descartada','texto': "No se requiere actualizar", 'valor': true});
     }
 };
 
 
-onMounted(async () => {
-  await MostrarValores(props.Informacion?.Sociedad)
+onBeforeMount(async () => {
+  await MostrarValores(props.Informacion)
 });
 
 
