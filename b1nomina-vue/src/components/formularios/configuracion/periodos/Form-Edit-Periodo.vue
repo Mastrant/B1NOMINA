@@ -1,6 +1,6 @@
 <template>
     <form class="formulario" :id="IDFORM" @submit.prevent="Enviar">
-        <p>Ingrese los datos correspondientes al periodo: <span>{{Informacion?.nombre}}</span></p>
+        <p class="mensaje">Ingrese los datos correspondientes al periodo: <span class="nombrePeriodo">{{Informacion?.nombre}}</span></p>
 
         <div class="row">
             <InputBorderDescripcion
@@ -218,6 +218,24 @@ div.espacioTrash {
     width: 100%;
     display:flex;
     justify-content: end;
+}
+
+p.mensaje {
+font-family: Poppins;
+font-size: 17px;
+font-weight: 500;
+line-height: 26px;
+text-align: justified;
+margin: 0;
+
+}
+
+p.mensaje > span.nombrePeriodo {
+font-size: 18px;
+font-weight: 600;
+line-height: 26px;
+text-align: justified;
+
 }
 
 </style>
