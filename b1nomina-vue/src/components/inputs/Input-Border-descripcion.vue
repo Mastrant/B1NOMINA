@@ -14,6 +14,8 @@
            :placeholder="Placeholder"
            :minlength="minimoCaracteres"
            :maxlength="maximoCaracteres"
+           :min="minimoNumeros"
+           :max="maximoNumeros"
            :step="NumeroDecimales"
            :value="modelValue"
            @input="$emit('update:modelValue', $event.target.value)"

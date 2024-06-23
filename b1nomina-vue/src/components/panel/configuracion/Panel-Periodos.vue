@@ -2,7 +2,7 @@
     <div class="panel-empleados">
         <div class="acciones-form">
             <div class="filtros">
-                <ListaTemplate v-model="filtroPeriodo" :options="Listado_years" optionsSelected="Seleccionar Periodo"/>
+                <ListaTemplate v-model="filtroPeriodo" :options="Listado_years" :preseleccion="actualYear" options-selected="Seleccionar Periodo"/>
             </div>     
             
             <TemplateButton text="Añadir Siguiente Periodo" @click="ActionButton">
@@ -40,10 +40,9 @@
     import AlertShort from '@/components/alertas/Alert-short-template.vue';
 
     //librerias
-    import { ref, reactive, toRefs, watch, inject, onBeforeMount, provide} from 'vue';
+    import { ref, watch, inject, onBeforeMount, provide} from 'vue';
 
     import peticiones_configuracion_Periodos from '@/peticiones/configuracion/periodos.js';
-
 
     // Inyectar el valor proporcionado por la url
     import { useRoute } from 'vue-router';
@@ -58,6 +57,7 @@
     const route = useRoute();
     // idSociedad es un String
     const idSociedad = route.params.sociedadId;
+    const IDCreator = localStorage.getItem('userId')
 
     //toma la referencia del componente notificacion para utilizar el metodo mostrar
     const notificacionStatus = ref(null);
@@ -74,7 +74,8 @@
     const ListaPeriodos = ref([]); 
     const Listado_years = ref([])
     const ListadoPeriodos_selecionado = ref([])
-    const Data_addPeriodo = ref(['asdasd'])
+    const Data_addPeriodo = ref([])
+    const actualYear = ref('')
     
     //filtros
 
@@ -127,13 +128,13 @@ const pedirPeriodos = async () => {
         }, {});
 
         ListaPeriodos.value = agrupadoPorAnio;
-        const keysD = Object.keys(ListaPeriodos.value)
 
-        console.log(filtroPeriodo.value)
-        console.log(ListaPeriodos.value[keysD[0]])
+        actualYear.value =respuesta.data?.actualYear
+
+        Data_addPeriodo.value = {sociedadID: Number(idSociedad), addYear: respuesta.data?.maxPeridoDb + 1, creador: Number(IDCreator)}
 
         // Seleccionar el primer elemento si filtroPeriodo es 0, de lo contrario, seleccionar uno basado en filtroPeriodo.value
-        ListadoPeriodos_selecionado.value = ListaPeriodos.value[keysD[0]]
+        ListadoPeriodos_selecionado.value = ListaPeriodos.value[actualYear.value]
     } else {
         console.error(respuesta?.error);
         showNotificacion({'texto':respuesta?.data?.message, 'valor': true});
@@ -142,6 +143,7 @@ const pedirPeriodos = async () => {
 }
 
     provide('actualizarData', pedirPeriodos());
+    provide('mostrarNotificacion', showNotificacion);
 
     // al montar el componente ejecuta las funciones
     onBeforeMount(async () => {

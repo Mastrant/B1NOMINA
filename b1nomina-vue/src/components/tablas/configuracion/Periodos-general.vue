@@ -53,7 +53,7 @@
                     />
                 </template>
                 <template v-slot:accionButton>          
-                    <EditIcon Stroke="#1A245B" @click="activarFormulario(2,[])" text="Editar"/>
+                    <EditIcon Stroke="#1A245B" @click="activarFormulario(2, item)" text="Editar"/>
                 </template>
             </PeriodosRow>
             <!--Final cuerpo-->
@@ -69,7 +69,7 @@ import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
 import PeriodosRow from '@/components/tablas/configuracion/Periodos-row.vue';
 import CicloConfiguracionPeriodos from '@/components/elementos/Ciclo-Configuracion-Periodos.vue';
 
-import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
+import { ref, defineProps, watchEffect, onMounted, defineEmits} from 'vue';
 
 import { useRoute } from 'vue-router';
 
@@ -87,7 +87,9 @@ const props = defineProps({
 const CicloCrearPeriodo = ref(null)
 
 
-
+/** 
+ *
+*/
 const activarFormulario = (Action, Data = []) => {
     CicloCrearPeriodo.value?.ActionButton(Action, Data)
 }

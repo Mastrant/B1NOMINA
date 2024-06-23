@@ -6,17 +6,22 @@
         :NombreAccion="TituloModal" 
         :textSubmit="TextoButton"
         :activarModal="activarModal"
-        :ModalActivo="1"
-        :DataNotification="NotificacionModal"
-        
+        :ModalActivo="1"        
     >
         <template #default><!--Espacio para los formularios -->
-            <div v-if=" formActivo == 1"> <!--Añadir Periodo-->                    
-                {{ Informacion }}
+            <div v-if=" formActivo == 1"> <!--Añadir Periodo-->       
+                <FormCreatePeriodo 
+                    :Data="Informacion"
+                    @DataNotificacion="procesarRespuesta"
+                />
             </div>
 
-            <div v-if=" formActivo == 2"> <!--Editar Periodo-->                    
-                {{Informacion}}
+            <div v-if=" formActivo == 2"> <!--Editar Periodo-->  
+                {{ Informacion }}                  
+                <FormEditPeriodo 
+                    :Informacion="Informacion"
+                    @DataNotificacion="procesarRespuesta"
+                />
             </div>
 
         </template>
@@ -27,16 +32,17 @@
     //componentes
     import TemplateModal from '@/components/modal/TemplateModal.vue';
     //formularios
+    import FormCreatePeriodo from '@/components/formularios/configuracion/periodos/Form-Create-Periodo.vue'
+    import FormEditPeriodo from '@/components/formularios/configuracion/periodos/Form-Edit-Periodo.vue';
 
     //librerias
     import { ref, onMounted, defineExpose, inject, defineEmits} from 'vue';
     import { useRoute } from 'vue-router';
 
     const actualizar = inject('actualizarData')
+    const showNotificacion = inject('mostrarNotificacion')
 
     const route = useRoute();
-    // idSociedad es un String
-    const idSociedad = route.params.sociedadId;
 
      /////////// programacion de los modales de activacion ///////////////
     const activarModal = ref(false)
@@ -62,13 +68,8 @@
      * Controla la visualización de modales y la activación de formularios.
      * 
      * @param {number} TipoAccion - Tipo de acción a realizar:
-     *                             1: Salario,
-     *                             2: Datos de contrato,
-     *                             3: Datos puesto de trabajo,
-     *                             4: Centralizacion.
-     *                             4: Retomar Contrato.
-     *                             4: Retomar Contrato.
-     *                             4: Retomar Contrato.
+     *                             1: Crear periodo,
+     *                             2: Editar periodo selecionado,
      * @param {number} item_ID - ID del elemento seleccionado.
      * 
      * @example
@@ -87,7 +88,7 @@
                 formActivo.value = TipoAccion;
                 Informacion.value = Datos
                 TextoButton.value = 'Guardar';
-                TituloModal.value = 'Datos del periodo';
+                TituloModal.value = `Datos del periodo`;
                 IDFormModal.value = 'EditPeriodo';
             
                 break;
@@ -106,32 +107,21 @@
         showModal(1)
     }
 
-    const NotificacionModal = ref({})
-    /**
-     * Cambia el valor de lanotificacion del modal
-     * @param {Objeto} respuesta Recive el diccionario necesario para mostrar la notificacion del modal
-    */
-    const notificacionModal = (respuesta) => {
-        if (respuesta?.valor == true){
-            actualizar();
-            NotificacionModal.value = respuesta
+    const procesarRespuesta = (Solicitud) => {
+        console.log(Solicitud)
+        if (Solicitud?.valor == true){
+            actualizar()
+            showModal()
+            showNotificacion({'Titulo': "empleado especial", 'Descripcion': "esta es la descripcion de la cartica"})
         } else {
-            NotificacionModal.value = respuesta.error
+            showModal()
+            showNotificacion({'Titulo': "No se puede añadir el periodo", 'Descripcion': Solicitud?.texto})
         }
-        
-       
-    };
+    }
 
     //Expoe la funcion para activar el modal
     defineExpose({
         ActionButton
     })
 
-
-
-
-// al montar el componente ejecuta las funciones
-onMounted(async () => {
-
-});
 </script>
