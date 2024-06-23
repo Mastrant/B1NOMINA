@@ -8,21 +8,21 @@
         </td>
         <!--Rut-->
         <td class="Number">
-            <span>
+            <div>
                 <slot name="uf"></slot>
-            </span>
+            </div>
         </td>
         <!--utm-->
         <td class="Number">
-            <span class="utm">
+            <div class="utm">
                 <slot name="utm"></slot>
-            </span>
+            </div>
         </td>
         <!--Saladio / Fac.Actualización	-->
         <td class="Number">
-            <span>
+            <div>
                 <slot name="factor_actualizacion"></slot>
-            </span>
+            </div>
         </td>
         <!--Estado-->
         <td class="estado">
@@ -105,10 +105,10 @@ td.rowperiodo > div {
 }
 
 td.Number > div {
+    width: 100%;
     text-align: end;
     box-sizing: border-box;
 }
-
 
 /**
  * Estilos para la columna de estados
