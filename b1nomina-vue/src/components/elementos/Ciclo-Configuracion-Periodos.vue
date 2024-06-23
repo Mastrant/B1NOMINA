@@ -36,13 +36,10 @@
     import FormEditPeriodo from '@/components/formularios/configuracion/periodos/Form-Edit-Periodo.vue';
 
     //librerias
-    import { ref, onMounted, defineExpose, inject, defineEmits} from 'vue';
-    import { useRoute } from 'vue-router';
+    import { ref, defineExpose, inject, defineEmits} from 'vue';
 
     const actualizar = inject('actualizarData')
     const showNotificacion = inject('mostrarNotificacion')
-
-    const route = useRoute();
 
      /////////// programacion de los modales de activacion ///////////////
     const activarModal = ref(false)
@@ -110,12 +107,12 @@
     const procesarRespuesta = (Solicitud) => {
         console.log(Solicitud)
         if (Solicitud?.valor == true){
-            actualizar()
+            actualizar
             showModal()
-            showNotificacion({'Titulo': "empleado especial", 'Descripcion': "esta es la descripcion de la cartica"})
+            showNotificacion({'Titulo': Solicitud?.titulo, 'Descripcion': Solicitud?.texto})
         } else {
             showModal()
-            showNotificacion({'Titulo': "No se puede añadir el periodo", 'Descripcion': Solicitud?.texto})
+            showNotificacion({'Titulo': Solicitud?.titulo, 'Descripcion': Solicitud?.texto})
         }
     }
 
