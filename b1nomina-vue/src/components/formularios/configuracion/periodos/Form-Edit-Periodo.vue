@@ -12,6 +12,7 @@
                 :requerido="RequiereActualizar"
                 Tipo="Number"
                 :minimoNumeros="0"
+                :maximoNumeros="9999999999999"
                 :NumeroDecimales="0.01"
 
             />
@@ -24,6 +25,7 @@
                 :requerido="RequiereActualizar"
                 Tipo="Number"
                 :minimoNumeros="0"
+                :maximoNumeros="9999999999999"
                 :NumeroDecimales="0.01"
             />
 
@@ -36,6 +38,7 @@
                 :requerido="RequiereActualizar"
                 Tipo="Number"
                 :minimoNumeros="0"
+                :maximoNumeros="9999999999999"
                 :NumeroDecimales="0.01"
             />
 
@@ -55,15 +58,13 @@ const props = defineProps({
     },
 })
 
-const ID_Sociedad = ref(inject('SociedadID'))
 const ID_USERMASTER = ref(localStorage.getItem('userId'))
 
 const IDFORM = "EditPeriodo"
 
-const ListaDimension = []
-
 const emit = defineEmits([
     "DataNotificacion",
+    "dataNotificacionModal",
 ]);
 
 // Definicion de variables de los inputs
@@ -82,8 +83,8 @@ const payload_old = reactive({});
 const payload = reactive({});
 
 //Escuchar cambios en las variables
-watch(monto_UF, (nuevoValor) => ActualizarPayload('monto_UF', nuevoValor));
-watch(monto_UTM, (nuevoValor) => ActualizarPayload('monto_UTM', nuevoValor));
+watch(monto_UF, (nuevoValor) => ActualizarPayload('uf', nuevoValor));
+watch(monto_UTM, (nuevoValor) => ActualizarPayload('utm', nuevoValor));
 watch(factor_actualizacion, (nuevoValor) => ActualizarPayload('factor_actualizacion', nuevoValor));
 
 //ve si hay cambios en la informacion y actualiza los campos:
@@ -105,35 +106,50 @@ const verificarCambios = () => {
     // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
     const camposIguales = Object.keys(payload_old).every(key => payload_old[key] == payload[key]);
 
-    // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
-    const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
-
     // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
-    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+    RequiereActualizar.value = !(camposIguales);
 }
 
 
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
-    RequiereActualizar.value = false;
 
-    monto_UF.value = (DATA?.uf == null)? '' :DATA?.uf;
     monto_UTM.value = (DATA?.utm == null)? '' :DATA?.utm;
-    factor_actualizacion.value = (DATA?.factor_actualizacion == null)? '' :DATA?.factor_actualizacion;
-
-    // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
-    // utilizando '' si DATA?.documento es null.
     payload_old.utm = DATA?.utm ?? '';
     payload.utm = DATA?.utm ?? '';
     
+    monto_UF.value = (DATA?.uf == null)? '' :DATA?.uf;
     payload_old.uf = DATA?.uf ?? '';
     payload.uf = DATA?.uf ?? '';
-
+    
+    factor_actualizacion.value = (DATA?.factor_actualizacion == null)? '' :DATA?.factor_actualizacion;
     payload_old.factor_actualizacion = DATA?.factor_actualizacion ?? '';
     payload.factor_actualizacion = DATA?.factor_actualizacion ?? '';
+
+    payload_old.anio = DATA?.anio ?? '';
+    payload.anio = DATA?.anio ?? '';
+
+    payload_old.nombre = DATA?.nombre ?? '';
+    payload.nombre = DATA?.nombre ?? '';
+
+    payload_old.activo = DATA?.activo ?? 0;
+    payload.activo = DATA?.activo ?? 0;
+
+    payload_old.mes = DATA?.mes ?? '';
+    payload.mes = DATA?.mes ?? '';
+
+    payload_old.observaciones = DATA?.observaciones ?? '';
+    payload.observaciones = DATA?.observaciones ?? '';
+
+    payload_old.sociedad_id = DATA?.sociedad_id ?? '';
+    payload.sociedad_id = DATA?.sociedad_id ?? '';
+
+
+    RequiereActualizar.value = false
 }
+
 /**
  * Funcion emitida al enviar el formulario
  * @params payload Contiene los datos que se pasaran
@@ -155,12 +171,12 @@ const Enviar = async () => {
             emit('DataNotificacion', {'titulo': 'Error al editar el Periodo', 'texto': respuesta?.error, 'valor': false})
         }
     } else {
-        emit('DataNotificacionModal', {'titulo': 'Accion Descartada','texto': "No se requiere actualizar", 'valor': true});
+        emit('dataNotificacionModal', {'titulo': 'Accion Descartada','texto': "No se requiere actualizar", 'valor': true});
     }
 };
 
 
-onBeforeMount(async () => {
+onMounted(async () => {
   await MostrarValores(props.Informacion)
 });
 

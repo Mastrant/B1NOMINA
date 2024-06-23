@@ -142,7 +142,7 @@ const pedirPeriodos = async () => {
 
 }
 
-    provide('actualizarData', pedirPeriodos());
+    provide('actualizarData', pedirPeriodos);
     provide('mostrarNotificacion', showNotificacion);
 
     // al montar el componente ejecuta las funciones

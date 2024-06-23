@@ -6,7 +6,8 @@
         :NombreAccion="TituloModal" 
         :textSubmit="TextoButton"
         :activarModal="activarModal"
-        :ModalActivo="1"        
+        :ModalActivo="1"
+        :DataNotification="alertaFormulario"
     >
         <template #default><!--Espacio para los formularios -->
             <div v-if=" formActivo == 1"> <!--Añadir Periodo-->       
@@ -21,7 +22,7 @@
                 <FormEditPeriodo 
                     :Informacion="Informacion"
                     @DataNotificacion="procesarRespuesta"
-                    @DataNotificacionModal="asd"
+                    @DataNotificacionModal="procesarAlerta"
                 />
             </div>
 
@@ -39,7 +40,7 @@
     //librerias
     import { ref, defineExpose, inject, defineEmits} from 'vue';
 
-    const actualizar = inject('actualizarData')
+    const actualizarData = inject('actualizarData')
     const showNotificacion = inject('mostrarNotificacion')
 
      /////////// programacion de los modales de activacion ///////////////
@@ -50,6 +51,7 @@
     const Informacion = ref([])
     const modalActivo = ref(0)
     const IDFormModal = ref('')
+    const alertaFormulario = ref({})
 
     //acciona la vista del modal
     const showModal = (Id_modal = 0) => {
@@ -106,15 +108,18 @@
     }
 
     const procesarRespuesta = (Solicitud) => {
-        console.log(Solicitud)
         if (Solicitud?.valor == true){
-            actualizar
+            actualizarData()
             showModal()
             showNotificacion({'Titulo': Solicitud?.titulo, 'Descripcion': Solicitud?.texto})
         } else {
             showModal()
             showNotificacion({'Titulo': Solicitud?.titulo, 'Descripcion': Solicitud?.texto})
         }
+    }
+
+    const procesarAlerta = (Data) => {
+        alertaFormulario.value = Data
     }
 
     //Expoe la funcion para activar el modal
