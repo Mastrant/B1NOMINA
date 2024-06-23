@@ -50,7 +50,7 @@
                         Tipo="individual"
                         :Texto="(item?.activo == 1)? 'Activo' : 'Inactivo' " 
                         :Estado="(item?.activo == 1)? true : false"
-                        @click="()=>console.log(item)"
+                        @click="activarPeriodo(item)"
                     />
                 </template>
                 <template v-slot:accionButton>          
@@ -70,12 +70,14 @@ import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
 import PeriodosRow from '@/components/tablas/configuracion/Periodos-row.vue';
 import CicloConfiguracionPeriodos from '@/components/elementos/Ciclo-Configuracion-Periodos.vue';
 
-import { ref, defineProps, watchEffect, onMounted, defineEmits} from 'vue';
+import peticiones_configuracion_Periodos from '@/peticiones/configuracion/periodos.js'
+
+import { ref, defineProps, watchEffect, onMounted, inject} from 'vue';
 
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
-const sociedadId = route.params.sociedadId;
+const ID_USERMASTER = ref(localStorage.getItem('userId'))
 
 // Define los props
 const props = defineProps({
@@ -99,18 +101,23 @@ defineExpose({
     activarFormulario
 })
 
+const actualizarData = inject('actualizarData')
+const showNotificacion = inject('mostrarNotificacion')
 
-const emit = defineEmits([
-    'upData',
-    'actualizar_Lista',
-    'mostrarNotificacion',
-]);
+const activarPeriodo = async (InformacionPeriodo) => {
 
-const resultadoActivacion = (Data) => {
-    
-    emit('mostrarNotificacion', Data)
-    emit('actualizar_Lista')
+    const Estado = (InformacionPeriodo?.activo == 0)? 1 : 0;
+    const respuesta = await peticiones_configuracion_Periodos?.ActualizarEstadoPeriodo(InformacionPeriodo?.id, Estado, ID_USERMASTER.value)
+
+    if(respuesta.success == true){
+        showNotificacion({'Titulo': 'Periodo editado con éxito', 'Descripcion':respuesta?.data?.message, 'valor': true})
+        actualizarData()
+    } else {
+        console.error(respuesta?.error)
+        showNotificacion({'Titulo': 'Error al cambiar el estado del Periodo', 'Descripcion': respuesta?.error, 'valor': false})
+    }
 }
+
 
 // Accede a la lista de empleados desde props
 const ListaEmpleados = ref(props.listaEmpleados);

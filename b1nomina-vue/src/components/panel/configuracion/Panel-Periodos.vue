@@ -18,8 +18,6 @@
             <PeriodosGeneral v-if="ListaPeriodos"  
                 ref="TablaPeriodos"
                 :listaEmpleados="ListadoPeriodos_selecionado"   
-                @actualizar_Lista="pedirPeriodos"
-                @mostrarNotificacion="showNotificacion"
             />
             
         </div>
@@ -63,7 +61,7 @@
     const notificacionStatus = ref(null);
 
     const showNotificacion = (Data) => {
-        notificacionStatus.value.ActivarNotificacion(Data); //Formato: {'Titulo': "empleado especial", 'Descripcion': "esta es la descripcion de la cartica"}   
+        notificacionStatus.value?.ActivarNotificacion(Data); //Formato: {'Titulo': "empleado especial", 'Descripcion': "esta es la descripcion de la cartica"}   
     }
 
     //fin control del modal
@@ -111,7 +109,7 @@
 
 const pedirPeriodos = async () => {
     const respuesta = await peticiones_configuracion_Periodos.getListadoPeriodos(idSociedad);
-    
+
     if(respuesta.success === true){
         Listado_years.value = respuesta.data?.years;
         // Asumiendo que details es la propiedad correcta y no una función
@@ -137,7 +135,6 @@ const pedirPeriodos = async () => {
         ListadoPeriodos_selecionado.value = ListaPeriodos.value[actualYear.value]
     } else {
         console.error(respuesta?.error);
-        showNotificacion({'texto':respuesta?.data?.message, 'valor': true});
     }
 
 }
