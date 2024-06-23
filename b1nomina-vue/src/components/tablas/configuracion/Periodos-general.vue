@@ -50,6 +50,7 @@
                         Tipo="individual"
                         :Texto="(item?.activo == 1)? 'Activo' : 'Inactivo' " 
                         :Estado="(item?.activo == 1)? true : false"
+                        @click="()=>console.log(item)"
                     />
                 </template>
                 <template v-slot:accionButton>          

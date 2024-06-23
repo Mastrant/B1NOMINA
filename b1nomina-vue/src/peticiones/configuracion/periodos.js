@@ -70,10 +70,18 @@ const peticiones_configuracion_Periodos = {
             return { success: false, error: error };
         }  
     },
-    ActualizarEstadoPeriodo(idMaster, id, payload){
+
+    /**
+     * 
+     * @param {Number} idPeriodo 
+     * @param {Number} estado 0 o 1 
+     * @param {Number} idMaster 
+     * @returns {Object} { success: true, data: respuesta?.data };
+     */
+    ActualizarEstadoPeriodo(idPeriodo, estado, idMaster){
         try {
             // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
-            return axios.put(`departamento/${id}/update?user_updater=${idMaster}`,payload)
+            return axios.put(`periodo/${idPeriodo}/update_estado?estado=${estado}&user_updater=${idMaster}`)
             // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
            .then(respuesta => {
                 return { success: true, data: respuesta?.data };
