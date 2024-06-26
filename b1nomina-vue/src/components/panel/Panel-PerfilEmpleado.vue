@@ -731,7 +731,7 @@
                             </template>
                 
                             <template #Tabla>
-                                
+                                <AsignacionesCargaPrevisionales />
                             </template>
                         </LayoutTablasSimples>
                     </div>
@@ -830,8 +830,10 @@ import InputRadioButton from '@/components/botones/Input-Radio-button.vue';
 
 // Tablas
 import LayoutTablasSimples from '@/components/Layouts/LayoutTablasSimples.vue'
-import AsignacionesPrestamos from '@/components/tablas/perfilEmpleado/asignaciones/AsignacionesPrestamos-general.vue';
 import ListaCuentas from '@/components/tablas/perfilEmpleado/datospago/ListaCuentas-general.vue'
+import AsignacionesPrestamos from '@/components/tablas/perfilEmpleado/asignaciones/AsignacionesPrestamos-general.vue';
+import AsignacionesCargaPrevisionales from '@/components/tablas/perfilEmpleado/asignaciones/AsignacionesCargasPrevisionales-general.vue';
+
 
 //iconos
 import DolarIcon from '@/components/icons/Dolar-icon-blanco.vue';
