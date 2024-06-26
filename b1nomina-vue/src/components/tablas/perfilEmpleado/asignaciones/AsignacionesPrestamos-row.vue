@@ -1,43 +1,43 @@
 <template>
     <tr class="rowTabla cuerpo">
         <!--Nombre y apelidos-->
-        <td class="rowperiodo">
+        <td class="colConcepto">
             <div>
-                <slot name="periodo"></slot>
+                <slot name="CONCEPTO"></slot>
             </div>                    
         </td>
         <!--Rut-->
-        <td class="Number">
-            <div>
-                <slot name="uf"></slot>
-            </div>
+        <td class="">
+            <span>
+                <slot name="DESCRIPCION"></slot>
+            </span>
         </td>
-        <!--utm-->
-        <td class="Number">
-            <div class="utm">
-                <slot name="utm"></slot>
-            </div>
+        <!--Cargo-->
+        <td class="">
+            <span class="cargo">
+                <slot name="VALOR"></slot>
+            </span>
         </td>
-        <!--Saladio / Fac.Actualización	-->
-        <td class="Number">
-            <div>
-                <slot name="factor_actualizacion"></slot>
-            </div>
+        <!--Saladio / sueldo-->
+        <td class="">
+            <span>
+                <slot name="CUOTAS"></slot>
+            </span>
         </td>
         <!--Estado-->
-        <td class="estado">
-            <div class="estado">
-                <slot name="activateComponente"></slot>
-            </div>                    
-        </td>
         <!--Acciones-->
         <td class="acciones">
             <div>
-                <slot name="accionButton"></slot>
+                <slot name="ACCIONES"></slot>
             </div>
         </td>
     </tr>
 </template>
+
+<script setup>
+
+
+</script>
 
 <style scoped>
 
@@ -72,7 +72,7 @@ tr.rowTabla {
 
 /* Estilos para cada celda de la tabla */
 tr.cuerpo > td {
-    width: 200px; /* Ancho automático basado en el contenido */
+    width: auto; /* Ancho automático basado en el contenido */
     height: 48px;
     background: none; /* Sin fondo para una apariencia limpia */
     box-sizing: border-box; /* Para incluir padding y borde en el ancho total */
@@ -97,18 +97,11 @@ tr.cuerpo > td {
  * Estilos para la columna de nombres de empleados
  * Alinea el texto al inicio y limita el ancho máximo para evitar desbordamientos
  */
-td.rowperiodo > div {
+td.colConcepto > div {
     text-align: start;
-    max-width: 180px;
-    box-sizing: border-box;
-    padding-left: 24px;
+    max-width: 290px;
 }
 
-td.Number > div {
-    width: 100%;
-    text-align: end;
-    box-sizing: border-box;
-}
 
 /**
  * Estilos para la columna de estados

@@ -5,17 +5,23 @@
             <!--Encabezado de la tabla-->
             <tr class="rowTabla encabezado">
 
-                <th class="rowNombre">
-                    CONCEPTO 
+                <th class="">
+                    BANCO 
                 </th>
                 <th class="">
-                    DESCRIPCION
+                    TIPO DE CUENTA
                 </th>
                 <th class=""> 
-                    VALOR
+                    NÚMERO DE CUENTA
                 </th>
                 <th class=""> 
-                    CUOTAS
+                    DE TERCERO
+                </th>
+                <th class=""> 
+                    AUTORIZACION
+                </th>
+                <th class=""> 
+                    ESTADO
                 </th>
                 <th class=""> 
                     ACCIONES 
@@ -24,30 +30,42 @@
             <!--Final encabezado-->
 
             <!--Cuerpo de la tabla-->
-            <AsignacionesPrestamosRow>
+            <ListaCuentasrow>
 
                 <!--Nombre y apelidos-->
-                <template v-slot:CONCEPTO>
-                    Empresarial
+                <template v-slot:banco>
+                    BBVA Chile
                 </template>
                 <!--Rut-->
-                <template v-slot:DESCRIPCION>
-                    Descripcion del prestamo
+                <template v-slot:tipoCuenta>
+                    Corriente
                 </template>
                  <!--Cargo-->
-                <template v-slot:VALOR>
-                    $50000
+                <template v-slot:NumeroCuenta>
+                    000 000 000
                 </template>
                 <!--Saladio / sueldo-->
-                <template v-slot:CUOTAS>
-                   5
+                <template v-slot:Tercero>
+                   <input type="checkbox">
+                </template>
+                <template v-slot:Autorizacion>
+                    <WaitButton Texto="En Proceso"/>
+                    <CorrectButton texto="Completada"/>
+                    <DescartarButton texto="Caducada"/>                
+                </template>
+                <template v-slot:estado>
+                    <InterruptorButton
+                        Tipo="individual"
+                        :Texto="(2 === 0)? 'Activo': 'Inactivo'"
+                        :Estado="(2 === 0)? true : false"
+                    />
                 </template>
                 <!--Estado-->
                 <template v-slot:ACCIONES>
                     <EditIcon Stroke="#1A2771" text="Editar" />
                     <TrashIcon Stroke="#1A2771" text="Eliminar" />
                 </template>
-            </AsignacionesPrestamosRow>
+            </ListaCuentasrow>
             <!--Final cuerpo-->
         </table>        
         
@@ -58,10 +76,12 @@
 <script setup>
 import TrashIcon from '@/components/icons/trash-icon.vue'
 import EditIcon from '@/components/icons/Edit-icon.vue'
-import InterruptorButton from '@/components/inputs/Interruptor-modal-button.vue';
-import InputCheckbox from '@/components/inputs/Input-Checkbox.vue';
-import AsignacionesPrestamosRow from '@/components/tablas/asignaciones/AsignacionesPrestamos-row.vue';
+import ListaCuentasrow from '@/components/tablas/perfilEmpleado/datospago/ListaCuentas-row.vue';
+import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
 
+import WaitButton from '@/components/botones/Wait-button.vue';
+import CorrectButton from '@/components/botones/Correct-button.vue';
+import DescartarButton from '@/components/botones/Descartar-button.vue';
 
 import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
 
@@ -94,35 +114,6 @@ const resultadoActivacion = (Data) => {
 // Accede a la lista de empleados desde props
 const ListadoPrestamos = ref(props.ListadoPrestamos);
 
-const listaEmpleadosSelecionados = ref([]);
-
-/**
- * Función para manejar la interacción con una lista de empleados seleccionados.
- * Esta función agrega o remueve un valor de la lista basado en si el valor ya está presente.
- *
- * @param {Number} value - El valor a agregar o remover de la lista.
- */
- const InteraccionListaEmpleadosSelecionados = (value) => {
-
-  // Verifica si el valor no es null
-  if (value !== null) {
-    // Verifica si el valor ya está en la lista
-    if (listaEmpleadosSelecionados.value.includes(value)) {
-      // Si el valor ya está en la lista, lo remueve
-      // Encuentra el índice del valor en la lista
-      const index = listaEmpleadosSelecionados.value.indexOf(value);
-      // Verifica si el índice es válido (mayor que -1)
-      if (index > -1) {
-        // Remueve el valor de la lista usando splice
-        listaEmpleadosSelecionados.value?.splice(index,   1);
-      }
-    } else {
-      // Si el valor no está en la lista, lo agrega
-      // Agrega el valor al final de la lista
-      listaEmpleadosSelecionados.value?.push(value);
-    }
-  }
-};
 
 const upData = (arrayData) => {
     // Convertir el objeto proxy a un array real
@@ -130,7 +121,6 @@ const upData = (arrayData) => {
     emit('upData', arrayReal);
 };
 
-watch(listaEmpleadosSelecionados.value, upData)
 
 //configuracion del paginado
 const DatosPaginados = ref([]); //arreglo con los datos picados

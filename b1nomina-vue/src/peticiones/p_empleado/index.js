@@ -199,6 +199,20 @@ const peticiones = {
             return { success: false, error: error?.response };
         }
     },
+
+    async addCargaPrevisional(parametro,){
+        try {
+            return await axios.post(`RUTA`)
+            .then(respuesta => {
+                return { success: true, data: respuesta?.data.data };
+            })
+            .catch(error => {
+                return { success: false, error: error?.response.data.message };
+            });
+        } catch (error) {
+            return { success: false, error: error };
+        }  
+    },
 }
 
 // Exporta el objeto peticiones para su uso en otros módulos.

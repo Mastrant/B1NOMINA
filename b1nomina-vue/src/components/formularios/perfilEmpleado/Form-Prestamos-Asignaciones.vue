@@ -1,14 +1,14 @@
 <template>    
-    <form class="formulario" id="ActualizarPrevisionSalud" @submit.prevent="Enviar">
+    <form class="formulario" id="addPrestamo" @submit.prevent="Enviar">
         
         <div class="row-form">
-            <LayoutInputLineal textLabel="Concepto" :requerido="RequiereActualizar">
+            <LayoutInputLineal textLabel="Tipo" :requerido="RequiereActualizar">
                 <template v-slot>
                     <ListaTemplateLineal  
-                        v-model="institución" 
-                        :options="Parametros?.tiposalario" 
+                        v-model="TipoPrestamo" 
+                        :options="Parametros?.tipoprestamo" 
                         :requerido="RequiereActualizar"            
-                        :preseleccion="institución" 
+                        :preseleccion="TipoPrestamo" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
@@ -17,22 +17,42 @@
 
         <div class="row-form">
             <InputLinealDescripcion 
-                v-model="PactadoUF"
+                v-model="DescripcionPrestamo"
                 Placeholder="Ingresar Descripción" 
                 Titulo="Descripción" 
-                @update:modelValue="PactadoUF = $event"
+                @update:modelValue="DescripcionPrestamo = $event"
                 :requerido="RequiereActualizar"
             />
         </div>
         <div class="row-form">
             <InputLinealDescripcion 
-                v-model="PactadoUF"
+                v-model="valorCuota"
                 Placeholder="$ 0" 
                 Titulo="Valor mensual" 
-                @update:modelValue="PactadoUF = $event"
+                @update:modelValue="valorCuota = $event"
                 Tipo="Number"
                 numero-decimales="any"
                 :minimo-numeros="0.00"
+                :requerido="RequiereActualizar"
+            />
+        </div>
+        <div class="row-form">
+            <InputLinealDescripcion 
+                v-model="numeroCuotas"
+                Placeholder="0" 
+                Titulo="Número de cuotas a pagar" 
+                @update:modelValue="numeroCuotas = $event"
+                Tipo="Number"
+                numero-decimales="any"
+                :minimo-numeros="0"
+                :requerido="RequiereActualizar"
+            />
+            <InputLinealDescripcion 
+                v-model="fechaPrimerPago"
+                Placeholder="" 
+                Titulo="Fecha del pago primera cuota" 
+                @update:modelValue="fechaPrimerPago = $event"
+                Tipo="date"
                 :requerido="RequiereActualizar"
             />
         </div>
@@ -63,12 +83,19 @@
     // payload de las peticiones
     const payload_old = reactive({});
 
-    const institución = ref('')
-    watch(institución, (nuevoValor) => ActualizarPayload('', nuevoValor));
+    const TipoPrestamo = ref('')
+    const DescripcionPrestamo = ref('')
+    const valorCuota = ref('')
+    const numeroCuotas = ref('')
+    const fechaPrimerPago = ref('')
 
-    const PactadoUF = ref('');
-    watch(PactadoUF, (nuevoValor) =>  ActualizarPayload('monto_sueldo', nuevoValor));
+    watch(TipoPrestamo, (nuevoValor) =>  ActualizarPayload('monto_sueldo', nuevoValor));
+    watch(DescripcionPrestamo, (nuevoValor) =>  ActualizarPayload('monto_sueldo', nuevoValor));
+    watch(valorCuota, (nuevoValor) =>  ActualizarPayload('monto_sueldo', nuevoValor));
+    watch(numeroCuotas, (nuevoValor) =>  ActualizarPayload('monto_sueldo', nuevoValor));
+    watch(fechaPrimerPago, (nuevoValor) =>  ActualizarPayload('monto_sueldo', nuevoValor));
 
+    
     watch(DatosUsuario, (nuevaInfo) => {
         MostrarValores(nuevaInfo)        
     })
@@ -80,13 +107,13 @@
     const MostrarValores = (DATA) => {
         RequiereActualizar.value = false;
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
+        
+        TipoPrestamo.value = (DATA?.PactadoUF == null)? '' :DATA?.PactadoUF;
+        DescripcionPrestamo.value = (DATA?.PactadoUF == null)? '' :DATA?.PactadoUF;
+        valorCuota.value = (DATA?.PactadoUF == null)? '' :DATA?.PactadoUF;
+        numeroCuotas.value = (DATA?.PactadoUF == null)? '' :DATA?.PactadoUF;
+        fechaPrimerPago.value = (DATA?.PactadoUF == null)? '' :DATA?.PactadoUF;
 
-        
-        institución.value = (DATA?.institución == null)? '' :DATA?.institución;
-        payload_old.institución = DATA?.institución ?? '';
-        payload.institución = DATA?.institución ?? '';
-        
-        PactadoUF.value = (DATA?.PactadoUF == null)? '' :DATA?.PactadoUF;
         payload_old.PactadoUF = DATA?.PactadoUF ?? '';
         payload.PactadoUF = DATA?.PactadoUF ?? '';
     }

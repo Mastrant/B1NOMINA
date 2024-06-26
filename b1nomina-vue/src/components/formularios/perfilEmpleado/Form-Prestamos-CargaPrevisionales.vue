@@ -1,15 +1,15 @@
 <template>
     
-    <form class="formulario" id="ActualizarCargaPrevisionales" @submit.prevent="Enviar">
+    <form class="formulario" id="CargaPrevisionales" @submit.prevent="Enviar">
 
         <div class="row-form">
             <LayoutInputLineal textLabel="Parentesco" :requerido="RequiereActualizar ">
                 <template v-slot>
                     <ListaTemplateLineal  
-                        v-model="nacionalidad" 
+                        v-model="parentesco" 
                         :options="Parametros?.parentescos" 
                         :requerido="RequiereActualizar"    
-                        :preseleccion="nacionalidad" 
+                        :preseleccion="parentesco" 
                         optionsSelected="Seleccionar"                    
                     />
                 </template>
@@ -55,6 +55,18 @@
 
         </div>
 
+        <LayoutInputLineal textLabel="Condición" :requerido="RequiereActualizar ">
+                <template v-slot>
+                    <ListaTemplateLineal  
+                        v-model="condicion" 
+                        :options="Parametros?.condicion" 
+                        :requerido="RequiereActualizar"    
+                        :preseleccion="condicion" 
+                        optionsSelected="Seleccionar"                    
+                    />
+                </template>
+            </LayoutInputLineal>
+
 
     </form>
     
@@ -89,7 +101,6 @@
     const payload = reactive({
         rut: "",
         estado_civil_id: "",
-        nacionalidad_id: "",
         nombres: "",
         apellido_paterno: "",
         fecha_nacimiento: "",
@@ -99,7 +110,6 @@
     const payload_old = reactive({
         rut: "",
         estado_civil_id: "",
-        nacionalidad_id: "",
         nombres: "",
         apellido_paterno: "",
         fecha_nacimiento: "",
@@ -109,23 +119,23 @@
 
     const RequiereActualizar  = ref(false);
 
+    const parentesco = ref('');
     const numeroDocumento = ref("");
     const nombres = ref("");
     const apellidos = ref("");
-    const tipoDocumentoSelect = ref(""); //Documento selecionado
-    const nacionalidad = ref('');
-    const genero = ref('');
     const fechaNacimiento = ref('');
-    const estadoCivil = ref(''); 
+    const condicion = ref('')
 
+
+
+
+    watch(parentesco, (nuevoValor) => ActualizarPayload("parentesco", nuevoValor));
     watch(numeroDocumento, (nuevoValor) => ActualizarPayload("rut", nuevoValor));
-    watch(nombres, (nuevoValor) => ActualizarPayload("nombres", nuevoValor.toUpperCase()));
-    watch(apellidos, (nuevoValor) => ActualizarPayload("apellido_paterno", nuevoValor.toUpperCase()));
+    watch(nombres, (nuevoValor) => ActualizarPayload("nombre", nuevoValor));
+    watch(apellidos, (nuevoValor) => ActualizarPayload("apellidos", nuevoValor));
+    watch(fechaNacimiento, (nuevoValor) => ActualizarPayload("fecha_nacimiento", nuevoValor));
+    watch(condicion, (nuevoValor) => ActualizarPayload("condicion", nuevoValor));
 
-    watch(nacionalidad, (nuevoValor) => ActualizarPayload('nacionalidad_id', nuevoValor));
-    watch(genero, (nuevoValor) => ActualizarPayload('sexo_id', nuevoValor));
-    watch(fechaNacimiento, (nuevoValor) => ActualizarPayload('fecha_nacimiento', nuevoValor));
-    watch(estadoCivil, (nuevoValor) => ActualizarPayload('estado_civil_id', nuevoValor));
 
     watch(DatosUsuario, (nuevaInfo) => {
         MostrarValores(nuevaInfo)
@@ -135,47 +145,16 @@
         Parametros.value = nuevaInfo
     })
 
-    const cambiargenero = () => {
-        genero.value = 2;
-    }
 
     const MostrarValores = (DATA) => {
 
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
         RequiereActualizar.value = false
 
-        tipoDocumentoSelect.value = (DATA?.nacionalidad_id == 1)? 2 : 1;
-
         payload_old.rut = DATA?.rut ?? '';
         payload.rut = DATA?.rut ?? '';
         
-        numeroDocumento.value = (DATA?.rut == null)? '' :DATA?.rut;
-        payload_old.rut = DATA?.rut ?? '';
-        payload.rut = DATA?.rut ?? '';
 
-        nombres.value = (DATA?.nombres == null)? '' :DATA?.nombres;
-        payload_old.nombres = DATA?.nombres ?? '';
-        payload.nombres = DATA?.nombres ?? '';
-
-        apellidos.value = (DATA?.apellido_paterno == null)? '' :DATA?.apellido_paterno;
-        payload_old.apellido_paterno = DATA?.apellido_paterno ?? '';
-        payload.apellido_paterno = DATA?.apellido_paterno ?? '';
-
-        nacionalidad.value = (DATA?.nacionalidad_id == null)? 1 : DATA?.nacionalidad_id;
-        payload_old.nacionalidad_id = Number(DATA?.nacionalidad_id) ?? '';
-        payload.nacionalidad_id = Number(DATA?.nacionalidad_id) ?? '';
-
-        genero.value = (DATA?.sexo_id == null || DATA?.sexo_id == '')? 1 : DATA?.sexo_id;
-        payload_old.sexo_id = DATA?.sexo_id ?? '';
-        payload.sexo_id = DATA?.sexo_id ?? '';
-
-        fechaNacimiento.value = (DATA?.fecha_nacimiento == null)? '' :DATA?.fecha_nacimiento;
-        payload_old.fecha_nacimiento = DATA?.fecha_nacimiento ?? '';
-        payload.fecha_nacimiento = DATA?.fecha_nacimiento ?? '';
-
-        estadoCivil.value = (DATA?.estado_civil_id == null)? '' :DATA?.estado_civil_id;
-        payload_old.estado_civil_id = DATA?.estado_civil_id ?? '';
-        payload.estado_civil_id = DATA?.estado_civil_id ?? '';
     }
 
 /**
@@ -201,10 +180,10 @@
  * // }
  */
  const ActualizarPayload = (propiedad, valor) => {
-  // Asigna el nuevo valor a la propiedad especificada dentro del objeto 'payload'.
-  payload[propiedad] = valor;
-  
-  verificarCambios();
+    // Asigna el nuevo valor a la propiedad especificada dentro del objeto 'payload'.
+    payload[propiedad] = valor;
+    
+    verificarCambios();
 
 };
 // Define la función verificarCambios que verifica si hay cambios entre los valores antiguos y nuevos de un payload.
@@ -242,18 +221,21 @@ const verificarCambios = () => {
  */
  const Enviar = async () => {
   //si ID es nulo crea un usuario
- 
-  if (RequiereActualizar.value == true) {
-    const respuesta = await peticiones.ActualizarDatosPrincipales(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
-    if(respuesta.success == true){
-       emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor': true})
+
+        console.log(DatosUsuario.value)
+
+
+    if (RequiereActualizar.value == true) {
+        const respuesta = await peticiones.ActualizarDatosPrincipales(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+        if(respuesta.success == true){
+        emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor': true})
+        } else {
+            console.error(respuesta?.error)
+            emit('respuestaServidor', {'texto': respuesta?.error, 'valor': false})
+        }
     } else {
-        console.error(respuesta?.error)
-        emit('respuestaServidor', {'texto': respuesta?.error, 'valor': false})
+        emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor': true});
     }
-  } else {
-    emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor': true});
-  }
 };
 </script>
 

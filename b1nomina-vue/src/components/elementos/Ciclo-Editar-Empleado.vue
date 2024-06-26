@@ -77,20 +77,32 @@
                 </div>
                 
             <div v-if=" formActivo == 12"> <!--retomar Asignaciones Prestamo-->                    
-                    <FormPrestamosAsignaciones
-                        @respuestaServidor="notificacionModal"
-                    />
+                <FormDatosPago 
+                    @respuestaServidor="notificacionModal"
+                />
                     
             </div>
 
             <div v-if=" formActivo == 13"> <!--retomar otras Asignaciones-->                    
-                
+                <FormPrestamosAsignaciones
+                        @respuestaServidor="notificacionModal"
+                    />
             </div>
 
             <div v-if=" formActivo == 14"> <!--retomar cargas previsionales -->                    
+                
                 <FormPrestamosCargaPrevisional 
                     @respuestaServidor="notificacionModal"
                 />
+            </div>
+            <div v-if=" formActivo == 15"> <!--retomar cargas previsionales -->                    
+               
+            </div>
+            <div v-if=" formActivo == 16"> <!--retomar cargas previsionales -->                    
+           
+            </div>
+            <div v-if=" formActivo == 17"> <!--retomar cargas previsionales -->                    
+               
             </div>
         </template>
     </TemplateModal>
@@ -107,6 +119,8 @@
     import FormDatosContacto from '@/components/formularios/perfilEmpleado/Form-DatosContacto.vue';
     import FormDatosPago from '@/components/formularios/perfilEmpleado/Form-DatosPago.vue';
     import FormCentralizacionDatosAdicionales from '@/components/formularios/perfilEmpleado/From-DatosP-Adicionales.vue';
+
+    import FormDatosPago2 from '@/components/formularios/perfilEmpleado/Form-DatosPago.vue'
 
     import FormDatosPAFP from '@/components/formularios/perfilEmpleado/Form-DatosP-AFP.vue';
     import FormDatosPAPV from '@/components/formularios/perfilEmpleado/Form-DatosP-APV.vue';
@@ -255,7 +269,7 @@
                 formActivo.value = TipoAccion;
                 EmpleadoID_Selecionado.value = item_ID;
                 TextoButton.value = 'Guardar';
-                TituloModal.value = 'Asignación de Préstamos';
+                TituloModal.value = 'Añadir Cuenta';
                 IDFormModal.value = 'AsignacionesPrestamos';
 
                 break; 
@@ -264,8 +278,8 @@
                 formActivo.value = TipoAccion;
                 EmpleadoID_Selecionado.value = item_ID;
                 TextoButton.value = 'Guardar';
-                TituloModal.value = 'Otras Asignaciones';
-                IDFormModal.value = 'OtrasAsignaciones';
+                TituloModal.value = 'Prestamos';
+                IDFormModal.value = 'addPrestamo';
 
                 break; 
 
@@ -274,7 +288,23 @@
                 EmpleadoID_Selecionado.value = item_ID;
                 TextoButton.value = 'Guardar';
                 TituloModal.value = 'Cargas Previsionales';
-                IDFormModal.value = 'CargasPrevisionales';
+                IDFormModal.value = 'CargaPrevisionales';
+
+                break; 
+            case 15:
+                formActivo.value = TipoAccion;
+                EmpleadoID_Selecionado.value = item_ID;
+                TextoButton.value = 'Guardar';
+                TituloModal.value = 'Cargar Contrato';
+                IDFormModal.value = 'CargarContrato';
+
+                break; 
+            case 16:
+                formActivo.value = TipoAccion;
+                EmpleadoID_Selecionado.value = item_ID;
+                TextoButton.value = 'Guardar';
+                TituloModal.value = 'Cargar Archivos Adicionales';
+                IDFormModal.value = 'ArchivosAdicionales';
 
                 break; 
                 

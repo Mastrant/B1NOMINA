@@ -1,7 +1,7 @@
 <template>
     <div class="panel-PerfilEmpleado">
 
-        <LayoutCabeceraEmpleado @clickEvent="() => console.log('editarfoto')" :imagen="DatosUsuario?.foto">
+        <LayoutCabeceraEmpleado :imagen="DatosUsuario?.foto">
             <template #Rol>
                 Rol                
             </template>
@@ -13,28 +13,24 @@
             </template>
             <template #Botones>
 
-                <TemplateButton2 text="Ver último combrobante de pago">
+                <TemplateButton2 text="Ver último combrobante de pago"  @click="() => console.log('Descargar comprobante')" >
                     <template #post>                                        
                         <OjitoIcon Stroke="#002E99"/>
                     </template>
                 </TemplateButton2>
 
-                <TemplateButton2 text="Liquidar">
+                <TemplateButton2 text="Liquidar" @click="() => console.log('Liquidar Empleado')">
                     <template #post>                                        
                         <DolarIcon color="#002E99" />
                     </template>
                 </TemplateButton2>
 
-                <TemplateButton2 text="Desactivar" v-if="DatosUsuario?.activo == 1">
+                <TemplateButton2 :text="(DatosUsuario?.activo == 1)? 'Desactivar' : 'Activar'" @click="() => console.log((DatosUsuario?.activo == 1)? 'Desactivar' : 'Activar')">
                     <template #post>                                        
                         <ExitColorIcon Stroke="#002E99" />
                     </template>
                 </TemplateButton2>
-                <TemplateButton2 text="Activar" v-else>
-                    <template #post>                                        
-                        <ExitColorIcon Stroke="#002E99" />
-                    </template>
-                </TemplateButton2>
+
 
             </template>
         </LayoutCabeceraEmpleado>     
@@ -76,7 +72,7 @@
                     <NavButtonTemplate text="Datos Personales" :seleccionado="panelShow== 2" @click="showInfo(2)" />
                     <NavButtonTemplate text="Datos de Pago" :seleccionado="panelShow== 3" @click="showInfo(3)" />
                     <NavButtonTemplate text="Datos Previsionales" :seleccionado="panelShow== 4" @click="showInfo(4)" />
-                    <NavButtonTemplate text="Asignaciones" :seleccionado="panelShow== 5" @click="showInfo(5)" />
+                    <NavButtonTemplate text="Prestamos" :seleccionado="panelShow== 5" @click="showInfo(5)" />
                     <NavButtonTemplate text="Documentos" :seleccionado="panelShow== 6" @click="showInfo(6)"/>
                 </template>
                 <template v-slot:formulario>
@@ -262,6 +258,7 @@
 
                         </LayoutTablaEMpleados>
                     </div>
+
                     <div class="contenedorInfo" v-if="panelShow == 2">
                         <LayoutTablaEMpleados>
                             <template #boton1>                                                                    
@@ -370,7 +367,8 @@
                 
                         </LayoutTablaEMpleados>
                     </div>
-                    <div class="contenedorInfo" v-if="panelShow == 3">
+
+                    <div class="contenedorInfo tablas" v-if="panelShow == 3">
                         <LayoutTablaEMpleados>
                             <template #boton2>                                                                    
                                 <TemplateBlanckButton @click="EditarInfo?.ActionButton(7,EmpleadoID)" text="Editar">
@@ -384,39 +382,32 @@
                                 Datos de pago
                             </template>       
 
-                            <template #st-1>                                                                    
-                                
-                            </template>
+                            <template #st-1></template>
+
                             <template #text-1>                                                                    
                                 <InputRadioButton 
                                     texto="Transferencia Bancaria"
-                                />
+                                />                                
+                            </template>
 
-                                
-                            </template>
-                            <template #st-2>                                                                    
-                                
-                            </template>
+                            <template #st-2></template>
+
                             <template #text-2>                                                                    
                                 <InputRadioButton 
                                     texto="Cheque"
-                                />
-                                
+                                />                                
                             </template>
-                            <template #st-3>                                                                    
-                                
-                            </template>
+
+                            <template #st-3></template>
+
                             <template #text-3>                                                                    
                                 <InputRadioButton 
                                     texto="Al contado"
                                 />
                             </template>
-                            <template #st-4>                                                                    
-                               
-                            </template>
-                            <template #text-4>                                                                    
-                               
-                            </template>   
+                            <template #st-4></template>
+
+                            <template #text-4></template>   
 
                             <template #titulo2>                                                                    
                                 Cuenta Activa
@@ -469,10 +460,25 @@
                             <template #text-11>                                                                                                                                    
                                 {{DatosUsuario?.email_tercero}}
                             </template>
-                            
-                           
                         </LayoutTablaEMpleados>
+
+                        <LayoutTablasSimples Titulo="Historial cuentas bancarias">
+                            <template #boton>
+                            
+                                <TemplateButton2 @click="EditarInfo?.ActionButton(12,EmpleadoID)" text="Añadir Cuenta" >
+                                    <template #default>                                        
+                                        <PlusCirculoIcon Stroke="#002E99"/>
+                                    </template>
+                                </TemplateButton2> 
+                                
+                            </template>
+                
+                            <template #Tabla>
+                                <ListaCuentas />
+                            </template>
+                        </LayoutTablasSimples>
                     </div>
+
                     <div class="contenedorInfo" v-if="panelShow == 4">
                         <LayoutTablaEMpleados>
                             <template #boton1>                                                                    
@@ -711,14 +717,31 @@
                                 />
                             </template>
                             
-                        </LayoutTablaEMpleados>
-                    </div>
-                    <div class="contenedorInfo tablas" v-if="panelShow == 5">
+                        </LayoutTablaEMpleados>            
 
-                        <LayoutTablasSimples Titulo="Asignación de Préstamos">
+                        <LayoutTablasSimples Titulo="Asignacion de Cargas Previsionales">
                             <template #boton>
                             
-                                <TemplateButton2 @click="EditarInfo?.ActionButton(12,EmpleadoID)" text="Nuevo Préstamo" >
+                                <TemplateButton2 @click="EditarInfo?.ActionButton(14,EmpleadoID)" text="Nueva Carga Previsional" >
+                                    <template #default>                                        
+                                        <PlusCirculoIcon Stroke="#002E99"/>
+                                    </template>
+                                </TemplateButton2> 
+                                
+                            </template>
+                
+                            <template #Tabla>
+                                
+                            </template>
+                        </LayoutTablasSimples>
+                    </div>
+
+                    <div class="contenedorInfo tablas" v-if="panelShow == 5">
+
+                        <LayoutTablasSimples Titulo="Cargas Previsionales">
+                            <template #boton>
+                            
+                                <TemplateButton2 @click="EditarInfo?.ActionButton(13,EmpleadoID)" text="Nuevo Préstamo" >
                                     <template #default>                                        
                                         <PlusCirculoIcon Stroke="#002E99"/>
                                     </template>
@@ -730,11 +753,28 @@
                                 <AsignacionesPrestamos />
                             </template>
                         </LayoutTablasSimples>
-
-                        <LayoutTablasSimples Titulo="Otras Asignaciones">
+                    </div>                    
+                    <div class="contenedorInfo tablas" v-if="panelShow == 6"> <!--Documentos-->
+                        <LayoutTablasSimples Titulo="Contratos">
                             <template #boton>
                             
-                                <TemplateButton2 @click="EditarInfo?.ActionButton(13 ,EmpleadoID)" text="Nuevo Préstamo" >
+                                <TemplateButton2 @click="EditarInfo?.ActionButton(15, EmpleadoID)" text="Nuevo Contrato" >
+                                    <template #default>                                        
+                                        <PlusCirculoIcon Stroke="#002E99"/>
+                                    </template>
+                                </TemplateButton2> 
+                                
+                            </template>
+                
+                            <template #Tabla>
+                                
+                            </template>
+                        </LayoutTablasSimples> 
+
+                        <LayoutTablasSimples Titulo="Archivos Adicionales">
+                            <template #boton>
+                            
+                                <TemplateButton2 @click="EditarInfo?.ActionButton(16, EmpleadoID)" text="Nuevo Archivo" >
                                     <template #default>                                        
                                         <PlusCirculoIcon Stroke="#002E99"/>
                                     </template>
@@ -746,37 +786,6 @@
                                 
                             </template>
                         </LayoutTablasSimples>
-
-                        <LayoutTablasSimples Titulo="Cargas Previsionales">
-                            <template #boton>
-                            
-                                <TemplateButton2 @click="EditarInfo?.ActionButton(14,EmpleadoID)" text="Nuevo Préstamo" >
-                                    <template #default>                                        
-                                        <PlusCirculoIcon Stroke="#002E99"/>
-                                    </template>
-                                </TemplateButton2> 
-                                
-                            </template>
-                
-                            <template #Tabla>
-                                
-                            </template>
-                        </LayoutTablasSimples>
-                    </div>
-                    
-                    <div class="contenedorInfo" v-if="panelShow == 6">
-                        <LayoutEmpy>
-                            <template #imagen>
-                                <img src="@/components/icons/svg/NotificationPerson-icon.svg">    
-                            </template>
-                            <template #contenido>
-                                <h3 class="titulo">No tienes solicitudes Pendientes</h3>
-                                <span class="texto">
-                                    Aquí podrás visualizar, aceptar y rechazar las solicitudes realizadas por tu empleado.
-                                </span>
-                                
-                            </template>
-                        </LayoutEmpy>    
                     </div>
                 </template>
         </LayoutForm>
@@ -811,7 +820,6 @@ import LayoutForm from '@/components/Layouts/LayoutForm.vue';
 import LayoutTablaEMpleados from '@/components/Layouts/LayoutTabla-datosEmpleado.vue'
 import boxInfo from '@/components/elementos/Box-info.vue';
 import NavButtonTemplate from '@/components/botones/Nav-button-templateForm.vue';
-import TemplateButton from '@/components/botones/Template-button.vue';
 import TemplateButton2 from '@/components/botones/Template-button2.vue';
 import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
 import TemplateBlanckButton from '@/components/botones/Template-blank-button.vue';
@@ -820,8 +828,10 @@ import CicloEditarEmpleado from '@/components/elementos/Ciclo-Editar-Empleado.vu
 import ShortTemplateModal from '@/components/modal/Short-TemplateModal.vue';
 import InputRadioButton from '@/components/botones/Input-Radio-button.vue';
 
+// Tablas
 import LayoutTablasSimples from '@/components/Layouts/LayoutTablasSimples.vue'
-import AsignacionesPrestamos from '@/components/tablas/asignaciones/AsignacionesPrestamos-general.vue';
+import AsignacionesPrestamos from '@/components/tablas/perfilEmpleado/asignaciones/AsignacionesPrestamos-general.vue';
+import ListaCuentas from '@/components/tablas/perfilEmpleado/datospago/ListaCuentas-general.vue'
 
 //iconos
 import DolarIcon from '@/components/icons/Dolar-icon-blanco.vue';
