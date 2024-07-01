@@ -2,26 +2,26 @@
     <tr class="rowTabla cuerpo">
         <!--Nombre y apelidos-->
         <td class="colConcepto">
-            <div>
-                <slot name="CONCEPTO"></slot>
-            </div>                    
+            <span>
+                <slot name="nombre"></slot>
+            </span>                    
         </td>
         <!--Rut-->
         <td class="">
             <span>
-                <slot name="DESCRIPCION"></slot>
+                <slot name="rut"></slot>
             </span>
         </td>
         <!--Cargo-->
         <td class="">
             <span class="cargo">
-                <slot name="VALOR"></slot>
+                <slot name="parentesco"></slot>
             </span>
         </td>
         <!--Saladio / sueldo-->
         <td class="">
             <span>
-                <slot name="CUOTAS"></slot>
+                <slot name="fecha"></slot>
             </span>
         </td>
         <!--Estado-->

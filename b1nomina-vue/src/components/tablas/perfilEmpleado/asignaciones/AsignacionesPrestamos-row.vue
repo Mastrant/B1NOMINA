@@ -21,10 +21,15 @@
         <!--Saladio / sueldo-->
         <td class="">
             <span>
-                <slot name="CUOTAS"></slot>
+                <slot name="cuotas"></slot>
             </span>
         </td>
         <!--Estado-->
+        <td class="">
+            <div class="estado-button">
+                <slot name="estado"></slot>
+            </div>                    
+        </td>
         <!--Acciones-->
         <td class="acciones">
             <div>
@@ -102,6 +107,11 @@ td.colConcepto > div {
     max-width: 290px;
 }
 
+td > div.estado-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 /**
  * Estilos para la columna de estados

@@ -18,29 +18,44 @@
                     CUOTAS
                 </th>
                 <th class=""> 
+                    ESTADO
+                </th>
+                <th class=""> 
                     ACCIONES 
                 </th>
             </tr>
             <!--Final encabezado-->
 
             <!--Cuerpo de la tabla-->
-            <AsignacionesPrestamosRow>
+            <AsignacionesPrestamosRow v-for="prestamo in DatosPaginados" :key="prestamo?.id">
 
                 <!--Nombre y apelidos-->
                 <template v-slot:CONCEPTO>
-                    Empresarial
+                    {{prestamo}}
                 </template>
                 <!--Rut-->
                 <template v-slot:DESCRIPCION>
-                    Descripcion del prestamo
+                    {{prestamo}}
                 </template>
                  <!--Cargo-->
                 <template v-slot:VALOR>
-                    $50000
+                    {{prestamo}}
                 </template>
                 <!--Saladio / sueldo-->
-                <template v-slot:CUOTAS>
-                   5
+                <template v-slot:cuotas>
+                    {{prestamo}}
+                </template>
+                <template #estado>
+                    <StatusButton
+                        v-show="prestamo"
+                        texto="Pagado"
+                    />
+                    <StatusButton 
+                        v-show="prestamo"
+                        texto="Por pagar"
+                        color1="#1A245B"
+                        color2="#CDE0F1"
+                    />
                 </template>
                 <!--Estado-->
                 <template v-slot:ACCIONES>
@@ -50,6 +65,11 @@
             </AsignacionesPrestamosRow>
             <!--Final cuerpo-->
         </table>        
+
+        <div class="espacio-paginacion" v-if="listadoPrestamos.length > 12">
+            <SeleccionarPaginacion @valorSelecionado="asignarValor"/>
+            <Paginacion :totalPaginas="totalpaginas()" @NumeroSelecionado="getDataPorPagina"/>
+        </div>
         
     </div>
    
@@ -59,7 +79,10 @@
 import TrashIcon from '@/components/icons/trash-icon.vue'
 import EditIcon from '@/components/icons/Edit-icon.vue'
 import AsignacionesPrestamosRow from '@/components/tablas/perfilEmpleado/asignaciones/AsignacionesPrestamos-row.vue';
+import Paginacion from '@/components/elementos/Paginacion.vue';
+import SeleccionarPaginacion from '@/components/elementos/Seleccionar-paginacion.vue'
 
+import StatusButton from '@/components/botones/Status-button.vue';
 
 import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
 
@@ -72,7 +95,7 @@ const sociedadId = route.params.sociedadId;
 
 // Define los props
 const props = defineProps({
-  ListadoPrestamos: {
+  Listado: {
     type: Array,
     default: () => []
   }
@@ -83,52 +106,15 @@ const emit = defineEmits([
     'mostrarNotificacion',
 ]);
 
-const resultadoActivacion = (Data) => {
-    
-    emit('mostrarNotificacion', Data)
-    emit('actualizar_Lista')
-}
 
 // Accede a la lista de empleados desde props
-const ListadoPrestamos = ref(props.ListadoPrestamos);
-
-const listaEmpleadosSelecionados = ref([]);
-
-/**
- * Función para manejar la interacción con una lista de empleados seleccionados.
- * Esta función agrega o remueve un valor de la lista basado en si el valor ya está presente.
- *
- * @param {Number} value - El valor a agregar o remover de la lista.
- */
- const InteraccionListaEmpleadosSelecionados = (value) => {
-
-  // Verifica si el valor no es null
-  if (value !== null) {
-    // Verifica si el valor ya está en la lista
-    if (listaEmpleadosSelecionados.value.includes(value)) {
-      // Si el valor ya está en la lista, lo remueve
-      // Encuentra el índice del valor en la lista
-      const index = listaEmpleadosSelecionados.value.indexOf(value);
-      // Verifica si el índice es válido (mayor que -1)
-      if (index > -1) {
-        // Remueve el valor de la lista usando splice
-        listaEmpleadosSelecionados.value?.splice(index,   1);
-      }
-    } else {
-      // Si el valor no está en la lista, lo agrega
-      // Agrega el valor al final de la lista
-      listaEmpleadosSelecionados.value?.push(value);
-    }
-  }
-};
+const listadoPrestamos = ref(props.Listado);
 
 const upData = (arrayData) => {
     // Convertir el objeto proxy a un array real
     const arrayReal = [...arrayData];
     emit('upData', arrayReal);
 };
-
-watch(listaEmpleadosSelecionados.value, upData)
 
 //configuracion del paginado
 const DatosPaginados = ref([]); //arreglo con los datos picados
@@ -142,7 +128,7 @@ const asignarValor = (Numero) => {
 //total de paginas
 const totalpaginas = () => {
     //devuelve el numero de paginas segun los datos y redondea el resultado
-    return Math.ceil(ListadoPrestamos.value.length / elementosPorPagina.value);
+    return Math.ceil(listadoPrestamos.value.length / elementosPorPagina.value);
 };
 
 //optener data segun la pagina
@@ -161,13 +147,13 @@ function getDataPorPagina(numeroPagina){
     let fin = (numeroPagina * elementosPorPagina.value);
     
     //recorre los datos de lista y los indexa en la paginacion
-    DatosPaginados.value = ListadoPrestamos.value.slice(ini, fin)
+    DatosPaginados.value = listadoPrestamos.value.slice(ini, fin)
 };
 
 
 //al cambiar los datos reinicia el renderizado
 watchEffect(() => {
-  ListadoPrestamos.value = props.ListadoPrestamos;
+    listadoPrestamos.value = props.Listado;
   //al detectar el cambio en la lista solicita los datos
   getDataPorPagina();
 });
@@ -175,8 +161,10 @@ watchEffect(() => {
 //al montar el componente solicita la data
 onMounted(()=> {
     //ejecuta la actualizacion del paginado
-    ListadoPrestamos.value = props.ListadoPrestamos;
+    listadoPrestamos.value = props.Listado;
 });
+
+
 </script>
 
 <style scoped>

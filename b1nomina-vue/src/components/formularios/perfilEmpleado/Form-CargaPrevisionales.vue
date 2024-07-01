@@ -50,7 +50,7 @@
                 Titulo="Fecha de nacimiento"
                 v-model="fechaNacimiento"
                 @update:modelValue="fechaNacimiento = $event"
-                :requerido="RequiereActualizar "
+                :requerido="RequiereActualizar"
             />
 
         </div>
@@ -82,39 +82,14 @@
     import peticiones from '@/peticiones/p_empleado';
 
     const DatosUsuario = reactive(inject('dataEmpleado'))
+    const familiarSelecionado = ref({})
     const parametros = reactive(inject('parametros'))
     const Parametros = ref({});
     const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
     
-    //lista de
-    const ListaTiposDocumentos = [
-    {
-        id: 1,
-        nombre: "Pasaporte",
-    },
-    {
-        id: 2,
-        nombre: "RUT",
-    },
-    ];
-
-    const payload = reactive({
-        rut: "",
-        estado_civil_id: "",
-        nombres: "",
-        apellido_paterno: "",
-        fecha_nacimiento: "",
-        sexo_id: "",
-    });
+    const payload = reactive({});
     
-    const payload_old = reactive({
-        rut: "",
-        estado_civil_id: "",
-        nombres: "",
-        apellido_paterno: "",
-        fecha_nacimiento: "",
-        sexo_id: "",
-    });
+    const payload_old = reactive({});
 
 
     const RequiereActualizar  = ref(false);
@@ -126,18 +101,15 @@
     const fechaNacimiento = ref('');
     const condicion = ref('')
 
-
-
-
-    watch(parentesco, (nuevoValor) => ActualizarPayload("parentesco", nuevoValor));
+    watch(parentesco, (nuevoValor) => ActualizarPayload("parentesco_id", nuevoValor));
     watch(numeroDocumento, (nuevoValor) => ActualizarPayload("rut", nuevoValor));
-    watch(nombres, (nuevoValor) => ActualizarPayload("nombre", nuevoValor));
+    watch(nombres, (nuevoValor) => ActualizarPayload("nombres", nuevoValor));
     watch(apellidos, (nuevoValor) => ActualizarPayload("apellidos", nuevoValor));
-    watch(fechaNacimiento, (nuevoValor) => ActualizarPayload("fecha_nacimiento", nuevoValor));
+    watch(fechaNacimiento, (nuevoValor) => ActualizarPayload("fecha_nac", nuevoValor));
     watch(condicion, (nuevoValor) => ActualizarPayload("condicion", nuevoValor));
 
 
-    watch(DatosUsuario, (nuevaInfo) => {
+    watch(familiarSelecionado, (nuevaInfo) => {
         MostrarValores(nuevaInfo)
     })
 
@@ -151,8 +123,23 @@
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
         RequiereActualizar.value = false
 
-        payload_old.rut = DATA?.rut ?? '';
-        payload.rut = DATA?.rut ?? '';
+        payload_old.parentesco = DATA?.parentesco_id ?? '';
+        payload.parentesco = DATA?.parentesco_id ?? '';
+
+        payload_old.numeroDocumento = DATA?.rut ?? '';
+        payload.numeroDocumento = DATA?.rut ?? '';
+
+        payload_old.nombres = DATA?.nombres ?? '';
+        payload.nombres = DATA?.nombres ?? '';
+
+        payload_old.apellidos = DATA?.apellidos ?? '';
+        payload.apellidos = DATA?.apellidos ?? '';
+
+        payload_old.fechaNacimiento = DATA?.fecha_nac ?? '';
+        payload.fechaNacimiento = DATA?.fecha_nac ?? '';
+
+        payload_old.condicion = DATA?.condicion ?? '';
+        payload.condicion = DATA?.condicion ?? '';
         
 
     }
@@ -186,6 +173,7 @@
     verificarCambios();
 
 };
+
 // Define la función verificarCambios que verifica si hay cambios entre los valores antiguos y nuevos de un payload.
 const verificarCambios = () => {
     // Comprueba si todos los campos relevantes en payload_old y payload son iguales.
@@ -222,19 +210,17 @@ const verificarCambios = () => {
  const Enviar = async () => {
   //si ID es nulo crea un usuario
 
-        console.log(DatosUsuario.value)
-
-
     if (RequiereActualizar.value == true) {
-        const respuesta = await peticiones.ActualizarDatosPrincipales(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+        const respuesta = await peticiones.addCargaPrevisional(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+        console.log(respuesta)
         if(respuesta.success == true){
-        emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor': true})
+            emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor': true})
         } else {
             console.error(respuesta?.error)
-            emit('respuestaServidor', {'texto': respuesta?.error, 'valor': false})
+            emit('respuestaServidor', {'texto':respuesta?.error?.message, 'valor':false})
         }
     } else {
-        emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor': true});
+        emit('respuestaServidor', {'texto': "Los campos estan vacios", 'valor': true});
     }
 };
 </script>

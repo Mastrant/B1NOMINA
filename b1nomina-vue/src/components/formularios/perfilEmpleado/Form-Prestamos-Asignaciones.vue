@@ -12,7 +12,7 @@
                         optionsSelected="Seleccionar"
                     />
                 </template>
-            </LayoutInputLineal>            
+            </LayoutInputLineal>          
         </div>
 
         <div class="row-form">
@@ -28,12 +28,13 @@
             <InputLinealDescripcion 
                 v-model="valorCuota"
                 Placeholder="$ 0" 
-                Titulo="Valor mensual" 
+                Titulo="Valor" 
                 @update:modelValue="valorCuota = $event"
                 Tipo="Number"
-                numero-decimales="any"
-                :minimo-numeros="0.00"
+                :minimoNumeros="1"
+                :NumeroDecimales="0.01"
                 :requerido="RequiereActualizar"
+
             />
         </div>
         <div class="row-form">
@@ -43,8 +44,7 @@
                 Titulo="Número de cuotas a pagar" 
                 @update:modelValue="numeroCuotas = $event"
                 Tipo="Number"
-                numero-decimales="any"
-                :minimo-numeros="0"
+                :minimo-numeros="1"
                 :requerido="RequiereActualizar"
             />
             <InputLinealDescripcion 
@@ -63,11 +63,15 @@
     import InputLinealDescripcion from '@/components/inputs/Input-Lineal-descripcion.vue';
     import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
     import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
-    import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
 
     import {reactive, ref, watch, inject, onMounted, defineEmits, onBeforeMount} from 'vue';
 
     import peticiones from '@/peticiones/p_empleado';
+
+    import {useRoute}  from 'vue-router';
+
+    const route = useRoute();  
+    const Sociedad_id = route.params.sociedadId
 
     const DatosUsuario = reactive(inject('dataEmpleado'))
     const parametros = reactive(inject('parametros'))
@@ -78,10 +82,26 @@
     const RequiereActualizar = ref(false)
 
     // payload de las peticiones
-    const payload = reactive({});
+    const payload = reactive({
+        tipo_id: '',
+        descripcion: '',
+        valor: '',
+        cuotas: '',
+        fecha_inicio: '',
+        "sociedad_id": Sociedad_id
+    });
     
     // payload de las peticiones
-    const payload_old = reactive({});
+    const payload_old = reactive({
+        tipo_id: '',
+        descripcion: '',
+        valor: '',
+        cuotas: '',
+        fecha_inicio: '',
+        "sociedad_id": Sociedad_id
+    });
+
+
 
     const TipoPrestamo = ref('')
     const DescripcionPrestamo = ref('')
@@ -89,33 +109,29 @@
     const numeroCuotas = ref('')
     const fechaPrimerPago = ref('')
 
-    watch(TipoPrestamo, (nuevoValor) =>  ActualizarPayload('monto_sueldo', nuevoValor));
-    watch(DescripcionPrestamo, (nuevoValor) =>  ActualizarPayload('monto_sueldo', nuevoValor));
-    watch(valorCuota, (nuevoValor) =>  ActualizarPayload('monto_sueldo', nuevoValor));
-    watch(numeroCuotas, (nuevoValor) =>  ActualizarPayload('monto_sueldo', nuevoValor));
-    watch(fechaPrimerPago, (nuevoValor) =>  ActualizarPayload('monto_sueldo', nuevoValor));
-
-    
-    watch(DatosUsuario, (nuevaInfo) => {
-        MostrarValores(nuevaInfo)        
-    })
+    watch(TipoPrestamo, (nuevoValor) =>  ActualizarPayload('tipo_id', nuevoValor));
+    watch(DescripcionPrestamo, (nuevoValor) =>  ActualizarPayload('descripcion', nuevoValor));
+    watch(valorCuota, (nuevoValor) =>  ActualizarPayload('valor', nuevoValor));
+    watch(numeroCuotas, (nuevoValor) =>  {
+        numeroCuotas.value = Math.round(nuevoValor)
+        ActualizarPayload('cuotas', nuevoValor)
+    });
+    watch(fechaPrimerPago, (nuevoValor) =>  ActualizarPayload('fecha_inicio', nuevoValor));
 
     watch(parametros, (nuevaInfo) => {     
         Parametros.value = nuevaInfo
     })
 
-    const MostrarValores = (DATA) => {
+    const ResetForm = () => {
         RequiereActualizar.value = false;
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
         
-        TipoPrestamo.value = (DATA?.PactadoUF == null)? '' :DATA?.PactadoUF;
-        DescripcionPrestamo.value = (DATA?.PactadoUF == null)? '' :DATA?.PactadoUF;
-        valorCuota.value = (DATA?.PactadoUF == null)? '' :DATA?.PactadoUF;
-        numeroCuotas.value = (DATA?.PactadoUF == null)? '' :DATA?.PactadoUF;
-        fechaPrimerPago.value = (DATA?.PactadoUF == null)? '' :DATA?.PactadoUF;
+        TipoPrestamo.value = '';
+        DescripcionPrestamo.value = '';
+        valorCuota.value = '';
+        numeroCuotas.value =  '';
+        fechaPrimerPago.value = '';
 
-        payload_old.PactadoUF = DATA?.PactadoUF ?? '';
-        payload.PactadoUF = DATA?.PactadoUF ?? '';
     }
 
 /**
@@ -164,11 +180,12 @@ const verificarCambios = () => {
 }
 
     onMounted(() => {
-        MostrarValores(DatosUsuario.value)
+        ResetForm()
+        RequiereActualizar.value == false
     });
 
     onBeforeMount(() => {
-        Parametros.value = parametros.value
+        Parametros.value = parametros.value;
     })
 
     const emit = defineEmits([
@@ -182,9 +199,10 @@ const verificarCambios = () => {
  */
  const Enviar = async () => {
   //si ID es nulo crea un usuario
+  console.log(payload)
  
   if (RequiereActualizar.value == true) {
-    const respuesta = await peticiones?.ActualizarAFP(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+    const respuesta = await peticiones?.addPrestamo(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
     if(respuesta.success == true){
        emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
     } else {
@@ -193,7 +211,7 @@ const verificarCambios = () => {
     }
 
   } else {
-    emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor':true});
+    emit('respuestaServidor', {'texto': "Los campos estan vacios", 'valor':true});
   }
 };
 

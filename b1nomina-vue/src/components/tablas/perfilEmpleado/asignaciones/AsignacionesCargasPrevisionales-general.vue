@@ -6,16 +6,16 @@
             <tr class="rowTabla encabezado">
 
                 <th class="">
-                    CONCEPTO 
+                    NOMBRE Y APELLIDO 
                 </th>
                 <th class="">
-                    DESCRIPCION
+                    RUT
                 </th>
                 <th class=""> 
-                    VALOR
+                    PARENTESCO
                 </th>
                 <th class=""> 
-                    CUOTAS
+                    FECHA DE NACIMIENTO
                 </th>
                 <th class=""> 
                     ACCIONES 
@@ -24,30 +24,30 @@
             <!--Final encabezado-->
 
             <!--Cuerpo de la tabla-->
-            <AsignacionesPrestamosRow>
+            <AsignacionesCargaPrevisionalesRow>
 
                 <!--Nombre y apelidos-->
-                <template v-slot:CONCEPTO>
-                    Empresarial
+                <template #nombre>
+                    FULANO DE TAL
                 </template>
                 <!--Rut-->
-                <template v-slot:DESCRIPCION>
-                    Descripcion del prestamo
+                <template #rut>
+                    1234567-K
                 </template>
                  <!--Cargo-->
-                <template v-slot:VALOR>
-                    $50000
+                <template #parentesco>
+                    PADRE MADRE
                 </template>
                 <!--Saladio / sueldo-->
-                <template v-slot:CUOTAS>
-                   5
+                <template #fecha>
+                   01/01/2021
                 </template>
                 <!--Estado-->
                 <template v-slot:ACCIONES>
                     <EditIcon Stroke="#1A2771" text="Editar" />
                     <TrashIcon Stroke="#1A2771" text="Eliminar" />
                 </template>
-            </AsignacionesPrestamosRow>
+            </AsignacionesCargaPrevisionalesRow>
             <!--Final cuerpo-->
         </table>        
         
@@ -58,25 +58,23 @@
 <script setup>
 import TrashIcon from '@/components/icons/trash-icon.vue'
 import EditIcon from '@/components/icons/Edit-icon.vue'
-import AsignacionesPrestamosRow from '@/components/tablas/perfilEmpleado/asignaciones/AsignacionesPrestamos-row.vue';
-
+import AsignacionesCargaPrevisionalesRow from '@/components/tablas/perfilEmpleado/asignaciones/AsignacionesCargasPrevisionales-row.vue';
 
 import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
 
 import { useRoute } from 'vue-router';
-
-import almacen from '@/store/almacen.js';
 
 const route = useRoute();
 const sociedadId = route.params.sociedadId;
 
 // Define los props
 const props = defineProps({
-  ListadoPrestamos: {
-    type: Array,
-    default: () => []
-  }
+    listadoCargas: {
+        type: Array,
+        default: () => []
+    }
 });
+
 const emit = defineEmits([
     'upData',
     'actualizar_Lista',
@@ -90,92 +88,18 @@ const resultadoActivacion = (Data) => {
 }
 
 // Accede a la lista de empleados desde props
-const ListadoPrestamos = ref(props.ListadoPrestamos);
-
-const listaEmpleadosSelecionados = ref([]);
-
-/**
- * Función para manejar la interacción con una lista de empleados seleccionados.
- * Esta función agrega o remueve un valor de la lista basado en si el valor ya está presente.
- *
- * @param {Number} value - El valor a agregar o remover de la lista.
- */
- const InteraccionListaEmpleadosSelecionados = (value) => {
-
-  // Verifica si el valor no es null
-  if (value !== null) {
-    // Verifica si el valor ya está en la lista
-    if (listaEmpleadosSelecionados.value.includes(value)) {
-      // Si el valor ya está en la lista, lo remueve
-      // Encuentra el índice del valor en la lista
-      const index = listaEmpleadosSelecionados.value.indexOf(value);
-      // Verifica si el índice es válido (mayor que -1)
-      if (index > -1) {
-        // Remueve el valor de la lista usando splice
-        listaEmpleadosSelecionados.value?.splice(index,   1);
-      }
-    } else {
-      // Si el valor no está en la lista, lo agrega
-      // Agrega el valor al final de la lista
-      listaEmpleadosSelecionados.value?.push(value);
-    }
-  }
-};
-
-const upData = (arrayData) => {
-    // Convertir el objeto proxy a un array real
-    const arrayReal = [...arrayData];
-    emit('upData', arrayReal);
-};
-
-watch(listaEmpleadosSelecionados.value, upData)
-
-//configuracion del paginado
-const DatosPaginados = ref([]); //arreglo con los datos picados
-const paginaActual = ref(1); //inicializacion de la pagina
-const elementosPorPagina = ref(24); //numero de filas por pagina
-
-const asignarValor = (Numero) => {
-    elementosPorPagina.value = Numero;
-}
-
-//total de paginas
-const totalpaginas = () => {
-    //devuelve el numero de paginas segun los datos y redondea el resultado
-    return Math.ceil(ListadoPrestamos.value.length / elementosPorPagina.value);
-};
-
-//optener data segun la pagina
-function getDataPorPagina(numeroPagina){
-    //vacia la lista al cambiar iniciar
-
-    //si el valor de numeroPagina es null o undefined le asigna 1
-    (numeroPagina == undefined || numeroPagina == null)
-        ? numeroPagina = 1
-        : paginaActual.value = numeroPagina;   
-    
-    DatosPaginados.value = ([]);
-
-    //rango del indice
-    let ini = (numeroPagina * elementosPorPagina.value) - elementosPorPagina.value;
-    let fin = (numeroPagina * elementosPorPagina.value);
-    
-    //recorre los datos de lista y los indexa en la paginacion
-    DatosPaginados.value = ListadoPrestamos.value.slice(ini, fin)
-};
+const ListadoCargas = ref(props.listadoCargas);
 
 
 //al cambiar los datos reinicia el renderizado
 watchEffect(() => {
-  ListadoPrestamos.value = props.ListadoPrestamos;
-  //al detectar el cambio en la lista solicita los datos
-  getDataPorPagina();
+  ListadoCargas.value = props.ListadoCargas;
 });
 
 //al montar el componente solicita la data
 onMounted(()=> {
     //ejecuta la actualizacion del paginado
-    ListadoPrestamos.value = props.ListadoPrestamos;
+    ListadoCargas.value = props.listadoCargas;
 });
 </script>
 

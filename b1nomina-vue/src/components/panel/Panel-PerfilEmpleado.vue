@@ -738,7 +738,7 @@
 
                     <div class="contenedorInfo tablas" v-if="panelShow == 5">
 
-                        <LayoutTablasSimples Titulo="Cargas Previsionales">
+                        <LayoutTablasSimples Titulo="Asignación de Préstamos">
                             <template #boton>
                             
                                 <TemplateButton2 @click="EditarInfo?.ActionButton(13,EmpleadoID)" text="Nuevo Préstamo" >
@@ -750,7 +750,7 @@
                             </template>
                 
                             <template #Tabla>
-                                <AsignacionesPrestamos />
+                                <AsignacionesPrestamos :ListadoPrestamos="ListadoPrestamos" />
                             </template>
                         </LayoutTablasSimples>
                     </div>                    
@@ -845,9 +845,11 @@ import EdiIcon from '@/components/icons/Edit-icon.vue';
 import PlusCirculoIcon from '@/components/icons/Plus-Circulo-icon.vue';
 
 //Librerias y acciones
-import {ref, inject } from 'vue';
+import {ref, inject, onMounted } from 'vue';
 import {useRoute}  from 'vue-router';
 import almacen from '@/store/almacen';
+
+import peticiones_panel_empleado from '@/peticiones/p_empleado';
 
 const DatosUsuario = ref(inject('dataEmpleado'))
 
@@ -864,12 +866,58 @@ const showInfo = (id_apartado) => {
 const EditarInfo = ref(null);
 const shortTemplateModal = ref(null);
 
-/*
-onMounted(async () => {
-    await console.log(DatosUsuario.value)
-})
+const ListadoPrestamos = ref({})
+const ListadoCargaPrevisionales = ref({})
+const ListadoContrato = ref({})
+const ListadoArchivosAdicionales = ref({})
 
-*/
+const SolicitarListadoDePrestamos = async (id = Number) => {
+    const respuesta = await peticiones_panel_empleado?.getListadoPrestamos(id);
+
+    console.log(respuesta)
+    if (respuesta.success) {
+        //console.log(respuesta.data)
+        ListadoPrestamos.value = respuesta.data;
+    } else {
+        console.error(respuesta.error)
+    }
+}
+const SolicitarListadoCargaPresionales = async (id = Number) => {
+    const respuesta = await peticiones_panel_empleado?.getHistorialDeAcciones(id);
+    if (respuesta.success) {
+        //console.log(respuesta.data)
+        ListadoCargaPrevisionales.value = respuesta.data;
+    } else {
+        console.error(respuesta.error)
+    }
+}
+const SolicitarListadoDeContrato = async (id = Number) => {
+    const respuesta = await peticiones_panel_empleado?.getHistorialDeAcciones(id);
+    if (respuesta.success) {
+        //console.log(respuesta.data)
+        ListadoContrato.value = respuesta.data;
+    } else {
+        console.error(respuesta.error)
+    }
+}
+const SolicitarListadoDeArchivos = async (id = Number) => {
+    const respuesta = await peticiones_panel_empleado?.getHistorialDeAcciones(id);
+    if (respuesta.success) {
+        //console.log(respuesta.data)
+        ListadoArchivosAdicionales.value = respuesta.data;
+    } else {
+        console.error(respuesta.error)
+    }
+}
+
+
+
+onMounted(async () => {
+    await SolicitarListadoDePrestamos(DatosUsuario.value?.user_id)
+    await SolicitarListadoCargaPresionales(DatosUsuario.value?.user_id)
+    await SolicitarListadoDeContrato(DatosUsuario.value?.user_id)
+    await SolicitarListadoDeArchivos(DatosUsuario.value?.user_id)
+});
 
 </script>
 

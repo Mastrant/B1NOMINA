@@ -19,7 +19,7 @@
            :step="NumeroDecimales"
            :value="modelValue"
            @input="$emit('update:modelValue', $event.target.value)"
-           >
+        >
     </div>        
 </template>
 
@@ -68,7 +68,6 @@ const props = defineProps(
         },
         maximoCaracteres: {
             type:[Number, String], // Define el tipo de dato que puede recibir, Number o String.
-            default: 100 // Valor por defecto para el máximo de caracteres permitidos.
         },
         minimoNumeros: {
             type:[Number, String], // Define el tipo de dato que puede recibir, Number o String.
@@ -79,7 +78,7 @@ const props = defineProps(
         },
         NumeroDecimales: {
             type: [Number, String], // Define el tipo de dato que puede recibir, Number o String.
-            default: 2 // Valor por defecto para el mínimo de caracteres permitidos.
+            default: 0 // Valor por defecto para el mínimo de caracteres permitidos.
         },
         requerido: {
             type: Boolean, // Define el tipo de dato que puede recibir, Boolean.

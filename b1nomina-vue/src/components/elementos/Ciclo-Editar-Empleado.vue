@@ -91,7 +91,7 @@
 
             <div v-if=" formActivo == 14"> <!--retomar cargas previsionales -->                    
                 
-                <FormPrestamosCargaPrevisional 
+                <FormCargaPrevisional 
                     @respuestaServidor="notificacionModal"
                 />
             </div>
@@ -128,7 +128,7 @@
     import FormDatospAdicionales from '@/components/formularios/perfilEmpleado/From-DatosP-Adicionales.vue';
 
     import FormPrestamosAsignaciones from '@/components/formularios/perfilEmpleado/Form-Prestamos-Asignaciones.vue';
-    import FormPrestamosCargaPrevisional from '@/components/formularios/perfilEmpleado/Form-Prestamos-CargaPrevisionales.vue';
+    import FormCargaPrevisional from '@/components/formularios/perfilEmpleado/Form-CargaPrevisionales.vue';
     
     //librerias
     import { ref, onMounted, defineExpose, inject } from 'vue';
