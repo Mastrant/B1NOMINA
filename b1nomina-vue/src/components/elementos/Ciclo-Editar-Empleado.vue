@@ -77,7 +77,7 @@
                 </div>
                 
             <div v-if=" formActivo == 12"> <!--retomar Asignaciones Prestamo-->                    
-                <FormDatosPago 
+                <FormAddCuenta 
                     @respuestaServidor="notificacionModal"
                 />
                     
@@ -120,7 +120,7 @@
     import FormDatosPago from '@/components/formularios/perfilEmpleado/Form-DatosPago.vue';
     import FormCentralizacionDatosAdicionales from '@/components/formularios/perfilEmpleado/From-DatosP-Adicionales.vue';
 
-    import FormDatosPago2 from '@/components/formularios/perfilEmpleado/Form-DatosPago.vue'
+    import FormAddCuenta from '@/components/formularios/perfilEmpleado/Form-Add-Cuenta.vue'
 
     import FormDatosPAFP from '@/components/formularios/perfilEmpleado/Form-DatosP-AFP.vue';
     import FormDatosPAPV from '@/components/formularios/perfilEmpleado/Form-DatosP-APV.vue';
@@ -270,7 +270,7 @@
                 EmpleadoID_Selecionado.value = item_ID;
                 TextoButton.value = 'Guardar';
                 TituloModal.value = 'Añadir Cuenta';
-                IDFormModal.value = 'AsignacionesPrestamos';
+                IDFormModal.value = 'AddCuenta';
 
                 break; 
 

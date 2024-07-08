@@ -33,20 +33,13 @@ const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función 
 // Llama a la función para enviar información al componente padre
 
 
-const ListadoCentrosCostos = ref([
-    {
-        id: 1
-    },
-    {
-        id: 2
-    }
-]);
+const ListadoCentrosCostos = ref([]);
 
 const SolicitarListadoCentrosCostos = async (ID_Sociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getCentralizacion(ID_Sociedad);
     console.log(respuesta)
     if (respuesta.success) {
-        ListadoCentrosCostos.value = respuesta.data;
+        ListadoCentrosCostos.value = respuesta.data.data;
     } else {
         console.error(respuesta.error)
     }

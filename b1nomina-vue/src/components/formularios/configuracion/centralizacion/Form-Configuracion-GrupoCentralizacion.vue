@@ -8,10 +8,10 @@
             <LayoutInputBorder textLabel="Validar eventos según" :requerido="RequiereActualizar">
                 <template v-slot>
                   <ListaTemplateBorder
-                    v-model="Region"
+                    v-model="validacionEvento"
                     :options="parametros.regiones"
                     :requerido="RequiereActualizar"            
-                    :preseleccion="Region"  
+                    :preseleccion="validacionEvento"  
                     optionsSelected="Seleccionar"
                   />
                 </template>
@@ -289,6 +289,7 @@ const emit = defineEmits([
 
 // Definicion de variables de los inputs
 
+const validacionEvento = ref('');
 const TopeCuotaPrestamo = ref('');
 const PorcentajeAnticipo = ref('');
 const Remunera = ref('');
@@ -325,25 +326,26 @@ const payload = reactive({
 });
 
 //Escuchar cambios en las variables
-watch(TopeCuotaPrestamo, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(PorcentajeAnticipo, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(Remunera, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(AFP, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(previsionSalud, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(Gratificacion, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(H_Extra, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(AFC, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(Movilizacion, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(Colacion, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(O_asignacion, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(SIS, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(Mutual, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(I_unico, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(A_familiar, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(A_Familiar_Pagar, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(I_unico_pagar, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(AFC_Pagar, (nuevoValor) => ActualizarPayload('', nuevoValor));
-watch(sueldos_pagar, (nuevoValor) => ActualizarPayload('', nuevoValor));
+watch(validacionEvento, (nuevoValor) => ActualizarPayload('validar_evento', nuevoValor));
+watch(TopeCuotaPrestamo, (nuevoValor) => ActualizarPayload('porcentaje_tope_cuota_prestamo', nuevoValor));
+watch(PorcentajeAnticipo, (nuevoValor) => ActualizarPayload('porcentaje_maximo_anticipo', nuevoValor));
+watch(Remunera, (nuevoValor) => ActualizarPayload('cuenta_remunera_deb', nuevoValor));
+watch(AFP, (nuevoValor) => ActualizarPayload('cuenta_AFP_deb', nuevoValor));
+watch(previsionSalud, (nuevoValor) => ActualizarPayload('cuenta_salud_deb', nuevoValor));
+watch(Gratificacion, (nuevoValor) => ActualizarPayload('cuenta_gratificacion_deb', nuevoValor));
+watch(H_Extra, (nuevoValor) => ActualizarPayload('cuenta_horas_ext_deb', nuevoValor));
+watch(AFC, (nuevoValor) => ActualizarPayload('cuenta_seg_AFC_deb', nuevoValor));
+watch(Movilizacion, (nuevoValor) => ActualizarPayload('cuenta_mov_deb', nuevoValor));
+watch(Colacion, (nuevoValor) => ActualizarPayload('cuenta_col_deb', nuevoValor));
+watch(O_asignacion, (nuevoValor) => ActualizarPayload('cuenta_otra_asig_deb', nuevoValor));
+watch(SIS, (nuevoValor) => ActualizarPayload('cuenta_SIS_deb', nuevoValor));
+watch(Mutual, (nuevoValor) => ActualizarPayload('cuenta_mut_deb', nuevoValor));
+watch(I_unico, (nuevoValor) => ActualizarPayload('cuenta_impuesto_unico_deb', nuevoValor));
+watch(A_familiar, (nuevoValor) => ActualizarPayload('cuenta_asignacion_fami_deb', nuevoValor));
+watch(A_Familiar_Pagar, (nuevoValor) => ActualizarPayload('cuenta_asignacion_familiar_cred', nuevoValor));
+watch(I_unico_pagar, (nuevoValor) => ActualizarPayload('cuenta_impuesto_unico_cred', nuevoValor));
+watch(AFC_Pagar, (nuevoValor) => ActualizarPayload('cuenta_Afc_empresa_cred', nuevoValor));
+watch(sueldos_pagar, (nuevoValor) => ActualizarPayload('cuenta_sueldo_pagar_cred', nuevoValor));
 
 
 
@@ -382,28 +384,89 @@ const MostrarValores = (DATA) => {
 
     RequiereActualizar.value = false;
 
+
+    validacionEvento.value = (DATA?.validar_evento == null)? '' :DATA?.porcentaje_tope_cuota_prestamo;
+    payload_old.validar_evento = DATA?.validar_evento ?? '';
+    payload.validar_evento = DATA?.validar_evento ?? '';
+
     // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
     // utilizando '' si DATA?.documento es null.
-    TopeCuotaPrestamo.value = (DATA?.dato == null)? '' :DATA?.dato;
-    PorcentajeAnticipo.value = (DATA?.dato == null)? '' :DATA?.dato;
-    Remunera.value = (DATA?.dato == null)? '' :DATA?.dato;
-    AFP.value = (DATA?.dato == null)? '' :DATA?.dato;
-    previsionSalud.value = (DATA?.dato == null)? '' :DATA?.dato;
-    Gratificacion.value = (DATA?.dato == null)? '' :DATA?.dato;
-    H_Extra.value = (DATA?.dato == null)? '' :DATA?.dato;
-    AFC.value = (DATA?.dato == null)? '' :DATA?.dato;
-    Movilizacion.value = (DATA?.dato == null)? '' :DATA?.dato;
-    Colacion.value = (DATA?.dato == null)? '' :DATA?.dato;
-    O_asignacion.value = (DATA?.dato == null)? '' :DATA?.dato;
-    SIS.value = (DATA?.dato == null)? '' :DATA?.dato;
-    Mutual.value = (DATA?.dato == null)? '' :DATA?.dato;
-    I_unico.value = (DATA?.dato == null)? '' :DATA?.dato;
-    A_familiar.value = (DATA?.dato == null)? '' :DATA?.dato;
-    A_Familiar_Pagar.value = (DATA?.dato == null)? '' :DATA?.dato;
-    I_unico_pagar.value = (DATA?.dato == null)? '' :DATA?.dato;
-    AFC_Pagar.value = (DATA?.dato == null)? '' :DATA?.dato;
-    sueldos_pagar.value = (DATA?.dato == null)? '' :DATA?.dato;
-    
+    TopeCuotaPrestamo.value = (DATA?.porcentaje_tope_cuota_prestamo == null)? '' :DATA?.porcentaje_tope_cuota_prestamo;
+payload_old.porcentaje_tope_cuota_prestamo = DATA?.porcentaje_tope_cuota_prestamo ?? '';
+payload.porcentaje_tope_cuota_prestamo = DATA?.porcentaje_tope_cuota_prestamo ?? '';
+
+    PorcentajeAnticipo.value = (DATA?.porcentaje_maximo_anticipo == null)? '' :DATA?.porcentaje_maximo_anticipo;
+payload_old.porcentaje_maximo_anticipo = DATA?.porcentaje_maximo_anticipo ?? '';
+payload.porcentaje_maximo_anticipo = DATA?.porcentaje_maximo_anticipo ?? '';
+
+    Remunera.value = (DATA?.cuenta_remunera_deb == null)? '' :DATA?.cuenta_remunera_deb;
+payload_old.cuenta_remunera_deb = DATA?.cuenta_remunera_deb ?? '';
+payload.cuenta_remunera_deb = DATA?.cuenta_remunera_deb ?? '';
+
+    AFP.value = (DATA?.cuenta_AFP_deb == null)? '' :DATA?.cuenta_AFP_deb;
+payload_old.cuenta_AFP_deb = DATA?.cuenta_AFP_deb ?? '';
+payload.cuenta_AFP_deb = DATA?.cuenta_AFP_deb ?? '';
+
+    previsionSalud.value = (DATA?.cuenta_salud_deb == null)? '' :DATA?.cuenta_salud_deb;
+payload_old.cuenta_salud_deb = DATA?.cuenta_salud_deb ?? '';
+payload.cuenta_salud_deb = DATA?.cuenta_salud_deb ?? '';
+
+    Gratificacion.value = (DATA?.cuenta_gratificacion_deb == null)? '' :DATA?.cuenta_gratificacion_deb;
+payload_old.cuenta_gratificacion_deb = DATA?.cuenta_gratificacion_deb ?? '';
+payload.cuenta_gratificacion_deb = DATA?.cuenta_gratificacion_deb ?? '';
+
+    H_Extra.value = (DATA?.cuenta_horas_ext_deb == null)? '' :DATA?.cuenta_horas_ext_deb;
+payload_old.cuenta_horas_ext_deb = DATA?.cuenta_horas_ext_deb ?? '';
+payload.cuenta_horas_ext_deb = DATA?.cuenta_horas_ext_deb ?? '';
+
+    AFC.value = (DATA?.cuenta_seg_AFC_deb == null)? '' :DATA?.cuenta_seg_AFC_deb;
+    payload_old.cuenta_seg_AFC_deb = DATA?.cuenta_seg_AFC_deb ?? '';
+    payload.cuenta_seg_AFC_deb = DATA?.cuenta_seg_AFC_deb ?? '';
+
+    Movilizacion.value = (DATA?.cuenta_mov_deb == null)? '' :DATA?.cuenta_mov_deb;
+payload_old.cuenta_mov_deb = DATA?.cuenta_mov_deb ?? '';
+payload.cuenta_mov_deb = DATA?.cuenta_mov_deb ?? '';
+
+    Colacion.value = (DATA?.cuenta_col_deb == null)? '' :DATA?.cuenta_col_deb;
+    payload_old.cuenta_col_deb = DATA?.cuenta_col_deb ?? '';
+    payload.cuenta_col_deb = DATA?.cuenta_col_deb ?? '';
+
+    O_asignacion.value = (DATA?.cuenta_otra_asig_deb == null)? '' :DATA?.cuenta_otra_asig_deb;
+payload_old.cuenta_otra_asig_deb = DATA?.cuenta_otra_asig_deb ?? '';
+payload.cuenta_otra_asig_deb = DATA?.cuenta_otra_asig_deb ?? '';
+
+    SIS.value = (DATA?.cuenta_SIS_deb == null)? '' :DATA?.cuenta_SIS_deb;
+payload_old.cuenta_SIS_deb = DATA?.cuenta_SIS_deb ?? '';
+payload.cuenta_SIS_deb = DATA?.cuenta_SIS_deb ?? '';
+
+    Mutual.value = (DATA?.cuenta_mut_deb == null)? '' :DATA?.cuenta_mut_deb;
+payload_old.cuenta_mut_deb = DATA?.cuenta_mut_deb ?? '';
+payload.cuenta_mut_deb = DATA?.cuenta_mut_deb ?? '';
+
+    I_unico.value = (DATA?.cuenta_impuesto_unico_deb == null)? '' :DATA?.cuenta_impuesto_unico_deb;
+payload_old.cuenta_impuesto_unico_deb = DATA?.cuenta_impuesto_unico_deb ?? '';
+payload.cuenta_impuesto_unico_deb = DATA?.cuenta_impuesto_unico_deb ?? '';
+
+    A_familiar.value = (DATA?.cuenta_asignacion_fami_deb == null)? '' :DATA?.cuenta_asignacion_fami_deb;
+   payload_old.cuenta_asignacion_fami_deb = DATA?.cuenta_asignacion_fami_deb ?? '';
+   payload.cuenta_asignacion_fami_deb = DATA?.cuenta_asignacion_fami_deb ?? '';
+
+    A_Familiar_Pagar.value = (DATA?.cuenta_asignacion_familiar_cred == null)? '' :DATA?.cuenta_asignacion_familiar_cred;
+   payload_old.cuenta_asignacion_familiar_cred = DATA?.cuenta_asignacion_familiar_cred ?? '';
+   payload.cuenta_asignacion_familiar_cred = DATA?.cuenta_asignacion_familiar_cred ?? '';
+
+    I_unico_pagar.value = (DATA?.cuenta_impuesto_unico_cred == null)? '' :DATA?.cuenta_impuesto_unico_cred;
+    payload_old.cuenta_impuesto_unico_cred = DATA?.cuenta_impuesto_unico_cred ?? '';
+    payload.cuenta_impuesto_unico_cred = DATA?.cuenta_impuesto_unico_cred ?? '';
+
+    AFC_Pagar.value = (DATA?.cuenta_Afc_empresa_cred == null)? '' :DATA?.cuenta_Afc_empresa_cred;
+payload_old.cuenta_Afc_empresa_cred = DATA?.cuenta_Afc_empresa_cred ?? '';
+payload.cuenta_Afc_empresa_cred = DATA?.cuenta_Afc_empresa_cred ?? '';
+
+    sueldos_pagar.value = (DATA?.cuenta_sueldo_pagar_cred == null)? '' :DATA?.cuenta_sueldo_pagar_cred;
+    payload_old.cuenta_sueldo_pagar_cred = DATA?.cuenta_sueldo_pagar_cred ?? '';
+    payload.cuenta_sueldo_pagar_cred = DATA?.cuenta_sueldo_pagar_cred ?? '';
+
     
     payload_old.TopeCuotaPrestamo = DATA?.dato ?? '';
     payload.TopeCuotaPrestamo = DATA?.dato ?? '';

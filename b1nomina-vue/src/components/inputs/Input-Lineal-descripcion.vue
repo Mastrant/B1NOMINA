@@ -58,6 +58,9 @@ const props = defineProps(
             type: String, // Define el tipo de dato que puede recibir, String.
             default: 'text' // Valor por defecto para el tipo de input, en este caso, texto.
         },
+        validaciones: {
+            
+        },
         Deshabilitar: {
             type: Boolean, // Define el tipo de dato que puede recibir, Boolean.
             default:false, // Valor por defecto, el input no estará deshabilitado.

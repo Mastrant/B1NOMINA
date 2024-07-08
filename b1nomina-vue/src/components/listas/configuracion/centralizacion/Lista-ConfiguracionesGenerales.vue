@@ -81,9 +81,9 @@ onMounted( async () => {
 </script>
 
 <style scoped>
-.contend {
-    display:flex;
-    flex-direction: column;
-    padding: 0 12px;
-}
+    .contend {
+        display:flex;
+        flex-direction: column;
+        padding: 0 12px;
+    }
 </style>

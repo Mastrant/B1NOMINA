@@ -8,6 +8,7 @@
             :id="idRadius"
             :value="Valor"
             :checked="Selecionado"
+            :required="requerido"
             @change="onChange"
         >
         <!-- Etiqueta asociada al input de radio -->
@@ -48,6 +49,8 @@ const props = defineProps({
     preseleccion:{
         type: [Number, String]
     },
+    
+    requerido: { type: Boolean, default: false }
 });
 
 // Define los eventos que el componente puede emitir

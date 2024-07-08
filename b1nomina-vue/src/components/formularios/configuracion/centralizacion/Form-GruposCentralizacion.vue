@@ -1,22 +1,5 @@
 <template>
-    <form class="formulario" :id="IDFORM" @submit.prevent="Enviar">
-        <TemplateModal 
-            @closeModal="showModal(false)" 
-            :FormId="IDFormModal"
-            :NombreAccion="TituloModal" 
-            :textSubmit="TextoButton"
-            :activarModal="activarModal"
-            :ModalActivo="1"
-            :DataNotification="InformacionNotificacionModal"
-            
-        >
-            <template #default><!--Espacio para los formularios -->
-                <FormConfigGrupoCentralizacion 
-                    :FormID="IDFormModal"
-                    @DataNotificacion="ActualizarDataNotificacionModal"                
-                />
-            </template>
-        </TemplateModal>
+    <form class="formulario" :id="IDFORM" @submit.prevent="Enviar">        
         <div class="row">
             
             <InputBorderDescripcion
@@ -43,6 +26,26 @@
             </div>
             
         </div>
+        <div>
+            <TemplateModal 
+            @closeModal="showModal(false)" 
+            :FormId="IDFormModal"
+            :NombreAccion="TituloModal" 
+            :textSubmit="TextoButton"
+            :activarModal="activarModal"
+            :ModalActivo="1"
+            :DataNotification="InformacionNotificacionModal"
+            
+            >
+                <template #default><!--Espacio para los formularios -->
+                    <FormConfigGrupoCentralizacion 
+                        :FormID="IDFormModal"
+                        :Informacion="Informacion"
+                        @DataNotificacion="ActualizarDataNotificacionModal"                
+                    />
+                </template>
+            </TemplateModal>
+        </div>
 
         <div class="espacioBoto" v-if="RequiereActualizar">
             <TemplateButton :form="IDFORM" Tipo="submit" text="Actualizar"/>
@@ -60,6 +63,8 @@ import FormConfigGrupoCentralizacion from '@/components/formularios/configuracio
 
 import { defineProps, ref, reactive, watch, defineEmits, onMounted, inject} from 'vue';
 
+import peticiones_Configuracion from '@/peticiones/configuracion/centralizacion.js'
+
 const props = defineProps({
     Informacion: {
         type: Object,
@@ -70,6 +75,7 @@ const props = defineProps({
 const RequiereActualizar = ref(false);
 
 const ID_Sociedad = ref(inject('SociedadID'))
+const UserID = ref(localStorage.getItem('userId'));
 
 const IDFORM = "GrupoCentralizacion" + props.Informacion?.id;
 
@@ -81,30 +87,30 @@ const emit = defineEmits([
 
 const NombreCampo = ref('');
 
-    const activarModal = ref(false)
-    const TextoButton = ref('');
-    const TituloModal = ref('');
-    const IDFormModal = ref('');
-    const InformacionNotificacionModal = ref({})
+const activarModal = ref(false)
+const TextoButton = ref('');
+const TituloModal = ref('');
+const IDFormModal = ref('configuracion'+props.Informacion?.id);
+const InformacionNotificacionModal = ref({})
 
-        /**
-     * Cambia el valor de lanotificacion del modal
-     * @param {Objeto} respuesta Recive el diccionario necesario para mostrar la notificacion del modal
-    */
-    const ActualizarDataNotificacionModal = (Informacion) => {
-        InformacionNotificacionModal.value = Informacion;
-    };
+    /**
+ * Cambia el valor de lanotificacion del modal
+ * @param {Objeto} respuesta Recive el diccionario necesario para mostrar la notificacion del modal
+*/
+const ActualizarDataNotificacionModal = (Informacion) => {
+    InformacionNotificacionModal.value = Informacion;
+};
 
-    const showModal = (valor) => {
-        activarModal.value = valor;
-    };
+const showModal = (valor) => {
+    activarModal.value = valor;
+};
 
-    const ActionButton = () => {
-        TextoButton.value = 'Guardar Configuración';
-        TituloModal.value = 'Configuracion Avanzada';
-        IDFormModal.value = 'Datos'+ IDFORM;        
-        showModal(true)
-    }
+const ActionButton = () => {
+    TextoButton.value = 'Guardar Configuración';
+    TituloModal.value = 'Configuracion Avanzada';
+    IDFormModal.value = 'Datos'+ IDFORM;        
+    showModal(true)
+}
 
 //Contiene la información original
 const payload_old = reactive({
@@ -178,8 +184,8 @@ const Enviar = async () => {
   //si ID es nulo crea un usuario
  
     if (RequiereActualizar.value == true) {
-        const respuesta = await peticiones_configuracion_datosEmpresa.ActualizarCampoAdicional(
-            ID_USERMASTER.value , props.Informacion?.id, payload
+        const respuesta = await peticiones_Configuracion?.ActualizarNombreGrupoCentralizacion(
+            UserID.value , props.Informacion?.id, payload
         );
 
         if(respuesta.success == true){

@@ -6,9 +6,12 @@
             En esta sección puede configurar las cuentas contables de tu grupo de empleados.
         </p>
 
-        <LayoutFondoBorder v-for="Grupo in ListaGruposCentralizacion" :key="Grupo.id">
-            <template #default>    
-                <FormGrupoCentralizacion />
+        <LayoutFondoBorder v-for="Grupo in ListaGruposCentralizacion" :key="Grupo.id">            
+            <template #default>   
+                <FormGrupoCentralizacion 
+                    :Informacion="Grupo"
+                
+                />
             </template>
         </LayoutFondoBorder>
 
@@ -22,16 +25,49 @@ import FormGrupoCentralizacion from '@/components/formularios/configuracion/cent
 
 import TemplateBlankButton from '@/components/botones/Template-blank-button.vue';
 
-import {ref} from 'vue';
+import {onMounted, ref, inject} from 'vue';
 
-const ListaGruposCentralizacion = ref([
-    {
-        id: 1
-    },
-    {
-        id: 2
+import peticiones_Configuracion from '@/peticiones/configuracion/centralizacion.js'
+
+const ID_Sociedad = ref(inject('SociedadID'))
+const UserID = ref(localStorage.getItem('userId'));
+
+// Accede a la función proporcionada por el componente padre
+const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función del componente padre
+// Llama a la función para enviar información al componente padre
+
+
+
+const ListaGruposCentralizacion = ref([]);
+
+const SolicitarListadoCentrosCostos = async (ID_Sociedad = Number) => {
+    const respuesta = await peticiones_Configuracion.getCentralizacion(ID_Sociedad);
+    console.log(respuesta)
+    if (respuesta.success) {
+        ListaGruposCentralizacion.value = respuesta.data.data;
+    } else {
+        console.error(respuesta.error)
     }
-]);
+}
+
+const AddCampo = async () => {
+    const respuesta = await peticiones_Configuracion.CreateCentroCosto(Number(UserID.value));
+    if (respuesta.success) {
+        RefrescarDatos();
+    } else {
+        console.error(respuesta.error)
+        MostrarMensaje({Titulo:'Error al añadir',Descripcion: respuesta.error.data.message});
+    }
+}
+
+const RefrescarDatos = () => {
+    SolicitarListadoCargos(ID_Sociedad.value);
+    MostrarMensaje({Titulo:'Datos Actualizados', Descripcion:'Se han actualizado los datos correctamente.'});
+}
+
+onMounted(() => {
+    SolicitarListadoCentrosCostos(ID_Sociedad.value);
+});
 </script>
 
 <style scoped>
