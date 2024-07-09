@@ -26,7 +26,7 @@ import FormGrupoCentralizacion from '@/components/formularios/configuracion/cent
 
 import TemplateBlankButton from '@/components/botones/Template-blank-button.vue';
 
-import {onMounted, ref, inject} from 'vue';
+import {onMounted, ref, inject, provide} from 'vue';
 
 import peticiones_Configuracion from '@/peticiones/configuracion/centralizacion.js'
 
@@ -62,9 +62,11 @@ const AddCampo = async () => {
 }
 
 const RefrescarDatos = () => {
-    SolicitarListadoCargos(ID_Sociedad.value);
+    SolicitarListadoCentrosCostos(ID_Sociedad.value);
     MostrarMensaje({Titulo:'Datos Actualizados', Descripcion:'Se han actualizado los datos correctamente.'});
 }
+
+provide('actualizarData', RefrescarDatos);
 
 onMounted(() => {
     SolicitarListadoCentrosCostos(ID_Sociedad.value);

@@ -15,7 +15,7 @@
                 <TuerquitaIcon
                     Stroke="#1A245B"
                     text="Configurar" 
-                    @click="Modal.ActionButton()"
+                    @click="ActionButton"
                 />
                 
                 <trashIcon
@@ -26,12 +26,26 @@
             </div>
             
         </div>
-        <ModalFormConfigGrupoCentralización 
-            ref="Modal"
-            :formID="IDFormModal"
-            :Informacion="Informacion"
-            @DataNotificacion="ActualizarDataNotificacionModal"       
-        />
+        <div>
+            <TemplateModal 
+            @closeModal="showModal(false)" 
+            :FormId="IDFormModal"
+            :NombreAccion="TituloModal" 
+            :textSubmit="TextoButton"
+            :activarModal="activarModal"
+            :ModalActivo="1"
+            :DataNotification="InformacionNotificacionModal"
+            
+            >
+                <template #default><!--Espacio para los formularios -->
+                    <FormConfigGrupoCentralizacion 
+                        :FormID="IDFormModal"
+                        :Informacion="Informacion"
+                        @DataNotificacion="ActualizarDataNotificacionModal"                
+                    />
+                </template>
+            </TemplateModal>
+        </div>
 
         <div class="espacioBoto" v-if="RequiereActualizar">
             <TemplateButton :form="IDFORM" Tipo="submit" text="Actualizar"/>
@@ -44,7 +58,9 @@ import InputBorderDescripcion from '@/components/inputs/Input-Border-descripcion
 import TemplateButton from '@/components/botones/Template-button.vue';
 import TuerquitaIcon from  '@/components/icons/Tuerquita-icon.vue';
 import trashIcon from '@/components/icons/trash-icon.vue';
-import ModalFormConfigGrupoCentralización from '@/components/formularios/configuracion/centralizacion/Modal-Form-Config-GrupoCentralización.vue';
+import TemplateModal from '@/components/modal/TemplateModal.vue'
+import FormConfigGrupoCentralizacion from '@/components/formularios/configuracion/centralizacion/Form-Configuracion-GrupoCentralizacion.vue';
+
 import { defineProps, ref, reactive, watch, defineEmits, onMounted, inject} from 'vue';
 
 import peticiones_Configuracion from '@/peticiones/configuracion/centralizacion.js'
@@ -64,10 +80,9 @@ const RequiereActualizar = ref(false);
 const ID_Sociedad = ref(inject('SociedadID'))
 const UserID = ref(localStorage.getItem('userId'));
 
-const IDFORM = `GrupoCentralizacion${props.formID}`;
+const ActualizarInformacion = inject('actualizarData');
 
-const Modal = ref(null)
-const IDFormModal = ref('configuracion'+props.formID);
+const IDFORM = `GrupoCentralizacion${props.formID}`;
 
 const emit = defineEmits([
     "DataNotificacion",
@@ -77,6 +92,10 @@ const emit = defineEmits([
 
 const NombreCampo = ref('');
 
+const activarModal = ref(false)
+const TextoButton = ref('');
+const TituloModal = ref('');
+const IDFormModal = ref('configuracion'+props.formID);
 const InformacionNotificacionModal = ref({})
 
     /**
@@ -87,23 +106,33 @@ const ActualizarDataNotificacionModal = (Informacion) => {
     InformacionNotificacionModal.value = Informacion;
 };
 
+const showModal = (valor) => {
+    activarModal.value = valor;
+};
+
+const ActionButton = () => {
+    TextoButton.value = 'Guardar Configuración';
+    TituloModal.value = 'Configuracion Avanzada';
+    IDFormModal.value = 'Datos'+ IDFORM;        
+    showModal(true)
+}
 
 //Contiene la información original
 const payload_old = reactive({
     id:'',
-    NombreCampo: "",
+    nombre: "",
 
 });
 
 //Contiene la información a enviar
 const payload = reactive({
     id:'',
-    NombreCampo: "",
+    nombre: "",
 
 });
 
 //Escuchar cambios en las variables
-watch(NombreCampo, (nuevoValor) => ActualizarPayload('NombreCampo', nuevoValor));
+watch(NombreCampo, (nuevoValor) => ActualizarPayload('nombre', nuevoValor));
 
 //ve si hay cambios en la informacion y actualiza los campos:
 watch(() => props.Informacion, (nuevoValor) => { 
@@ -142,8 +171,8 @@ const MostrarValores = (DATA) => {
     payload_old.id = DATA?.id ?? '';
     payload.id = DATA?.id ?? '';
 
-    payload_old.NombreCampo = DATA?.nombre ?? '';
-    payload.NombreCampo = DATA?.nombre ?? '';
+    payload_old.nombre = DATA?.nombre ?? '';
+    payload.nombre = DATA?.nombre ?? '';
     
 };
 
@@ -163,9 +192,10 @@ const Enviar = async () => {
         const respuesta = await peticiones_Configuracion?.ActualizarNombreGrupoCentralizacion(
             UserID.value , props.Informacion?.id, payload
         );
-
+        console.log(respuesta)
         if(respuesta.success == true){
-        emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
+            emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
+            ActualizarInformacion()
         } else {
             console.error(respuesta?.error)
             emit('DataNotificacion', {'texto': respuesta?.error, 'valor': false})

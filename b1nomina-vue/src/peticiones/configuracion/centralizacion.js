@@ -185,7 +185,7 @@ const peticiones_configuracion_Centralizaxiones = {
     ActualizarNombreGrupoCentralizacion(idMaster, id, payload){
         try {
             // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
-            return axios.put(`grupo_centralizacion/${id}/update_nombre?user_updater=${idMaster}`,payload)
+            return axios.put(`grupo_centralizacion/${id}/update_nombre?nombre=${payload?.nombre}&user_updater=${idMaster}`)
             // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
            .then(respuesta => {
                 return { success: true, data: respuesta?.data };

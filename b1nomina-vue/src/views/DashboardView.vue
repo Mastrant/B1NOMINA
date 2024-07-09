@@ -24,6 +24,12 @@
     import LayoutPanel from '@/components/Layouts/LayoutPanel.vue';
     // Importa el componente PanelDashboard para mostrar el panel de dashboard
     import PanelDashboard from '@/components/panel/Panel-Dashboard.vue';
+
+    const elemento = {id:'123'}
+
+    console.log(elemento);
+
+
 </script>
 
 <!-- Estilos CSS -->
