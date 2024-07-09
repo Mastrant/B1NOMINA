@@ -14,7 +14,7 @@
         <template #panel>            
             <!-- Renderiza el componente correspondiente a la ruta actual -->
             <router-view />
-        </template>
+        </template>        
         
     </LayoutPanel>
 </template>

@@ -270,7 +270,7 @@ const ID_USERMASTER = ref(localStorage.getItem('userId'))
 
 const props = defineProps({
     FormID: {
-        type: Text
+        type: String
     },
     Informacion: {
         type: Object,

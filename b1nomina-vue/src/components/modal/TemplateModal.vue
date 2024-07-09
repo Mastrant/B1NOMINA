@@ -19,7 +19,7 @@
                     :Mensaje="mensajeNotificacion"
                     :Status="tipoNotificacion"
                     @closeNotificacion="cerrarNotificacion"
-                    :style="{ zIndex: 1000 }"
+                    style=" z-index: 1000"
                 />
                 <!-- Transición interna para animar el contenido del modal. -->
                 <transition name="Animacion-Modal-inner">
@@ -151,7 +151,7 @@ div.modal {
     align-items: center; /* Centra verticalmente el contenido */
     height:  100vh; /* Ajusta la altura al  100% de la altura de la ventana del navegador */
     width:  100vw; /* Ajusta la anchura al  100% del ancho de la ventana del navegador */
-    position:absolute; /* Posiciona el modal absolutamente en relación al primer ancestro posicionado (o el viewport si no hay ninguno) */
+    position: fixed; /* Posiciona el modal absolutamente en relación al primer ancestro posicionado (o el viewport si no hay ninguno) */
     top:0; /* Alinea el modal con el borde superior de la ventana del navegador */
     left:  0; /* Alinea el modal con el borde izquierdo de la ventana del navegador */
     background-color:  #00000080; /* Fondo negro con  50% de transparencia */

@@ -10,6 +10,7 @@
             <template #default>   
                 <FormGrupoCentralizacion 
                     :Informacion="Grupo"
+                    :formID="Grupo.id+'config'"
                 
                 />
             </template>
@@ -40,7 +41,7 @@ const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función 
 
 const ListaGruposCentralizacion = ref([]);
 
-const SolicitarListadoCentrosCostos = async (ID_Sociedad = Number) => {
+const SolicitarListadoCentrosCostos = async (ID_Sociedad) => {
     const respuesta = await peticiones_Configuracion.getCentralizacion(ID_Sociedad);
     console.log(respuesta)
     if (respuesta.success) {
