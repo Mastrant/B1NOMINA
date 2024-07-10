@@ -5,7 +5,7 @@
             <div class="separador-button">
                 <span>Jubilado AFP</span>
                 <InterruptorButton 
-                    @ValorEstado="estado_jubiladoAFP"
+                    @ValorEstado="(value) => (value == true)? estado_jubiladoAFP = 1 : estado_jubiladoAFP = 0"
                     Objid="aplica_Gratificacion_Legal"
                     :Texto="(estado_jubiladoAFP == true)? 'Activo' : 'Inactivo'"
                     Tipo="individual"
@@ -33,7 +33,7 @@
                 @update:modelValue="ahorroAFP = $event"
                 Tipo="Number"
                 :minimo-numeros="0.00"
-                numero-decimales="any"
+                :NumeroDecimales="0.01"
                 :requerido="RequiereActualizar"
             />
         </div>
@@ -65,13 +65,13 @@
     const payload_old = reactive({});
 
     const estado_jubiladoAFP = ref(false);
-    watch(estado_jubiladoAFP, (nuevoValor) => ActualizarPayload('', (nuevoValor == true)? 1: 0));
+    watch(estado_jubiladoAFP, (nuevoValor) => ActualizarPayload("jubilado_afp", (nuevoValor == true)? 1: 0));
     
     const institución = ref('')
-    watch(institución, (nuevoValor) => ActualizarPayload('', nuevoValor));
+    watch(institución, (nuevoValor) => ActualizarPayload("afp_id", nuevoValor));
 
     const ahorroAFP = ref('');
-    watch(ahorroAFP, (nuevoValor) =>  ActualizarPayload('monto_sueldo', Math.abs(nuevoValor)));
+    watch(ahorroAFP, (nuevoValor) =>  ActualizarPayload("ahorro_afp2", Math.abs(nuevoValor)));
 
     watch(DatosUsuario, (nuevaInfo) => {
         MostrarValores(nuevaInfo)        
@@ -82,20 +82,21 @@
     })
 
     const MostrarValores = (DATA) => {
-        RequiereActualizar.value = false;
+
 
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
         estado_jubiladoAFP.value = (DATA?.jubilado_afp == 1)? true : false;
-        payload_old.estado_jubiladoAFP = (DATA?.jubilado_afp == 1)? 1 : 0;
-        payload.estado_jubiladoAFP = (DATA?.jubilado_afp == 1)? 1 : 0;
+        payload_old.jubilado_afp = (DATA?.jubilado_afp == 1)? 1 : 0;
+        payload.jubilado_afp = (DATA?.jubilado_afp == 1)? 1 : 0;
        
         institución.value = (DATA?.afp_id == null || DATA?.afp_id.toLowerCase() == 'no asignado')? '' :DATA?.afp_id;
-        payload_old.institución = (DATA?.afp_id == null || DATA?.afp_id.toLowerCase() == 'no asignado')? '' :DATA?.afp_id;
-        payload.institución = (DATA?.afp_id == null || DATA?.afp_id.toLowerCase() == 'no asignado')? '' :DATA?.afp_id;
+        payload_old.afp_id = (DATA?.afp_id == null || DATA?.afp_id.toLowerCase() == 'no asignado')? '' :DATA?.afp_id;
+        payload.afp_id = (DATA?.afp_id == null || DATA?.afp_id.toLowerCase() == 'no asignado')? '' :DATA?.afp_id;
         
         ahorroAFP.value = (DATA?.ahorro_afp2 == null)? '' :DATA?.ahorro_afp2;
-        payload_old.ahorroAFP = DATA?.ahorro_afp2 ?? '';
-        payload.ahorroAFP = DATA?.ahorro_afp2 ?? '';
+        payload_old.ahorro_afp2 = DATA?.ahorro_afp2 ?? '';
+        payload.ahorro_afp2 = DATA?.ahorro_afp2 ?? '';
+        RequiereActualizar.value = false;
     }
 
 /**
@@ -133,14 +134,12 @@ const verificarCambios = () => {
     // Comprueba si todos los campos relevantes en payload_old y payload son iguales.
     // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
     const camposIguales = Object.keys(payload_old).every( key => payload_old[key] == payload[key]);
-    
-    // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
-    const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
+
 
     // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
-    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+    RequiereActualizar.value = !(camposIguales);
 }
 
     onMounted(() => {

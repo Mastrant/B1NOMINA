@@ -42,7 +42,7 @@ const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función 
 const ListaGruposCentralizacion = ref([]);
 
 const SolicitarListadoCentrosCostos = async (ID_Sociedad) => {
-    const respuesta = await peticiones_Configuracion.getCentralizacion(ID_Sociedad);
+    const respuesta = await peticiones_Configuracion.getGrupoCentralizacion(ID_Sociedad);
     console.log(respuesta)
     if (respuesta.success) {
         ListaGruposCentralizacion.value = respuesta.data.data;

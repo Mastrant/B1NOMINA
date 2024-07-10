@@ -36,7 +36,7 @@ const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función 
 const ListadoCentrosCostos = ref([]);
 
 const SolicitarListadoCentrosCostos = async (ID_Sociedad = Number) => {
-    const respuesta = await peticiones_Configuracion.getCentralizacion(ID_Sociedad);
+    const respuesta = await peticiones_Configuracion.getCentroDeCosto(ID_Sociedad);
     console.log(respuesta)
     if (respuesta.success) {
         ListadoCentrosCostos.value = respuesta.data.data;

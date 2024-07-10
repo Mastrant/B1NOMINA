@@ -41,7 +41,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="institución" 
-                        :options="Parametros?.apv_" 
+                        :options="Parametros?.apv" 
                         :requerido="RequiereActualizar"            
                         :preseleccion="institución" 
                         optionsSelected="Seleccionar"
