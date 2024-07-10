@@ -6,13 +6,13 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="institución" 
-                        :options="Parametros?.tiposalario" 
+                        :options="Parametros?.previsionsalud" 
                         :requerido="RequiereActualizar"            
                         :preseleccion="institución" 
                         optionsSelected="Seleccionar"
                     />
                 </template>
-            </LayoutInputLineal>            
+            </LayoutInputLineal>           
         </div>
 
         <div class="row-form">
@@ -24,6 +24,7 @@
                 Tipo="Number"
                 numero-decimales="any"
                 :minimo-numeros="0.00"
+                :-numero-decimales="0.01"
                 :requerido="RequiereActualizar"
             />
         </div>
@@ -34,7 +35,6 @@
     import InputLinealDescripcion from '@/components/inputs/Input-Lineal-descripcion.vue';
     import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
     import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
-    import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
 
     import {reactive, ref, watch, inject, onMounted, defineEmits, onBeforeMount} from 'vue';
 
@@ -55,10 +55,10 @@
     const payload_old = reactive({});
 
     const institución = ref('')
-    watch(institución, (nuevoValor) => ActualizarPayload('', nuevoValor));
+    watch(institución, (nuevoValor) => ActualizarPayload("prevision_salud_id", nuevoValor));
 
     const PactadoUF = ref('');
-    watch(PactadoUF, (nuevoValor) =>  ActualizarPayload('monto_sueldo', nuevoValor));
+    watch(PactadoUF, (nuevoValor) =>  ActualizarPayload("pactado", nuevoValor));
 
     watch(DatosUsuario, (nuevaInfo) => {
         MostrarValores(nuevaInfo)        
@@ -73,13 +73,13 @@
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
 
         
-        institución.value = (DATA?.institución == null)? '' :DATA?.institución;
-        payload_old.institución = DATA?.institución ?? '';
-        payload.institución = DATA?.institución ?? '';
+        institución.value = (DATA?.prevision_salud_id == null)? '' :DATA?.prevision_salud_id;
+        payload_old.prevision_salud_id = DATA?.prevision_salud_id ?? '';
+        payload.prevision_salud_id = DATA?.prevision_salud_id ?? '';
         
-        PactadoUF.value = (DATA?.PactadoUF == null)? '' :DATA?.PactadoUF;
-        payload_old.PactadoUF = DATA?.PactadoUF ?? '';
-        payload.PactadoUF = DATA?.PactadoUF ?? '';
+        PactadoUF.value = (DATA?.pactado == null)? '' :DATA?.pactado;
+        payload_old.pactado = DATA?.pactado ?? '';
+        payload.pactado = DATA?.pactado ?? '';
     }
 
 /**
@@ -146,9 +146,10 @@ const verificarCambios = () => {
  */
  const Enviar = async () => {
   //si ID es nulo crea un usuario
+  console.log(payload)
  
   if (RequiereActualizar.value == true) {
-    const respuesta = await peticiones?.ActualizarAFP(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+    const respuesta = await peticiones?.ActualizarPresvisionSalud(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
     if(respuesta.success == true){
        emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
     } else {

@@ -202,7 +202,7 @@ const peticiones = {
     async ActualizarPresvisionSalud(idEmpleado, idMaster, payload){
         try {
             // Intenta realizar una petición PUT para actualizar los datos bancarios del empleado.
-            const respuesta = await axios.put(`user/${idEmpleado}/update_prevision_salud?user_updater=${idMaster}`, payload);
+            const respuesta = await axios.put(`user/${idEmpleado}/update_prevision_salud_reduced?userUpdaterId=${idMaster}`, payload);
             // Devuelve un objeto con éxito y los datos obtenidos si la petición fue exitosa.
             return { success: true, data: respuesta?.data };
         } catch (error) {
