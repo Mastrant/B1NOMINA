@@ -5,33 +5,33 @@
             <div class="separador-button">
                 <span>Activo</span>
                 <InterruptorButton 
-                    @ValorEstado="Activo"
+                    @ValorEstado=" (value) => Activo = value"
                     Objid="Activo"
-                    :Texto="(Activo == true)? 'Activo' : 'Inactivo'"
+                    :Texto="(Activo == 1)? 'Activo' : 'Inactivo'"
                     Tipo="individual"
-                    :Estado="(Activo)? true :false"
+                    :Estado="(Activo == 1)? true :false"
                     :requerido="RequiereActualizar"
                 />                
             </div>
             <div class="separador-button">
                 <span>Colectivo</span>
                 <InterruptorButton 
-                    @ValorEstado="Colectivo"
+                    @ValorEstado="(value) => Colectivo = value"
                     Objid="Colectivo"
-                    :Texto="(Colectivo == true)? 'Activo' : 'Inactivo'"
+                    :Texto="(Colectivo == 1)? 'Activo' : 'Inactivo'"
                     Tipo="individual"
-                    :Estado="(Colectivo)? true :false"
+                    :Estado="(Colectivo == 1)? true :false"
                     :requerido="RequiereActualizar"
                 />                
             </div>
             <div class="separador-button">
                 <span>Pago Directo</span>
                 <InterruptorButton 
-                    @ValorEstado="PagoDirecto"
+                    @ValorEstado="(value) => PagoDirecto = value"
                     Objid="aplica_Gratificacion_Legal"
-                    :Texto="(PagoDirecto == true)? 'Activo' : 'Inactivo'"
+                    :Texto="(PagoDirecto == 1)? 'Activo' : 'Inactivo'"
                     Tipo="individual"
-                    :Estado="(PagoDirecto)? true :false"
+                    :Estado="(PagoDirecto == 1)? true :false"
                     :requerido="RequiereActualizar"
                 />                
             </div>
@@ -41,7 +41,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="institución" 
-                        :options="Parametros?.apv" 
+                        :options="Parametros?.instituciones_apv" 
                         :requerido="RequiereActualizar"            
                         :preseleccion="institución" 
                         optionsSelected="Seleccionar"
@@ -57,7 +57,7 @@
                 Titulo="Pactado($)" 
                 @update:modelValue="Pactado = $event"
                 Tipo="Number"
-                numero-decimales="any"
+                :NumeroDecimales="0.01"
                 :minimo-numeros="0.00"
                 :requerido="RequiereActualizar"
             />
@@ -77,7 +77,7 @@
                 <template v-slot>
                     <ListaTemplateLineal  
                         v-model="Regimen" 
-                        :options="Parametros?.Regimen" 
+                        :options="Parametros?.regimen" 
                         :requerido="RequiereActualizar"            
                         :preseleccion="Regimen" 
                         optionsSelected="Seleccionar"
@@ -127,7 +127,7 @@
 
     
     const Activo = ref(false);
-    watch(Activo, (nuevoValor) => ActualizarPayload('apv_activo', (nuevoValor == true)? 1: 0));
+    watch(Activo, (nuevoValor) => ActualizarPayload('activo', (nuevoValor == true)? 1: 0));
 
     const Colectivo = ref(false);
     watch(Colectivo, (nuevoValor) => ActualizarPayload('colectivo', (nuevoValor == true)? 1: 0));
@@ -147,7 +147,7 @@
     watch(Unidad, (nuevoValor) => ActualizarPayload('unidad_pacto_id', nuevoValor));
 
     const Regimen = ref('')
-    watch(Regimen, (nuevoValor) => ActualizarPayload('regimen', nuevoValor));
+    watch(Regimen, (nuevoValor) => ActualizarPayload('regimen', String(nuevoValor)));
 
     const NConvenio = ref('')
     watch(NConvenio, (nuevoValor) => ActualizarPayload('nconvenio', nuevoValor));
@@ -165,17 +165,17 @@
         RequiereActualizar.value = false;
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
         
-        Activo.value = (DATA?.apv_activo == 1)? true : false;
-        payload_old.Activo = (DATA?.apv_activo == 1)? DATA?.apv_activo : 0;
-        payload.Activo = (DATA?.apv_activo == 1)? DATA?.apv_activo : 0;
+        Activo.value = (DATA?.apv_activo == 1)? 1 : 0;
+        payload_old.activo = (DATA?.apv_activo == 1)? DATA?.apv_activo : 0;
+        payload.activo = (DATA?.apv_activo == 1)? DATA?.apv_activo : 0;
 
-        Colectivo.value = (DATA?.colectivo == 1)? true : false;
-        payload_old.Colectivo = (DATA?.colectivo == 1)? DATA?.colectivo : 0;
-        payload.Colectivo = (DATA?.colectivo == 1)? DATA?.colectivo : 0;
+        Colectivo.value = (DATA?.colectivo == 1)? 1 : 0;
+        payload_old.colectivo = (DATA?.colectivo == 1)? DATA?.colectivo : 0;
+        payload.colectivo = (DATA?.colectivo == 1)? DATA?.colectivo : 0;
 
-        PagoDirecto.value = (DATA?.pago_directo == 1)? true : false;
-        payload_old.PagoDirecto = (DATA?.pago_directo == 1)? DATA?.pago_directo : 0;
-        payload.PagoDirecto = (DATA?.pago_directo == 1)? DATA?.pago_directo : 0;
+        PagoDirecto.value = (DATA?.pago_directo == 1)? 1 : 0;
+        payload_old.pago_directo = (DATA?.pago_directo == 1)? DATA?.pago_directo : 0;
+        payload.pago_directo = (DATA?.pago_directo == 1)? DATA?.pago_directo : 0;
 
         institución.value = (DATA?.apv_institucion_id == null || DATA?.apv_institucion_id.toLowerCase() == 'no asignado')? '' :DATA?.apv_institucion_id;
         payload_old.institución = (DATA?.apv_institucion_id == null || DATA?.apv_institucion_id.toLowerCase() == 'no asignado')? '' :DATA?.apv_institucion_id;
@@ -186,12 +186,12 @@
         payload.Pactado = (DATA?.monto_pacto == null || DATA?.monto_pacto.toLowerCase() == 'no asignado') ? '' :DATA?.monto_pacto;
 
         Unidad.value = (DATA?.unidad_pacto_id == null || DATA?.unidad_pacto_id.toLowerCase() == 'no asignado')? '' :DATA?.unidad_pacto_id;
-        payload_old.Unidad = (DATA?.unidad_pacto_id == null || DATA?.unidad_pacto_id.toLowerCase() == 'no asignado')? '' :DATA?.unidad_pacto_id;
-        payload.Unidad = (DATA?.unidad_pacto_id == null || DATA?.unidad_pacto_id.toLowerCase() == 'no asignado')? '' :DATA?.unidad_pacto_id;
+        payload_old.unidad_pacto_id = (DATA?.unidad_pacto_id == null || DATA?.unidad_pacto_id.toLowerCase() == 'no asignado')? '' :DATA?.unidad_pacto_id;
+        payload.unidad_pacto_id = (DATA?.unidad_pacto_id == null || DATA?.unidad_pacto_id.toLowerCase() == 'no asignado')? '' :DATA?.unidad_pacto_id;
 
         Regimen.value = (DATA?.regimen == null)? '' :DATA?.regimen;
-        payload_old.Regimen = DATA?.regimen ?? '';
-        payload.Regimen = DATA?.regimen ?? '';
+        payload_old.regimen = DATA?.regimen ?? '';
+        payload.regimen = DATA?.regimen ?? '';
 
         NConvenio.value = (DATA?.nconvenio == null)? '' :DATA?.nconvenio;
         payload_old.NConvenio = DATA?.nconvenio ?? '';
@@ -234,14 +234,11 @@ const verificarCambios = () => {
     // Comprueba si todos los campos relevantes en payload_old y payload son iguales.
     // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
     const camposIguales = Object.keys(payload_old).every( key => payload_old[key] == payload[key]);
-    
-    // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
-    const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
 
     // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
-    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+    RequiereActualizar.value = !(camposIguales);
 }
 
     onMounted(() => {
@@ -263,7 +260,7 @@ const verificarCambios = () => {
  */
  const Enviar = async () => {
   //si ID es nulo crea un usuario
- 
+ console.log(payload)
   if (RequiereActualizar.value == true) {
     const respuesta = await peticiones?.ActualizarAPV(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
     if(respuesta.success == true){

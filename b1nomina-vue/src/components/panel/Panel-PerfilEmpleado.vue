@@ -575,33 +575,33 @@
                                     :Estado="(DatosUsuario?.pago_directo == 1)? true : false"
                                 />
                             </template>
-                            <template #st-12> <!---->                                                                     
+                            <template #st-12> <!--Institución APV-->                                                                     
                                 Institución
                             </template>
                             <template #text-12>                                                                    
                                 {{ DatosUsuario?.apv_institucion_nombre }}
                             </template>
-                            <template #st-13> <!---->                                                                      
+                            <template #st-13> <!--Unidad APV-->                                                                      
                                 Unidad
                             </template>
                             <template #text-13>                                                                    
-                                {{ DatosUsuario?.unidad_pacto_nombre }}
+                                {{ (DatosUsuario?.unidad_pacto_id == 1)? '$': 'UF' }}
                             </template>
-                            <template #st-14> <!---->    
+                            <template #st-14> <!--Régimen APV-->    
                                Régimen
                             </template>
                             <template #text-14>                                                                    
-                                {{ DatosUsuario?.regimen }}
+                                {{ (DatosUsuario?.regimen == 1)? 'A' : 'B' }}
                             </template>
 
-                            <template #st-15> <!---->    
+                            <template #st-15> <!--Pactado APV-->    
                                Pactado($)
                             </template>
                             <template #text-15>                                                                    
                                 {{ DatosUsuario?.monto_pacto }}
                             </template>
 
-                            <template #st-16> <!---->    
+                            <template #st-16> <!-- N° Convenio APV-->    
                                N° Convenio
                             </template>
                             <template #text-16>                                                                    

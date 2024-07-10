@@ -11,11 +11,11 @@
             
             <div class="separador-button">
                 <InterruptorButton 
-                    @ValorEstado="aplica_Gratificacion_Legal"
+                    @ValorEstado="(value) => aplica_Gratificacion_Legal = value"
                     Objid="aplica_Gratificacion_Legal"
-                    :Texto="( aplica_Gratificacion_Legal == true)? 'Activo' : 'Inactivo'"
+                    :Texto="( aplica_Gratificacion_Legal == 1)? 'Activo' : 'Inactivo'"
                     Tipo="individual"
-                    :Estado="(aplica_Gratificacion_Legal)? true :false"
+                    :Estado="(aplica_Gratificacion_Legal == 1)? true :false"
                     :requerido="RequiereActualizar"
                 />                
             </div>
@@ -26,11 +26,11 @@
             
             <div class="separador-button">
                 <InterruptorButton 
-                    @ValorEstado="afiliado_AFC"
+                    @ValorEstado="(value) => afiliado_AFC = value"
                     Objid="afiliado_AFC"
-                    :Texto="( afiliado_AFC == true)? 'Activo' : 'Inactivo'"
+                    :Texto="( afiliado_AFC == 1)? 'Activo' : 'Inactivo'"
                     Tipo="individual"
-                    :Estado="afiliado_AFC"
+                    :Estado="(afiliado_AFC == 1)? true :false"
                     :requerido="RequiereActualizar"
                 />                
             </div>
@@ -41,11 +41,11 @@
             
             <div class="separador-button">
                 <InterruptorButton 
-                    @ValorEstado="antiguedad_Maxima_AFC"
+                    @ValorEstado="(value) => antiguedad_Maxima_AFC = value"
                     Objid="antiguedad_Maxima_AFC"
-                    :Texto="( antiguedad_Maxima_AFC == true)? 'Activo' : 'Inactivo'"
+                    :Texto="(antiguedad_Maxima_AFC == 1)? 'Activo' : 'Inactivo'"
                     Tipo="individual"
-                    :Estado="antiguedad_Maxima_AFC"
+                    :Estado="(antiguedad_Maxima_AFC == 1)? true : false"
                     :requerido="RequiereActualizar"
                 />                
             </div>
@@ -56,11 +56,11 @@
             
             <div class="separador-button">
                 <InterruptorButton 
-                    @ValorEstado="pens_vejez"
+                    @ValorEstado="(value) => pens_vejez = value"
                     Objid="pens_vejez"
-                    :Texto="( pens_vejez == true)? 'Activo' : 'Inactivo'"
+                    :Texto="( pens_vejez == 1)? 'Activo' : 'Inactivo'"
                     Tipo="individual"
-                    :Estado="pens_vejez"
+                    :Estado="(pens_vejez == 1)? true : false"
                     :requerido="RequiereActualizar"
                 />                
             </div>
@@ -71,11 +71,11 @@
 
         <div class="separador-button">
             <InterruptorButton 
-                @ValorEstado="pens_invalidez"
+                @ValorEstado="(value) => pens_invalidez = value"
                 Objid="pens_invalidez"
-                :Texto="( pens_invalidez == true)? 'Activo' : 'Inactivo'"
+                :Texto="(pens_invalidez == 1)? 'Activo' : 'Inactivo'"
                 Tipo="individual"
-                :Estado="pens_invalidez"
+                :Estado="(pens_invalidez == 1)? true : false"
                 :requerido="RequiereActualizar"
             />
 
@@ -87,11 +87,11 @@
 
             <div class="separador-button">
                 <InterruptorButton 
-                    @ValorEstado="ExINP"
+                    @ValorEstado="(value) => ExINP = value"
                     Objid="ExINP"
-                    :Texto="( ExINP == true)? 'Activo' : 'Inactivo'"
+                    :Texto="(ExINP == 1)? 'Activo' : 'Inactivo'"
                     Tipo="individual"
-                    :Estado="ExINP"
+                    :Estado="(ExINP == 1)? true : false"
                     :requerido="RequiereActualizar"
                 />
             </div>
@@ -136,14 +136,12 @@ const payload_old = reactive({});
 
 const RequiereActualizar  = ref(false);
 
-
-watch(aplica_Gratificacion_Legal, (nuevoValor) => ActualizarPayload("", (nuevoValor == true)? 1 : 0));
-watch(afiliado_AFC, (nuevoValor) => ActualizarPayload("",(nuevoValor == true)? 1 : 0));
-watch(antiguedad_Maxima_AFC, (nuevoValor) => ActualizarPayload("",(nuevoValor == true)? 1 : 0));
-watch(pens_vejez, (nuevoValor) => ActualizarPayload("",(nuevoValor == true)? 1 : 0));
-watch(pens_invalidez, (nuevoValor) => ActualizarPayload("",(nuevoValor == true)? 1 : 0));
-watch(ExINP, (nuevoValor) => ActualizarPayload("",(nuevoValor == true)? 1 : 0));
-
+watch(aplica_Gratificacion_Legal, (nuevoValor) => ActualizarPayload('gratificacion', nuevoValor));
+watch(afiliado_AFC, (nuevoValor) => ActualizarPayload('afiliado_afc', nuevoValor));
+watch(antiguedad_Maxima_AFC, (nuevoValor) => ActualizarPayload('antiguedad_afc', nuevoValor));
+watch(pens_vejez, (nuevoValor) => ActualizarPayload('vejez', nuevoValor));
+watch(pens_invalidez, (nuevoValor) => ActualizarPayload('invalidez', nuevoValor));
+watch(ExINP, (nuevoValor) => ActualizarPayload('exinp', nuevoValor));
 
 watch(DatosUsuario, (nuevaInfo) => {
     MostrarValores(nuevaInfo)
@@ -154,18 +152,29 @@ const MostrarValores = (DATA) => {
     // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
     RequiereActualizar.value = false
 
-    
-    aplica_Gratificacion_Legal.value = (DATA?.rut == 1)? true : false;
+    aplica_Gratificacion_Legal.value = (DATA?.gratificacion == 1)? 1 : 0;
+    payload_old.gratificacion = DATA?.gratificacion ?? '';
+    payload.gratificacion = DATA?.gratificacion ?? '';
 
-    afiliado_AFC.value = (DATA?.rut == 1)? true : false;
+    afiliado_AFC.value = (DATA?.afiliado_afc == 1)? 1 : 0;
+    payload_old.afiliado_afc = DATA?.afiliado_afc ?? '';
+    payload.afiliado_afc = DATA?.afiliado_afc ?? '';
 
-    antiguedad_Maxima_AFC.value = (DATA?.rut == 1)? true : false;
+    antiguedad_Maxima_AFC.value = (DATA?.antiguedad_afc == 1)? 1 : 0;
+    payload_old.antiguedad_afc = DATA?.antiguedad_afc ?? '';
+    payload.antiguedad_afc = DATA?.antiguedad_afc ?? '';
 
-    pens_vejez.value = (DATA?.rut == 1)? true : false;
+    pens_vejez.value = (DATA?.vejez == 1)? 1 : 0;
+    payload_old.vejez = DATA?.vejez ?? '';
+    payload.vejez = DATA?.vejez ?? '';
 
-    pens_invalidez.value = (DATA?.rut == 1)? true : false;
+    pens_invalidez.value = (DATA?.invalidez == 1)? 1 : 0;
+    payload_old.invalidez = DATA?.invalidez ?? '';
+    payload.invalidez = DATA?.invalidez ?? '';
 
-    ExINP.value = (DATA?.rut == 1)? true : false;
+    ExINP.value = (DATA?.exinp == 1)? 1 : 0;
+    payload_old.exinp = DATA?.exinp ?? '';
+    payload.exinp = DATA?.exinp ?? '';
 
 
     payload_old.rut = DATA?.rut ?? '';
@@ -208,13 +217,10 @@ const verificarCambios = () => {
     // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
     const camposIguales = Object.keys(payload_old).every( key => payload_old[key] == payload[key]);
     
-    // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
-    const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
-
     // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
-    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+    RequiereActualizar.value = !(camposIguales);
 }
 
 
@@ -234,11 +240,9 @@ onBeforeMount(() => {
  */
  const Enviar = async () => {
   //si ID es nulo crea un usuario
-  console.log(payload)
- 
-  /*
+  
   if (RequiereActualizar.value == true) {
-    const respuesta = await peticiones.ActualizarDatosPrincipales(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+    const respuesta = await peticiones.ActualizarDatosAdicionales(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
     if(respuesta.success == true){
        emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor': true})
     } else {
@@ -248,7 +252,7 @@ onBeforeMount(() => {
   } else {
     emit('respuestaServidor', {'texto': "No se requiere actualizar", 'valor': true});
   }
-  */
+
 };
 </script>
 

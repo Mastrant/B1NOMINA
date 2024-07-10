@@ -52,7 +52,7 @@
                 Placeholder="" 
                 Titulo="Fecha del pago primera cuota" 
                 @update:modelValue="fechaPrimerPago = $event"
-                Tipo="date"
+                Tipo="month"
                 :requerido="RequiereActualizar"
             />
         </div>
