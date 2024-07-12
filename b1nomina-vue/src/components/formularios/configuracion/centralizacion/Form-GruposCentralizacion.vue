@@ -41,6 +41,7 @@
                     <FormConfigGrupoCentralizacion 
                         :FormID="IDFormModal"
                         :Informacion="Informacion"
+                        :parametros="parametros"
                         @DataNotificacion="ActualizarDataNotificacionModal"                
                     />
                 </template>
@@ -72,6 +73,10 @@ const props = defineProps({
     },
     formID: {
         type: String,
+    },
+    parametros: {
+        type: Object,
+        default: {}
     }
 });
 

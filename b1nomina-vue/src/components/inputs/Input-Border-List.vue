@@ -9,22 +9,27 @@
         
         <!-- Campo de entrada personalizable con varios atributos y eventos -->
         <input class="input-template"
-        :required="requerido"
-        :disabled="Deshabilitar"
-        :type="Tipo" 
-        :placeholder="Placeholder"
-        :minlength="minimoCaracteres"
-        :maxlength="maximoCaracteres"
-        :step="NumeroDecimales"
-        :value="modelValue"
-        @input="$emit('update:modelValue', $event.target.value)"
-        :list="id_list"
+            :required="requerido"
+            :disabled="Deshabilitar"
+            :type="Tipo" 
+            :placeholder="Placeholder"
+            :minlength="minimoCaracteres"
+            :maxlength="maximoCaracteres"
+            :step="NumeroDecimales"
+            :value="modelValue"
+            @input="$emit('update:modelValue', $event.target.value)"
+            :list="id_list"
         >
         
         <!-- Lista de opciones para autocompletar el campo de entrada -->
-        <datalist :id="id_list" >
+        <datalist class="datalistEstilos" :id="id_list" v-if="withNombre == true">
             <!-- Genera opciones dinámicamente basadas en el array 'opciones' -->
-            <option v-for="opcion in opciones" :key="opcion?.id" :value="opcion[ParametroFiltro]" />
+            <option v-for="opcion in opciones" :key="opcion?.id" :value="opcion[ParametroFiltro]"> {{opcion.nombre}} </option>
+        </datalist>
+        <!-- Lista de opciones para autocompletar el campo de entrada -->
+        <datalist class="datalistEstilos" :id="id_list" v-else>
+            <!-- Genera opciones dinámicamente basadas en el array 'opciones' -->
+            <option v-for="opcion in opciones" :key="opcion?.id" :value="opcion[ParametroFiltro]"></option>
         </datalist>
     </div>        
         
@@ -121,6 +126,10 @@ const props = defineProps({
         type: String,
         default: "example",
         description: 'ID del elemento datalist asociado al campo de entrada.'
+    },
+    withNombre: {
+        type: Boolean,
+        default: false
     }
 });
 
@@ -172,6 +181,10 @@ input.input-template {
 /* Establece el estilo para el estado de foco del campo de entrada. */
 input.input-template:focus {
     outline: none; /* Elimina el contorno que aparece cuando el campo de entrada está enfocado. */
+}
+
+datalist {
+    height: 100px;
 }
 
 /* Media query para pantallas pequeñas */

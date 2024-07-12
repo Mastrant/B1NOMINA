@@ -11,6 +11,7 @@
                 <FormGrupoCentralizacion 
                     :Informacion="Grupo"
                     :formID="Grupo.id+'config'"
+                    :parametros="parametros.data"
                 
                 />
             </template>
@@ -51,6 +52,19 @@ const SolicitarListadoCentrosCostos = async (ID_Sociedad) => {
     }
 }
 
+const parametros = ref({})
+
+const SolicitarParametros = async (ID_Sociedad = Number) => {
+    const respuesta = await peticiones_Configuracion.getParametrosConfiguracionGeneral(ID_Sociedad);
+    if (respuesta.success) {
+        parametros.value = respuesta.data;
+        console.log(parametros.value.data)
+
+    } else {
+        console.error(respuesta.error)
+    }
+}
+
 const AddCampo = async () => {
     const respuesta = await peticiones_Configuracion.CreateCentroCosto(Number(UserID.value));
     if (respuesta.success) {
@@ -70,6 +84,7 @@ provide('actualizarData', RefrescarDatos);
 
 onMounted(() => {
     SolicitarListadoCentrosCostos(ID_Sociedad.value);
+    SolicitarParametros(ID_Sociedad.value);
 });
 </script>
 

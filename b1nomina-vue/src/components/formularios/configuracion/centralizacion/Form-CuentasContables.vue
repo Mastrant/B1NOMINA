@@ -9,7 +9,10 @@
                 v-model="cuentaAnticipo"
                 @update:modelValue="cuentaAnticipo = $event"
                 :requerido="RequiereActualizar"
-                :opciones="[{id:1, nombre:'opcion'}]"
+                :opciones="parametros?.listado_cuentas_empresa"
+                ParametroFiltro="id"
+                id_list="CuentaAnticipos"
+                :with-nombre="true"
             />
         
             <InputBorderList
@@ -19,7 +22,9 @@
                 v-model="CuentaBonosFeriados"
                 @update:modelValue="CuentaBonosFeriados = $event"
                 :requerido="RequiereActualizar"
-                :opciones="[{id:1, nombre:'predro'}]"
+                :opciones="parametros?.listado_cuentas_empresa"
+                ParametroFiltro="id"
+                id_list="CuentaBonos"
             />
 
             <InputBorderList
@@ -29,7 +34,9 @@
                 v-model="CuentaPrestamoSolidarios"
                 @update:modelValue="CuentaPrestamoSolidarios = $event"
                 :requerido="RequiereActualizar"
-                :opciones="[{id:1, nombre:'predro'},{id:2, nombre:'praedro'}]"
+                :opciones="parametros?.listado_cuentas_empresa"
+                ParametroFiltro="id"
+                id_list="CuentaPrestamosSolidarios"
             />           
         </div>
 
@@ -77,14 +84,10 @@ const CuentaPrestamoSolidarios= ref('');
 const RequiereActualizar = ref(false);
 
 //Contiene la información original
-const payload_old = reactive({
-
-});
+const payload_old = reactive({});
 
 //Contiene la información a enviar
-const payload = reactive({
-
-});
+const payload = reactive({});
 
 //Escuchar cambios en las variables
 watch(cuentaAnticipo, (nuevoValor) => ActualizarPayload('cuenta_anticipo', nuevoValor));

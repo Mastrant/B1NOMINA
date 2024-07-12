@@ -28,6 +28,7 @@
             <template #default>
                 <FormCuentasContables 
                     :Informacion="DatosConfiguracion"
+                    :parametros="parametros.data"
                     @DataNotificacion="RefrescarDatos"
                 />
             </template>
@@ -64,6 +65,18 @@ const SolicitarConfiguracionGeneral = async (ID_Sociedad = Number) => {
     }
 }
 
+const parametros = ref({})
+
+const SolicitarParametros = async (ID_Sociedad = Number) => {
+    const respuesta = await peticiones_Configuracion.getParametrosConfiguracionGeneral(ID_Sociedad);
+    if (respuesta.success) {
+        parametros.value = respuesta.data;
+
+    } else {
+        console.error(respuesta.error)
+    }
+}
+
 const RefrescarDatos = (respuesta) => {
     if(respuesta?.valor == true) {
         SolicitarConfiguracionGeneral(ID_Sociedad.value);
@@ -75,6 +88,7 @@ const RefrescarDatos = (respuesta) => {
 
 onMounted( async () => {
     SolicitarConfiguracionGeneral(ID_Sociedad.value);
+    SolicitarParametros(ID_Sociedad.value);
 });
 </script>
 

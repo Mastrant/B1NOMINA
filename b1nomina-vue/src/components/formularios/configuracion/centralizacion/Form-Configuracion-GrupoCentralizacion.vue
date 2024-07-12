@@ -9,7 +9,7 @@
                 <template v-slot>
                   <ListaTemplateBorder
                     v-model="validacionEvento"
-                    :options="parametros.regiones"
+                    :options="parametros.validacion_grupoCentralizacion"
                     :requerido="RequiereActualizar"            
                     :preseleccion="validacionEvento"  
                     optionsSelected="Seleccionar"
