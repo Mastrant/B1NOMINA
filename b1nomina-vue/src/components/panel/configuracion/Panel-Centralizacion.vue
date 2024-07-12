@@ -41,8 +41,11 @@ import ListaCentrosCostos from '@/components/listas/configuracion/centralizacion
 import ListaGrupos from '@/components/listas/configuracion/centralizacion/Lista-Grupos.vue'
 import AlertShort from '@/components/alertas/Alert-short-template.vue';
 
-import { ref, inject, provide } from 'vue'; // Importa las funciones reactivas y de inyección de dependencias de Vue
+import peticiones_Configuracion from '@/peticiones/configuracion/centralizacion.js'
 
+import { ref, inject, provide, onBeforeMount } from 'vue'; // Importa las funciones reactivas y de inyección de dependencias de Vue
+
+const ID_Sociedad = ref(inject('SociedadID'))
 const panelSelecionado = ref(1);
 
 const SelecionarPanel = (num) => {
@@ -65,7 +68,7 @@ const showNotificacionShort = (Info) => {
     }
 }
 
-provide('showNotificacionShort',showNotificacionShort)
+provide('showNotificacionShort',showNotificacionShort);
 
 </script>
 

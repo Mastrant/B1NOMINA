@@ -1,29 +1,33 @@
 <template>
+    <!-- Contenedor principal que envuelve toda la entrada de línea -->
     <div class="input-line-contend">
+        <!-- Etiqueta que describe el campo de entrada, mostrando el título y, opcionalmente, un asterisco si el campo es requerido -->
         <label class="input-label">
             {{Titulo}}
-            <span v-show="requerido">
-                *
-            </span>
+            <span v-show="requerido">*</span>
         </label>
         
+        <!-- Campo de entrada personalizable con varios atributos y eventos -->
         <input class="input-template"
-           :required="requerido"
-           :disabled="Deshabilitar"
-           :type="Tipo" 
-           :placeholder="Placeholder"
-           :minlength="minimoCaracteres"
-           :maxlength="maximoCaracteres"
-           :step="NumeroDecimales"
-           :value="modelValue"
-           @input="$emit('update:modelValue', $event.target.value)"
-           list="opciones"
+        :required="requerido"
+        :disabled="Deshabilitar"
+        :type="Tipo" 
+        :placeholder="Placeholder"
+        :minlength="minimoCaracteres"
+        :maxlength="maximoCaracteres"
+        :step="NumeroDecimales"
+        :value="modelValue"
+        @input="$emit('update:modelValue', $event.target.value)"
+        :list="id_list"
         >
-
-        <datalist id="opciones" v-for="opcion in opciones" :key="opcion?.id">
-            <option :value="opcion?.nombre"></option>
+        
+        <!-- Lista de opciones para autocompletar el campo de entrada -->
+        <datalist :id="id_list" >
+            <!-- Genera opciones dinámicamente basadas en el array 'opciones' -->
+            <option v-for="opcion in opciones" :key="opcion?.id" :value="opcion[ParametroFiltro]" />
         </datalist>
     </div>        
+        
 </template>
 
 <script setup>
@@ -40,54 +44,86 @@
         :opciones="[] o {}" Lista de opciones a selecionar
     />
 */
+/* Componente de entrada de línea con soporte para diversas propiedades y eventos */
 import { defineProps } from 'vue';
 
-const props = defineProps(
-    {
-        // Props de funcionamiento
-        modelValue: {
-            type: [String, Number], // Define el tipo de dato que puede recibir, String o Number.
-            default: '', // Valor por defecto en caso de que no se proporcione un valor.
-        },
-        // Props de formato y estilos
-        Placeholder : {
-            type: [String, Number], // Define el tipo de dato que puede recibir, String o Number.
-            default: 'Datos del campo', // Valor por defecto para el placeholder.
-        },
-        Titulo: {
-            type: String, // Define el tipo de dato que puede recibir, String.
-            default: "Titulo" // Valor por defecto para el título.
-        },
-        Tipo: {
-            type: String, // Define el tipo de dato que puede recibir, String.
-            default: 'text' // Valor por defecto para el tipo de input, en este caso, texto.
-        },
-        Deshabilitar: {
-            type: Boolean, // Define el tipo de dato que puede recibir, Boolean.
-            default:false, // Valor por defecto, el input no estará deshabilitado.
-        },
-        minimoCaracteres: {
-            type: [Number, String], // Define el tipo de dato que puede recibir, Number o String.
-            default: 2 // Valor por defecto para el mínimo de caracteres permitidos.
-        },
-        maximoCaracteres: {
-            type:[Number, String], // Define el tipo de dato que puede recibir, Number o String.
-            default: 100 // Valor por defecto para el máximo de caracteres permitidos.
-        },
-        NumeroDecimales: {
-            type: [Number, String], // Define el tipo de dato que puede recibir, Number o String.
-            default: 2 // Valor por defecto para el mínimo de caracteres permitidos.
-        },
-        requerido: {
-            type: Boolean, // Define el tipo de dato que puede recibir, Boolean.
-            default: false // Valor por defecto, el input no será requerido.
-        },
-        opciones: {
-            type: Object,
-            default: []
-        }
+// Propiedades que el componente acepta //
+
+const props = defineProps({
+    // Propiedad para capturar el valor del campo de entrada
+    modelValue: {
+        type: [String, Number],
+        default: '',
+        description: 'El valor actual del campo de entrada.'
+    },
+    // Propiedad para definir el texto de sugerencia en el campo de entrada
+    Placeholder : {
+        type: [String, Number],
+        default: 'Datos del campo',
+        description: 'Texto sugerido que aparece en el campo de entrada.'
+    },
+    // Propiedad para definir el título del campo de entrada
+    Titulo: {
+        type: String,
+        default: "Titulo",
+        description: 'Título o descripción del campo de entrada.'
+    },
+    // Propiedad para definir el tipo de entrada (por ejemplo, texto, número, etc.)
+    Tipo: {
+        type: String,
+        default: 'text',
+        description: 'Tipo de entrada (texto, número, etc.).'
+    },
+    // Propiedad para habilitar o deshabilitar el campo de entrada
+    Deshabilitar: {
+        type: Boolean,
+        default: false,
+        description: 'Indica si el campo de entrada está habilitado o deshabilitado.'
+    },
+    // Propiedad para definir el número mínimo de caracteres requeridos
+    minimoCaracteres: {
+        type: [Number, String],
+        default: 2,
+        description: 'Número mínimo de caracteres requeridos en el campo de entrada.'
+    },
+    // Propiedad para definir el número máximo de caracteres permitidos
+    maximoCaracteres: {
+        type:[Number, String],
+        default: 100,
+        description: 'Número máximo de caracteres permitidos en el campo de entrada.'
+    },
+    // Propiedad para definir el número de decimales permitidos en entradas numéricas
+    NumeroDecimales: {
+        type: [Number, String],
+        default: 2,
+        description: 'Número de decimales permitidos en entradas numéricas.'
+    },
+    // Propiedad para indicar si el campo de entrada es obligatorio
+    requerido: {
+        type: Boolean,
+        default: false,
+        description: 'Indica si el campo de entrada es obligatorio.'
+    },
+    // Propiedad para definir opciones de autocompletado para el campo de entrada
+    opciones: {
+        type: Object,
+        default: [],
+        description: 'Lista de opciones para autocompletar el campo de entrada.'
+    },
+    // Propiedad para definir el parámetro de filtro utilizado para extraer valores de las opciones
+    ParametroFiltro: {
+        type: String,
+        default: "nombre",
+        description: 'Parámetro utilizado para extraer valores de las opciones de autocompletado.'
+    },
+    // Propiedad para definir el ID del elemento datalist asociado al campo de entrada
+    id_list: {
+        type: String,
+        default: "example",
+        description: 'ID del elemento datalist asociado al campo de entrada.'
     }
-);
+});
+
 </script>
 
 <style scoped>

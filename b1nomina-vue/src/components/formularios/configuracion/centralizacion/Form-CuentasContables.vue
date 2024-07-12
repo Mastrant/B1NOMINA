@@ -29,7 +29,7 @@
                 v-model="CuentaPrestamoSolidarios"
                 @update:modelValue="CuentaPrestamoSolidarios = $event"
                 :requerido="RequiereActualizar"
-                :opciones="[{id:1, nombre:'predro'}]"
+                :opciones="[{id:1, nombre:'predro'},{id:2, nombre:'praedro'}]"
             />           
         </div>
 

@@ -53,7 +53,7 @@ const MostrarMensaje = inject('showNotificacionShort'); // Inyecta una función 
 // Llama a la función para enviar información al componente padre
 
 const DatosConfiguracion = ref({})
-const ListadoDimensiones = ref({})
+
 
 const SolicitarConfiguracionGeneral = async (ID_Sociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getConfiguracionGeneral(ID_Sociedad);
@@ -71,12 +71,10 @@ const RefrescarDatos = (respuesta) => {
     } else {
         MostrarMensaje({Titulo:'Error al actualizar', Descripcion: respuesta.texto});
     }
-    
 }
 
 onMounted( async () => {
     SolicitarConfiguracionGeneral(ID_Sociedad.value);
-
 });
 </script>
 

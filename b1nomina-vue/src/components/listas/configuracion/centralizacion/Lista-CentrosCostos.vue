@@ -8,11 +8,18 @@
 
         <LayoutFondoBorder v-for="Centro in ListadoCentrosCostos" :key="Centro.id">
             <template #default>    
-                  <FormCentroCosto :Informacion="Centro"/>        
+                  <FormCentroCosto 
+                    :Informacion="Centro"
+                    :parametros="ListadoDimensiones"
+                    @DataNotificacion="RefrescarDatos"    
+                />        
             </template>
         </LayoutFondoBorder>
 
-        <TemplateBlankButton text="+ Agregar Nuevo Centro de Costo"/>
+        <TemplateBlankButton 
+            text="+ Agregar Nuevo Centro de Costo"
+            @click="AddCampo"
+        />
     </div>
 </template>
 
@@ -21,7 +28,7 @@ import LayoutFondoBorder from '@/components/Layouts/LayoutFondoBorder.vue';
 import FormCentroCosto from '@/components/formularios/configuracion/centralizacion/Form-CentroCosto.vue'
 import TemplateBlankButton from '@/components/botones/Template-blank-button.vue';
 
-import {onMounted, ref, inject} from 'vue';
+import {onMounted, ref, inject, onBeforeMount} from 'vue';
 
 import peticiones_Configuracion from '@/peticiones/configuracion/centralizacion.js'
 
@@ -37,31 +44,50 @@ const ListadoCentrosCostos = ref([]);
 
 const SolicitarListadoCentrosCostos = async (ID_Sociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getCentroDeCosto(ID_Sociedad);
-    console.log(respuesta)
     if (respuesta.success) {
-        ListadoCentrosCostos.value = respuesta.data.data;
+        ListadoCentrosCostos.value = respuesta.data;
+    } else {
+        console.error(respuesta.error)
+    }
+}
+
+
+const ListadoDimensiones = ref({})
+const parametros = ref({})
+
+const SolicitarParametros = async (ID_Sociedad = Number) => {
+    const respuesta = await peticiones_Configuracion.getParametrosConfiguracionGeneral(ID_Sociedad);
+    if (respuesta.success) {
+        parametros.value = respuesta.data;
+        ListadoDimensiones.value = parametros.value?.data;
+
     } else {
         console.error(respuesta.error)
     }
 }
 
 const AddCampo = async () => {
-    const respuesta = await peticiones_Configuracion.CreateCentroCosto(Number(UserID.value));
+    const respuesta = await peticiones_Configuracion.CreateCentroCosto(Number(ID_Sociedad.value), UserID.value);
     if (respuesta.success) {
         RefrescarDatos();
     } else {
         console.error(respuesta.error)
-        MostrarMensaje({Titulo:'Error al añadir',Descripcion: respuesta.error.data.message});
+        MostrarMensaje({Titulo:'Error al añadir', Descripcion: respuesta.error?.data.message});
     }
 }
 
-const RefrescarDatos = () => {
-    SolicitarListadoCargos(ID_Sociedad.value);
-    MostrarMensaje({Titulo:'Datos Actualizados', Descripcion:'Se han actualizado los datos correctamente.'});
+const RefrescarDatos = (respuesta) => {
+    if(respuesta?.valor == true) {
+        SolicitarListadoCentrosCostos(ID_Sociedad.value);
+        MostrarMensaje({Titulo:'Datos Actualizados', Descripcion: respuesta.texto});
+    } else {
+        MostrarMensaje({Titulo:'Error al actualizar', Descripcion: respuesta.texto});
+    }
 }
 
-onMounted(() => {
+onBeforeMount(() => {
     SolicitarListadoCentrosCostos(ID_Sociedad.value);
+    SolicitarParametros(ID_Sociedad.value);
 });
 </script>
 

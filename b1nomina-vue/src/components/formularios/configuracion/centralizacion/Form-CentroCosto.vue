@@ -1,31 +1,40 @@
 <template>
-    <form class="formulario">
-        <div class="row">
-            <InputBorderDescripcion
+    <form class="formulario" :id="IDFORM" @submit.prevent="Enviar">
+        <div class="row">           
+
+            <InputBorderList
                 Placeholder="Ingresar centro de costos"
                 Titulo="Centro de costo"
                 name="CentroDeCosto"
                 v-model="CentroDeCosto"
                 @update:modelValue="CentroDeCosto = $event"
                 :requerido="RequiereActualizar"
-            />
-            <InputBorderDescripcion
+                :opciones="[]"
+                ParametroFiltro="id"
+                id_list="listadoCC"
+
+            /> 
+            
+            <InputBorderList
                 Placeholder="Ingresar código"
-                Titulo="Código SAP "
+                Titulo="Código SAP"
                 name="CodigoSAP"
                 v-model="CodigoSAP"
                 @update:modelValue="CodigoSAP = $event"
                 :requerido="RequiereActualizar"
-            />
+                :opciones="parametros?.SAP_codigo"
+                ParametroFiltro="id"
+                id_list="listadoSAP"
+            /> 
 
             <LayoutInputBorder textLabel="Dimensión" :requerido="RequiereActualizar">
                 <template v-slot>
                   <ListaTemplateBorder
                     v-model="Dimension"
-                    :options="ListaDimension"
+                    :options="parametros?.dimensiones"
                     :requerido="RequiereActualizar"            
                     :preseleccion="Dimension"  
-                    optionsSelected="Seleccionar"
+                    optionsSelected="Seleccionar"                    
                   />
                 </template>
             </LayoutInputBorder>
@@ -37,17 +46,20 @@
         </div>
 
         <div class="espacioBoto" v-if="RequiereActualizar">
-            <TemplateButton text="Actualizar"/>
+            <TemplateButton :form="IDFORM" Tipo="submit" text="Actualizar"/>
         </div>
+
     </form>
 </template>
 
 <script setup>
-import InputBorderDescripcion from '@/components/inputs/Input-Border-descripcion.vue';
 import ListaTemplateBorder from "@/components/listas/Lista-template-border.vue";
 import LayoutInputBorder from "@/components/Layouts/LayoutInputBorder.vue";
 import TemplateButton from '@/components/botones/Template-button.vue';
 import trashIcon from '@/components/icons/trash-icon.vue';
+import InputBorderList from '@/components/inputs/Input-Border-List.vue';
+
+import peticiones_configuracion from '@/peticiones/configuracion/centralizacion.js';
 
 import { defineProps, ref, reactive, watch, defineEmits, onMounted, inject} from 'vue';
 
@@ -67,14 +79,12 @@ const ID_USERMASTER = ref(localStorage.getItem('userId'))
 
 const IDFORM = "FormCentroCostos"
 
-const ListaDimension = []
-
 const emit = defineEmits([
     "DataNotificacion",
 ]);
 
 // Definicion de variables de los inputs
-
+const ID_Elemento = ref('0000')
 const CentroDeCosto = ref('');
 const CodigoSAP = ref('');
 const Dimension= ref('');
@@ -83,26 +93,20 @@ const Dimension= ref('');
 const RequiereActualizar = ref(false);
 
 //Contiene la información original
-const payload_old = reactive({
-
-});
+const payload_old = reactive({});
 
 //Contiene la información a enviar
-const payload = reactive({
-
-});
+const payload = reactive({});
 
 //Escuchar cambios en las variables
-watch(CentroDeCosto, (nuevoValor) => ActualizarPayload('CentroDeCosto', nuevoValor));
-watch(CodigoSAP, (nuevoValor) => ActualizarPayload('CodigoSAP', nuevoValor));
-watch(Dimension, (nuevoValor) => ActualizarPayload('Dimension', nuevoValor));
+watch(CentroDeCosto, (nuevoValor) => ActualizarPayload('centro_costo', nuevoValor));
+watch(CodigoSAP, (nuevoValor) => ActualizarPayload('codigo_sap', nuevoValor));
+watch(Dimension, (nuevoValor) => ActualizarPayload('dimension_id', nuevoValor));
 
 //ve si hay cambios en la informacion y actualiza los campos:
-watch(() => props.Informacion.Sociedad, (nuevoValor) => { 
-  MostrarValores(nuevoValor) 
+watch(() => props.Informacion, (nuevoValor) => { 
+    MostrarValores(nuevoValor) 
 });
-
-
 
 //actualizar datos del payload a enviar
 const ActualizarPayload = (propiedad, valor) => {
@@ -116,38 +120,36 @@ const verificarCambios = () => {
     // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
     const camposIguales = Object.keys(payload_old).every(key => payload_old[key] == payload[key]);
 
-    // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
-    const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
-
     // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
     // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
     // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
-    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+    RequiereActualizar.value = !(camposIguales);
 }
-
 
 // Define la función MostrarValores que actualiza los valores de varios campos basados en los datos proporcionados.
 const MostrarValores = (DATA) => {
-    RequiereActualizar.value = false;
+    console.log(DATA)
 
-    CentroDeCosto.value = (DATA?.responsable == null)? '' :DATA?.responsable;
-    CodigoSAP.value = (DATA?.rut_responsable == null)? '' :DATA?.rut_responsable;
-    Dimension.value = (DATA?.email_responsable == null)? '' :DATA?.email_responsable;
+    ID_Elemento.value = (DATA?.id == null)? '' :DATA?.id
+    CentroDeCosto.value = (DATA?.centro_costo == null)? '' :DATA?.centro_costo;
+    CodigoSAP.value = (DATA?.codigo_sap == null)? '' :DATA?.codigo_sap;
+    Dimension.value = (DATA?.dimension_id == null)? '' :DATA?.dimension_id;
 
     // Asigna el valor de DATA?.documento a payload_old.documento y payload.documento,
     // utilizando '' si DATA?.documento es null.
-    payload_old.responsable = DATA?.responsable ?? '';
-    payload.responsable = DATA?.responsable ?? '';
+    payload_old.centro_costo = DATA?.centro_costo ?? '';
+    payload.centro_costo = DATA?.centro_costo ?? '';
     
-    payload_old.rut_responsable = DATA?.rut_responsable ?? '';
-    payload.rut_responsable = DATA?.rut_responsable ?? '';
+    payload_old.codigo_sap = DATA?.codigo_sap ?? '';
+    payload.codigo_sap = DATA?.codigo_sap ?? '';
 
-    payload_old.email_responsable = DATA?.email_responsable ?? '';
-    payload.email_responsable = DATA?.emailResponsable ?? '';
+    payload_old.dimension_id = DATA?.dimension_id ?? '';
+    payload.dimension_id = DATA?.dimension_id ?? '';
 
-    payload_old.telefono_responsable = DATA?.telefono_responsable ?? '';
-    payload.telefono_responsable = DATA?.telefono_responsable ?? '';
+    payload_old.sociedad_id = DATA?.sociedad_id ?? '';
+    payload.sociedad_id = DATA?.sociedad_id ?? '';
 
+    RequiereActualizar.value = false;
 }
 
 /**
@@ -158,10 +160,9 @@ const MostrarValores = (DATA) => {
 const Enviar = async () => {
     //si ID es nulo crea un usuario
 
-
     if (RequiereActualizar.value == true) {        
-        const respuesta = await peticiones_configuracion_datosEmpresa?.ActualizarCentroDeCosto(
-            ID_USERMASTER.value, ID_Sociedad.value, payload
+        const respuesta = await peticiones_configuracion?.ActualizarCentroDeCosto(
+            ID_USERMASTER.value, ID_Elemento.value, payload
         );
 
         if(respuesta.success == true){
@@ -177,9 +178,8 @@ const Enviar = async () => {
 
 
 onMounted(async () => {
-  await MostrarValores(props.Informacion?.Sociedad)
+  await MostrarValores(props.Informacion)
 });
-
 
 
 
