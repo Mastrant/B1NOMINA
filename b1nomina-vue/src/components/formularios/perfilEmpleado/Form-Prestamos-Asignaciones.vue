@@ -24,6 +24,7 @@
                     :requerido="RequiereActualizar"
                 />
             </div>
+
             <div class="row-form">
                 <InputLinealDescripcion 
                     v-model="valorCuota"
@@ -37,6 +38,7 @@
 
                 />
             </div>
+
             <div class="row-form">
                 <InputLinealDescripcion 
                     v-model="numeroCuotas"
@@ -48,6 +50,7 @@
                     :maximo-numeros="200"
                     :requerido="RequiereActualizar"
                 />
+
                 <InputLinealDescripcion 
                     v-model="fechaPrimerPago"
                     Placeholder="" 
@@ -64,6 +67,7 @@
                 :Listado="ListadoCuotas"
             />
         </section>
+
         <div class="espacio-botones">
             <PaginateButton 
                 v-show="verFormulario == 2"
@@ -156,6 +160,7 @@ watch(parametros, (nuevaInfo) => {
 })
 
 const ResetForm = () => {
+
     RequiereActualizar.value = false;
     
     TipoPrestamo.value = '';
@@ -167,8 +172,6 @@ const ResetForm = () => {
     verFormulario.value = 1
     ListadoCuotas.value = []
     generarPrestamo.value = false
-    
-
 }
 
 /**
@@ -235,42 +238,49 @@ const emit = defineEmits([
  * @params payload Contiene los datos que se pasaran
  * Ejecuta la peticion con axios
  */
- const Enviar = async () => {
+const Enviar = async () => {
     //si ID es nulo crea un usuario
     if (generarPrestamo.value == false){
+
         if (RequiereActualizar.value == true) {
+
             const respuesta = await peticiones?.postCuotas(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
 
             if (respuesta.success == true) {
 
-                ListadoCuotas.value = respuesta.data.data
-                verFormulario.value = 2
-                generarPrestamo.value = true
+                ListadoCuotas.value = respuesta?.data.data;
+                verFormulario.value = 2;
+                generarPrestamo.value = true;
+
+            } else {
+                console.error(respuesta?.error)
+                emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false});
+            }
+
+        } else {
+            emit('respuestaServidor', {'texto': "Los campos estan vacios", 'valor':true});
+        }
+
+    } else {
+
+        if (RequiereActualizar.value == true) {
+
+            const respuesta = await peticiones?.addPrestamo(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+
+            if(respuesta.success == true){
+                emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
+                ResetForm()
 
             } else {
                 console.error(respuesta?.error)
                 emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false})
             }
-        } else {
-            emit('respuestaServidor', {'texto': "Los campos estan vacios", 'valor':true});
-        }
-    } else {
-        if (RequiereActualizar.value == true) {
-                const respuesta = await peticiones?.addPrestamo(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
-                if(respuesta.success == true){
-                    emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
-                } else {
-                    console.error(respuesta?.error)
-                    emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false})
-                }
 
         } else {
             emit('respuestaServidor', {'texto': "Los campos estan vacios", 'valor':true});
         }        
-    }
 
-    
-    
+    }  
 };
 
 </script>

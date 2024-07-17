@@ -75,7 +75,7 @@ span.page-link {
     line-height: 26px;
     word-wrap: break-word;
     background: none;
-    margin: 2px 4px;
+    margin: 8px 12px;
 }
 
 /**Estilo de la fuente al posicionar el mouse */

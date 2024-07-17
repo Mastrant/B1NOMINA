@@ -85,8 +85,8 @@
 
             <div v-if=" formActivo == 13"> <!--retomar otras Asignaciones-->                    
                 <FormPrestamosAsignaciones
-                        @respuestaServidor="notificacionModal"
-                    />
+                    @respuestaServidor="notificacionModal"
+                />
             </div>
 
             <div v-if=" formActivo == 14"> <!--retomar cargas previsionales -->                    
