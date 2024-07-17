@@ -1,158 +1,175 @@
 <template>    
     <form class="formulario" id="addPrestamo" @submit.prevent="Enviar">
-        
-        <div class="row-form">
-            <LayoutInputLineal textLabel="Tipo" :requerido="RequiereActualizar">
-                <template v-slot>
-                    <ListaTemplateLineal  
-                        v-model="TipoPrestamo" 
-                        :options="Parametros?.tipoprestamo" 
-                        :requerido="RequiereActualizar"            
-                        :preseleccion="TipoPrestamo" 
-                        optionsSelected="Seleccionar"
-                    />
-                </template>
-            </LayoutInputLineal>          
-        </div>
+        <section  v-show="verFormulario == 1">
+            <div class="row-form">
+                <LayoutInputLineal textLabel="Tipo" :requerido="RequiereActualizar">
+                    <template v-slot>
+                        <ListaTemplateLineal  
+                            v-model="TipoPrestamo" 
+                            :options="Parametros?.tipoprestamo" 
+                            :requerido="RequiereActualizar"            
+                            :preseleccion="TipoPrestamo" 
+                            optionsSelected="Seleccionar"
+                        />
+                    </template>
+                </LayoutInputLineal>          
+            </div>
 
-        <div class="row-form">
-            <InputLinealDescripcion 
-                v-model="DescripcionPrestamo"
-                Placeholder="Ingresar Descripción" 
-                Titulo="Descripción" 
-                @update:modelValue="DescripcionPrestamo = $event"
-                :requerido="RequiereActualizar"
-            />
-        </div>
-        <div class="row-form">
-            <InputLinealDescripcion 
-                v-model="valorCuota"
-                Placeholder="$ 0" 
-                Titulo="Valor" 
-                @update:modelValue="valorCuota = $event"
-                Tipo="Number"
-                :minimoNumeros="1"
-                :NumeroDecimales="0.01"
-                :requerido="RequiereActualizar"
+            <div class="row-form">
+                <InputLinealDescripcion 
+                    v-model="DescripcionPrestamo"
+                    Placeholder="Ingresar Descripción" 
+                    Titulo="Descripción" 
+                    @update:modelValue="DescripcionPrestamo = $event"
+                    :requerido="RequiereActualizar"
+                />
+            </div>
+            <div class="row-form">
+                <InputLinealDescripcion 
+                    v-model="valorCuota"
+                    Placeholder="$ 0" 
+                    Titulo="Valor" 
+                    @update:modelValue="valorCuota = $event"
+                    Tipo="Number"
+                    :minimoNumeros="1"
+                    :NumeroDecimales="0.01"
+                    :requerido="RequiereActualizar"
 
-            />
-        </div>
-        <div class="row-form">
-            <InputLinealDescripcion 
-                v-model="numeroCuotas"
-                Placeholder="0" 
-                Titulo="Número de cuotas a pagar" 
-                @update:modelValue="numeroCuotas = $event"
-                Tipo="Number"
-                :minimo-numeros="1"
-                :maximo-numeros="200"
-                :requerido="RequiereActualizar"
-            />
-            <InputLinealDescripcion 
-                v-model="fechaPrimerPago"
-                Placeholder="" 
-                Titulo="Fecha del pago primera cuota" 
-                @update:modelValue="fechaPrimerPago = $event"
-                Tipo="month"
-                :requerido="RequiereActualizar"
-            />
-        </div>
+                />
+            </div>
+            <div class="row-form">
+                <InputLinealDescripcion 
+                    v-model="numeroCuotas"
+                    Placeholder="0" 
+                    Titulo="Número de cuotas a pagar" 
+                    @update:modelValue="numeroCuotas = $event"
+                    Tipo="Number"
+                    :minimo-numeros="1"
+                    :maximo-numeros="200"
+                    :requerido="RequiereActualizar"
+                />
+                <InputLinealDescripcion 
+                    v-model="fechaPrimerPago"
+                    Placeholder="" 
+                    Titulo="Fecha del pago primera cuota" 
+                    @update:modelValue="fechaPrimerPago = $event"
+                    Tipo="month"
+                    :requerido="RequiereActualizar"
+                />
+            </div>
+        </section>
 
-        <section>
-            <CuotasPrestamos 
+        <section v-show="verFormulario == 2" class="tabla-cuotas">
+            <CuotasPrestamos                
                 :Listado="ListadoCuotas"
             />
         </section>
-        <div class="">
+        <div class="espacio-botones">
             <PaginateButton 
+                v-show="verFormulario == 2"
                 texto="Editar Cuotas" 
-                v-if="verFormulario == 2"
-            
-                />
-            <PaginateButton texto="Ver Cuotas" v-if="verFormulario == 1"/>
+                @click="() => {
+                    verFormulario = 1
+                    generarPrestamo = false
+                }"
+            />
+
+            <PaginateButton 
+                v-show="verFormulario == 1 && ListadoCuotas.length > 0"
+                texto="Ver Cuotas" 
+                @click="() => {
+                    verFormulario = 2
+                    generarPrestamo = true
+                }"
+            />
         </div>
     </form>    
 </template>
 
 <script setup>
-    import InputLinealDescripcion from '@/components/inputs/Input-Lineal-descripcion.vue';
-    import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
-    import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
-    import CuotasPrestamos from '@/components/tablas/perfilEmpleado/asignaciones/CuotasPrestamo-General.vue'
-    import PaginateButton from '@/components/botones/Paginate-button.vue';
+import InputLinealDescripcion from '@/components/inputs/Input-Lineal-descripcion.vue';
+import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
+import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
+import CuotasPrestamos from '@/components/tablas/perfilEmpleado/asignaciones/CuotasPrestamo-General.vue'
+import PaginateButton from '@/components/botones/Paginate-button.vue';
 
-    import {reactive, ref, watch, inject, onMounted, defineEmits, onBeforeMount} from 'vue';
+import {reactive, ref, watch, inject, onMounted, defineEmits, onBeforeMount} from 'vue';
 
-    import peticiones from '@/peticiones/p_empleado';
+import peticiones from '@/peticiones/p_empleado';
 
-    import {useRoute}  from 'vue-router';
+import {useRoute}  from 'vue-router';
 
-    const route = useRoute();  
-    const Sociedad_id = route.params.sociedadId
+const route = useRoute();  
+const Sociedad_id = route.params.sociedadId
 
-    const DatosUsuario = reactive(inject('dataEmpleado'))
-    const parametros = reactive(inject('parametros'))
+const DatosUsuario = reactive(inject('dataEmpleado'))
+const parametros = reactive(inject('parametros'))
+
+const Parametros = ref({});
+const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
+
+const RequiereActualizar = ref(false)
+
+// payload de las peticiones
+const payload = reactive({
+    tipo_id: '',
+    descripcion: '',
+    valor: '',
+    cuotas: '',
+    fecha_inicio: '',
+    "sociedad_id": Sociedad_id
+});
+
+// payload de las peticiones
+const payload_old = reactive({
+    tipo_id: '',
+    descripcion: '',
+    valor: '',
+    cuotas: '',
+    fecha_inicio: '',
+    "sociedad_id": Sociedad_id
+});
+
+const verFormulario = ref(1)
+
+const TipoPrestamo = ref('')
+const DescripcionPrestamo = ref('')
+const valorCuota = ref('')
+const numeroCuotas = ref('')
+const fechaPrimerPago = ref('')
+
+const ListadoCuotas = ref([])
+const generarPrestamo = ref(false)
+
+watch(TipoPrestamo, (nuevoValor) =>  ActualizarPayload('tipo_id', nuevoValor));
+watch(DescripcionPrestamo, (nuevoValor) =>  ActualizarPayload('descripcion', nuevoValor));
+watch(valorCuota, (nuevoValor) =>  ActualizarPayload('valor', nuevoValor));
+watch(numeroCuotas, (nuevoValor) =>  {
+    numeroCuotas.value = Math.round(nuevoValor)
+    ActualizarPayload('cuotas', nuevoValor)
+});
+watch(fechaPrimerPago, (nuevoValor) =>  ActualizarPayload('fecha_inicio', nuevoValor));
+
+watch(parametros, (nuevaInfo) => {  
+    ResetForm()   
+    Parametros.value = nuevaInfo
+})
+
+const ResetForm = () => {
+    RequiereActualizar.value = false;
     
-    const Parametros = ref({});
-    const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
+    TipoPrestamo.value = '';
+    DescripcionPrestamo.value = '';
+    valorCuota.value = '';
+    numeroCuotas.value =  '';
+    fechaPrimerPago.value = '';
 
-    const RequiereActualizar = ref(false)
-
-    // payload de las peticiones
-    const payload = reactive({
-        tipo_id: '',
-        descripcion: '',
-        valor: '',
-        cuotas: '',
-        fecha_inicio: '',
-        "sociedad_id": Sociedad_id
-    });
+    verFormulario.value = 1
+    ListadoCuotas.value = []
+    generarPrestamo.value = false
     
-    // payload de las peticiones
-    const payload_old = reactive({
-        tipo_id: '',
-        descripcion: '',
-        valor: '',
-        cuotas: '',
-        fecha_inicio: '',
-        "sociedad_id": Sociedad_id
-    });
 
-    const verFormulario = ref(1)
-
-
-    const TipoPrestamo = ref('')
-    const DescripcionPrestamo = ref('')
-    const valorCuota = ref('')
-    const numeroCuotas = ref('')
-    const fechaPrimerPago = ref('')
-
-    const ListadoCuotas = ref([])
-
-    watch(TipoPrestamo, (nuevoValor) =>  ActualizarPayload('tipo_id', nuevoValor));
-    watch(DescripcionPrestamo, (nuevoValor) =>  ActualizarPayload('descripcion', nuevoValor));
-    watch(valorCuota, (nuevoValor) =>  ActualizarPayload('valor', nuevoValor));
-    watch(numeroCuotas, (nuevoValor) =>  {
-        numeroCuotas.value = Math.round(nuevoValor)
-        ActualizarPayload('cuotas', nuevoValor)
-    });
-    watch(fechaPrimerPago, (nuevoValor) =>  ActualizarPayload('fecha_inicio', nuevoValor));
-
-    watch(parametros, (nuevaInfo) => {     
-        Parametros.value = nuevaInfo
-    })
-
-    const ResetForm = () => {
-        RequiereActualizar.value = false;
-        // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
-        
-        TipoPrestamo.value = '';
-        DescripcionPrestamo.value = '';
-        valorCuota.value = '';
-        numeroCuotas.value =  '';
-        fechaPrimerPago.value = '';
-
-    }
+}
 
 /**
  * Actualiza el valor de una propiedad específica dentro del objeto 'payload'.
@@ -205,6 +222,7 @@ onMounted(() => {
 });
 
 onBeforeMount(() => {
+    ResetForm()
     Parametros.value = parametros.value;
 })
 
@@ -219,36 +237,40 @@ const emit = defineEmits([
  */
  const Enviar = async () => {
     //si ID es nulo crea un usuario
-    
-    if (RequiereActualizar.value == true) {
-        console.log(payload)
+    if (generarPrestamo.value == false){
+        if (RequiereActualizar.value == true) {
+            const respuesta = await peticiones?.postCuotas(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
 
-        const respuesta = await peticiones?.postCuotas(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
-        console.log(respuesta)
-        if(respuesta.success == true){
-            ListadoCuotas.value = respuesta.data.data
-            verCuotas.value= 2
-        } else {
-            console.error(respuesta?.error)
-            emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false})
-        }
-    } else {
-        emit('respuestaServidor', {'texto': "Los campos estan vacios", 'valor':true});
-    }
-    /*
-    if (RequiereActualizar.value == true) {
-            const respuesta = await peticiones?.addPrestamo(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
-            if(respuesta.success == true){
-                emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
+            if (respuesta.success == true) {
+
+                ListadoCuotas.value = respuesta.data.data
+                verFormulario.value = 2
+                generarPrestamo.value = true
+
             } else {
                 console.error(respuesta?.error)
                 emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false})
             }
-
+        } else {
+            emit('respuestaServidor', {'texto': "Los campos estan vacios", 'valor':true});
+        }
     } else {
-        emit('respuestaServidor', {'texto': "Los campos estan vacios", 'valor':true});
+        if (RequiereActualizar.value == true) {
+                const respuesta = await peticiones?.addPrestamo(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+                if(respuesta.success == true){
+                    emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
+                } else {
+                    console.error(respuesta?.error)
+                    emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false})
+                }
+
+        } else {
+            emit('respuestaServidor', {'texto': "Los campos estan vacios", 'valor':true});
+        }        
     }
-        */
+
+    
+    
 };
 
 </script>
@@ -272,34 +294,10 @@ div.row-form {
 /* Define el estilo del formulario, utilizando 
 flexbox para organizar los elementos en una 
 columna con un espacio de  16px entre ellos */
-form.formulario {
+form.formulario > section {
     display: flex;
     flex-direction: column;
     gap:  16px
-}
-
-/* Contenedor para elementos multimedia, organizados 
-en columnas con un espacio de  12px entre ellos */
-div.multimedia {
-    display: flex;
-    flex-direction: column;
-    gap:  12px;
-}
-
-/* Estilo para el botón de añadir una foto, con bordes 
-y un padding específico para un mejor aspecto visual */
-div.multimedia div.add-photo{
-    border-radius:  6px;
-    border:  0.5px #363855 dashed;
-    border-width:  5px;
-    box-sizing: border-box;
-    padding:  12px  48px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width:  100%;
-    height: fit-content;
 }
 
 /* Estilo para el título del formulario, asegurando que el texto sea legible y estéticamente agradable */
@@ -312,6 +310,16 @@ h2.titulo-form {
     line-height:  32px;  
     word-wrap: break-word;
 }
+div.espacio-botones{
+    display: flex;
+    justify-content: end;
+    padding: 24px 24px 0px 0px;
+}
 
+section.tabla-cuotas {
+    box-sizing: border-box;
+    max-height: 420px;
+    overflow-y: scroll;
+}
 
 </style>

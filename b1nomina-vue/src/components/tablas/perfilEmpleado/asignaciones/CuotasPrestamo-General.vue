@@ -21,7 +21,7 @@
                     {{ cuota?.cuota }}
                 </template>
                 <template #row2>                        
-                    {{ cuota?.monto }} $
+                    {{ parseFloat(cuota?.monto.toFixed(2)) }} $
                 </template>
                 <template #row3>                        
                     {{ cuota?.fecha_cuota }}
@@ -65,6 +65,7 @@ watchEffect(() => {
 /* Estilos generales para la tabla de empleados */
 .TablaEmpleados {
     width: 100%; /* Asegura que la tabla ocupe el ancho completo del contenedor */
+    box-sizing: border-box;
 }
 
 /**

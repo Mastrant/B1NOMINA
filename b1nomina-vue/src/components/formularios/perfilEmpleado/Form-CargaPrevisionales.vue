@@ -41,7 +41,7 @@
                 Titulo="Apellido Paterno"
                 v-model="apellidos"
                 @update:modelValue="apellidos = $event"
-                :requerido="RequiereActualizar "
+                :requerido="RequiereActualizar"
                 name="Apellidos"
             />            
 
@@ -49,7 +49,6 @@
                 Tipo="date"
                 Titulo="Fecha de nacimiento"
                 v-model="fechaNacimiento"
-                Condicionales="this.max=new Date().toISOString().split('T')[0]"
                 @update:modelValue="fechaNacimiento = $event"
                 :requerido="RequiereActualizar"
             />
