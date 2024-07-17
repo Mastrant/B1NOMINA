@@ -236,6 +236,36 @@ const peticiones = {
             return { success: false, error: error };
         }  
     },
+
+    async ActualizarCargaPrevisional(idPersona, idMaster, payload){
+        try {
+            // Intenta realizar una petición PUT para actualizar los datos bancarios del empleado.
+            const respuesta = await axios.put(`carga_previsional/${idPersona}/update_carga_previsional?userUpdaterId=${idMaster}`, payload);
+            // Devuelve un objeto con éxito y los datos obtenidos si la petición fue exitosa.
+            return { success: true, data: respuesta?.data };
+        } catch (error) {
+            // En caso de error, devuelve un objeto indicando el fallo y el error.
+            return { success: false, error: error?.response };
+        }
+    },
+    
+    async getListadoCargaPresionales(idEmpleado){
+        try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
+            return axios.get(`user/${idEmpleado}/list_carga_previsional`)
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+            .then(respuesta => {
+                    return { success: true, data: respuesta?.data };
+                })
+                // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+            .catch(error => {
+                    return { success: false, error: error?.response };
+            });
+        } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
+            return { success: false, error: error };
+        }  
+    }, 
     
     async getListadoPrestamos(idEmpleado){
         try {
@@ -269,6 +299,26 @@ const peticiones = {
             return { success: false, error: error };
         }  
     },
+
+    async postCuotas(idEmpleado, idMaster, payload){
+        try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
+            return axios.post(`user/${idEmpleado}/calcular_prestamos?userCreatorId=${idMaster}`, payload)
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+            .then(respuesta => {
+                    return { success: true, data: respuesta?.data };
+                })
+                // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+            .catch(error => {
+                    return { success: false, error: error?.response };
+            });
+        } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
+            return { success: false, error: error };
+        }  
+    },
+
+    
 }
 
 // Exporta el objeto peticiones para su uso en otros módulos.

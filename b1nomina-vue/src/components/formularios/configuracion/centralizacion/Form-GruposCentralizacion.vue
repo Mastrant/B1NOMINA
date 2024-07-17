@@ -197,7 +197,6 @@ const Enviar = async () => {
         const respuesta = await peticiones_Configuracion?.ActualizarNombreGrupoCentralizacion(
             UserID.value , props.Informacion?.id, payload
         );
-        console.log(respuesta)
         if(respuesta.success == true){
             emit('DataNotificacion', {'texto':respuesta?.data?.message, 'valor': true})
             ActualizarInformacion()

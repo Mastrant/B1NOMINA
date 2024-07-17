@@ -49,6 +49,7 @@
                 Tipo="date"
                 Titulo="Fecha de nacimiento"
                 v-model="fechaNacimiento"
+                Condicionales="this.max=new Date().toISOString().split('T')[0]"
                 @update:modelValue="fechaNacimiento = $event"
                 :requerido="RequiereActualizar"
             />
@@ -56,17 +57,16 @@
         </div>
 
         <LayoutInputLineal textLabel="Condición" :requerido="RequiereActualizar ">
-                <template v-slot>
-                    <ListaTemplateLineal  
-                        v-model="condicion" 
-                        :options="Parametros?.condicion" 
-                        :requerido="RequiereActualizar"    
-                        :preseleccion="condicion" 
-                        optionsSelected="Seleccionar"                    
-                    />
-                </template>
-            </LayoutInputLineal>
-
+            <template v-slot>
+                <ListaTemplateLineal  
+                    v-model="condicion" 
+                    :options="Parametros?.condicion" 
+                    :requerido="RequiereActualizar"    
+                    :preseleccion="condicion" 
+                    optionsSelected="Seleccionar"                    
+                />
+            </template>
+        </LayoutInputLineal>
 
     </form>
     
@@ -76,24 +76,31 @@
     import InputLinealDescripcion from '@/components/inputs/Input-Lineal-descripcion.vue';
     import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
     import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
-    import InputRadioButton from '@/components/botones/Input-Radio-button.vue';
     
     import {reactive, ref, watch, inject, onMounted, defineEmits, onBeforeMount} from 'vue';
     import peticiones from '@/peticiones/p_empleado';
 
+    const props = defineProps({
+        familiarSelecionado: {
+            type:Object,
+            default: []
+        }
+    })
+
+    //variables inicialisadoras
     const DatosUsuario = reactive(inject('dataEmpleado'))
-    const familiarSelecionado = ref({})
     const parametros = reactive(inject('parametros'))
     const Parametros = ref({});
+
     const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
     
+    //inicializacion de los valores del payload a enviar
     const payload = reactive({});
-    
     const payload_old = reactive({});
-
 
     const RequiereActualizar  = ref(false);
 
+    //Datos de los inputs
     const parentesco = ref('');
     const numeroDocumento = ref("");
     const nombres = ref("");
@@ -101,6 +108,7 @@
     const fechaNacimiento = ref('');
     const condicion = ref('')
 
+    //control y deteccion de cambios de las variables
     watch(parentesco, (nuevoValor) => ActualizarPayload("parentesco_id", nuevoValor));
     watch(numeroDocumento, (nuevoValor) => ActualizarPayload("rut", nuevoValor));
     watch(nombres, (nuevoValor) => ActualizarPayload("nombres", nuevoValor));
@@ -109,7 +117,7 @@
     watch(condicion, (nuevoValor) => ActualizarPayload("condicion", nuevoValor));
 
 
-    watch(familiarSelecionado, (nuevaInfo) => {
+    watch(() => props.familiarSelecionado, (nuevaInfo) => {
         MostrarValores(nuevaInfo)
     })
 
@@ -123,11 +131,18 @@
         // Asigna el valor de DATA?.documento a numeroDocumento.value, utilizando '' si DATA?.documento es null.
         RequiereActualizar.value = false
 
+        parentesco.value = (DATA?.parentesco_id == null)? '' :DATA?.parentesco_id;
+        numeroDocumento.value = (DATA?.rut == null)? '' : String(DATA?.rut);
+        nombres.value = (DATA?.nombres == null)? '' :DATA?.nombres;
+        apellidos.value = (DATA?.apellidos == null)? '' :DATA?.apellidos;
+        fechaNacimiento.value = (DATA?.fecha_nac == null)? '' :DATA?.fecha_nac;
+        condicion.value = (DATA?.condicion == null)? '' :DATA?.condicion;
+
         payload_old.parentesco = DATA?.parentesco_id ?? '';
         payload.parentesco = DATA?.parentesco_id ?? '';
 
-        payload_old.numeroDocumento = DATA?.rut ?? '';
-        payload.numeroDocumento = DATA?.rut ?? '';
+        payload_old.numeroDocumento =  String(DATA?.rut) ?? '';
+        payload.numeroDocumento =  String(DATA?.rut) ?? '';
 
         payload_old.nombres = DATA?.nombres ?? '';
         payload.nombres = DATA?.nombres ?? '';
@@ -138,6 +153,9 @@
         payload_old.fechaNacimiento = DATA?.fecha_nac ?? '';
         payload.fechaNacimiento = DATA?.fecha_nac ?? '';
 
+        payload_old.condicion = DATA?.condicion ?? '';
+        payload.condicion = DATA?.condicion ?? '';
+        
         payload_old.condicion = DATA?.condicion ?? '';
         payload.condicion = DATA?.condicion ?? '';
         
@@ -190,7 +208,7 @@ const verificarCambios = () => {
 }
 
     onMounted(() => {
-        MostrarValores(DatosUsuario.value)
+        MostrarValores(props.familiarSelecionado)
     });
 
     const emit = defineEmits([
@@ -210,18 +228,36 @@ const verificarCambios = () => {
  const Enviar = async () => {
   //si ID es nulo crea un usuario
 
-    if (RequiereActualizar.value == true) {
-        const respuesta = await peticiones.addCargaPrevisional(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
-        console.log(respuesta)
-        if(respuesta.success == true){
-            emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor': true})
+    if(props.familiarSelecionado.length != 0){
+        console.log("actualizar Familiar")
+        console.log(payload)
+        console.log(props.familiarSelecionado)
+
+        if (RequiereActualizar.value == true) {
+            const respuesta = await peticiones.ActualizarCargaPrevisional(props.familiarSelecionado?.id, ID_USERMASTER, payload);
+            if(respuesta.success == true){
+                emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor': true})
+            } else {
+                console.error(respuesta?.error)
+                emit('respuestaServidor', {'texto':respuesta?.error?.message, 'valor':false})
+            }
         } else {
-            console.error(respuesta?.error)
-            emit('respuestaServidor', {'texto':respuesta?.error?.message, 'valor':false})
+            emit('respuestaServidor', {'texto': "Los campos estan vacios", 'valor': true});
         }
-    } else {
-        emit('respuestaServidor', {'texto': "Los campos estan vacios", 'valor': true});
+    } else {   
+        if (RequiereActualizar.value == true) {
+            const respuesta = await peticiones.addCargaPrevisional(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+            if(respuesta.success == true){
+                emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor': true})
+            } else {
+                console.error(respuesta?.error)
+                emit('respuestaServidor', {'texto':respuesta?.error?.data.message, 'valor':false})
+            }
+        } else {
+            emit('respuestaServidor', {'texto': "Los campos estan vacios", 'valor': true});
+        }
     }
+
 };
 </script>
 

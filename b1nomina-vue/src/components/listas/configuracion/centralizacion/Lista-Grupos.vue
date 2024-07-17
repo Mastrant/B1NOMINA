@@ -44,7 +44,6 @@ const ListaGruposCentralizacion = ref([]);
 
 const SolicitarListadoCentrosCostos = async (ID_Sociedad) => {
     const respuesta = await peticiones_Configuracion.getGrupoCentralizacion(ID_Sociedad);
-    console.log(respuesta)
     if (respuesta.success) {
         ListaGruposCentralizacion.value = respuesta.data.data;
     } else {
@@ -58,7 +57,6 @@ const SolicitarParametros = async (ID_Sociedad = Number) => {
     const respuesta = await peticiones_Configuracion.getParametrosConfiguracionGeneral(ID_Sociedad);
     if (respuesta.success) {
         parametros.value = respuesta.data;
-        console.log(parametros.value.data)
 
     } else {
         console.error(respuesta.error)

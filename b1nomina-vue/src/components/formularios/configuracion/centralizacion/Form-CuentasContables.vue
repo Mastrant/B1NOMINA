@@ -25,6 +25,7 @@
                 :opciones="parametros?.listado_cuentas_empresa"
                 ParametroFiltro="id"
                 id_list="CuentaBonos"
+                :with-nombre="true"
             />
 
             <InputBorderList
@@ -37,6 +38,7 @@
                 :opciones="parametros?.listado_cuentas_empresa"
                 ParametroFiltro="id"
                 id_list="CuentaPrestamosSolidarios"
+                :with-nombre="true"
             />           
         </div>
 

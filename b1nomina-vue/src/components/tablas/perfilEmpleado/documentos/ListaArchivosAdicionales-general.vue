@@ -6,16 +6,13 @@
             <tr class="rowTabla encabezado">
 
                 <th class="">
-                    NOMBRE Y APELLIDO 
+                    NOMBRE DEL ARCHIVO 
                 </th>
                 <th class="">
-                    RUT
+                    DESCRIPCION DEL ARCHIVO
                 </th>
                 <th class=""> 
-                    PARENTESCO
-                </th>
-                <th class=""> 
-                    FECHA DE NACIMIENTO
+                    FECHA DE CREACIÓN
                 </th>
                 <th class=""> 
                     ACCIONES 
@@ -24,7 +21,7 @@
             <!--Final encabezado-->
 
             <!--Cuerpo de la tabla-->
-            <AsignacionesCargaPrevisionalesRow v-for="persona in listadoCargas" :key="persona.id">
+            <FilaArchivo v-for="persona in listadoCargas" :key="persona.id">
 
                 <!--Nombre y apelidos-->
                 <template #nombre>
@@ -33,10 +30,6 @@
                 <!--Rut-->
                 <template #rut>
                     {{String(persona?.rut)}}
-                </template>
-                 <!--Cargo-->
-                <template #parentesco>
-                    {{persona?.nombre_parentesco}}
                 </template>
                 <!--Saladio / sueldo-->
                 <template #fecha>
@@ -47,7 +40,7 @@
                     <EditIcon Stroke="#1A2771" text="Editar" @click="emit('editarDatosFamiliar', persona)"/>
                     <TrashIcon Stroke="#1A2771" text="Eliminar" />
                 </template>
-            </AsignacionesCargaPrevisionalesRow>
+            </FilaArchivo>
             <!--Final cuerpo-->
         </table>                
     </div>
@@ -57,7 +50,7 @@
 <script setup>
 import TrashIcon from '@/components/icons/trash-icon.vue'
 import EditIcon from '@/components/icons/Edit-icon.vue'
-import AsignacionesCargaPrevisionalesRow from '@/components/tablas/perfilEmpleado/asignaciones/AsignacionesCargasPrevisionales-row.vue';
+import FilaArchivo from '@/components/tablas/perfilEmpleado/documentos/ListaArchivosAdicionales-row.vue';
 
 import { ref, defineProps, watchEffect, onMounted, defineEmits} from 'vue';
 

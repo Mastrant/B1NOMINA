@@ -17,7 +17,7 @@
             
             <InputBorderList
                 Placeholder="Ingresar código"
-                Titulo="Código SAP"
+                Titulo="Código ERP"
                 name="CodigoSAP"
                 v-model="CodigoSAP"
                 @update:modelValue="CodigoSAP = $event"

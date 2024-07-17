@@ -45,6 +45,7 @@
                 @update:modelValue="numeroCuotas = $event"
                 Tipo="Number"
                 :minimo-numeros="1"
+                :maximo-numeros="200"
                 :requerido="RequiereActualizar"
             />
             <InputLinealDescripcion 
@@ -56,6 +57,20 @@
                 :requerido="RequiereActualizar"
             />
         </div>
+
+        <section>
+            <CuotasPrestamos 
+                :Listado="ListadoCuotas"
+            />
+        </section>
+        <div class="">
+            <PaginateButton 
+                texto="Editar Cuotas" 
+                v-if="verFormulario == 2"
+            
+                />
+            <PaginateButton texto="Ver Cuotas" v-if="verFormulario == 1"/>
+        </div>
     </form>    
 </template>
 
@@ -63,6 +78,8 @@
     import InputLinealDescripcion from '@/components/inputs/Input-Lineal-descripcion.vue';
     import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
     import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
+    import CuotasPrestamos from '@/components/tablas/perfilEmpleado/asignaciones/CuotasPrestamo-General.vue'
+    import PaginateButton from '@/components/botones/Paginate-button.vue';
 
     import {reactive, ref, watch, inject, onMounted, defineEmits, onBeforeMount} from 'vue';
 
@@ -101,6 +118,7 @@
         "sociedad_id": Sociedad_id
     });
 
+    const verFormulario = ref(1)
 
 
     const TipoPrestamo = ref('')
@@ -108,6 +126,8 @@
     const valorCuota = ref('')
     const numeroCuotas = ref('')
     const fechaPrimerPago = ref('')
+
+    const ListadoCuotas = ref([])
 
     watch(TipoPrestamo, (nuevoValor) =>  ActualizarPayload('tipo_id', nuevoValor));
     watch(DescripcionPrestamo, (nuevoValor) =>  ActualizarPayload('descripcion', nuevoValor));
@@ -179,18 +199,18 @@ const verificarCambios = () => {
     RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
 }
 
-    onMounted(() => {
-        ResetForm()
-        RequiereActualizar.value == false
-    });
+onMounted(() => {
+    ResetForm()
+    RequiereActualizar.value == false
+});
 
-    onBeforeMount(() => {
-        Parametros.value = parametros.value;
-    })
+onBeforeMount(() => {
+    Parametros.value = parametros.value;
+})
 
-    const emit = defineEmits([
-        'respuestaServidor',
-    ]);
+const emit = defineEmits([
+    'respuestaServidor',
+]);
 
 /**
  * Funcion emitida al enviar el formulario
@@ -198,21 +218,37 @@ const verificarCambios = () => {
  * Ejecuta la peticion con axios
  */
  const Enviar = async () => {
-  //si ID es nulo crea un usuario
-  console.log(payload)
- 
-  if (RequiereActualizar.value == true) {
-    const respuesta = await peticiones?.addPrestamo(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
-    if(respuesta.success == true){
-       emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
-    } else {
-        console.error(respuesta?.error)
-        emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false})
-    }
+    //si ID es nulo crea un usuario
+    
+    if (RequiereActualizar.value == true) {
+        console.log(payload)
 
-  } else {
-    emit('respuestaServidor', {'texto': "Los campos estan vacios", 'valor':true});
-  }
+        const respuesta = await peticiones?.postCuotas(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+        console.log(respuesta)
+        if(respuesta.success == true){
+            ListadoCuotas.value = respuesta.data.data
+            verCuotas.value= 2
+        } else {
+            console.error(respuesta?.error)
+            emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false})
+        }
+    } else {
+        emit('respuestaServidor', {'texto': "Los campos estan vacios", 'valor':true});
+    }
+    /*
+    if (RequiereActualizar.value == true) {
+            const respuesta = await peticiones?.addPrestamo(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+            if(respuesta.success == true){
+                emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
+            } else {
+                console.error(respuesta?.error)
+                emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false})
+            }
+
+    } else {
+        emit('respuestaServidor', {'texto': "Los campos estan vacios", 'valor':true});
+    }
+        */
 };
 
 </script>

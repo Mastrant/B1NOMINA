@@ -18,6 +18,7 @@
            :max="maximoNumeros"
            :step="NumeroDecimales"
            :value="modelValue"
+           :onfocus="Condicionales"
            @input="$emit('update:modelValue', $event.target.value)"
         >
     </div>        
@@ -83,10 +84,14 @@ const props = defineProps(
             type: [Number, String], // Define el tipo de dato que puede recibir, Number o String.
             default: 0 // Valor por defecto para el mínimo de caracteres permitidos.
         },
+        Condicionales: {
+            type:String,
+            default:'',
+        },
         requerido: {
             type: Boolean, // Define el tipo de dato que puede recibir, Boolean.
             default: false // Valor por defecto, el input no será requerido.
-        }
+        },
     }
 );
 </script>

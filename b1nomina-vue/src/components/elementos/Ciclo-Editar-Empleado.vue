@@ -90,13 +90,15 @@
             </div>
 
             <div v-if=" formActivo == 14"> <!--retomar cargas previsionales -->                    
-                
                 <FormCargaPrevisional 
                     @respuestaServidor="notificacionModal"
                 />
             </div>
             <div v-if=" formActivo == 15"> <!---->                    
-               
+                <FormCargaPrevisional 
+                    @respuestaServidor="notificacionModal"
+                    :familiarSelecionado="DatosParaElFormulario"
+                />
             </div>
             <div v-if=" formActivo == 16"> <!---->                    
            
@@ -149,6 +151,8 @@
     const modalActivo = ref(0)
     const IDFormModal = ref('')
 
+    const DatosParaElFormulario = ref({})
+
     //acciona la vista del modal
     const showModal = (Id_modal = 0) => {
         if(Id_modal == 1){
@@ -176,7 +180,7 @@
      * @example
      * ActionButton(1, 1, 123); // Muestra el modal para cargar CV con el ID 123.
      */
-    const ActionButton = (TipoAccion, item_ID) => {
+    const ActionButton = (TipoAccion, item_ID, Data = {}) => {
         switch (TipoAccion) {
             case 1:                
                 formActivo.value = TipoAccion;
@@ -273,11 +277,10 @@
                 IDFormModal.value = 'AddCuenta';
 
                 break; 
-
             case 13:
                 formActivo.value = TipoAccion;
                 EmpleadoID_Selecionado.value = item_ID;
-                TextoButton.value = 'Guardar';
+                TextoButton.value = 'Generar Cuotas';
                 TituloModal.value = 'Prestamos';
                 IDFormModal.value = 'addPrestamo';
 
@@ -295,11 +298,20 @@
                 formActivo.value = TipoAccion;
                 EmpleadoID_Selecionado.value = item_ID;
                 TextoButton.value = 'Guardar';
+                TituloModal.value = 'Editar Carga Previsional';
+                IDFormModal.value = 'CargaPrevisionales';
+                DatosParaElFormulario.value = Data;
+
+                break; 
+            case 16:
+                formActivo.value = TipoAccion;
+                EmpleadoID_Selecionado.value = item_ID;
+                TextoButton.value = 'Guardar';
                 TituloModal.value = 'Cargar Contrato';
                 IDFormModal.value = 'CargarContrato';
 
                 break; 
-            case 16:
+            case 17:
                 formActivo.value = TipoAccion;
                 EmpleadoID_Selecionado.value = item_ID;
                 TextoButton.value = 'Guardar';

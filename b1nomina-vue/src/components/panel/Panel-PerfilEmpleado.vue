@@ -368,7 +368,7 @@
                         </LayoutTablaEMpleados>
                     </div>
 
-                    <div class="contenedorInfo tablas" v-if="panelShow == 3">
+                    <div class="contenedorInfo tablas" v-if="panelShow == 3">  <!--Datos de Pago-->
                         <LayoutTablaEMpleados>
                             <template #boton2>                                                                    
                                 <TemplateBlanckButton @click="EditarInfo?.ActionButton(7,EmpleadoID)" text="Editar">
@@ -479,7 +479,7 @@
                         </LayoutTablasSimples>
                     </div>
 
-                    <div class="contenedorInfo" v-if="panelShow == 4">
+                    <div class="contenedorInfo tablas" v-if="panelShow == 4">  <!--Datos Previsionales-->
                         <LayoutTablaEMpleados>
                             <template #boton1>                                                                    
                                 <TemplateBlanckButton @click="EditarInfo?.ActionButton(8,EmpleadoID)" text="Editar">
@@ -731,12 +731,15 @@
                             </template>
                 
                             <template #Tabla>
-                                <AsignacionesCargaPrevisionales />
+                                <AsignacionesCargaPrevisionales
+                                    :listadoCargas="ListadoCargaPrevisionales.data"
+                                    @editarDatosFamiliar="(datos) => EditarInfo?.ActionButton(15,EmpleadoID, datos)"
+                                />
                             </template>
                         </LayoutTablasSimples>
                     </div>
 
-                    <div class="contenedorInfo tablas" v-if="panelShow == 5">
+                    <div class="contenedorInfo tablas" v-if="panelShow == 5">  <!--Prestamos-->
 
                         <LayoutTablasSimples Titulo="Asignación de Préstamos">
                             <template #boton>
@@ -754,11 +757,12 @@
                             </template>
                         </LayoutTablasSimples>
                     </div>                    
+
                     <div class="contenedorInfo tablas" v-if="panelShow == 6"> <!--Documentos-->
                         <LayoutTablasSimples Titulo="Contratos">
                             <template #boton>
                             
-                                <TemplateButton2 @click="EditarInfo?.ActionButton(15, EmpleadoID)" text="Nuevo Contrato" >
+                                <TemplateButton2 @click="EditarInfo?.ActionButton(16, EmpleadoID)" text="Nuevo Contrato" >
                                     <template #default>                                        
                                         <PlusCirculoIcon Stroke="#002E99"/>
                                     </template>
@@ -767,23 +771,23 @@
                             </template>
                 
                             <template #Tabla>
-                                
+                                <ListaContrato />
                             </template>
                         </LayoutTablasSimples> 
 
                         <LayoutTablasSimples Titulo="Archivos Adicionales">
                             <template #boton>
                             
-                                <TemplateButton2 @click="EditarInfo?.ActionButton(16, EmpleadoID)" text="Nuevo Archivo" >
+                                <TemplateButton2 @click="EditarInfo?.ActionButton(17, EmpleadoID)" text="Nuevo Archivo" >
                                     <template #default>                                        
                                         <PlusCirculoIcon Stroke="#002E99"/>
                                     </template>
                                 </TemplateButton2> 
                                 
                             </template>
-                
-                            <template #Tabla>
                                 
+                            <template #Tabla>
+                                <ListadoArchivos />
                             </template>
                         </LayoutTablasSimples>
                     </div>
@@ -823,7 +827,6 @@ import NavButtonTemplate from '@/components/botones/Nav-button-templateForm.vue'
 import TemplateButton2 from '@/components/botones/Template-button2.vue';
 import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
 import TemplateBlanckButton from '@/components/botones/Template-blank-button.vue';
-import LayoutEmpy from '@/components/Layouts/LayoutEmpy.vue'
 import CicloEditarEmpleado from '@/components/elementos/Ciclo-Editar-Empleado.vue';
 import ShortTemplateModal from '@/components/modal/Short-TemplateModal.vue';
 import InputRadioButton from '@/components/botones/Input-Radio-button.vue';
@@ -833,7 +836,8 @@ import LayoutTablasSimples from '@/components/Layouts/LayoutTablasSimples.vue'
 import ListaCuentas from '@/components/tablas/perfilEmpleado/datospago/ListaCuentas-general.vue'
 import AsignacionesPrestamos from '@/components/tablas/perfilEmpleado/asignaciones/AsignacionesPrestamos-general.vue';
 import AsignacionesCargaPrevisionales from '@/components/tablas/perfilEmpleado/asignaciones/AsignacionesCargasPrevisionales-general.vue';
-
+import ListaContrato from '@/components/tablas/perfilEmpleado/documentos/ListaContratos-general.vue';
+import ListadoArchivos from '@/components/tablas/perfilEmpleado/documentos/ListaArchivosAdicionales-general.vue';
 
 //iconos
 import DolarIcon from '@/components/icons/Dolar-icon-blanco.vue';
@@ -845,7 +849,7 @@ import EdiIcon from '@/components/icons/Edit-icon.vue';
 import PlusCirculoIcon from '@/components/icons/Plus-Circulo-icon.vue';
 
 //Librerias y acciones
-import {ref, inject, onMounted } from 'vue';
+import {ref, inject, onMounted, onBeforeMount } from 'vue';
 import {useRoute}  from 'vue-router';
 import almacen from '@/store/almacen';
 
@@ -862,6 +866,7 @@ const panelShow = ref(1)
 const showInfo = (id_apartado) => {
     panelShow.value = id_apartado;
 };
+
 //referencia del ciclo editar info
 const EditarInfo = ref(null);
 const shortTemplateModal = ref(null);
@@ -883,10 +888,11 @@ const SolicitarListadoDePrestamos = async (id = Number) => {
     }
 }
 const SolicitarListadoCargaPresionales = async (id = Number) => {
-    const respuesta = await peticiones_panel_empleado?.getHistorialDeAcciones(id);
+    const respuesta = await peticiones_panel_empleado?.getListadoCargaPresionales(id);
     if (respuesta.success) {
         //console.log(respuesta.data)
         ListadoCargaPrevisionales.value = respuesta.data;
+        console.log(ListadoCargaPrevisionales.value.data)
     } else {
         console.error(respuesta.error)
     }
@@ -909,8 +915,6 @@ const SolicitarListadoDeArchivos = async (id = Number) => {
         console.error(respuesta.error)
     }
 }
-
-
 
 onMounted(async () => {
     await SolicitarListadoDePrestamos(DatosUsuario.value?.user_id)

@@ -1,5 +1,5 @@
 <template>
-    <button class="page-item" :class="{'activate': activate}">
+    <button type="button" class="page-item" :class="{'activate': activate}">
         <!--si la variable texto esta vacia muestra el elemento enviado-->
         <slot name="icono" v-if="texto == ''">
 
@@ -40,7 +40,7 @@ button.page-item {
     display: inline-flex;
     background: none;
 
-    width: 36px;
+    min-width: 36px;
     height: 36px;
     box-sizing: border-box;
     transition: all 0.1s ease;
@@ -68,13 +68,14 @@ button.page-item.activate .page-link {
 }
 
 /**Estilos texto interno */
-.page-link {
+span.page-link {
     color: #1A245B;
     font-size: 16px;
     font-weight: 400;
     line-height: 26px;
     word-wrap: break-word;
     background: none;
+    margin: 2px 4px;
 }
 
 /**Estilo de la fuente al posicionar el mouse */

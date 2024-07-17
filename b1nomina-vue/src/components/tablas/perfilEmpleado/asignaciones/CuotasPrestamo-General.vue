@@ -1,106 +1,64 @@
 <template>
     <div class="conted"> 
-        <!--Contenedor de la tabla-->
         <table class="TablaEmpleados">
-            <!--Encabezado de la tabla-->
             <tr class="rowTabla encabezado">
-
                 <th class="">
-                    NOMBRE Y APELLIDO 
+                    N° 
                 </th>
                 <th class="">
-                    RUT
+                    MONTO
                 </th>
                 <th class=""> 
-                    PARENTESCO
+                    FECHAS DE PAGO
                 </th>
                 <th class=""> 
-                    FECHA DE NACIMIENTO
-                </th>
-                <th class=""> 
-                    ACCIONES 
+                    CUOTAS DE PAGO
                 </th>
             </tr>
-            <!--Final encabezado-->
 
-            <!--Cuerpo de la tabla-->
-            <AsignacionesCargaPrevisionalesRow v-for="persona in listadoCargas" :key="persona.id">
-
-                <!--Nombre y apelidos-->
-                <template #nombre>
-                    {{persona?.nombres}} {{persona?.apellidos}}
+            <CuotasPrestamo v-for="cuota in listadoCuotas" :key="cuota?.id">
+                <template #row1>                        
+                    {{ cuota?.cuota }}
                 </template>
-                <!--Rut-->
-                <template #rut>
-                    {{String(persona?.rut)}}
+                <template #row2>                        
+                    {{ cuota?.monto }} $
                 </template>
-                 <!--Cargo-->
-                <template #parentesco>
-                    {{persona?.nombre_parentesco}}
+                <template #row3>                        
+                    {{ cuota?.fecha_cuota }}
                 </template>
-                <!--Saladio / sueldo-->
-                <template #fecha>
-                    {{persona?.fecha_nac.split("-").reverse().join("-")}}
+                <template #row4> 
+                    {{ cuota?.estado }}                       
+                    <StatusButton
+                        texto="Por cobrar"
+                        color1="#1A245B"
+                        color2="#CDE0F1"
+                    />
                 </template>
-                <!--Estado-->
-                <template v-slot:ACCIONES>
-                    <EditIcon Stroke="#1A2771" text="Editar" @click="emit('editarDatosFamiliar', persona)"/>
-                    <TrashIcon Stroke="#1A2771" text="Eliminar" />
-                </template>
-            </AsignacionesCargaPrevisionalesRow>
-            <!--Final cuerpo-->
-        </table>                
+            </CuotasPrestamo>
+        </table>
     </div>
-   
 </template>
 
 <script setup>
-import TrashIcon from '@/components/icons/trash-icon.vue'
-import EditIcon from '@/components/icons/Edit-icon.vue'
-import AsignacionesCargaPrevisionalesRow from '@/components/tablas/perfilEmpleado/asignaciones/AsignacionesCargasPrevisionales-row.vue';
-
-import { ref, defineProps, watchEffect, onMounted, defineEmits} from 'vue';
-
-import { useRoute } from 'vue-router';
-
-const route = useRoute();
-const sociedadId = route.params.sociedadId;
+import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue';
+import CuotasPrestamo from '@/components/tablas/perfilEmpleado/asignaciones/CuotasPrestamo-Row.vue'
+import StatusButton from '@/components/botones/Status-button.vue'
 
 // Define los props
 const props = defineProps({
-    listadoCargas: {
-        type: Array,
-        default: () => []
-    }
+  Listado: {
+    type: Array,
+    default: () => []
+  }
 });
-
-const emit = defineEmits([
-    'upData',
-    'actualizar_Lista',
-    'mostrarNotificacion',
-    'editarDatosFamiliar'
-]);
-
-const resultadoActivacion = (Data) => {
-    
-    emit('mostrarNotificacion', Data)
-    emit('actualizar_Lista')
-}
 
 // Accede a la lista de empleados desde props
-const ListadoCargas = ref(props.listadoCargas);
+const listadoCuotas = ref(props.Listado);
 
-
-//al cambiar los datos reinicia el renderizado
 watchEffect(() => {
-  ListadoCargas.value = props.ListadoCargas;
+    listadoCuotas.value = props.Listado;
 });
 
-//al montar el componente solicita la data
-onMounted(()=> {
-    //ejecuta la actualizacion del paginado
-    ListadoCargas.value = props.listadoCargas;
-});
 </script>
 
 <style scoped>
