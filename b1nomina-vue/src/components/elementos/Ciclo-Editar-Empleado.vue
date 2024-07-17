@@ -330,6 +330,7 @@
      * @param {Objeto} respuesta Recive el diccionario necesario para mostrar la notificacion del modal
     */
     const notificacionModal = (respuesta) => {
+        console.log(respuesta)
         if (respuesta?.valor == true){
             actualizar();
             NotificacionModal.value = respuesta

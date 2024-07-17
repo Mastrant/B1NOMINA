@@ -27,31 +27,31 @@
             <!--Final encabezado-->
 
             <!--Cuerpo de la tabla-->
-            <AsignacionesPrestamosRow v-for="prestamo in DatosPaginados" :key="prestamo?.id">
+            <AsignacionesPrestamosRow v-for="prestamo in Listado" :key="prestamo?.id">
 
                 <!--Nombre y apelidos-->
                 <template v-slot:CONCEPTO>
-                    {{prestamo}}
+                    {{prestamo?.descripcion}}
                 </template>
                 <!--Rut-->
                 <template v-slot:DESCRIPCION>
-                    {{prestamo}}
+                    {{prestamo?.descripcion}}
                 </template>
                  <!--Cargo-->
                 <template v-slot:VALOR>
-                    {{prestamo}}
+                    {{prestamo?.valor}}
                 </template>
                 <!--Saladio / sueldo-->
                 <template v-slot:cuotas>
-                    {{prestamo}}
+                    {{prestamo?.cuotas}}
                 </template>
                 <template #estado>
-                    <StatusButton
-                        v-show="prestamo"
+                    <StatusButton 
+                        v-show="prestamo?.estado == 2"
                         texto="Pagado"
                     />
                     <StatusButton 
-                        v-show="prestamo"
+                        v-show="prestamo?.estado == 1"
                         texto="Por pagar"
                         color1="#1A245B"
                         color2="#CDE0F1"
@@ -59,25 +59,27 @@
                 </template>
                 <!--Estado-->
                 <template v-slot:ACCIONES>
-                    <EditIcon Stroke="#1A2771" text="Editar" />
+                    <ViewIcon Stroke="#1A2771" text="Ver cuotas" />
                     <TrashIcon Stroke="#1A2771" text="Eliminar" />
                 </template>
             </AsignacionesPrestamosRow>
             <!--Final cuerpo-->
         </table>        
 
-        <div class="espacio-paginacion" v-if="listadoPrestamos.length > 12">
-            <SeleccionarPaginacion @valorSelecionado="asignarValor"/>
-            <Paginacion :totalPaginas="totalpaginas()" @NumeroSelecionado="getDataPorPagina"/>
-        </div>
-        
+        <!-- elemento para paginación
+            <div class="espacio-paginacion" v-if="listadoPrestamos.length > 12">
+                <SeleccionarPaginacion @valorSelecionado="asignarValor"/>
+                <Paginacion :totalPaginas="totalpaginas()" @NumeroSelecionado="getDataPorPagina"/>
+            </div>
+            
+        -->
     </div>
    
 </template>
 
 <script setup>
 import TrashIcon from '@/components/icons/trash-icon.vue'
-import EditIcon from '@/components/icons/Edit-icon.vue'
+import ViewIcon from '@/components/icons/Ojito-icon.vue'
 import AsignacionesPrestamosRow from '@/components/tablas/perfilEmpleado/asignaciones/AsignacionesPrestamos-row.vue';
 import Paginacion from '@/components/elementos/Paginacion.vue';
 import SeleccionarPaginacion from '@/components/elementos/Seleccionar-paginacion.vue'
@@ -106,15 +108,10 @@ const emit = defineEmits([
     'mostrarNotificacion',
 ]);
 
+/* Codigo para paginacion de ser necesario
 
 // Accede a la lista de empleados desde props
 const listadoPrestamos = ref(props.Listado);
-
-const upData = (arrayData) => {
-    // Convertir el objeto proxy a un array real
-    const arrayReal = [...arrayData];
-    emit('upData', arrayReal);
-};
 
 //configuracion del paginado
 const DatosPaginados = ref([]); //arreglo con los datos picados
@@ -163,8 +160,7 @@ onMounted(()=> {
     //ejecuta la actualizacion del paginado
     listadoPrestamos.value = props.Listado;
 });
-
-
+*/
 </script>
 
 <style scoped>

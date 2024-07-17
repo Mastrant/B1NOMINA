@@ -49,7 +49,7 @@
                 </template>
             </AsignacionesCargaPrevisionalesRow>
             <!--Final cuerpo-->
-        </table>                
+        </table>               
     </div>
    
 </template>

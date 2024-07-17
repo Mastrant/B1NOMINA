@@ -1,30 +1,21 @@
 <template>
     <tr class="rowTabla cuerpo">
-        <!--Nombre y apelidos-->
         <td class="colConcepto">
             <span>
                 <slot name="nombre"></slot>
             </span>                    
         </td>
-        <!--Rut-->
         <td class="">
             <span>
-                <slot name="rut"></slot>
+                <slot name="descripcion"></slot>
             </span>
         </td>
-        <!--Cargo-->
-        <td class="">
-            <span class="cargo">
-                <slot name="parentesco"></slot>
-            </span>
-        </td>
-        <!--Saladio / sueldo-->
+
         <td class="">
             <span>
                 <slot name="fecha"></slot>
             </span>
         </td>
-        <!--Estado-->
         <!--Acciones-->
         <td class="acciones">
             <div>
@@ -33,11 +24,6 @@
         </td>
     </tr>
 </template>
-
-<script setup>
-
-
-</script>
 
 <style scoped>
 

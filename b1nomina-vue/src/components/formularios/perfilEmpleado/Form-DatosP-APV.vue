@@ -260,7 +260,6 @@ const verificarCambios = () => {
  */
  const Enviar = async () => {
   //si ID es nulo crea un usuario
- console.log(payload)
   if (RequiereActualizar.value == true) {
     const respuesta = await peticiones?.ActualizarAPV(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
     if(respuesta.success == true){

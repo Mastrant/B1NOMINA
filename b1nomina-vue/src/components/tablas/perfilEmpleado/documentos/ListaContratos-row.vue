@@ -9,19 +9,19 @@
         <!--Rut-->
         <td class="">
             <span>
-                <slot name="rut"></slot>
+                <slot name="fecha1"></slot>
             </span>
         </td>
         <!--Cargo-->
         <td class="">
-            <span class="cargo">
-                <slot name="parentesco"></slot>
+            <span class="">
+                <slot name="fecha2"></slot>
             </span>
         </td>
         <!--Saladio / sueldo-->
         <td class="">
             <span>
-                <slot name="fecha"></slot>
+                <slot name="estado"></slot>
             </span>
         </td>
         <!--Estado-->

@@ -61,8 +61,7 @@
                     v-model="condicion" 
                     :options="Parametros?.condicion" 
                     :requerido="RequiereActualizar"    
-                    :preseleccion="condicion" 
-                    optionsSelected="Seleccionar"                    
+                    :preseleccion="condicion"                  
                 />
             </template>
         </LayoutInputLineal>
@@ -110,8 +109,8 @@ const condicion = ref('')
 //control y deteccion de cambios de las variables
 watch(parentesco, (nuevoValor) => ActualizarPayload("parentesco_id", nuevoValor));
 watch(numeroDocumento, (nuevoValor) => ActualizarPayload("rut", nuevoValor));
-watch(nombres, (nuevoValor) => ActualizarPayload("nombres", nuevoValor));
-watch(apellidos, (nuevoValor) => ActualizarPayload("apellidos", nuevoValor));
+watch(nombres, (nuevoValor) => ActualizarPayload("nombres", nuevoValor?.toUpperCase()));
+watch(apellidos, (nuevoValor) => ActualizarPayload("apellidos", nuevoValor?.toUpperCase()));
 watch(fechaNacimiento, (nuevoValor) => ActualizarPayload("fecha_nac", nuevoValor));
 watch(condicion, (nuevoValor) => ActualizarPayload("condicion", nuevoValor));
 
@@ -136,14 +135,14 @@ const MostrarValores = (DATA) => {
     fechaNacimiento.value = (DATA?.fecha_nac == null)? '' :DATA?.fecha_nac;
     condicion.value = (DATA?.condicion == null)? '' :DATA?.condicion;
 
-    payload_old.parentesco = DATA?.parentesco_id ?? '';
-    payload.parentesco = DATA?.parentesco_id ?? '';
+    payload_old.parentesco_id = DATA?.parentesco_id ?? '';
+    payload.parentesco_id = DATA?.parentesco_id ?? '';
 
-    payload_old.numeroDocumento =  String(DATA?.rut) ?? '';
-    payload.numeroDocumento =  String(DATA?.rut) ?? '';
+    payload_old.rut =  String(DATA?.rut) ?? '';
+    payload.rut =  String(DATA?.rut) ?? '';
 
-    payload_old.nombres = DATA?.nombres ?? '';
-    payload.nombres = DATA?.nombres ?? '';
+    payload_old.nombres = DATA?.nombres?.toUpperCase() ?? '';
+    payload.nombres = DATA?.nombres?.toUpperCase() ?? '';
 
     payload_old.apellidos = DATA?.apellidos ?? '';
     payload.apellidos = DATA?.apellidos ?? '';
@@ -230,6 +229,7 @@ onBeforeMount(() => {
  */
 const Enviar = async () => {
 
+    console.log(payload)
     if(props.familiarSelecionado.length != 0){
 
         if (RequiereActualizar.value == true) {
@@ -241,7 +241,7 @@ const Enviar = async () => {
                 emit('respuestaServidor', {'texto':respuesta?.error?.message, 'valor':false})
             }
         } else {
-            emit('respuestaServidor', {'texto': "Los campos estan vacios", 'valor': true});
+            emit('respuestaServidor', {'texto': "No se requiere Actualizar", 'valor': true});
         }
 
     } else {   

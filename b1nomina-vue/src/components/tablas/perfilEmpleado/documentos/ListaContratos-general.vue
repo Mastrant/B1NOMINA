@@ -24,39 +24,41 @@
             <!--Final encabezado-->
 
             <!--Cuerpo de la tabla-->
-            <FilaContrato v-for="persona in listadoCargas" :key="persona.id">
-
-                <!--Nombre y apelidos-->
+            <FilaContrato v-for="documento in listadoContratos" :key="documento.id">
+                
                 <template #nombre>
-                    {{persona?.nombres}} {{persona?.apellidos}}
+                    {{documento.nombre}}
                 </template>
-                <!--Rut-->
-                <template #rut>
-                    {{String(persona?.rut)}}
-                </template>
-                 <!--Cargo-->
-                <template #parentesco>
-                    {{persona?.nombre_parentesco}}
-                </template>
-                <!--Saladio / sueldo-->
-                <template #fecha>
-                    {{persona?.fecha_nac.split("-").reverse().join("-")}}
-                </template>
-                <!--Estado-->
-                <template v-slot:ACCIONES>
-                    <EditIcon Stroke="#1A2771" text="Editar" @click="emit('editarDatosFamiliar', persona)"/>
-                    <TrashIcon Stroke="#1A2771" text="Eliminar" />
-                </template>
+                <!--
+                
+                    <template #fecha1>
+                        {{String(documento?.rut)}}
+                    </template>
+
+                    <template #fecha2>
+                        {{documento?.nombre_parentesco}}
+                    </template>
+
+                    <template #estado>
+                        {{documento?.fecha_nac.split("-").reverse().join("-")}}
+                    </template>
+
+                -->
+                    <template v-slot:ACCIONES>
+                        <Donwload Stroke="#1A2771" text="Editar" />
+                        <TrashIcon Stroke="#1A2771" text="Eliminar" />
+                    </template>
+
             </FilaContrato>
             <!--Final cuerpo-->
-        </table>                
+        </table>               
     </div>
    
 </template>
 
 <script setup>
 import TrashIcon from '@/components/icons/trash-icon.vue'
-import EditIcon from '@/components/icons/Edit-icon.vue'
+import Donwload from '@/components/icons/Donwload-icon.vue'
 import FilaContrato from '@/components/tablas/perfilEmpleado/documentos/ListaContratos-row.vue';
 
 import { ref, defineProps, watchEffect, onMounted, defineEmits} from 'vue';
@@ -68,7 +70,7 @@ const sociedadId = route.params.sociedadId;
 
 // Define los props
 const props = defineProps({
-    listadoCargas: {
+    listadoContratos: {
         type: Array,
         default: () => []
     }
@@ -82,24 +84,22 @@ const emit = defineEmits([
 ]);
 
 const resultadoActivacion = (Data) => {
-    
     emit('mostrarNotificacion', Data)
     emit('actualizar_Lista')
 }
 
 // Accede a la lista de empleados desde props
-const ListadoCargas = ref(props.listadoCargas);
-
+const listadoContratos = ref(props.listadoContratos);
 
 //al cambiar los datos reinicia el renderizado
 watchEffect(() => {
-  ListadoCargas.value = props.ListadoCargas;
+  listadoContratos.value = props.listadoContratos;
 });
 
 //al montar el componente solicita la data
 onMounted(()=> {
     //ejecuta la actualizacion del paginado
-    ListadoCargas.value = props.listadoCargas;
+    listadoContratos.value = props.listadoContratos;
 });
 </script>
 

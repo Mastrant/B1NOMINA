@@ -732,7 +732,7 @@
                 
                             <template #Tabla>
                                 <AsignacionesCargaPrevisionales
-                                    :listadoCargas="ListadoCargaPrevisionales.data"
+                                    :listadoCargas="ListadoCargaPrevisionales"
                                     @editarDatosFamiliar="(datos) => EditarInfo?.ActionButton(15,EmpleadoID, datos)"
                                 />
                             </template>
@@ -753,7 +753,7 @@
                             </template>
                 
                             <template #Tabla>
-                                <AsignacionesPrestamos :ListadoPrestamos="ListadoPrestamos" />
+                                <AsignacionesPrestamos :Listado="ListadoPrestamos" />
                             </template>
                         </LayoutTablasSimples>
                     </div>                    
@@ -771,25 +771,29 @@
                             </template>
                 
                             <template #Tabla>
-                                <ListaContrato />
+                                
+                                    <ListaContrato 
+                                        :listadoContratos="ListadoContrato"
+                                    />
+                                
                             </template>
                         </LayoutTablasSimples> 
 
                         <LayoutTablasSimples Titulo="Archivos Adicionales">
-                            <template #boton>
-                            
+                            <template #boton>                            
                                 <TemplateButton2 @click="EditarInfo?.ActionButton(17, EmpleadoID)" text="Nuevo Archivo" >
                                     <template #default>                                        
                                         <PlusCirculoIcon Stroke="#002E99"/>
                                     </template>
-                                </TemplateButton2> 
-                                
+                                </TemplateButton2>                                 
                             </template>
                                 
                             <template #Tabla>
-                                <ListadoArchivos />
+                                <ListadoArchivos 
+                                    :listadoArchivos=ListadoArchivosAdicionales
+                                />
                             </template>
-                        </LayoutTablasSimples>
+                        </LayoutTablasSimples>                        
                     </div>
                 </template>
         </LayoutForm>
@@ -876,41 +880,41 @@ const ListadoCargaPrevisionales = ref({})
 const ListadoContrato = ref({})
 const ListadoArchivosAdicionales = ref({})
 
+const SolicitarListadoCargaPresionales = async (id = Number) => {
+    const respuesta = await peticiones_panel_empleado?.getListadoCargaPresionales(id);
+    console.log(respuesta)
+    if (respuesta.success) {
+        //console.log(respuesta.data)
+        ListadoCargaPrevisionales.value = respuesta.data.data;
+    } else {
+        console.error(respuesta.error)
+    }
+}
 const SolicitarListadoDePrestamos = async (id = Number) => {
     const respuesta = await peticiones_panel_empleado?.getListadoPrestamos(id);
 
     console.log(respuesta)
     if (respuesta.success) {
         //console.log(respuesta.data)
-        ListadoPrestamos.value = respuesta.data;
-    } else {
-        console.error(respuesta.error)
-    }
-}
-const SolicitarListadoCargaPresionales = async (id = Number) => {
-    const respuesta = await peticiones_panel_empleado?.getListadoCargaPresionales(id);
-    if (respuesta.success) {
-        //console.log(respuesta.data)
-        ListadoCargaPrevisionales.value = respuesta.data;
-        console.log(ListadoCargaPrevisionales.value.data)
+        ListadoPrestamos.value = respuesta.data.data;
     } else {
         console.error(respuesta.error)
     }
 }
 const SolicitarListadoDeContrato = async (id = Number) => {
-    const respuesta = await peticiones_panel_empleado?.getHistorialDeAcciones(id);
+    const respuesta = await peticiones_panel_empleado?.getListadoDeContrato(id);
     if (respuesta.success) {
         //console.log(respuesta.data)
-        ListadoContrato.value = respuesta.data;
+        ListadoContrato.value = respuesta.data.resultado;
     } else {
         console.error(respuesta.error)
     }
 }
 const SolicitarListadoDeArchivos = async (id = Number) => {
-    const respuesta = await peticiones_panel_empleado?.getHistorialDeAcciones(id);
+    const respuesta = await peticiones_panel_empleado?.getListadoDeArchivos(id);
     if (respuesta.success) {
         //console.log(respuesta.data)
-        ListadoArchivosAdicionales.value = respuesta.data;
+        ListadoArchivosAdicionales.value = respuesta.data.data;
     } else {
         console.error(respuesta.error)
     }

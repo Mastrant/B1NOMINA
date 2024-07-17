@@ -163,15 +163,28 @@ const ResetForm = () => {
 
     RequiereActualizar.value = false;
     
-    TipoPrestamo.value = '';
     DescripcionPrestamo.value = '';
     valorCuota.value = '';
     numeroCuotas.value =  '';
     fechaPrimerPago.value = '';
+    TipoPrestamo.value = '';
 
     verFormulario.value = 1
     ListadoCuotas.value = []
     generarPrestamo.value = false
+
+    payload.tipo_id = ''
+    payload.descripcion = ''
+    payload.valor = ''
+    payload.cuotas = ''
+    payload.fecha_inicio = ''
+
+    payload_old.tipo_id = ''
+    payload_old.descripcion = ''
+    payload_old.valor = ''
+    payload_old.cuotas = ''
+    payload_old.fecha_inicio = ''
+    
 }
 
 /**

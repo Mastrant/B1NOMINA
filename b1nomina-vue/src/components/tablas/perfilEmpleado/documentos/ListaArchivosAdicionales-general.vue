@@ -21,27 +21,28 @@
             <!--Final encabezado-->
 
             <!--Cuerpo de la tabla-->
-            <FilaArchivo v-for="persona in listadoCargas" :key="persona.id">
+            <FilaArchivo v-for="archivo in listadoArchivos" :key="archivo.id">
 
-                <!--Nombre y apelidos-->
                 <template #nombre>
-                    {{persona?.nombres}} {{persona?.apellidos}}
+                    {{archivo?.nombre}}
                 </template>
-                <!--Rut-->
-                <template #rut>
-                    {{String(persona?.rut)}}
-                </template>
-                <!--Saladio / sueldo-->
-                <template #fecha>
-                    {{persona?.fecha_nac.split("-").reverse().join("-")}}
-                </template>
-                <!--Estado-->
-                <template v-slot:ACCIONES>
-                    <EditIcon Stroke="#1A2771" text="Editar" @click="emit('editarDatosFamiliar', persona)"/>
-                    <TrashIcon Stroke="#1A2771" text="Eliminar" />
-                </template>
+                
+                <!--
+                    <template #rut>
+                        {{String(archivo?.rut)}}
+                    </template>
+    
+                -->
+                    <template #fecha>
+                        {{archivo?.created}}
+                    </template>
+                    
+                    <template v-slot:ACCIONES>
+                        <Donwload Stroke="#1A2771" text="Descargar"/>
+                        <TrashIcon Stroke="#1A2771" text="Eliminar" />
+                    </template>
             </FilaArchivo>
-            <!--Final cuerpo-->
+
         </table>                
     </div>
    
@@ -49,7 +50,7 @@
 
 <script setup>
 import TrashIcon from '@/components/icons/trash-icon.vue'
-import EditIcon from '@/components/icons/Edit-icon.vue'
+import Donwload from '@/components/icons/Donwload-icon.vue'
 import FilaArchivo from '@/components/tablas/perfilEmpleado/documentos/ListaArchivosAdicionales-row.vue';
 
 import { ref, defineProps, watchEffect, onMounted, defineEmits} from 'vue';
@@ -61,7 +62,7 @@ const sociedadId = route.params.sociedadId;
 
 // Define los props
 const props = defineProps({
-    listadoCargas: {
+    listadoArchivos: {
         type: Array,
         default: () => []
     }
@@ -81,18 +82,18 @@ const resultadoActivacion = (Data) => {
 }
 
 // Accede a la lista de empleados desde props
-const ListadoCargas = ref(props.listadoCargas);
+const listadoArchivos = ref(props.listadoArchivos);
 
 
 //al cambiar los datos reinicia el renderizado
 watchEffect(() => {
-  ListadoCargas.value = props.ListadoCargas;
+  listadoArchivos.value = props.listadoArchivos;
 });
 
 //al montar el componente solicita la data
 onMounted(()=> {
     //ejecuta la actualizacion del paginado
-    ListadoCargas.value = props.listadoCargas;
+    listadoArchivos.value = props.listadoArchivos;
 });
 </script>
 
@@ -100,6 +101,8 @@ onMounted(()=> {
 /* Estilos generales para la tabla de empleados */
 .TablaEmpleados {
     width: 100%; /* Asegura que la tabla ocupe el ancho completo del contenedor */
+    max-height: 420px;
+    overflow-y: scroll;
 }
 
 /**
