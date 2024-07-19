@@ -59,8 +59,8 @@
                 </template>
                 <!--Estado-->
                 <template v-slot:ACCIONES>
-                    <ViewIcon Stroke="#1A2771" text="Ver cuotas" />
-                    <TrashIcon Stroke="#1A2771" text="Eliminar" />
+                    <ViewIcon Stroke="#1A2771" text="Ver cuotas" @click="emit('verCuotas', prestamo)"/>
+                    <TrashIcon Stroke="#1A2771" text="Eliminar" @click="emit('eliminarPrestamo', prestamo)"/>
                 </template>
             </AsignacionesPrestamosRow>
             <!--Final cuerpo-->
@@ -90,8 +90,6 @@ import { ref, defineProps, watchEffect, onMounted, watch, defineEmits} from 'vue
 
 import { useRoute } from 'vue-router';
 
-import almacen from '@/store/almacen.js';
-
 const route = useRoute();
 const sociedadId = route.params.sociedadId;
 
@@ -105,6 +103,7 @@ const props = defineProps({
 const emit = defineEmits([
     'upData',
     'actualizar_Lista',
+    'eliminarPrestamo',
     'mostrarNotificacion',
 ]);
 

@@ -753,7 +753,11 @@
                             </template>
                 
                             <template #Tabla>
-                                <AsignacionesPrestamos :Listado="ListadoPrestamos" />
+                                <AsignacionesPrestamos 
+                                    :Listado="ListadoPrestamos" 
+                                    @verCuotas="(datos) => EditarInfo?.ActionButton(19,EmpleadoID, datos)"    
+                                    @eliminarPrestamo="(datos) => EditarInfo?.ActionButton(18,EmpleadoID, datos)"    
+                                />
                             </template>
                         </LayoutTablasSimples>
                     </div>                    
@@ -798,7 +802,7 @@
                 </template>
         </LayoutForm>
         <!--Modales Editar información-->
-        <CicloEditarEmpleado ref="EditarInfo" />
+        <CicloEditarEmpleado ref="EditarInfo" @actualizarTablas="ActualizarDataTablas"/>
 
         <ShortTemplateModal
             NombreAccion="Foto de Perfil"
@@ -918,6 +922,13 @@ const SolicitarListadoDeArchivos = async (id = Number) => {
     } else {
         console.error(respuesta.error)
     }
+}
+
+const ActualizarDataTablas = async () => {
+    await SolicitarListadoDePrestamos(DatosUsuario.value?.user_id)
+    await SolicitarListadoCargaPresionales(DatosUsuario.value?.user_id)
+    await SolicitarListadoDeContrato(DatosUsuario.value?.user_id)
+    await SolicitarListadoDeArchivos(DatosUsuario.value?.user_id)
 }
 
 onMounted(async () => {

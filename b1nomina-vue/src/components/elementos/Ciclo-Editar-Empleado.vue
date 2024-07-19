@@ -106,6 +106,16 @@
             <div v-if=" formActivo == 17"> <!---->                    
                
             </div>
+
+            <div v-if=" formActivo == 18"> <!--Eliminar Prestamo-->                    
+               <FormEliminarPrestamo 
+                    :Infomacion="DatosParaElFormulario"
+               />
+            </div>
+
+            <div v-if=" formActivo == 19"> <!---->                    
+               Ver cuotas
+            </div>
         </template>
     </TemplateModal>
 </template>|
@@ -130,13 +140,17 @@
     import FormDatospAdicionales from '@/components/formularios/perfilEmpleado/From-DatosP-Adicionales.vue';
 
     import FormPrestamosAsignaciones from '@/components/formularios/perfilEmpleado/Form-Prestamos-Asignaciones.vue';
+    import FormEliminarPrestamo from '@/components/formularios/perfilEmpleado/Form-Eliminar-Prestamo.vue';
     import FormCargaPrevisional from '@/components/formularios/perfilEmpleado/Form-CargaPrevisionales.vue';
     
     //librerias
-    import { ref, onMounted, defineExpose, inject } from 'vue';
+    import { ref, onMounted, defineExpose, inject, defineEmits } from 'vue';
     import { useRoute } from 'vue-router';
 
     const actualizar = inject('actualizarData')
+    const emit = defineEmits([
+        'actualizarTablas'
+    ])
 
     const route = useRoute();
     // idSociedad es un String
@@ -285,7 +299,6 @@
                 IDFormModal.value = 'addPrestamo';
 
                 break; 
-
             case 14:
                 formActivo.value = TipoAccion;
                 EmpleadoID_Selecionado.value = item_ID;
@@ -319,6 +332,23 @@
                 IDFormModal.value = 'ArchivosAdicionales';
 
                 break; 
+            case 18:
+                formActivo.value = TipoAccion;
+                EmpleadoID_Selecionado.value = item_ID;
+                TextoButton.value = 'Procesar';
+                TituloModal.value = 'Eliminar Prestamo';
+                IDFormModal.value = 'ArchivosAdicionales';
+                DatosParaElFormulario.value = Data;
+
+                break; 
+            case 19:
+                formActivo.value = TipoAccion;
+                EmpleadoID_Selecionado.value = item_ID;
+                TextoButton.value = 'Procesar';
+                TituloModal.value = 'Cargar Archivos Adicionales';
+                IDFormModal.value = 'ArchivosAdicionales';
+                DatosParaElFormulario.value = Data;
+                break; 
                 
         }
         showModal(1)
@@ -333,12 +363,12 @@
         console.log(respuesta)
         if (respuesta?.valor == true){
             actualizar();
+            emit('actualizarTablas')
             NotificacionModal.value = respuesta
         } else {
             NotificacionModal.value = respuesta.error
         }
         
-       
     };
 
     //Expoe la funcion para activar el modal
@@ -347,9 +377,5 @@
     })
 
 
-// al montar el componente ejecuta las funciones
-onMounted(async () => {
-
-});
 </script>
 
