@@ -755,8 +755,8 @@
                             <template #Tabla>
                                 <AsignacionesPrestamos 
                                     :Listado="ListadoPrestamos" 
-                                    @verCuotas="(datos) => EditarInfo?.ActionButton(19,EmpleadoID, datos)"    
-                                    @eliminarPrestamo="(datos) => EditarInfo?.ActionButton(18,EmpleadoID, datos)"    
+                                    @verCuotas="(datos) => EditarInfo?.ActionButton(19, EmpleadoID, datos)"    
+                                    @eliminarPrestamo="(datos) => EditarInfo?.ActionButton(18, EmpleadoID, datos)"    
                                 />
                             </template>
                         </LayoutTablasSimples>
@@ -804,6 +804,10 @@
         <!--Modales Editar información-->
         <CicloEditarEmpleado ref="EditarInfo" @actualizarTablas="ActualizarDataTablas"/>
 
+        <AlertShort
+            ref="notificacionStatus"
+        />
+
         <ShortTemplateModal
             NombreAccion="Foto de Perfil"
             textSubmit="Cambiar"
@@ -838,6 +842,8 @@ import TemplateBlanckButton from '@/components/botones/Template-blank-button.vue
 import CicloEditarEmpleado from '@/components/elementos/Ciclo-Editar-Empleado.vue';
 import ShortTemplateModal from '@/components/modal/Short-TemplateModal.vue';
 import InputRadioButton from '@/components/botones/Input-Radio-button.vue';
+import AlertShort from '@/components/alertas/Alert-short-template.vue';
+
 
 // Tablas
 import LayoutTablasSimples from '@/components/Layouts/LayoutTablasSimples.vue'
@@ -857,7 +863,7 @@ import EdiIcon from '@/components/icons/Edit-icon.vue';
 import PlusCirculoIcon from '@/components/icons/Plus-Circulo-icon.vue';
 
 //Librerias y acciones
-import {ref, inject, onMounted, onBeforeMount } from 'vue';
+import {ref, inject, onMounted, provide } from 'vue';
 import {useRoute}  from 'vue-router';
 import almacen from '@/store/almacen';
 
@@ -874,6 +880,15 @@ const panelShow = ref(1)
 const showInfo = (id_apartado) => {
     panelShow.value = id_apartado;
 };
+
+//toma la referencia del componente notificacion para utilizar el metodo mostrar
+const notificacionStatus = ref(null);
+
+const showNotificacion = (Data) => {
+    notificacionStatus.value?.ActivarNotificacion(Data); //Formato: {'Titulo': "empleado especial", 'Descripcion': "esta es la descripcion de la cartica"}   
+}
+
+provide('mostrarNotificacion', showNotificacion);
 
 //referencia del ciclo editar info
 const EditarInfo = ref(null);
@@ -930,6 +945,7 @@ const ActualizarDataTablas = async () => {
     await SolicitarListadoDeContrato(DatosUsuario.value?.user_id)
     await SolicitarListadoDeArchivos(DatosUsuario.value?.user_id)
 }
+
 
 onMounted(async () => {
     await SolicitarListadoDePrestamos(DatosUsuario.value?.user_id)

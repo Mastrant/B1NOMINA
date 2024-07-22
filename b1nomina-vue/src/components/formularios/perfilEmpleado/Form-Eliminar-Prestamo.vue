@@ -13,7 +13,7 @@ const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
 
 const props = defineProps({
     Infomacion: {
-        type: [String, Number],
+        type: Object,
         default: null
     }
 });
@@ -35,10 +35,10 @@ const Enviar = async () => {
     const respuesta = await peticiones?.deletePrestamo(props.Infomacion?.id, ID_USERMASTER);
 
     if(respuesta.success == true){
-       emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
+       emit('respuestaServidor', {'Titulo': "Eliminacion Exitosa",'Descripcion':respuesta?.data?.message + Infomacion?.descripcion, 'valor':true})
     } else {
         console.error(respuesta?.error)
-        emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false})
+        emit('respuestaServidor', {'Titulo': "Error al Eliminar",'Descripcion':respuesta?.error, 'valor':false})
     }
 
 };

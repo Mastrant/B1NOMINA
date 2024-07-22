@@ -107,37 +107,37 @@
         TablaPeriodos.value?.activarFormulario(1, Data_addPeriodo.value)
     }
 
-const pedirPeriodos = async () => {
-    const respuesta = await peticiones_configuracion_Periodos.getListadoPeriodos(idSociedad);
+    const pedirPeriodos = async () => {
+        const respuesta = await peticiones_configuracion_Periodos.getListadoPeriodos(idSociedad);
 
-    if(respuesta.success === true){
-        Listado_years.value = respuesta.data?.years;
-        // Asumiendo que details es la propiedad correcta y no una función
-        ListaPeriodos.value = respuesta.data?.details;
+        if(respuesta.success === true){
+            Listado_years.value = respuesta.data?.years;
+            // Asumiendo que details es la propiedad correcta y no una función
+            ListaPeriodos.value = respuesta.data?.details;
 
-        // Agrupar elementos por año
-        const agrupadoPorAnio = respuesta.data?.details.reduce((acumulador, item) => {
-            const anio = item.anio;
-            if (!acumulador[anio]) {
-                acumulador[anio] = [];
-            }
-            acumulador[anio].push(item);
-            return acumulador;
-        }, {});
+            // Agrupar elementos por año
+            const agrupadoPorAnio = respuesta.data?.details.reduce((acumulador, item) => {
+                const anio = item.anio;
+                if (!acumulador[anio]) {
+                    acumulador[anio] = [];
+                }
+                acumulador[anio].push(item);
+                return acumulador;
+            }, {});
 
-        ListaPeriodos.value = agrupadoPorAnio;
+            ListaPeriodos.value = agrupadoPorAnio;
 
-        actualYear.value =respuesta.data?.actualYear
+            actualYear.value =respuesta.data?.actualYear
 
-        Data_addPeriodo.value = {sociedadID: Number(idSociedad), addYear: respuesta.data?.maxPeridoDb + 1, creador: Number(IDCreator)}
+            Data_addPeriodo.value = {sociedadID: Number(idSociedad), addYear: respuesta.data?.maxPeridoDb + 1, creador: Number(IDCreator)}
 
-        // Seleccionar el primer elemento si filtroPeriodo es 0, de lo contrario, seleccionar uno basado en filtroPeriodo.value
-        ListadoPeriodos_selecionado.value = ListaPeriodos.value[actualYear.value]
-    } else {
-        console.error(respuesta?.error);
+            // Seleccionar el primer elemento si filtroPeriodo es 0, de lo contrario, seleccionar uno basado en filtroPeriodo.value
+            ListadoPeriodos_selecionado.value = ListaPeriodos.value[actualYear.value]
+        } else {
+            console.error(respuesta?.error);
+        }
+
     }
-
-}
 
     provide('actualizarData', pedirPeriodos);
     provide('mostrarNotificacion', showNotificacion);

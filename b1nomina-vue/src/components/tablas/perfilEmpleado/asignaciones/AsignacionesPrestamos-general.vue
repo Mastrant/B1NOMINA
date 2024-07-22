@@ -39,7 +39,7 @@
                 </template>
                  <!--Cargo-->
                 <template v-slot:VALOR>
-                    {{prestamo?.valor}}
+                    {{prestamo?.monto}} $
                 </template>
                 <!--Saladio / sueldo-->
                 <template v-slot:cuotas>
@@ -59,7 +59,7 @@
                 </template>
                 <!--Estado-->
                 <template v-slot:ACCIONES>
-                    <ViewIcon Stroke="#1A2771" text="Ver cuotas" @click="emit('verCuotas', prestamo)"/>
+                    <ViewIcon Stroke="#1A2771" text="Ver cuotas" @click="emit('verCuotas', prestamo?.detalle_cuotas)"/>
                     <TrashIcon Stroke="#1A2771" text="Eliminar" @click="emit('eliminarPrestamo', prestamo)"/>
                 </template>
             </AsignacionesPrestamosRow>
@@ -81,8 +81,7 @@
 import TrashIcon from '@/components/icons/trash-icon.vue'
 import ViewIcon from '@/components/icons/Ojito-icon.vue'
 import AsignacionesPrestamosRow from '@/components/tablas/perfilEmpleado/asignaciones/AsignacionesPrestamos-row.vue';
-import Paginacion from '@/components/elementos/Paginacion.vue';
-import SeleccionarPaginacion from '@/components/elementos/Seleccionar-paginacion.vue'
+
 
 import StatusButton from '@/components/botones/Status-button.vue';
 
@@ -105,6 +104,7 @@ const emit = defineEmits([
     'actualizar_Lista',
     'eliminarPrestamo',
     'mostrarNotificacion',
+    'verCuotas',
 ]);
 
 /* Codigo para paginacion de ser necesario

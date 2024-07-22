@@ -15,13 +15,12 @@
                     CUOTAS DE PAGO
                 </th>
             </tr>
-
             <CuotasPrestamo v-for="cuota in listadoCuotas" :key="cuota?.id">
                 <template #row1>                        
                     {{ cuota?.cuota }}
                 </template>
                 <template #row2>                        
-                    {{ parseFloat(cuota?.monto.toFixed(2)) }} $
+                    {{ parseFloat(cuota?.monto?.toFixed(2)) }} $
                 </template>
                 <template #row3>                        
                     {{ cuota?.fecha_cuota }}

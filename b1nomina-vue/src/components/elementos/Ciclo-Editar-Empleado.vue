@@ -108,13 +108,21 @@
             </div>
 
             <div v-if=" formActivo == 18"> <!--Eliminar Prestamo-->                    
-               <FormEliminarPrestamo 
+                <FormEliminarPrestamo 
                     :Infomacion="DatosParaElFormulario"
-               />
+                    @respuestaServidor="(respuesta) => {
+                        showModal()
+                        actualizar();
+                        emit('actualizarTablas')
+                        mostrarNotifiacionShort(respuesta)
+                    }"
+                />
             </div>
 
             <div v-if=" formActivo == 19"> <!---->                    
-               Ver cuotas
+                <CuotasPrestamos                
+                    :Listado="DatosParaElFormulario"
+                />
             </div>
         </template>
     </TemplateModal>
@@ -131,6 +139,7 @@
     import FormDatosContacto from '@/components/formularios/perfilEmpleado/Form-DatosContacto.vue';
     import FormDatosPago from '@/components/formularios/perfilEmpleado/Form-DatosPago.vue';
     import FormCentralizacionDatosAdicionales from '@/components/formularios/perfilEmpleado/From-DatosP-Adicionales.vue';
+    import CuotasPrestamos from '@/components/tablas/perfilEmpleado/asignaciones/VisualizarCuotas-General.vue'
 
     import FormAddCuenta from '@/components/formularios/perfilEmpleado/Form-Add-Cuenta.vue'
 
@@ -148,6 +157,7 @@
     import { useRoute } from 'vue-router';
 
     const actualizar = inject('actualizarData')
+    const mostrarNotifiacionShort = inject('mostrarNotificacion')
     const emit = defineEmits([
         'actualizarTablas'
     ])
@@ -337,7 +347,7 @@
                 EmpleadoID_Selecionado.value = item_ID;
                 TextoButton.value = 'Procesar';
                 TituloModal.value = 'Eliminar Prestamo';
-                IDFormModal.value = 'ArchivosAdicionales';
+                IDFormModal.value = 'EliminarPrestamo';
                 DatosParaElFormulario.value = Data;
 
                 break; 

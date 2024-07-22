@@ -321,7 +321,7 @@ const peticiones = {
     async deletePrestamo(idEmpleado, idMaster){
         try {
             // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
-            return axios.post(`prestamos/${idEmpleado}/delete_prestamos_user?userUpdaterId=${idMaster}`)
+            return axios.delete(`prestamos/${idEmpleado}/delete_prestamos_user?userUpdaterId=${idMaster}`)
             // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
             .then(respuesta => {
                     return { success: true, data: respuesta?.data };

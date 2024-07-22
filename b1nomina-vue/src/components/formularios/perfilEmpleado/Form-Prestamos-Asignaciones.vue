@@ -1,9 +1,15 @@
-<template>    
+<template>
+    <!-- Formulario para agregar o editar un préstamo -->
     <form class="formulario" id="addPrestamo" @submit.prevent="Enviar">
-        <section  v-show="verFormulario == 1">
+        <!-- Sección para ingresar detalles del préstamo, mostrada cuando verFormulario == 1 -->
+        <section v-show="verFormulario == 1">
+            <!-- Contenedor para el tipo de préstamo -->
             <div class="row-form">
+                <!-- Componente personalizado para seleccionar el tipo de préstamo -->
                 <LayoutInputLineal textLabel="Tipo" :requerido="RequiereActualizar">
+                    <!-- Slot para personalizar el contenido interno -->
                     <template v-slot>
+                        <!-- Componente de lista para seleccionar el tipo de préstamo -->
                         <ListaTemplateLineal  
                             v-model="TipoPrestamo" 
                             :options="Parametros?.tipoprestamo" 
@@ -15,7 +21,9 @@
                 </LayoutInputLineal>          
             </div>
 
+            <!-- Contenedor para la descripción del préstamo -->
             <div class="row-form">
+                <!-- Componente personalizado para ingresar la descripción del préstamo -->
                 <InputLinealDescripcion 
                     v-model="DescripcionPrestamo"
                     Placeholder="Ingresar Descripción" 
@@ -25,7 +33,9 @@
                 />
             </div>
 
+            <!-- Contenedor para el valor de la cuota y el número de cuotas -->
             <div class="row-form">
+                <!-- Componente personalizado para ingresar el valor de la cuota -->
                 <InputLinealDescripcion 
                     v-model="valorCuota"
                     Placeholder="$ 0" 
@@ -35,11 +45,12 @@
                     :minimoNumeros="1"
                     :NumeroDecimales="0.01"
                     :requerido="RequiereActualizar"
-
                 />
             </div>
 
+            <!-- Contenedor para el número de cuotas y la fecha del primer pago -->
             <div class="row-form">
+                <!-- Componente personalizado para ingresar el número de cuotas -->
                 <InputLinealDescripcion 
                     v-model="numeroCuotas"
                     Placeholder="0" 
@@ -51,6 +62,7 @@
                     :requerido="RequiereActualizar"
                 />
 
+                <!-- Componente personalizado para seleccionar la fecha del primer pago -->
                 <InputLinealDescripcion 
                     v-model="fechaPrimerPago"
                     Placeholder="" 
@@ -62,13 +74,17 @@
             </div>
         </section>
 
+        <!-- Sección para visualizar las cuotas generadas, mostrada cuando verFormulario == 2 -->
         <section v-show="verFormulario == 2" class="tabla-cuotas">
+            <!-- Componente personalizado para mostrar las cuotas -->
             <CuotasPrestamos                
                 :Listado="ListadoCuotas"
             />
         </section>
 
+        <!-- Contenedor para botones de navegación entre secciones -->
         <div class="espacio-botones">
+            <!-- Botón para editar cuotas, visible solo en la vista de cuotas -->
             <PaginateButton 
                 v-show="verFormulario == 2"
                 texto="Editar Cuotas" 
@@ -78,6 +94,7 @@
                 }"
             />
 
+            <!-- Botón para ver cuotas, visible solo en la edición de préstamo y si hay cuotas -->
             <PaginateButton 
                 v-show="verFormulario == 1 && ListadoCuotas.length > 0"
                 texto="Ver Cuotas" 
@@ -90,213 +107,169 @@
     </form>    
 </template>
 
-<script setup>
-import InputLinealDescripcion from '@/components/inputs/Input-Lineal-descripcion.vue';
-import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
-import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
-import CuotasPrestamos from '@/components/tablas/perfilEmpleado/asignaciones/CuotasPrestamo-General.vue'
-import PaginateButton from '@/components/botones/Paginate-button.vue';
 
-import {reactive, ref, watch, inject, onMounted, defineEmits, onBeforeMount} from 'vue';
+    <script setup>
+    // Importación de componentes personalizados y funciones de Vue.js necesarias para el componente.
+    import InputLinealDescripcion from '@/components/inputs/Input-Lineal-descripcion.vue';
+    import ListaTemplateLineal from '@/components/listas/Lista-template-lineal.vue';
+    import LayoutInputLineal from '@/components/Layouts/LayoutInputLineal.vue';
+    import CuotasPrestamos from '@/components/tablas/perfilEmpleado/asignaciones/CuotasPrestamo-General.vue'
+    import PaginateButton from '@/components/botones/Paginate-button.vue';
 
-import peticiones from '@/peticiones/p_empleado';
+    // Importación de funciones reactivas y de ciclo de vida de Vue.js.
+    import {reactive, ref, watch, inject, onMounted, defineEmits, onBeforeMount} from 'vue';
 
-import {useRoute}  from 'vue-router';
+    // Importación de funciones para realizar peticiones HTTP.
+    import peticiones from '@/peticiones/p_empleado';
 
-const route = useRoute();  
-const Sociedad_id = route.params.sociedadId
+    // Uso de Vue Router para obtener parámetros de ruta.
+    import {useRoute}  from 'vue-router';
 
-const DatosUsuario = reactive(inject('dataEmpleado'))
-const parametros = reactive(inject('parametros'))
+    // Obtención del ID de sociedad desde los parámetros de ruta.
+    const route = useRoute();  
+    const Sociedad_id = route.params.sociedadId;
 
-const Parametros = ref({});
-const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
+    // Acceso al estado global de datos del usuario y parámetros mediante inject.
+    const DatosUsuario = reactive(inject('dataEmpleado'));
+    const parametros = reactive(inject('parametros'));
 
-const RequiereActualizar = ref(false)
+    // Definición de varias referencias reactivas para manejar el estado del componente.
+    const Parametros = ref({});
+    const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
+    const RequiereActualizar = ref(false);
 
-// payload de las peticiones
-const payload = reactive({
-    tipo_id: '',
-    descripcion: '',
-    valor: '',
-    cuotas: '',
-    fecha_inicio: '',
-    "sociedad_id": Sociedad_id
-});
+    // Definición de objetos reactivos para manejar los datos del formulario y sus versiones antiguas.
+    const payload = reactive({
+        tipo_id: '',
+        descripcion: '',
+        valor: '',
+        cuotas: '',
+        fecha_inicio: '',
+        "sociedad_id": Sociedad_id
+    });
 
-// payload de las peticiones
-const payload_old = reactive({
-    tipo_id: '',
-    descripcion: '',
-    valor: '',
-    cuotas: '',
-    fecha_inicio: '',
-    "sociedad_id": Sociedad_id
-});
+    const payload_old = reactive({
+        tipo_id: '',
+        descripcion: '',
+        valor: '',
+        cuotas: '',
+        fecha_inicio: '',
+        "sociedad_id": Sociedad_id
+    });
 
-const verFormulario = ref(1)
+    // Definición de referencias reactivas para controlar la visualización del formulario y los datos ingresados por el usuario.
+    const verFormulario = ref(1);
+    const TipoPrestamo = ref('');
+    const DescripcionPrestamo = ref('');
+    const valorCuota = ref('');
+    const numeroCuotas = ref('');
+    const fechaPrimerPago = ref('');
+    const ListadoCuotas = ref([]);
+    const generarPrestamo = ref(false);
 
-const TipoPrestamo = ref('')
-const DescripcionPrestamo = ref('')
-const valorCuota = ref('')
-const numeroCuotas = ref('')
-const fechaPrimerPago = ref('')
+    // Observadores reactivos para actualizar automáticamente el objeto payload cuando cambian ciertos valores.
+    watch(TipoPrestamo, (nuevoValor) => ActualizarPayload('tipo_id', nuevoValor));
+    watch(DescripcionPrestamo, (nuevoValor) => ActualizarPayload('descripcion', nuevoValor));
+    watch(valorCuota, (nuevoValor) => ActualizarPayload('valor', nuevoValor));
+    watch(numeroCuotas, (nuevoValor) => {
+        numeroCuotas.value = Math.round(nuevoValor);
+        ActualizarPayload('cuotas', nuevoValor);
+    });
+    watch(fechaPrimerPago, (nuevoValor) => ActualizarPayload('fecha_inicio', nuevoValor));
 
-const ListadoCuotas = ref([])
-const generarPrestamo = ref(false)
+    // Observador reactivo para resetear el formulario cuando cambian los parámetros globales.
+    watch(parametros, (nuevaInfo) => {
+        ResetForm();
+        Parametros.value = nuevaInfo;
+    });
 
-watch(TipoPrestamo, (nuevoValor) =>  ActualizarPayload('tipo_id', nuevoValor));
-watch(DescripcionPrestamo, (nuevoValor) =>  ActualizarPayload('descripcion', nuevoValor));
-watch(valorCuota, (nuevoValor) =>  ActualizarPayload('valor', nuevoValor));
-watch(numeroCuotas, (nuevoValor) =>  {
-    numeroCuotas.value = Math.round(nuevoValor)
-    ActualizarPayload('cuotas', nuevoValor)
-});
-watch(fechaPrimerPago, (nuevoValor) =>  ActualizarPayload('fecha_inicio', nuevoValor));
+    // Función para resetear el estado del formulario y los payloads.
+    const ResetForm = () => {
+        RequiereActualizar.value = false;
+        
+        DescripcionPrestamo.value = '';
+        valorCuota.value = '';
+        numeroCuotas.value =  '';
+        fechaPrimerPago.value = '';
+        TipoPrestamo.value = '';
 
-watch(parametros, (nuevaInfo) => {  
-    ResetForm()   
-    Parametros.value = nuevaInfo
-})
+        verFormulario.value = 1;
+        ListadoCuotas.value = [];
+        generarPrestamo.value = false;
 
-const ResetForm = () => {
+        payload.tipo_id = '';
+        payload.descripcion = '';
+        payload.valor = '';
+        payload.cuotas = '';
+        payload.fecha_inicio = '';
 
-    RequiereActualizar.value = false;
-    
-    DescripcionPrestamo.value = '';
-    valorCuota.value = '';
-    numeroCuotas.value =  '';
-    fechaPrimerPago.value = '';
-    TipoPrestamo.value = '';
+        payload_old.tipo_id = '';
+        payload_old.descripcion = '';
+        payload_old.valor = '';
+        payload_old.cuotas = '';
+        payload_old.fecha_inicio = '';
+    };
 
-    verFormulario.value = 1
-    ListadoCuotas.value = []
-    generarPrestamo.value = false
+    // Función para actualizar el objeto payload con nuevos valores.
+    const ActualizarPayload = (propiedad, valor) => {
+        payload[propiedad] = valor;
+        verificarCambios();
+    };
 
-    payload.tipo_id = ''
-    payload.descripcion = ''
-    payload.valor = ''
-    payload.cuotas = ''
-    payload.fecha_inicio = ''
+    // Función para verificar si hay cambios entre los valores antiguos y nuevos del payload.
+    const verificarCambios = () => {
+        const camposIguales = Object.keys(payload_old).every(key => payload_old[key] == payload[key]);
+        const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
+        RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
+    };
 
-    payload_old.tipo_id = ''
-    payload_old.descripcion = ''
-    payload_old.valor = ''
-    payload_old.cuotas = ''
-    payload_old.fecha_inicio = ''
-    
-}
+    // Uso de los hooks del ciclo de vida para inicializar el estado del componente.
+    onMounted(() => {
+        ResetForm();
+        RequiereActualizar.value == false;
+    });
 
-/**
- * Actualiza el valor de una propiedad específica dentro del objeto 'payload'.
- *
- * @param {string} propiedad - El nombre de la propiedad a actualizar en el objeto 'payload'.
- * @param {any} valor - El nuevo valor que se asignará a la propiedad especificada.
- *
- * @example
- * // 'payload' es un objeto con una estructura predefinida.
- * const payload = {
- *   nombre: '',
- *   edad: 0
- * };
- *
- * // Llamando a ActualizarPayload para cambiar el nombre.
- * ActualizarPayload('nombre', variable);
- *
- * // Ahora, 'payload' se verá así:
- * // {
- * //   nombre: 'Pedro',
- * //   edad: 30
- * // }
- */
- const ActualizarPayload = (propiedad, valor) => {
-  // Asigna el nuevo valor a la propiedad especificada dentro del objeto 'payload'.
-  payload[propiedad] = valor;
-  
-  verificarCambios();
+    onBeforeMount(() => {
+        ResetForm();
+        Parametros.value = parametros.value;
+    });
 
-};
+    // Definición de eventos personalizados que pueden ser emitidos por este componente.
+    const emit = defineEmits(['respuestaServidor']);
 
-// Define la función verificarCambios que verifica si hay cambios entre los valores antiguos y nuevos de un payload.
-const verificarCambios = () => {
-    // Comprueba si todos los campos relevantes en payload_old y payload son iguales.
-    // Utiliza Object.keys para obtener las claves de ambos objetos y compara sus valores.
-    const camposIguales = Object.keys(payload_old).every( key => payload_old[key] == payload[key]);
-    
-    // Verifica si al menos uno de los valores en el nuevo payload no es una cadena vacía.
-    const alMenosUnValorVacio = Object.values(payload).some(value => value == '');
-
-    // Si todos los campos son iguales y al menos uno de los valores no es una cadena vacía,
-    // establece RequiereActualizar.value en false, indicando que no se requiere actualización.
-    // De lo contrario, establece RequiereActualizar.value en true, indicando que se requiere actualización.
-    RequiereActualizar.value = !(camposIguales && !alMenosUnValorVacio);
-}
-
-onMounted(() => {
-    ResetForm()
-    RequiereActualizar.value == false
-});
-
-onBeforeMount(() => {
-    ResetForm()
-    Parametros.value = parametros.value;
-})
-
-const emit = defineEmits([
-    'respuestaServidor',
-]);
-
-/**
- * Funcion emitida al enviar el formulario
- * @params payload Contiene los datos que se pasaran
- * Ejecuta la peticion con axios
- */
-const Enviar = async () => {
-    //si ID es nulo crea un usuario
-    if (generarPrestamo.value == false){
-
-        if (RequiereActualizar.value == true) {
-
-            const respuesta = await peticiones?.postCuotas(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
-
-            if (respuesta.success == true) {
-
-                ListadoCuotas.value = respuesta?.data.data;
-                verFormulario.value = 2;
-                generarPrestamo.value = true;
-
+    // Función asíncrona para manejar el envío del formulario, realizando peticiones HTTP según el estado actual.
+    const Enviar = async () => {
+        if (generarPrestamo.value == false){
+            if (RequiereActualizar.value == true) {
+                const respuesta = await peticiones?.postCuotas(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+                if (respuesta.success == true) {
+                    ListadoCuotas.value = respuesta?.data.data;
+                    verFormulario.value = 2;
+                    generarPrestamo.value = true;
+                } else {
+                    console.error(respuesta?.error);
+                    emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false});
+                }
             } else {
-                console.error(respuesta?.error)
-                emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false});
+                emit('respuestaServidor', {'texto': "Los campos estan vacios", 'valor':true});
             }
-
         } else {
-            emit('respuestaServidor', {'texto': "Los campos estan vacios", 'valor':true});
-        }
-
-    } else {
-
-        if (RequiereActualizar.value == true) {
-
-            const respuesta = await peticiones?.addPrestamo(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
-
-            if(respuesta.success == true){
-                emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true})
-                ResetForm()
-
+            if (RequiereActualizar.value == true) {
+                const respuesta = await peticiones?.addPrestamo(DatosUsuario.value?.user_id, ID_USERMASTER, payload);
+                if(respuesta.success == true){
+                    emit('respuestaServidor', {'texto':respuesta?.data?.message, 'valor':true});
+                    ResetForm();
+                } else {
+                    console.error(respuesta?.error);
+                    emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false});
+                }
             } else {
-                console.error(respuesta?.error)
-                emit('respuestaServidor', {'texto':respuesta?.error, 'valor':false})
-            }
-
-        } else {
-            emit('respuestaServidor', {'texto': "Los campos estan vacios", 'valor':true});
-        }        
-
-    }  
-};
-
+                emit('respuestaServidor', {'texto': "Los campos estan vacios", 'valor':true});
+            }        
+        }  
+    };
 </script>
+
 
 <style scoped>
 /* Establece el diseño de la fila del formulario, 
