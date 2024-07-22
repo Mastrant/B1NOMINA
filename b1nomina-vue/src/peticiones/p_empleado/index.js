@@ -210,169 +210,169 @@ const peticiones = {
             return { success: false, error: error?.response };
         }
     },
-
-    /**
-     * Actualiza la prevención de salud de un empleado.
-     * @param {number} idEmpleado - ID del empleado cuyos datos se van a actualizar.
-     * @param {number} idMaster - ID del usuario que realiza la actualización.
-     * @param {Object} payload - Objeto con los nuevos datos de prevención de salud.
-     * @returns {Promise<Object>} Resolución de la promesa con un objeto que indica si la operación fue exitosa y los datos resultantes.
-    */
-   
-    async function ActualizarPresvisionSalud(idEmpleado, idMaster, payload) {
+    async ActualizarPresvisionSalud(idEmpleado, idMaster, payload){
         try {
+            // Intenta realizar una petición PUT para actualizar los datos bancarios del empleado.
             const respuesta = await axios.put(`user/${idEmpleado}/update_prevision_salud_reduced?userUpdaterId=${idMaster}`, payload);
+            // Devuelve un objeto con éxito y los datos obtenidos si la petición fue exitosa.
             return { success: true, data: respuesta?.data };
         } catch (error) {
+            // En caso de error, devuelve un objeto indicando el fallo y el error.
             return { success: false, error: error?.response };
         }
     },
 
-    /**
-     * Agrega una nueva carga previsional para un empleado.
-     * @param {number} idEmpleado - ID del empleado al cual se le va a agregar la carga previsional.
-     * @param {number} idMaster - ID del usuario que realiza la creación.
-     * @param {Object} payload - Objeto con los datos de la carga previsional a agregar.
-     * @returns {Promise<Object>} Resolución de la promesa con un objeto que indica si la operación fue exitosa y los datos resultantes.
-     */
-    async function addCargaPrevisional(idEmpleado, idMaster, payload) {
+    async addCargaPrevisional(idEmpleado, idMaster, payload){
         try {
             return await axios.post(`user/${idEmpleado}/create_carga_previsional?userCreatorId=${idMaster}`, payload)
-            .then(respuesta => ({ success: true, data: respuesta?.data }))
-            .catch(error => ({ success: false, error: error?.response }));
+            .then(respuesta => {
+                return { success: true, data: respuesta?.data };
+            })
+            .catch(error => {
+                console.error(error)
+                return { success: false, error: error?.response};
+            });
         } catch (error) {
             return { success: false, error: error };
-        }
+        }  
     },
 
-    /**
-     * Actualiza una carga previsional existente.
-     * @param {number} idPersona - ID de la persona asociada a la carga previsional.
-     * @param {number} idMaster - ID del usuario que realiza la actualización.
-     * @param {Object} payload - Objeto con los nuevos datos de la carga previsional.
-     * @returns {Promise<Object>} Resolución de la promesa con un objeto que indica si la operación fue exitosa y los datos resultantes.
-     */
-    async function ActualizarCargaPrevisional(idPersona, idMaster, payload) {
+    async ActualizarCargaPrevisional(idPersona, idMaster, payload){
         try {
+            // Intenta realizar una petición PUT para actualizar los datos bancarios del empleado.
             const respuesta = await axios.put(`carga_previsional/${idPersona}/update_carga_previsional?userUpdaterId=${idMaster}`, payload);
+            // Devuelve un objeto con éxito y los datos obtenidos si la petición fue exitosa.
             return { success: true, data: respuesta?.data };
         } catch (error) {
+            // En caso de error, devuelve un objeto indicando el fallo y el error.
             return { success: false, error: error?.response };
         }
     },
-
-    /**
-     * Obtiene el listado de cargas previsionales de un empleado.
-     * @param {number} idEmpleado - ID del empleado cuyo listado se desea obtener.
-     * @returns {Promise<Object>} Resolución de la promesa con un objeto que indica si la operación fue exitosa y los datos resultantes.
-     */
-    async function getListadoCargaPresionales(idEmpleado) {
+    
+    async getListadoCargaPresionales(idEmpleado){
         try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
             return axios.get(`user/${idEmpleado}/list_carga_previsional`)
-            .then(respuesta => ({ success: true, data: respuesta?.data }))
-            .catch(error => ({ success: false, error: error?.response }));
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+            .then(respuesta => {
+                    return { success: true, data: respuesta?.data };
+                })
+                // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+            .catch(error => {
+                    return { success: false, error: error?.response };
+            });
         } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
             return { success: false, error: error };
-        }
-    },
-
-    /**
-     * Obtiene el listado de préstamos de un empleado.
-     * @param {number} idEmpleado - ID del empleado cuyo listado de préstamos se desea obtener.
-     * @returns {Promise<Object>} Resolución de la promesa con un objeto que indica si la operación fue exitosa y los datos resultantes.
-     */
-    async function getListadoPrestamos(idEmpleado) {
+        }  
+    }, 
+    
+    async getListadoPrestamos(idEmpleado){
         try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
             return axios.get(`user/${idEmpleado}/list_prestamos_user`)
-            .then(respuesta => ({ success: true, data: respuesta?.data }))
-            .catch(error => ({ success: false, error: error?.response }));
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+        .then(respuesta => {
+                return { success: true, data: respuesta?.data };
+            })
+            // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+        .catch(error => {
+                return { success: false, error: error?.response };
+            });
         } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
             return { success: false, error: error };
-        }
-    },
+        }  
+    }, 
 
-    /**
-     * Agrega un nuevo préstamo para un empleado.
-     * @param {number} idEmpleado - ID del empleado al cual se le va a agregar el préstamo.
-     * @param {number} idMaster - ID del usuario que realiza la creación.
-     * @param {Object} payload - Objeto con los datos del préstamo a agregar.
-     * @returns {Promise<Object>} Resolución de la promesa con un objeto que indica si la operación fue exitosa y los datos resultantes.
-     */
-    async function addPrestamo(idEmpleado, idMaster, payload) {
+    async addPrestamo(idEmpleado, idMaster, payload){
         try {
             return await axios.post(`user/${idEmpleado}/create_prestamos?userCreatorId=${idMaster}`, payload)
-            .then(respuesta => ({ success: true, data: respuesta?.data }))
-            .catch(error => ({ success: false, error: error?.response }));
+            .then(respuesta => {
+                return { success: true, data: respuesta?.data };
+            })
+            .catch(error => {
+                console.error(error)
+                return { success: false, error: error?.response};
+            });
         } catch (error) {
             return { success: false, error: error };
-        }
+        }  
     },
 
-    /**
-     * Calcula las cuotas de un préstamo.
-     * @param {number} idEmpleado - ID del empleado cuyas cuotas se van a calcular.
-     * @param {number} idMaster - ID del usuario que realiza el cálculo.
-     * @param {Object} payload - Objeto con los datos necesarios para el cálculo de cuotas.
-     * @returns {Promise<Object>} Resolución de la promesa con un objeto que indica si la operación fue exitosa y los datos resultantes.
-     */
-    async function postCuotas(idEmpleado, idMaster, payload) {
+    async postCuotas(idEmpleado, idMaster, payload){
         try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
             return axios.post(`user/${idEmpleado}/calcular_prestamos?userCreatorId=${idMaster}`, payload)
-            .then(respuesta => ({ success: true, data: respuesta?.data }))
-            .catch(error => ({ success: false, error: error?.response }));
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+            .then(respuesta => {
+                    return { success: true, data: respuesta?.data };
+                })
+                // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+            .catch(error => {
+                    return { success: false, error: error?.response };
+            });
         } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
             return { success: false, error: error };
-        }
+        }  
     },
 
-    /**
-     * Elimina un préstamo de un empleado.
-     * @param {number} idEmpleado - ID del empleado cuyo préstamo se va a eliminar.
-     * @param {number} idMaster - ID del usuario que realiza la eliminación.
-     * @returns {Promise<Object>} Resolución de la promesa con un objeto que indica si la operación fue exitosa y los datos resultantes.
-     */
-    async function deletePrestamo(idEmpleado, idMaster) {
+    async deletePrestamo(idEmpleado, idMaster){
         try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
             return axios.delete(`prestamos/${idEmpleado}/delete_prestamos_user?userUpdaterId=${idMaster}`)
-            .then(respuesta => ({ success: true, data: respuesta?.data }))
-            .catch(error => ({ success: false, error: error?.response }));
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+            .then(respuesta => {
+                    return { success: true, data: respuesta?.data };
+                })
+                // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+            .catch(error => {
+                    return { success: false, error: error?.response };
+            });
         } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
             return { success: false, error: error };
-        }
+        }  
     },
 
-    /**
-     * Obtiene el listado de contratos de un empleado.
-     * @param {number} idEmpleado - ID del empleado cuyo listado de contratos se desea obtener.
-     * @returns {Promise<Object>} Resolución de la promesa con un objeto que indica si la operación fue exitosa y los datos resultantes.
-     */
-    async function getListadoDeContrato(idEmpleado) {
+    async getListadoDeContrato(idEmpleado){
         try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
             return axios.get(`user/${idEmpleado}/list_files_users`)
-            .then(respuesta => ({ success: true, data: respuesta?.data }))
-            .catch(error => ({ success: false, error: error?.response }));
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+            .then(respuesta => {
+                    return { success: true, data: respuesta?.data };
+                })
+                // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+            .catch(error => {
+                    return { success: false, error: error?.response };
+            });
         } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
             return { success: false, error: error };
-        }
-    },
-
-    /**
-     * Obtiene el listado de archivos de un empleado.
-     * @param {number} idEmpleado - ID del empleado cuyo listado de archivos se desea obtener.
-     * @returns {Promise<Object>} Resolución de la promesa con un objeto que indica si la operación fue exitosa y los datos resultantes.
-     */
-    async function getListadoDeArchivos(idEmpleado) {
+        }  
+    }, 
+    
+    async getListadoDeArchivos(idEmpleado){
         try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
             return axios.get(`user/${idEmpleado}/list_files_users`)
-            .then(respuesta => ({ success: true, data: respuesta?.data }))
-            .catch(error => ({ success: false, error: error?.response }));
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+            .then(respuesta => {
+                    return { success: true, data: respuesta?.data };
+                })
+                // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+            .catch(error => {
+                    return { success: false, error: error?.response };
+            });
         } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
             return { success: false, error: error };
-        }
-    },
+        }  
+    }, 
 
-
-        
+    
 }
 
 // Exporta el objeto peticiones para su uso en otros módulos.

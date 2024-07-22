@@ -955,61 +955,6 @@
 
 
 <style scoped>
-    /* 
-     Contenedor principal del formulario de empleados, configurado para ocupar todo el espacio disponible
-     y organizar sus elementos en una columna. El uso de 'display: flex' y 'flex-direction: column' permite
-     una disposición flexible y ordenada de los elementos del formulario.
-    */
-    div.panel-PerfilEmpleado {
-        width: 100%; /* Ancho total del contenedor */
-        height: 100%; /* Altura total del contenedor */
-        display: flex; /* Disposición de elementos como flexibles */
-        flex-direction: column; /* Organiza los elementos en una columna vertical */
-        gap: 24px; /* Espaciado entre los elementos del formulario para mejorar la legibilidad */
-    }
-
-    /* Grupo de tarjetas o cards, dispuestos en fila y centrados horizontalmente */
-    div.cards {
-        display: flex; /* Disposición de elementos como flexibles */
-        flex-direction: row; /* Organiza los elementos en una fila horizontal */
-        gap: 24px; /* Espaciado entre las tarjetas */
-        justify-content: space-around; /* Distribuye el espacio restante uniformemente alrededor de los elementos */
-    }
-
-    /* Estilo para el fondo de los contenedores de información */
-    div.contenedorInfo {
-        background: #fcfcfc; /* Color de fondo claro */
-    }
-
-    /* Estilo específico para los contenedores de información que contienen tablas */
-    div.contenedorInfo.tablas {
-        display: flex; /* Disposición de elementos como flexibles */
-        flex-direction: column; /* Organiza los elementos en una columna vertical */
-        background: #fcfcfc; /* Color de fondo claro */
-        gap: 2.5rem; /* Espaciado entre los elementos dentro del contenedor */
-        margin: 12px 0; /* Margen externo arriba y abajo */
-    }
-
-    /* Estilo para títulos dentro de los contenedores de información */
-    h3.titulo {
-        font-size: 24px; /* Tamaño de fuente grande */
-        font-weight: 500; /* Grosor de fuente medio */
-        line-height: 34px; /* Altura de línea ajustada */
-        text-align: left; /* Alineación de texto a la izquierda */
-        color: #1A2771; /* Color de texto azul oscuro */
-        margin: 0; /* Sin margen alrededor del título */
-    }
-
-    /* Estilo para texto dentro de los contenedores de información */
-    span.texto {
-        display: flex; /* Disposición de elementos como flexibles */
-        font-size: 16px; /* Tamaño de fuente mediano */
-        font-weight: 400; /* Grosor de fuente ligero */
-        line-height: 26px; /* Altura de línea ajustada */
-        text-align: justify; /* Alineación de texto justificado */
-    }
-</style>
-
 /* 
  Contenedor principal del formulario de empleados, configurado para ocupar todo el espacio disponible
  y organizar sus elementos en una columna. El uso de 'display: flex' y 'flex-direction: column' permite
