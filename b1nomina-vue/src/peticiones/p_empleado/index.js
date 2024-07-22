@@ -372,7 +372,6 @@ const peticiones = {
         }  
     }, 
 
-    
 }
 
 // Exporta el objeto peticiones para su uso en otros módulos.
