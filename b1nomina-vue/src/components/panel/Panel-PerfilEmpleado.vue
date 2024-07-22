@@ -803,7 +803,7 @@
                 </template>
         </LayoutForm>
         <!--Modales Editar información-->
-        <CicloEditarEmpleado ref="EditarInfo" @actualizarTablas="ActualizarDataTablas"/>
+        <CicloEditarEmpleado ref="EditarInfo" @actualizarTablas="ActualizarDataTablas()"/>
 
         <AlertShort
             ref="notificacionStatus"
