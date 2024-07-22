@@ -129,9 +129,9 @@
 </template>|
 
 <script setup>
-    //componentes
+    // Importación de componentes específicos necesarios para la funcionalidad del perfil del empleado -->
     import TemplateModal from '@/components/modal/TemplateModal.vue';
-    //formularios
+    //Importación de formularios específicos para diferentes aspectos del perfil del empleado -->
     import FormSalario from '@/components/formularios/perfilEmpleado/Form-Salario.vue';
     import FormDatosContrato from '@/components/formularios/perfilEmpleado/Form-DatosContrato.vue';
     import FormPuesto from '@/components/formularios/perfilEmpleado/Form-Puesto.vue';
@@ -140,46 +140,43 @@
     import FormDatosPago from '@/components/formularios/perfilEmpleado/Form-DatosPago.vue';
     import FormCentralizacionDatosAdicionales from '@/components/formularios/perfilEmpleado/From-DatosP-Adicionales.vue';
     import CuotasPrestamos from '@/components/tablas/perfilEmpleado/asignaciones/VisualizarCuotas-General.vue'
-
     import FormAddCuenta from '@/components/formularios/perfilEmpleado/Form-Add-Cuenta.vue'
-
     import FormDatosPAFP from '@/components/formularios/perfilEmpleado/Form-DatosP-AFP.vue';
     import FormDatosPAPV from '@/components/formularios/perfilEmpleado/Form-DatosP-APV.vue';
     import FormDatosP_PrevisionSalud from '@/components/formularios/perfilEmpleado/Form-DatosP-PrevisionSalud.vue';
     import FormDatospAdicionales from '@/components/formularios/perfilEmpleado/From-DatosP-Adicionales.vue';
-
     import FormPrestamosAsignaciones from '@/components/formularios/perfilEmpleado/Form-Prestamos-Asignaciones.vue';
     import FormEliminarPrestamo from '@/components/formularios/perfilEmpleado/Form-Eliminar-Prestamo.vue';
     import FormCargaPrevisional from '@/components/formularios/perfilEmpleado/Form-CargaPrevisionales.vue';
     
-    //librerias
+    // Importación de librerías Vue para manejo de estado y eventos -->
     import { ref, onMounted, defineExpose, inject, defineEmits } from 'vue';
     import { useRoute } from 'vue-router';
 
-    const actualizar = inject('actualizarData')
-    const mostrarNotifiacionShort = inject('mostrarNotificacion')
-    const emit = defineEmits([
-        'actualizarTablas'
-    ])
+    // Inyección de funciones desde el contexto global o componente padre -->
+    const actualizar = inject('actualizarData');
+    const mostrarNotifiacionShort = inject('mostrarNotificacion');
 
+    // Definición de eventos personalizados que este componente puede emitir -->
+    const emit = defineEmits(['actualizarTablas']);
+
+    // Uso de vue-router para obtener parámetros de la ruta actual -->
     const route = useRoute();
-    // idSociedad es un String
     const idSociedad = route.params.sociedadId;
 
-     /////////// programacion de los modales de activacion ///////////////
-    const activarModal = ref(false)
-    const formActivo = ref(1)
-    const TextoButton = ref('')
-    const TituloModal = ref('')
-    const EmpleadoID_Selecionado = ref(0)
-    const modalActivo = ref(0)
-    const IDFormModal = ref('')
+    // Variables reactivas para controlar la visibilidad y contenido del modal -->
+    const activarModal = ref(false);
+    const formActivo = ref(1);
+    const TextoButton = ref('');
+    const TituloModal = ref('');
+    const EmpleadoID_Selecionado = ref(0);
+    const modalActivo = ref(0);
+    const IDFormModal = ref('');
+    const DatosParaElFormulario = ref({});
 
-    const DatosParaElFormulario = ref({})
-
-    //acciona la vista del modal
+    // Función para controlar la visibilidad del modal basado en el ID del modal proporcionado -->
     const showModal = (Id_modal = 0) => {
-        if(Id_modal == 1){
+        if (Id_modal === 1) {
             activarModal.value = !activarModal.value;
             modalActivo.value = Id_modal;
         } else {
@@ -188,21 +185,11 @@
     };
 
     /**
-     * Ejecuta acciones específicas basadas en los botones de la tabla de Encontratación.
+     * Función para manejar acciones específicas basadas en el tipo de acción y el ID del elemento seleccionado.
      * Controla la visualización de modales y la activación de formularios.
-     * 
-     * @param {number} TipoAccion - Tipo de acción a realizar:
-     *                             1: Salario,
-     *                             2: Datos de contrato,
-     *                             3: Datos puesto de trabajo,
-     *                             4: Centralizacion.
-     *                             4: Retomar Contrato.
-     *                             4: Retomar Contrato.
-     *                             4: Retomar Contrato.
+     * @param {number} TipoAccion - Tipo de acción a realizar.
      * @param {number} item_ID - ID del elemento seleccionado.
-     * 
-     * @example
-     * ActionButton(1, 1, 123); // Muestra el modal para cargar CV con el ID 123.
+     * @param {Object} Data - Datos opcionales para ciertas acciones.
      */
     const ActionButton = (TipoAccion, item_ID, Data = {}) => {
         switch (TipoAccion) {

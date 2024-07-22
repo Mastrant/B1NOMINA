@@ -830,133 +830,186 @@
 </template>
 
 <script setup>
-//componentes
-import LayoutCabeceraEmpleado from '@/components/Layouts/LayoutCabeceraEmpleado.vue';
-import LayoutForm from '@/components/Layouts/LayoutForm.vue';
-import LayoutTablaEMpleados from '@/components/Layouts/LayoutTabla-datosEmpleado.vue'
-import boxInfo from '@/components/elementos/Box-info.vue';
-import NavButtonTemplate from '@/components/botones/Nav-button-templateForm.vue';
-import TemplateButton2 from '@/components/botones/Template-button2.vue';
-import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
-import TemplateBlanckButton from '@/components/botones/Template-blank-button.vue';
-import CicloEditarEmpleado from '@/components/elementos/Ciclo-Editar-Empleado.vue';
-import ShortTemplateModal from '@/components/modal/Short-TemplateModal.vue';
-import InputRadioButton from '@/components/botones/Input-Radio-button.vue';
-import AlertShort from '@/components/alertas/Alert-short-template.vue';
+    // Importación de componentes específicos utilizados en la página
+    import LayoutCabeceraEmpleado from '@/components/Layouts/LayoutCabeceraEmpleado.vue';
+    import LayoutForm from '@/components/Layouts/LayoutForm.vue';
+    import LayoutTablaEMpleados from '@/components/Layouts/LayoutTabla-datosEmpleado.vue';
+    import boxInfo from '@/components/elementos/Box-info.vue';
+    import NavButtonTemplate from '@/components/botones/Nav-button-templateForm.vue';
+    import TemplateButton2 from '@/components/botones/Template-button2.vue';
+    import InterruptorButton from '@/components/inputs/Interruptor-button.vue';
+    import TemplateBlanckButton from '@/components/botones/Template-blank-button.vue';
+    import CicloEditarEmpleado from '@/components/elementos/Ciclo-Editar-Empleado.vue';
+    import ShortTemplateModal from '@/components/modal/Short-TemplateModal.vue';
+    import InputRadioButton from '@/components/botones/Input-Radio-button.vue';
+    import AlertShort from '@/components/alertas/Alert-short-template.vue';
 
+    // Importación de componentes para tablas
+    import LayoutTablasSimples from '@/components/Layouts/LayoutTablasSimples.vue';
+    import ListaCuentas from '@/components/tablas/perfilEmpleado/datospago/ListaCuentas-general.vue';
+    import AsignacionesPrestamos from '@/components/tablas/perfilEmpleado/asignaciones/AsignacionesPrestamos-general.vue';
+    import AsignacionesCargaPrevisionales from '@/components/tablas/perfilEmpleado/asignaciones/AsignacionesCargasPrevisionales-general.vue';
+    import ListaContrato from '@/components/tablas/perfilEmpleado/documentos/ListaContratos-general.vue';
+    import ListadoArchivos from '@/components/tablas/perfilEmpleado/documentos/ListaArchivosAdicionales-general.vue';
 
-// Tablas
-import LayoutTablasSimples from '@/components/Layouts/LayoutTablasSimples.vue'
-import ListaCuentas from '@/components/tablas/perfilEmpleado/datospago/ListaCuentas-general.vue'
-import AsignacionesPrestamos from '@/components/tablas/perfilEmpleado/asignaciones/AsignacionesPrestamos-general.vue';
-import AsignacionesCargaPrevisionales from '@/components/tablas/perfilEmpleado/asignaciones/AsignacionesCargasPrevisionales-general.vue';
-import ListaContrato from '@/components/tablas/perfilEmpleado/documentos/ListaContratos-general.vue';
-import ListadoArchivos from '@/components/tablas/perfilEmpleado/documentos/ListaArchivosAdicionales-general.vue';
+    // Importación de iconos para la interfaz de usuario
+    import DolarIcon from '@/components/icons/Dolar-icon-blanco.vue';
+    import InfoIcon from '@/components/icons/Info-icon.vue';
+    import SolIcon from '@/components/icons/Sol-icon.vue';
+    import OjitoIcon from '@/components/icons/Ojito-icon.vue';
+    import ExitColorIcon from '@/components/icons/Exit-color-icon.vue';
+    import EdiIcon from '@/components/icons/Edit-icon.vue';
+    import PlusCirculoIcon from '@/components/icons/Plus-Circulo-icon.vue';
 
-//iconos
-import DolarIcon from '@/components/icons/Dolar-icon-blanco.vue';
-import InfoIcon from '@/components/icons/Info-icon.vue';
-import SolIcon from '@/components/icons/Sol-icon.vue';
-import OjitoIcon from '@/components/icons/Ojito-icon.vue';
-import ExitColorIcon from '@/components/icons/Exit-color-icon.vue'
-import EdiIcon from '@/components/icons/Edit-icon.vue';
-import PlusCirculoIcon from '@/components/icons/Plus-Circulo-icon.vue';
+    // Importación de librerías y funciones de Vue
+    import { ref, inject, onMounted, provide } from 'vue';
+    import { useRoute } from 'vue-router';
+    import almacen from '@/store/almacen';
 
-//Librerias y acciones
-import {ref, inject, onMounted, provide } from 'vue';
-import {useRoute}  from 'vue-router';
-import almacen from '@/store/almacen';
+    // Importación de funciones para realizar peticiones HTTP
+    import peticiones_panel_empleado from '@/peticiones/p_empleado';
 
-import peticiones_panel_empleado from '@/peticiones/p_empleado';
+    // Inyección de datos del empleado desde el contexto global o componente padre
+    const DatosUsuario = ref(inject('dataEmpleado'));
 
-const DatosUsuario = ref(inject('dataEmpleado'))
+    // Uso de vue-router para obtener parámetros de la ruta actual
+    const route = useRoute();
+    const EmpleadoID = route.params.empleadoId;
 
-console.log(DatosUsuario.value)
+    // Estado para controlar la visibilidad de paneles informativos
+    const panelShow = ref(1);
 
-const route = useRoute();  
-const EmpleadoID = route.params.empleadoId
+    // Función para mostrar información en un panel específico
+    const showInfo = (id_seccion) => {
+        panelShow.value = id_seccion;
+    };
 
-const panelShow = ref(1)
-const showInfo = (id_apartado) => {
-    panelShow.value = id_apartado;
-};
+    // Referencia para acceder al método mostrar de notificaciones
+    const notificacionStatus = ref(null);
 
-//toma la referencia del componente notificacion para utilizar el metodo mostrar
-const notificacionStatus = ref(null);
+    // Función para activar notificaciones
+    const showNotificacion = (datos) => {
+        notificacionStatus.value?.ActivarNotificacion(datos); // Formato: {'Titulo': "empleado especial", 'Descripcion': "esta es la descripcion de la carta"}
+    };
 
-const showNotificacion = (Data) => {
-    notificacionStatus.value?.ActivarNotificacion(Data); //Formato: {'Titulo': "empleado especial", 'Descripcion': "esta es la descripcion de la cartica"}   
-}
+    // Proporcionar la función mostrarNotificacion para su uso en componentes hijos
+    provide('mostrarNotificacion', showNotificacion);
 
-provide('mostrarNotificacion', showNotificacion);
+    // Referencias para almacenar listados de información
+    const EditarInfo = ref(null);
+    const shortTemplateModal = ref(null);
+    const ListadoPrestamos = ref({});
+    const ListadoCargaPrevisionales = ref({});
+    const ListadoContrato = ref({});
+    const ListadoArchivosAdicionales = ref({});
 
-//referencia del ciclo editar info
-const EditarInfo = ref(null);
-const shortTemplateModal = ref(null);
+    // Funciones para solicitar listados de información mediante peticiones HTTP
+    const SolicitarListadoCargaPresionales = async (id = Number) => {
+        const respuesta = await peticiones_panel_empleado?.getListadoCargaPresionales(id);
+        console.log(respuesta);
+        if (respuesta.success) {
+            ListadoCargaPrevisionales.value = respuesta.data.data;
+        } else {
+            console.error(respuesta.error);
+        }
+    };
+    const SolicitarListadoDePrestamos = async (id = Number) => {
+        const respuesta = await peticiones_panel_empleado?.getListadoPrestamos(id);
+        console.log(respuesta);
+        if (respuesta.success) {
+            ListadoPrestamos.value = respuesta.data.data;
+        } else {
+            console.error(respuesta.error);
+        }
+    };
+    const SolicitarListadoDeContrato = async (id = Number) => {
+        const respuesta = await peticiones_panel_empleado?.getListadoDeContrato(id);
+        if (respuesta.success) {
+            ListadoContrato.value = respuesta.data.resultado;
+        } else {
+            console.error(respuesta.error);
+        }
+    };
+    const SolicitarListadoDeArchivos = async (id = Number) => {
+        const respuesta = await peticiones_panel_empleado?.getListadoDeArchivos(id);
+        if (respuesta.success) {
+            ListadoArchivosAdicionales.value = respuesta.data.data;
+        } else {
+            console.error(respuesta.error);
+        }
+    };
 
-const ListadoPrestamos = ref({})
-const ListadoCargaPrevisionales = ref({})
-const ListadoContrato = ref({})
-const ListadoArchivosAdicionales = ref({})
+    // Función para actualizar todos los listados de información
+    const ActualizarDataTablas = async () => {
+        await SolicitarListadoDePrestamos(DatosUsuario.value?.user_id);
+        await SolicitarListadoCargaPresionales(DatosUsuario.value?.user_id);
+        await SolicitarListadoDeContrato(DatosUsuario.value?.user_id);
+        await SolicitarListadoDeArchivos(DatosUsuario.value?.user_id);
+    };
 
-const SolicitarListadoCargaPresionales = async (id = Number) => {
-    const respuesta = await peticiones_panel_empleado?.getListadoCargaPresionales(id);
-    console.log(respuesta)
-    if (respuesta.success) {
-        //console.log(respuesta.data)
-        ListadoCargaPrevisionales.value = respuesta.data.data;
-    } else {
-        console.error(respuesta.error)
-    }
-}
-const SolicitarListadoDePrestamos = async (id = Number) => {
-    const respuesta = await peticiones_panel_empleado?.getListadoPrestamos(id);
-
-    console.log(respuesta)
-    if (respuesta.success) {
-        //console.log(respuesta.data)
-        ListadoPrestamos.value = respuesta.data.data;
-    } else {
-        console.error(respuesta.error)
-    }
-}
-const SolicitarListadoDeContrato = async (id = Number) => {
-    const respuesta = await peticiones_panel_empleado?.getListadoDeContrato(id);
-    if (respuesta.success) {
-        //console.log(respuesta.data)
-        ListadoContrato.value = respuesta.data.resultado;
-    } else {
-        console.error(respuesta.error)
-    }
-}
-const SolicitarListadoDeArchivos = async (id = Number) => {
-    const respuesta = await peticiones_panel_empleado?.getListadoDeArchivos(id);
-    if (respuesta.success) {
-        //console.log(respuesta.data)
-        ListadoArchivosAdicionales.value = respuesta.data.data;
-    } else {
-        console.error(respuesta.error)
-    }
-}
-
-const ActualizarDataTablas = async () => {
-    await SolicitarListadoDePrestamos(DatosUsuario.value?.user_id)
-    await SolicitarListadoCargaPresionales(DatosUsuario.value?.user_id)
-    await SolicitarListadoDeContrato(DatosUsuario.value?.user_id)
-    await SolicitarListadoDeArchivos(DatosUsuario.value?.user_id)
-}
-
-
-onMounted(async () => {
-    await SolicitarListadoDePrestamos(DatosUsuario.value?.user_id)
-    await SolicitarListadoCargaPresionales(DatosUsuario.value?.user_id)
-    await SolicitarListadoDeContrato(DatosUsuario.value?.user_id)
-    await SolicitarListadoDeArchivos(DatosUsuario.value?.user_id)
-});
-
+    // Ejecución de la actualización de listados cuando el componente se monta
+    onMounted(async () => {
+        await ActualizarDataTablas();
+    });
 </script>
 
+
 <style scoped>
+    /* 
+     Contenedor principal del formulario de empleados, configurado para ocupar todo el espacio disponible
+     y organizar sus elementos en una columna. El uso de 'display: flex' y 'flex-direction: column' permite
+     una disposición flexible y ordenada de los elementos del formulario.
+    */
+    div.panel-PerfilEmpleado {
+        width: 100%; /* Ancho total del contenedor */
+        height: 100%; /* Altura total del contenedor */
+        display: flex; /* Disposición de elementos como flexibles */
+        flex-direction: column; /* Organiza los elementos en una columna vertical */
+        gap: 24px; /* Espaciado entre los elementos del formulario para mejorar la legibilidad */
+    }
+
+    /* Grupo de tarjetas o cards, dispuestos en fila y centrados horizontalmente */
+    div.cards {
+        display: flex; /* Disposición de elementos como flexibles */
+        flex-direction: row; /* Organiza los elementos en una fila horizontal */
+        gap: 24px; /* Espaciado entre las tarjetas */
+        justify-content: space-around; /* Distribuye el espacio restante uniformemente alrededor de los elementos */
+    }
+
+    /* Estilo para el fondo de los contenedores de información */
+    div.contenedorInfo {
+        background: #fcfcfc; /* Color de fondo claro */
+    }
+
+    /* Estilo específico para los contenedores de información que contienen tablas */
+    div.contenedorInfo.tablas {
+        display: flex; /* Disposición de elementos como flexibles */
+        flex-direction: column; /* Organiza los elementos en una columna vertical */
+        background: #fcfcfc; /* Color de fondo claro */
+        gap: 2.5rem; /* Espaciado entre los elementos dentro del contenedor */
+        margin: 12px 0; /* Margen externo arriba y abajo */
+    }
+
+    /* Estilo para títulos dentro de los contenedores de información */
+    h3.titulo {
+        font-size: 24px; /* Tamaño de fuente grande */
+        font-weight: 500; /* Grosor de fuente medio */
+        line-height: 34px; /* Altura de línea ajustada */
+        text-align: left; /* Alineación de texto a la izquierda */
+        color: #1A2771; /* Color de texto azul oscuro */
+        margin: 0; /* Sin margen alrededor del título */
+    }
+
+    /* Estilo para texto dentro de los contenedores de información */
+    span.texto {
+        display: flex; /* Disposición de elementos como flexibles */
+        font-size: 16px; /* Tamaño de fuente mediano */
+        font-weight: 400; /* Grosor de fuente ligero */
+        line-height: 26px; /* Altura de línea ajustada */
+        text-align: justify; /* Alineación de texto justificado */
+    }
+</style>
+
 /* 
  Contenedor principal del formulario de empleados, configurado para ocupar todo el espacio disponible
  y organizar sus elementos en una columna. El uso de 'display: flex' y 'flex-direction: column' permite

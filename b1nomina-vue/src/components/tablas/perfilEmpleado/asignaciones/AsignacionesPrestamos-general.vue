@@ -1,51 +1,61 @@
 <template>
     <div class="conted"> 
-        <!--Contenedor de la tabla-->
+        <!-- Contenedor principal que envuelve la tabla y otros elementos -->
+        
+        <!-- Tabla para mostrar las asignaciones de préstamos -->
         <table class="TablaEmpleados">
-            <!--Encabezado de la tabla-->
+            <!-- Encabezado de la tabla que define las columnas -->
             <tr class="rowTabla encabezado">
-
+                <!-- Columna para el concepto del préstamo -->
                 <th class="">
                     CONCEPTO 
                 </th>
+                <!-- Columna para la descripción del préstamo -->
                 <th class="">
                     DESCRIPCION
                 </th>
+                <!-- Columna para el valor del préstamo -->
                 <th class=""> 
                     VALOR
                 </th>
+                <!-- Columna para el número de cuotas del préstamo -->
                 <th class=""> 
                     CUOTAS
                 </th>
+                <!-- Columna para el estado del préstamo (pagado, por pagar) -->
                 <th class=""> 
                     ESTADO
                 </th>
+                <!-- Columna para las acciones disponibles sobre cada préstamo -->
                 <th class=""> 
                     ACCIONES 
                 </th>
             </tr>
-            <!--Final encabezado-->
+            <!-- Final del encabezado -->
 
-            <!--Cuerpo de la tabla-->
+            <!-- Iteración sobre la lista de préstamos para renderizar cada fila -->
             <AsignacionesPrestamosRow v-for="prestamo in Listado" :key="prestamo?.id">
-
-                <!--Nombre y apelidos-->
+                <!-- Uso de slots personalizados para insertar contenido específico en cada columna -->
+                
+                <!-- Slot para el concepto del préstamo, mostrando la descripción -->
                 <template v-slot:CONCEPTO>
                     {{prestamo?.descripcion}}
                 </template>
-                <!--Rut-->
+                <!-- Slot para la descripción del préstamo, mostrando nuevamente la descripción -->
                 <template v-slot:DESCRIPCION>
                     {{prestamo?.descripcion}}
                 </template>
-                 <!--Cargo-->
+                <!-- Slot para el valor del préstamo, mostrando el monto y añadiendo el símbolo de dólar -->
                 <template v-slot:VALOR>
                     {{prestamo?.monto}} $
                 </template>
-                <!--Saladio / sueldo-->
+                <!-- Slot para las cuotas del préstamo -->
                 <template v-slot:cuotas>
                     {{prestamo?.cuotas}}
                 </template>
+                <!-- Slot personalizado sin nombre (usando #estado) para mostrar el estado del préstamo -->
                 <template #estado>
+                    <!-- Componente StatusButton para mostrar si el préstamo está pagado o por pagar -->
                     <StatusButton 
                         v-show="prestamo?.estado == 2"
                         texto="Pagado"
@@ -57,15 +67,18 @@
                         color2="#CDE0F1"
                     />
                 </template>
-                <!--Estado-->
+                <!-- Slot para las acciones disponibles sobre cada préstamo -->
                 <template v-slot:ACCIONES>
+                    <!-- Componente ViewIcon para la acción de ver cuotas -->
                     <ViewIcon Stroke="#1A2771" text="Ver cuotas" @click="emit('verCuotas', prestamo?.detalle_cuotas)"/>
+                    <!-- Componente TrashIcon para la acción de eliminar el préstamo -->
                     <TrashIcon Stroke="#1A2771" text="Eliminar" @click="emit('eliminarPrestamo', prestamo)"/>
                 </template>
             </AsignacionesPrestamosRow>
-            <!--Final cuerpo-->
+            <!-- Final del cuerpo de la tabla -->
         </table>        
 
+        <!-- Comentario sobre un elemento de paginación que podría ser implementado -->
         <!-- elemento para paginación
             <div class="espacio-paginacion" v-if="listadoPrestamos.length > 12">
                 <SeleccionarPaginacion @valorSelecionado="asignarValor"/>
@@ -74,7 +87,6 @@
             
         -->
     </div>
-   
 </template>
 
 <script setup>
