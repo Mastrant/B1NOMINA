@@ -76,14 +76,14 @@
                 />
                 </div>
                 
-            <div v-if=" formActivo == 12"> <!--retomar Asignaciones Prestamo-->                    
+            <div v-if=" formActivo == 12"> <!--retomar Asignaciones Cuenta bancaria-->                    
                 <FormAddCuenta 
                     @respuestaServidor="notificacionModal"
                 />
                     
             </div>
 
-            <div v-if=" formActivo == 13"> <!--retomar otras Asignaciones-->                    
+            <div v-if=" formActivo == 13"> <!--Asignar Prestamos-->                    
                 <FormPrestamosAsignaciones
                     @respuestaServidor="notificacionModal"
                 />
@@ -100,11 +100,11 @@
                     :familiarSelecionado="DatosParaElFormulario"
                 />
             </div>
-            <div v-if=" formActivo == 16"> <!---->                    
-           
+            <div v-if=" formActivo == 16"> <!--Cargar Contrato-->                    
+           Cargar Contrato
             </div>
-            <div v-if=" formActivo == 17"> <!---->                    
-               
+            <div v-if=" formActivo == 17"> <!--Cargar Archivos-->                    
+                Cargar Archivos
             </div>
 
             <div v-if=" formActivo == 18"> <!--Eliminar Prestamo-->                    
@@ -119,11 +119,24 @@
                 />
             </div>
 
-            <div v-if=" formActivo == 19"> <!---->                    
+            <div v-if=" formActivo == 19"> <!--Ver listado de cuotas-->                    
                 <CuotasPrestamos                
                     :Listado="DatosParaElFormulario"
                 />
             </div>
+
+            <div v-if=" formActivo == 20"> <!--Eliminar Familiares-->                    
+                <FormEliminarCargaPrevisional 
+                    :Informacion="DatosParaElFormulario"
+                    @respuestaServidor="(respuesta) => {
+                        showModal()
+                        actualizar();
+                        emit('actualizarTablas')
+                        mostrarNotifiacionShort(respuesta)
+                    }"
+                />
+            </div>
+
         </template>
     </TemplateModal>
 </template>|
@@ -151,7 +164,7 @@
     import FormPrestamosAsignaciones from '@/components/formularios/perfilEmpleado/Form-Prestamos-Asignaciones.vue';
     import FormEliminarPrestamo from '@/components/formularios/perfilEmpleado/Form-Eliminar-Prestamo.vue';
     import FormCargaPrevisional from '@/components/formularios/perfilEmpleado/Form-CargaPrevisionales.vue';
-    
+    import FormEliminarCargaPrevisional from '@/components/formularios/perfilEmpleado/Form-Eliminar-CargaPrevisional.vue';
     //librerias
     import { ref, onMounted, defineExpose, inject, defineEmits } from 'vue';
     import { useRoute } from 'vue-router';
@@ -357,6 +370,14 @@
                 TextoButton.value = 'Procesar';
                 TituloModal.value = 'Cargar Archivos Adicionales';
                 IDFormModal.value = 'ArchivosAdicionales';
+                DatosParaElFormulario.value = Data;
+                break; 
+            case 20:
+                formActivo.value = TipoAccion;
+                EmpleadoID_Selecionado.value = item_ID;
+                TextoButton.value = 'Procesar';
+                TituloModal.value = 'Eliminar Carga Previsional';
+                IDFormModal.value = 'eliminarCargaPrevisional';
                 DatosParaElFormulario.value = Data;
                 break; 
                 

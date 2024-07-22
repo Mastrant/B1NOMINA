@@ -266,6 +266,23 @@ const peticiones = {
             return { success: false, error: error };
         }  
     }, 
+    async deleteCargaPrevisional(idEmpleado, idMaster){
+        try {
+            // Realiza una petición GET a la API para obtener los datos del representante de la empresa.
+            return axios.delete(`prestamos/${idEmpleado}/delete_cargaprevisional_user?userUpdaterId=${idMaster}`)
+            // Si la petición es exitosa, devuelve un objeto con éxito y los datos recibidos.
+            .then(respuesta => {
+                    return { success: true, data: respuesta?.data };
+                })
+                // En caso de error en la petición, devuelve un objeto indicando el fallo y el mensaje de error.
+            .catch(error => {
+                    return { success: false, error: error?.response };
+            });
+        } catch (error) {
+            // Captura errores generales del bloque try-catch y devuelve un objeto indicando el fallo.
+            return { success: false, error: error };
+        }  
+    },
     
     async getListadoPrestamos(idEmpleado){
         try {

@@ -45,7 +45,7 @@
                 <!--Estado-->
                 <template v-slot:ACCIONES>
                     <EditIcon Stroke="#1A2771" text="Editar" @click="emit('editarDatosFamiliar', persona)"/>
-                    <TrashIcon Stroke="#1A2771" text="Eliminar" />
+                    <TrashIcon Stroke="#1A2771" text="Eliminar"  @click="emit('eliminarFamiliar', persona)"/>
                 </template>
             </AsignacionesCargaPrevisionalesRow>
             <!--Final cuerpo-->
@@ -78,7 +78,8 @@ const emit = defineEmits([
     'upData',
     'actualizar_Lista',
     'mostrarNotificacion',
-    'editarDatosFamiliar'
+    'editarDatosFamiliar',
+    'eliminarFamiliar'
 ]);
 
 const resultadoActivacion = (Data) => {

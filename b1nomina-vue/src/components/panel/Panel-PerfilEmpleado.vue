@@ -733,7 +733,8 @@
                             <template #Tabla>
                                 <AsignacionesCargaPrevisionales
                                     :listadoCargas="ListadoCargaPrevisionales"
-                                    @editarDatosFamiliar="(datos) => EditarInfo?.ActionButton(15,EmpleadoID, datos)"
+                                    @editarDatosFamiliar="(datos) => EditarInfo?.ActionButton(15, EmpleadoID, datos)"
+                                    @eliminarFamiliar="(datos) => EditarInfo?.ActionButton(20, EmpleadoID, datos)"
                                 />
                             </template>
                         </LayoutTablasSimples>
