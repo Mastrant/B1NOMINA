@@ -34,7 +34,7 @@
             <!-- Final del encabezado -->
 
             <!-- Iteración sobre la lista de préstamos para renderizar cada fila -->
-            <AsignacionesPrestamosRow v-for="prestamo in Listado" :key="prestamo?.id">
+            <AsignacionesPrestamosRow v-for="prestamo in ListadoPrestamos" :key="prestamo?.id">
                 <!-- Uso de slots personalizados para insertar contenido específico en cada columna -->
                 
                 <!-- Slot para el concepto del préstamo, mostrando la descripción -->
@@ -107,7 +107,7 @@ const sociedadId = route.params.sociedadId;
 // Define los props
 const props = defineProps({
   Listado: {
-    type: Array,
+    type: Object,
     default: () => []
   }
 });
@@ -118,6 +118,21 @@ const emit = defineEmits([
     'mostrarNotificacion',
     'verCuotas',
 ]);
+
+// Accede a la lista de empleados desde props
+const ListadoPrestamos = ref(props.Listado);
+
+
+//al cambiar los datos reinicia el renderizado
+watchEffect(() => {
+  ListadoPrestamos.value = props.Listado;
+});
+
+//al montar el componente solicita la data
+onMounted(()=> {
+    //ejecuta la actualizacion del paginado
+    ListadoPrestamos.value = props.Listado;
+});
 
 /* Codigo para paginacion de ser necesario
 

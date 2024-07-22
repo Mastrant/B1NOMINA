@@ -21,6 +21,7 @@ const props = defineProps({
 const emit = defineEmits([
     'activarUsuario',
     'notificacion',
+    'respuestaServidor'
 ]);
 
 
