@@ -906,7 +906,6 @@
     // Funciones para solicitar listados de información mediante peticiones HTTP
     const SolicitarListadoCargaPresionales = async (id = Number) => {
         const respuesta = await peticiones_panel_empleado?.getListadoCargaPresionales(id);
-        console.log(respuesta);
         if (respuesta.success) {
             ListadoCargaPrevisionales.value = respuesta.data.data;
         } else {
@@ -915,7 +914,6 @@
     };
     const SolicitarListadoDePrestamos = async (id = Number) => {
         const respuesta = await peticiones_panel_empleado?.getListadoPrestamos(id);
-        console.log(respuesta);
         if (respuesta.success) {
             ListadoPrestamos.value = respuesta.data.data;
         } else {

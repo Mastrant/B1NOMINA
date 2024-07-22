@@ -12,7 +12,7 @@ const FORM_ID = "EliminarPrestamo"
 const ID_USERMASTER = JSON.parse(localStorage.getItem("userId"));
 
 const props = defineProps({
-    Infomacion: {
+    Informacion: {
         type: Object,
         default: null
     }
@@ -32,7 +32,7 @@ const emit = defineEmits([
 const Enviar = async () => {
 //si ID es nulo crea un usuario
 
-    const respuesta = await peticiones?.deletePrestamo(props.Infomacion?.id, ID_USERMASTER);
+    const respuesta = await peticiones?.deletePrestamo(props.Informacion?.id, ID_USERMASTER);
 
     if(respuesta.success == true){
        emit('respuestaServidor', {'Titulo': "Eliminacion Exitosa",'Descripcion':respuesta?.data?.message + Infomacion?.descripcion, 'valor':true})

@@ -109,7 +109,7 @@
 
             <div v-if=" formActivo == 18"> <!--Eliminar Prestamo-->                    
                 <FormEliminarPrestamo 
-                    :Infomacion="DatosParaElFormulario"
+                    :Informacion="DatosParaElFormulario"
                     @respuestaServidor="(respuesta) => {
                         showModal()
                         actualizar();
