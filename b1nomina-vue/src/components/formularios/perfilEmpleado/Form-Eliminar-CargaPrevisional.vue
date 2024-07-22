@@ -41,7 +41,7 @@ const Enviar = async () => {
     const respuesta = await peticiones?.deleteCargaPrevisional(props.Informacion?.id, ID_USERMASTER);
 
     if(respuesta.success == true){
-       emit('respuestaServidor', {'Titulo': "Eliminacion Exitosa",'Descripcion':respuesta?.data?.message + Infomacion?.descripcion, 'valor':true})
+        emit('respuestaServidor', {'Titulo': "Eliminacion Exitosa", 'Descripcion':respuesta?.data?.message + props.Informacion?.descripcion, 'valor':true})
     } else {
         console.error(respuesta?.error)
         emit('respuestaServidor', {'Titulo': "Error al Eliminar",'Descripcion':respuesta?.error?.data, 'valor':false})
